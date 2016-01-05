@@ -1,0 +1,26 @@
+{
+  "name": "sak",
+  "description": "swiss army knife",
+  "main": "index.js",
+  "authors": [
+    "Jen Duncan"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "WFS",
+    "Test"
+  ],
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "angular": "~1.4.8",
+    "bootstrap": "~3.3.6"
+  }
+}

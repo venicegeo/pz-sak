@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="SAKapp">
+<head>
+    <!--/-->
+    <!-- Bootstrap 2 or Bootstrap 3 ?-->
+    <!---->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!---->
+    <!-- Angular 1.1.5 or 1.2.12 ?-->
+    <!---->
+    <script type="text/javascript" src="js/lib/angular.js"></script>
+    <!-- Font Awesome (optional)-->
+    <!-- Live Reload ( for development )-->
+    <!--/-->
+    <!-- abn-tree ( the thing we are testing )-->
+    <!---->
+    <script type="text/javascript" src="js/lib/abn_tree_directive.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/abn_tree.css">
+    <script type="text/javascript" src="treeview.js"></script>
+
+    <script type="text/javascript" src= "app/wfs/wfs.controller.js"></script>
+</head>
+<body ng-controller="SAKappController" style="margin:20px">
+<h2>SAK (Swiss Army Knife)</h2>
+
+
+
+<table border="0">
+    <tr>
+
+        <td style="padding:20px;vertical-align:top">
+            <div style="width:250px;background:whitesmoke;border:1px solid lightgray;border-radius:5px;">
+                <span ng-if="doing_async">...loading...</span>
+                <abn-tree tree-data="my_data" tree-control="my_tree" on-select="my_tree_handler(branch)" expand-level="2"></abn-tree>
+            </div>
+        </td>
+        <td style="padding:20px;vertical-align:top;">
+
+            <div data-ng-include src="bodyDiv" id="body" style="width:800px; height:600px" class="alert alert-warning"></div>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

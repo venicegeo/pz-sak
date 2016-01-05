@@ -1,0 +1,25 @@
+{
+  "name": "sak",
+  "version": "1.0.0",
+  "description": "swiss army knife",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "WFS",
+    "Test"
+  ],
+  "author": "Jen Duncan",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.4.8",
+    "angular-spinner": "^0.8.0",
+    "angular-ui-router": "^0.2.15",
+    "bootswatch": "^3.3.6",
+    "http-server": "^0.8.5",
+    "jquery": "^2.1.4",
+    "spin.js": "^2.3.2"
+  },
+  "devDependencies": {}
+}
