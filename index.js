@@ -6,7 +6,7 @@ var express = require("express"),
 
 var app = express();
 var logger = require('morgan');
-app.use(logger());
+app.use(logger('combined'));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
