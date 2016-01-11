@@ -19,6 +19,18 @@
     <script type="text/javascript" src="treeview.js"></script>
 
     <script type="text/javascript" src= "app/wfs/wfs.controller.js"></script>
+
+    <!-- Vendors -->
+	<script src="js/lib/jquery.min.js"></script>
+	<script src="js/lib/angular.min.js"></script>
+	<script src="js/lib/spin.js"></script>
+	<script src="js/lib/angular-spinner.min.js"></script>
+
+	<!-- Common -->
+	<script src= "app/wfs/app.module.wfs.js"></script>
+    <script src= "js/lib/OpenLayersLite-formats.js"></script>
+	<script src= "js/lib/wfs-client.js"></script>
+
 </head>
 <body ng-controller="SAKappController" style="margin:20px">
 <h2>SAK (Swiss Army Knife)</h2>
@@ -36,7 +48,7 @@
         </td>
         <td style="padding:20px;vertical-align:top;">
 
-            <div data-ng-include src="bodyDiv" id="body" style="width:800px; height:600px" class="alert alert-warning"></div>
+            <div data-ng-include src="bodyDiv" id="body" style="width:1200px; height:850px" class="alert alert-warning"></div>
         </td>
     </tr>
 </table>
