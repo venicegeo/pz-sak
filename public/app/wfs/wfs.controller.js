@@ -67,15 +67,15 @@
                 //TODO: Move to a factory
                 // DescribeFeature
                 $scope.describeFeature = function () {
-
-                    $scope.columns = wfsClient.getFeatureTypeSchema($scope.selectedCapability.name, $scope.selectedCapability.featureNS).featureTypes[0].properties;
-                    $log.debug('$scope.columns (describeFeature)', $scope.columns);
-                    $log.debug('$scope.columns.length', $scope.columns.length);
-                    if($scope.columns.length >= 1){
-                        $scope.getFeature();
-                        $scope.showFeatureTypeTable = true;
-                    }
-
+                	if ($scope.selectedCapability != null) {
+	                    $scope.columns = wfsClient.getFeatureTypeSchema($scope.selectedCapability.name, $scope.selectedCapability.featureNS).featureTypes[0].properties;
+	                    $log.debug('$scope.columns (describeFeature)', $scope.columns);
+	                    $log.debug('$scope.columns.length', $scope.columns.length);
+	                    if($scope.columns.length >= 1){
+	                        $scope.getFeature();
+	                        $scope.showFeatureTypeTable = true;
+	                    }
+                	}
                 };
 
                 //TODO: Move to a factory
