@@ -22,5 +22,11 @@
   "devDependencies": {
     "angular": "~1.4.8",
     "bootstrap": "~3.3.6"
+  },
+  "resolutions": {
+    "openlayers3": "3.8.2"
+  },
+  "dependencies": {
+    "angular-openlayers-directive": "~1.6.0"
   }
 }
