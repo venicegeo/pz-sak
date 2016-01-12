@@ -30,20 +30,20 @@
       }, {
         label: 'WMS',
         onSelect: function(branch) {
-                    return $scope.bodyDiv = "";
+                    return $scope.bodyDiv = "app/wms/wms.tpl.html";
                 },
 
       }, {
         label: 'Jobs',
         onSelect: function(branch) {
-                    return $scope.bodyDiv = "";
+                    return $scope.bodyDiv = "app/jobs/jobs.tpl.html";
                 },
 
       },
       {
         label: 'UUIDs',
         onSelect: function(branch) {
-                    return $scope.bodyDiv = "";
+                    return $scope.bodyDiv = "app/uuid/uuid.tpl.html";
                 },
         }
     ];
