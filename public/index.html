@@ -19,10 +19,10 @@
     <script type="text/javascript" src="treeview.js"></script>
 
     <script type="text/javascript" src= "app/wfs/wfs.controller.js"></script>
+    <script type="text/javascript" src= "app/wms/wms.controller.js"></script>
 
     <!-- Vendors -->
 	<script src="js/lib/jquery.min.js"></script>
-	<script src="js/lib/angular.min.js"></script>
 	<script src="js/lib/spin.js"></script>
 	<script src="js/lib/angular-spinner.min.js"></script>
 
@@ -30,6 +30,12 @@
 	<script src= "app/wfs/app.module.wfs.js"></script>
     <script src= "js/lib/OpenLayersLite-formats.js"></script>
 	<script src= "js/lib/wfs-client.js"></script>
+	
+	<!-- Map -->
+	<script src="js/lib/ol.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/ol.css">
+	<script src="js/lib/angular-sanitize.js"></script>
+	<script src="js/lib/angular-openlayers-directive.js"></script>
 
 </head>
 <body ng-controller="SAKappController" style="margin:20px">
@@ -48,7 +54,7 @@
         </td>
         <td style="padding:20px;vertical-align:top;">
 
-            <div data-ng-include src="bodyDiv" id="body" style="width:1200px; height:850px" class="alert alert-warning"></div>
+            <div data-ng-include src="bodyDiv" id="body" style="width:1200px; height:100%; min-height: 800px" class="alert alert-warning"></div>
         </td>
     </tr>
 </table>
