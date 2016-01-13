@@ -11,7 +11,7 @@
     "Test"
   ],
   "author": "Jen Duncan",
-  "license": "ISC",
+  "license": "RadiantBlue Technologies",
   "dependencies": {
     "angular": "^1.4.8",
     "angular-spinner": "^0.8.0",

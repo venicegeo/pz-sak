@@ -1,48 +1,52 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="SAKapp" ng-strict-di>
+<html lang="en" ng-app="SAKapp" ng-strict-di xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>UUID Service Info</title>
     <link rel="stylesheet" href="../../css/bootstrap.css">
+
 </head>
 <body>
 
-    <div ng-controller="UuidController" class="container">
-        <div class="row">
-            <h1 class="alert alert-success">Jobs Service Info</h1>
-            <p>Use the following input to query a uuid. A successful query will return a list of uuid.  NOTE: This does not do anything yet.  This serves
-                as a placeholder for future UUID app in the SAK Tool.</p>
-            <form>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="endPoint">UUIDs to query</label>
-                            <input id="endPoint" type="text" class="form-control" placeholder="Enter a valid UUID">
+<div ng-controller="UuidController" class="container">
+    <div class="row">
+        <h1 class="alert alert-success">UUID Service Info</h1>
+        <p>Use the following input to query a WMS Service. A successful query will return a list of WMS Features.  NOTE: This does not do anything yet.  This serves
+            as a placeholder for future WMS app in the SAK Tool.</p>
+        <form>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="endPoint">WMS to query</label>
+                        <input id="endPoint" type="text" class="form-control" placeholder="Enter a valid WMS">
 
-                        </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="outputFormat">Output</label>
-                            <select id="outputFormat" class="form-control" ng-model="outputFormat">
-                                <option>JSON</option>
-                                <option>GML3</option>
-                                <option>GML2</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <br>
-                        <button type="button" class="btn btn-primary" ng-click="getCapabilities()">Get Info</button>
                     </div>
                 </div>
-                <br>
 
-                <br>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="outputFormat">Output</label>
+                        <select id="outputFormat" class="form-control" ng-model="outputFormat">
+                            <option>JSON</option>
+                            <option>GML3</option>
+                            <option>GML2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <br>
+                    <button type="button" class="btn btn-primary" ng-click="getCapabilities()">Get Info</button>
+                </div>
+            </div>
+            <br>
 
-            </form>
-        </div>
+            <br>
+
+        </form>
+
+
+
     </div>
-    </body>
+</div>
+</body>
 </html>
