@@ -2,9 +2,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('JobsController', ['$scope',  JobsController]);
+        .controller('JobsController', ['$scope', '$log', '$q',  JobsController]);
 
-        function JobsController ($scope) {
+        function JobsController ($scope, $log, $q) {
 
 
         }
@@ -12,4 +12,4 @@
 
 
 
-});
+})();
