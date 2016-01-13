@@ -14,18 +14,32 @@
     $scope.my_tree_handler = function(branch) {
       var _ref;
 
-      //$scope.bodyPage = "app/wfs/wfs.tpl.html";
-
-
     };
 
 
     treedata_avm = [
+    {
+      label: 'Name Server',
+      onSelect: function(branch) {
+      return $scope.bodyDiv = "";
+      },
+
+        children: [
+        {
+        label: 'Admin'
+        }
+        ]
+       },
       {
         label: 'WFS',
         onSelect: function(branch) {
             return $scope.bodyDiv = "app/wfs/wfs.tpl.html";
         },
+        children: [
+        {
+        label: 'Admin'
+        }
+        ]
 
       }, {
         label: 'WMS',
@@ -33,11 +47,23 @@
                     return $scope.bodyDiv = "app/wms/wms.tpl.html";
                 },
 
+        children: [
+        {
+        label: 'Admin'
+        }
+        ]
+
       }, {
         label: 'Jobs',
         onSelect: function(branch) {
                     return $scope.bodyDiv = "app/jobs/jobs.tpl.html";
                 },
+
+        children: [
+        {
+        label: 'Admin'
+        }
+        ]
 
       },
       {
@@ -45,13 +71,95 @@
         onSelect: function(branch) {
                     return $scope.bodyDiv = "app/uuid/uuid.tpl.html";
                 },
+
+        children: [
+        {
+        label: 'Admin'
+        }
+        ]
+        },
+        {
+        label: 'Ingester',
+        onSelect: function(branch) {
+                    return $scope.bodyDiv = "";
+                },
+
+        children: [
+        {
+        label: 'Admin'
+        }
+        ]
+
+        },
+        {
+        label: 'Access',
+        onSelect: function(branch) {
+                     return $scope.bodyDiv = "";
+                  },
+
+        children: [
+        {
+        label: 'Admin'
+        }
+        ]
+
+        },
+        {
+        label: 'Search',
+                onSelect: function(branch) {
+                     return $scope.bodyDiv = "";
+                  },
+
+        children: [
+        {
+        label: 'Admin'
+        }
+        ]
+
+        },
+        {
+        label: 'User Service Registry',
+                onSelect: function(branch) {
+                     return $scope.bodyDiv = "";
+                },
+
+        children: [
+        {
+        label: 'Admin'
+        }
+        ]
+
+        },
+        {
+        label: 'Alerts',
+                onSelect: function(branch) {
+                     return $scope.bodyDiv = "";
+                },
+
+        children: [
+        {
+        label: 'Admin'
+        }
+        ]
+
+        },
+        {
+        label: 'Logger',
+                onSelect: function(branch) {
+                      return $scope.bodyDiv = "";
+                },
+
+        children: [
+        {
+        label: 'Admin'
+        }
+        ]
+
         }
     ];
 
     $scope.my_data = treedata_avm;
-    $scope.try_changing_the_tree_data = function() {
 
-    };
     $scope.my_tree = tree = {};
     $scope.try_async_load = function() {
       $scope.my_data = [];
