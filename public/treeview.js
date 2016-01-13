@@ -35,11 +35,7 @@
         onSelect: function(branch) {
             return $scope.bodyDiv = "app/wfs/wfs.tpl.html";
         },
-        children: [
-        {
-        label: 'Admin'
-        }
-        ]
+
 
       }, {
         label: 'WMS',
@@ -47,11 +43,7 @@
                     return $scope.bodyDiv = "app/wms/wms.tpl.html";
                 },
 
-        children: [
-        {
-        label: 'Admin'
-        }
-        ]
+
 
       }, {
         label: 'Jobs',
