@@ -6,6 +6,10 @@
 
         function UuidController ($scope, $log, $q) {
 
+                $scope.getUUIDs = function () {
+                    
+
+                };
 
         }
 
