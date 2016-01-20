@@ -12,12 +12,12 @@
     <div class="row">
         <h1 class="alert alert-success">UUID Service Info</h1>
         <p>Use the following input to query a the UUID. A successful query without a count, or count set to zero will return one UUID.  Filling in the count box will bring back that amount of UUIDs.  NOTE: Count is not a mandatory field and the maximum count is 255</p>
-        <form>
+        <form ng-submit="getUUIDs()">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="endPoint">Count of UUIDs to query</label>
-                        <input id="endPoint" type="text" class="form-control" placeholder="Enter a count">
+                        <label for="uuidCount">Count of UUIDs to query</label>
+                        <input id="uuidCount" ng-model="uuidCount" type="text" class="form-control" placeholder="Enter a count">
 
                     </div>
                 </div>
@@ -25,8 +25,34 @@
 
                 <div class="col-md-2">
                     <br>
-                    <button type="button" class="btn btn-primary" ng-click="getUUIDs()">Get UUID(s)</button>
+                    <button type="submit" class="btn btn-primary">Get UUID(s)</button>
                 </div>
+            </div>
+            <br>
+
+            <br>
+
+        </form>
+
+
+
+    </div>
+
+    <div class="row">
+        <h1 class="alert alert-success">UUIDs Returned from Service</h1>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group" style="margin-bottom: 2px;" ng-repeat="uuid in uuids">
+                        <label id="UUIDs">{{uuid}}</label>
+
+
+                    </div>
+                    <label id="errorMsg">{{errorMsg}}</label>
+                </div>
+
+
+
             </div>
             <br>
 
