@@ -1,14 +1,74 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="SAKapp" ng-strict-di>
+<html lang="en" ng-app="SAKapp" ng-strict-di xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Logger Service Info</title>
     <link rel="stylesheet" href="../../css/bootstrap.css">
 
-
 </head>
 <body>
 
+<div ng-controller="LoggerController" class="container">
 
+    <div class="row">
+        <h1 class="alert alert-success">Send to the Logger Service</h1>
+        <form ng-submit="postLog()">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="logMessage">Message to send to Logger:</label>
+                        <input id="logMessage" ng-model="logMessage" type="text" class="form-control" placeholder="Enter a message">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+
+                <button type="submit"  class="btn btn-primary">Log Message</button>
+            </div>
+
+            <br>
+
+            <br>
+        </form>
+    </div>
+<brr></brr>
+    <div class="row">
+        <h1 class="alert alert-success">Logger Service Info</h1>
+        <p>Use the following to query the Logger service. </p>
+        <form ng-submit="getLogs()">
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-primary">Get Log(s)</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+
+    <div class="row">
+        <h1 class="alert alert-success">Logs Returned from Service</h1>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group"  ng-repeat="log in logs">
+                    <pre id="UUIDs">{{log}}</pre>
+
+
+                </div>
+                <label id="errorMsg">{{errorMsg}}</label>
+            </div>
+        </div>
+        <br>
+
+        <br>
+
+        </form>
+
+
+
+    </div>
+</div>
 </body>
 </html>
