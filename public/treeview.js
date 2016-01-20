@@ -138,7 +138,7 @@
         {
         label: 'Logger',
                 onSelect: function(branch) {
-                      return $scope.bodyDiv = "";
+                      return $scope.bodyDiv = "app/logger/logger.tpl.html";
                 },
 
         children: [

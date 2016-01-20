@@ -11,7 +11,7 @@
                 $scope.getUUIDs = function () {
                     $scope.uuids = "";
                     $scope.errorMsg = "";
-                    var url = 'http://localhost:12340/uuid';
+                    var url = 'http://pz-uuidgen.cf.piazzageo.io/uuid';
                     if ($scope.uuidCount === undefined){
                         url = url;
                     }
