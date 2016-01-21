@@ -31,7 +31,7 @@
             <br>
         </form>
     </div>
-<brr></brr>
+
     <div class="row">
         <h1 class="alert alert-success">Logger Service Info</h1>
         <p>Use the following to query the Logger service. </p>
@@ -53,8 +53,9 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <p id="logs">{{logs}}</p>
-
+                    <div id="logs" ng-repeat="log in logs">
+                        {{log.time}} - {{log.service}} - {{log.address}} - {{log.severity}}: {{log.message}}
+                    </div>
 
                 </div>
                 <label id="errorMsg">{{errorMsg}}</label>
