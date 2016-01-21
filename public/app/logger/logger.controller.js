@@ -14,13 +14,9 @@
             $http({
                 method: "GET",
                 url: url,
-                responseType: "text",
-                transformResponse: function(data, headers) {
-                    return data;
-                }
             }).then(function successCallback( html ) {
                 $scope.logs = html.data;
-                /*angular.forEach($scope.log, function(item){
+                /*angular.forEach($scope.logs, function(item){
                     console.log(item);
                 })*/
             }, function errorCallback(response){
@@ -30,10 +26,39 @@
 
         };
 
+        function formatTwoDigit(number) {
+            if (number < 10) {
+                return "0" + number;
+            } else {
+                return number;
+            }
+        }
+
+        function formatThreeDigit(number) {
+            if (number < 10) {
+                return "00" + number;
+            }
+            else if (number < 100) {
+                return "0" + number;
+            } else {
+                return number;
+            }
+        }
+
+        function formatDate(date) {
+            return date.getUTCFullYear() + "-" +
+                    formatTwoDigit(date.getUTCMonth() + 1) + "-" +
+                    formatTwoDigit(date.getUTCDate()) + "T" +
+                    formatTwoDigit(date.getUTCHours()) + ":" +
+                    formatTwoDigit(date.getUTCMinutes()) + ":" +
+                    formatTwoDigit(date.getUTCSeconds()) + ":" +
+                    formatThreeDigit(date.getUTCMilliseconds()) + "Z";
+        }
+
         $scope.postLog = function(){
             $scope.errorMsg = "";
             var url = 'http://pz-logger.cf.piazzageo.io/log';
-            var currentTime = "2007-04-05T14:30Z";
+            var currentTime = formatDate(new Date());
             var logMessage = $scope.logMessage;
             var dataObj = {
                 service: "log-tester",
@@ -44,12 +69,22 @@
             }
 
 
-            var res = $http.post(url, dataObj);
-            res.success(function(data) {
-                $scope.message = data;
+            $http.post(
+                url,
+                dataObj,
+                {
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Headers" : "*",
+                        "Access-Control-Allow-Methods" : "*",
+                        "Access-Control-Allow-Credentials" : "false",
+                    }
+                }
+            ).then(function successCallback(res) {
+                $scope.message = res;
                 console.log("Success!");
-            });
-            res.error(function(data) {
+            }, function errorCallback(res) {
+                console.log("fail");
                 $scope.errorMsg = "Failure message: " + JSON.stringify({data: data});
             });
         }
