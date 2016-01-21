@@ -10,25 +10,24 @@
             $scope.logs = "";
             $scope.errorMsg = "";
             var url = 'http://pz-logger.cf.piazzageo.io/log';
-            var request = $http({
+
+            $http({
                 method: "GET",
-                url: url
-
-            });
-
-            request.success(
-                function( html ) {
-
-                    $scope.logs = (html.data);
-                    angular.forEach($scope.log, function(item){
-                        console.log(item);
-                    })
+                url: url,
+                responseType: "text",
+                transformResponse: function(data, headers) {
+                    return data;
                 }
-            )
-            request.error(function(){
+            }).then(function successCallback( html ) {
+                $scope.logs = html.data;
+                /*angular.forEach($scope.log, function(item){
+                    console.log(item);
+                })*/
+            }, function errorCallback(response){
                 console.log("fail");
                 $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
             });
+
         };
 
         $scope.postLog = function(){
