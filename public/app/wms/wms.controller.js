@@ -8,8 +8,8 @@
 
             // $scope.endPoint = 'http://demo.boundlessgeo.com/geoserver/wms';
             // $scope.endPoint = 'http://localhost:8081/geoserver/ows';
-			// $scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
-			$scope.endPoint = '';
+			$scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
+			//$scope.endPoint = '';
             $scope.version = '1.3.0';
             $scope.outputFormat = 'JSON';
 
