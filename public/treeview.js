@@ -21,7 +21,7 @@
     {
       label: 'Name Server',
       onSelect: function(branch) {
-      return $scope.bodyDiv = "";
+      return $scope.bodyDiv = "app/name-server/name-server.tpl.html";
       },
 
         children: [
@@ -66,14 +66,17 @@
 
         children: [
         {
-        label: 'Admin'
+        label: 'Admin',
+          onSelect: function(branch) {
+            return $scope.bodyDiv = "app/uuid/uuid.admin.tpl.html";
+          }
         }
         ]
         },
         {
         label: 'Ingester',
         onSelect: function(branch) {
-                    return $scope.bodyDiv = "";
+                    return $scope.bodyDiv = "app/ingester/ingester.tpl.html";
                 },
 
         children: [
@@ -86,7 +89,7 @@
         {
         label: 'Access',
         onSelect: function(branch) {
-                     return $scope.bodyDiv = "";
+                     return $scope.bodyDiv = "app/access/access.tpl.html";
                   },
 
         children: [
@@ -99,7 +102,7 @@
         {
         label: 'Search',
                 onSelect: function(branch) {
-                     return $scope.bodyDiv = "";
+                     return $scope.bodyDiv = "app/search/search.tpl.html";
                   },
 
         children: [
@@ -112,7 +115,7 @@
         {
         label: 'User Service Registry',
                 onSelect: function(branch) {
-                     return $scope.bodyDiv = "";
+                     return $scope.bodyDiv = "app/user-service-registry/user-service-registry.tpl.html";
                 },
 
         children: [
@@ -125,7 +128,7 @@
         {
         label: 'Alerts',
                 onSelect: function(branch) {
-                     return $scope.bodyDiv = "";
+                     return $scope.bodyDiv = "app/alerts/alerts.tpl.html";
                 },
 
         children: [
@@ -143,7 +146,10 @@
 
         children: [
         {
-        label: 'Admin'
+        label: 'Admin',
+          onSelect: function(branch) {
+            return $scope.bodyDiv = "app/logger/logger.admin.tpl.html";
+          }
         }
         ]
 
