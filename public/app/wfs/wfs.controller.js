@@ -19,6 +19,7 @@
                 //$scope.endPoint = 'http://localhost:7272/wfs';
                 //$scope.endPoint = 'http://10.0.10.183:9999/wfs';
                 //$scope.endPoint = 'http://10.0.10.183/geoserver/wfs';
+                //$scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
                 $scope.endPoint = '';
 
                 $scope.version = '1.1.0';

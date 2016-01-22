@@ -7,7 +7,9 @@
         function WmsController ($scope, $log, $q, olData) {
 
             // $scope.endPoint = 'http://demo.boundlessgeo.com/geoserver/wms';
-            $scope.endPoint = 'http://localhost:8081/geoserver/ows';
+            // $scope.endPoint = 'http://localhost:8081/geoserver/ows';
+			// $scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
+			$scope.endPoint = '';
             $scope.version = '1.3.0';
             $scope.outputFormat = 'JSON';
 
@@ -43,7 +45,7 @@
         			controls: {
         				zoom: true,
         				rotate: true,
-        				attribution: false,
+        				attribution: false
         			}
         		},
                 layers: [
@@ -54,7 +56,8 @@
                          type: 'ImageWMS',
                          url: $scope.endPoint,
                          params: {}
-                     }
+                     },
+					 extent: []
                    }
                  ]
         	});
@@ -111,11 +114,12 @@
 							$scope.selectedLayer.BoundingBox[0].extent[2],
 							$scope.selectedLayer.BoundingBox[0].extent[3]);
 
-						extent = $scope.selectedLayer.BoundingBox[0];
+						extent = $scope.selectedLayer.BoundingBox[0].extent;
 					}
 					var centerLonLat = bounds.getCenterLonLat();
 					$scope.center.lon = centerLonLat.lon;
 					$scope.center.lat = centerLonLat.lat;
+					$scope.layers[0].extent = extent;
 
 					olData.getMap().then(function(olMap) {
 						var mapSize = olMap.getSize();
