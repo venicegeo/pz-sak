@@ -2,10 +2,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('IngesterController', ['$scope', '$log', '$q', IngesterController]);
+        .controller('IngesterController', ['$scope', '$http', '$log', '$q', IngesterController]);
 
 
-    function IngesterController($scope, $log, $q) {
+    function IngesterController($scope, $http, $log, $q) {
         $scope.data = "none";
 
         $scope.ingest = function () {
@@ -44,6 +44,7 @@
                     alert(data);
                 },
                 error: function(res) {
+                    $scope.errorMsg = res.status;
                     alert("Error " + res.status);
                 }
             });
@@ -60,6 +61,25 @@
                     alert("finished");
                 });*/
             $scope.jobId = "39492023940958201209348";
+        }
+
+        $scope.getJobStatus = function() {
+            $http({
+                method: "GET",
+                url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-gateway"
+            }).then(function(result) {
+
+                $http({
+                    method: "GET",
+                    url: "http://" + result.data.address + "/jobStatus",
+                }).then(function successCallback( html ) {
+                    $scope.jobStatus = html.data;
+                }, function errorCallback(response){
+                    console.log("fail");
+                    $scope.errorMsg2 = "There was an issue with your request.  Please make sure ..."
+                });
+
+            });
         }
     }
 })();
