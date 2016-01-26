@@ -15,9 +15,17 @@
         <p>Display status info about the Logger Service</p>
         <div>
             <table>
-            <tr><td style="width:210px">Start Time:</td><td>{{adminData.starttime}}</td></tr>
+            <tr><td style="width:210px">Last Started:</td><td style="width:250px">{{adminData.starttime}}</td><td>({{getUptime(adminData.starttime)}})</td></tr>
             <tr><td>Number of messages received:</td> <td>{{adminData.logger.num_messages}}</td></tr>
             </table>
+            <br/>
+            <form ng-submit="reset()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-danger">Reset</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

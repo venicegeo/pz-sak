@@ -19,6 +19,7 @@
     "bootswatch": "^3.3.6",
     "http-server": "^0.8.5",
     "jquery": "^2.1.4",
+    "moment": "^2.11.1",
     "spin.js": "^2.3.2"
   },
   "devDependencies": {

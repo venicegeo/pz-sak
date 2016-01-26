@@ -37,6 +37,29 @@
         };
 
 
+        $scope.getUptime = function(dateString) {
+            return moment.utc(dateString).fromNow();
+        };
+
+        $scope.reset = function() {
+            $http({
+                method: "GET",
+                url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-uuidgen"
+            }).then(function(result) {
+
+                $http({
+                    method: "GET",
+                    url: "http://" + result.data.address + "/uuid/admin/reset",
+                }).then(function successCallback( html ) {
+                    $scope.adminData = html.data;
+                }, function errorCallback(response){
+                    console.log("fail");
+                    $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                });
+
+            });
+        };
+
     }
 
 })();

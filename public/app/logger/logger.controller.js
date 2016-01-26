@@ -32,27 +32,10 @@
 
         };
 
-        function formatTwoDigit(number) {
-            if (number < 10) {
-                return "0" + number;
-            } else {
-                return number;
-            }
-        }
-
-        function formatDate(date) {
-            return date.getUTCFullYear() + "-" +
-                    formatTwoDigit(date.getUTCMonth() + 1) + "-" +
-                    formatTwoDigit(date.getUTCDate()) + "T" +
-                    formatTwoDigit(date.getUTCHours()) + ":" +
-                    formatTwoDigit(date.getUTCMinutes()) + ":" +
-                    formatTwoDigit(date.getUTCSeconds())  + "Z";
-        }
-
         $scope.postLog = function(){
             $scope.errorMsg = "";
             var url = 'http://pz-logger.cf.piazzageo.io/log';
-            var currentTime = formatDate(new Date());
+            var currentTime = moment().utc().toISOString();
             var logMessage = $scope.logMessage;
             var dataObj = {
                 service: "log-tester",
