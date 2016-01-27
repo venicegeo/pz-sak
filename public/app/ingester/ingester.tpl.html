@@ -9,6 +9,52 @@
 </head>
 <body>
 
+<div ng-controller="IngesterController" class="container">
+    <div class="row">
+        <h1 class="alert alert-success">Ingester Service Info</h1>
+        <p>Use the following input to ingest a file into the system.</p>
+        <form>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="file">File to upload</label>
+                        <input id="file" type="file" class="form-control" ng-model="file" accept="image/*">
+
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <br>
+                    <button type="button" class="btn btn-primary" ng-click="ingest()">Ingest file</button>
+                </div>
+            </div>
+            <label id="errorMsg">{{errorMsg}}</label>
+            <h3 ng-show="jobId">{{jobId}}</h3>
+            <!--<p>{{data}}</p>-->
+        </form>
+
+        <h1 class="alert alert-success">Get Job Info</h1>
+        <form>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="jobId">Job ID</label>
+                        <input id="jobId" type="text" class="form-control" ng-model="jobId">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <br>
+                    <button type="button" class="btn btn-primary" ng-click="getJobStatus()">Get Status</button>
+                </div>
+            </div>
+            <label id="errorMsg2">{{errorMsg2}}</label>
+            <div ng-show="jobStatus">
+                Time Remaining: {{jobStatus.progress.timeRemaining}}<br/>
+                Time Spent: {{jobStatus.progress.timeSpent}}<br/>
+                <progress title="jobStatus.progress.percentComplete" max="100" value="jobStatus.progress.percentComplete"></progress>
+            </div>
+        </form>
+    </div>
+</div>
 
 </body>
 </html>

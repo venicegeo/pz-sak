@@ -10,7 +10,7 @@
 
 <div ng-controller="LoggerController" class="container">
 
-    <div class="row">
+   <div class="row">
         <h1 class="alert alert-success">Send to the Logger Service</h1>
         <form ng-submit="postLog()">
             <div class="row">
@@ -51,11 +51,29 @@
         <h1 class="alert alert-success">Logs Returned from Service</h1>
 
         <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div id="logs" ng-repeat="log in logs">
+            <div class="col-md-7">
+                <div class="form-group" ng-show="logs">
+
+                   <label>Filter: <input ng-model="searchText"></label>
+                   <table id="searchTextResults">
+                        <tr><th width="400px">Time</th>
+                            <th width="200px">Service</th>
+                            <th width="200px">Address</th>
+                            <th width="200px">Severity</th>
+                            <th width="600px">Message</th>
+                        </tr>
+                        <tr ng-repeat="log in logs | filter:searchText">
+                            <td width="400px">{{log.time}}</td>
+                            <td width="200px">{{log.service}}</td>
+                            <td width="200px">{{log.address}}</td>
+                            <td width="200px">{{log.severity}}</td>
+                            <td width="600px">{{log.message}}</td>
+                        </tr>
+                    </table>
+
+                   <!--<div id="logs" ng-repeat="log in logs | filter:searchText">
                         {{log.time}} - {{log.service}} - {{log.address}} - {{log.severity}}: {{log.message}}
-                    </div>
+                   </div>-->
 
                 </div>
                 <label id="errorMsg">{{errorMsg}}</label>

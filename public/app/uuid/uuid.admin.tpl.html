@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UUID Admin</title>
+</head>
+<body>
+
+<div ng-controller="UuidAdminController" class="container" ng-init="getStatus()">
+    <div class="row">
+        <h1 class="alert alert-success">UUID Generator Admin Info</h1>
+        <p>Display status info about the UUID Gen Service</p>
+        <div>
+            <table>
+                <tr><td style="width:210px">Last Started:</td><td style="width:250px">{{adminData.starttime}}</td><td>({{getUptime(adminData.starttime)}})</td></tr>
+                <tr><td>Number of Requests:</td> <td>{{adminData.uuidgen.num_requests}}</td></tr>
+                <tr><td>Number of UUIDs created:</td> <td>{{adminData.uuidgen.num_uuids}}</td></tr>
+            </table>
+            <br/>
+            <form ng-submit="reset()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-danger">Reset</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

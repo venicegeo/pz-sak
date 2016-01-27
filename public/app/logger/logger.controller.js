@@ -9,56 +9,33 @@
         $scope.getLogs = function () {
             $scope.logs = "";
             $scope.errorMsg = "";
-            var url = 'http://pz-logger.cf.piazzageo.io/log';
 
             $http({
                 method: "GET",
-                url: url,
-            }).then(function successCallback( html ) {
-                $scope.logs = html.data;
-                /*angular.forEach($scope.logs, function(item){
-                    console.log(item);
-                })*/
-            }, function errorCallback(response){
-                console.log("fail");
-                $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
+            }).then(function(result) {
+
+                $http({
+                    method: "GET",
+                    url: "http://" + result.data.address,
+                }).then(function successCallback( html ) {
+                    $scope.logs = html.data;
+                    /*angular.forEach($scope.logs, function(item){
+                     console.log(item);
+                     })*/
+                }, function errorCallback(response){
+                    console.log("fail");
+                    $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                });
+
             });
 
         };
 
-        function formatTwoDigit(number) {
-            if (number < 10) {
-                return "0" + number;
-            } else {
-                return number;
-            }
-        }
-
-        function formatThreeDigit(number) {
-            if (number < 10) {
-                return "00" + number;
-            }
-            else if (number < 100) {
-                return "0" + number;
-            } else {
-                return number;
-            }
-        }
-
-        function formatDate(date) {
-            return date.getUTCFullYear() + "-" +
-                    formatTwoDigit(date.getUTCMonth() + 1) + "-" +
-                    formatTwoDigit(date.getUTCDate()) + "T" +
-                    formatTwoDigit(date.getUTCHours()) + ":" +
-                    formatTwoDigit(date.getUTCMinutes()) + ":" +
-                    formatTwoDigit(date.getUTCSeconds()) + ":" +
-                    formatThreeDigit(date.getUTCMilliseconds()) + "Z";
-        }
-
         $scope.postLog = function(){
             $scope.errorMsg = "";
             var url = 'http://pz-logger.cf.piazzageo.io/log';
-            var currentTime = formatDate(new Date());
+            var currentTime = moment().utc().toISOString();
             var logMessage = $scope.logMessage;
             var dataObj = {
                 service: "log-tester",
@@ -74,10 +51,7 @@
                 dataObj,
                 {
                     headers: {
-                        "Access-Control-Allow-Origin": "*",
-                        "Access-Control-Allow-Headers" : "*",
-                        "Access-Control-Allow-Methods" : "*",
-                        "Access-Control-Allow-Credentials" : "false",
+                        "Content-Type": "application/x-www-form-urlencoded"
                     }
                 }
             ).then(function successCallback(res) {
