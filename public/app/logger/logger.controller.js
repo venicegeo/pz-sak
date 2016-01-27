@@ -51,10 +51,7 @@
                 dataObj,
                 {
                     headers: {
-                        "Access-Control-Allow-Origin": "*",
-                        "Access-Control-Allow-Headers" : "*",
-                        "Access-Control-Allow-Methods" : "*",
-                        "Access-Control-Allow-Credentials" : "false",
+                        "Content-Type": "application/x-www-form-urlencoded"
                     }
                 }
             ).then(function successCallback(res) {
