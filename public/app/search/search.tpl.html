@@ -6,13 +6,88 @@
     <link rel="stylesheet" href="../../css/bootstrap.css">
 
 
+    <style>
+        .navbutton {
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+    </style>
 </head>
 <body>
 
-<div class="container">
+<div ng-controller="SearchController" class="container">
     <div class="row">
-        <h1 class="alert alert-success">Search Service Info</h1>
-        <p>[Search service placeholder]</p>
+
+                <h1 class="alert alert-success">Add Keywords</h1>
+                <form id="tagForm" ng-submit="addTags()">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="indexId">Index</label>
+                                <input id="indexId" type="text" class="form-control" ng-model="indexId">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="typeId">Type</label>
+                                <input id="typeId" type="text" class="form-control" ng-model="typeId">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="documentId">Document ID</label>
+                                <input id="documentId" type="text" class="form-control" ng-model="documentId">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="tag">Keyword</label>
+                                <input id="tag" type="text" class="form-control" ng-model="tag">
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-primary" type="submit" id="tagBtn" style="margin-top: 24px">Add Keyword</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label id="tagMsg">{{tagMsg}}</label>
+                    </div>
+                </form>
+
+            <h1 class="alert alert-success">Search Service Info</h1>
+            <p>Perform searches on indexed data</p>
+            <form id="searchForm" ng-submit="getSearchResults($event)">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit" id="searchBtn">
+                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                </button>
+                            </span>
+                            <input id="searchTerm" type="text" class="form-control" ng-model="searchTerm" placeholder="Search">
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 10px" ng-show="totalResults == 0">{{errorMsg}}</div>
+                <div style="margin-top: 10px" ng-show="totalResults">Displaying {{from + 1}} to {{getLastIndex()}} of {{totalResults}} results</div><br/>
+                <div ng-show="searchResults" ng-repeat="result in searchResults">
+                    <pre>{{result | json}}</pre>
+                    <!--<span ng-show="result._source.name">{{result._source.name}}</span>
+                    <span ng-show="result._source.message">{{result._source.message}}</span>-->
+                    <br/>
+                </div>
+                <nav ng-show="totalResults > size">
+                    <ul class="pager">
+                        <li><a ng-click="prevPage()" class="navbutton">Previous</a></li>
+                        <li><a ng-click="nextPage()" class="navbutton">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
     </div>
 </div>
 
