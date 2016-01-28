@@ -34,6 +34,7 @@
 
         $scope.postLog = function(){
             $scope.errorMsg = "";
+
             var url = 'http://pz-logger.cf.piazzageo.io/log';
             var currentTime = moment().utc().toISOString();
             var logMessage = $scope.logMessage;
@@ -56,9 +57,13 @@
                 }
             ).then(function successCallback(res) {
                 $scope.message = res;
+                $scope.getLogs();
+                $scope.logMessage = null;
+
                 console.log("Success!");
             }, function errorCallback(res) {
                 console.log("fail");
+                $scope.successMsg = "There was a problem submitting the Log Message."
                 $scope.errorMsg = "Failure message: " + JSON.stringify({data: data});
             });
         }
