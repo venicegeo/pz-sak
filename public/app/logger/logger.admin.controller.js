@@ -47,9 +47,7 @@
                 url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
             }).then(function(result) {
 
-                var data = {
-                    reason: "Shutdown request from SAK"
-                };
+                var data = $scope.shutdownReason;
                 $http({
                     method: "POST",
                     url: "http://" + result.data.host + "/v1/admin/shutdown",
