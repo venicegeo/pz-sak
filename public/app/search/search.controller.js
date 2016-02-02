@@ -10,12 +10,6 @@
 
 
     function SearchController($scope, $http, $log, $q) {
-        $('#myTabs a').click(function (e) {
-            e.preventDefault()
-            $(this).tab('show')
-        });
-
-        $scope.data = "none";
         $scope.size = 10;
         $scope.from = 0;
 

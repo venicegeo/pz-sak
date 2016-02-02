@@ -107,7 +107,10 @@
 
         children: [
         {
-        label: 'Admin'
+        label: 'Admin',
+              onSelect: function(branch) {
+                return $scope.bodyDiv = "app/search/search.admin.tpl.html";
+              }
         }
         ]
 
