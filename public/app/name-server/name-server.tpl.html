@@ -9,10 +9,139 @@
 </head>
 <body>
 
-<div class="container">
+<div ng-controller="NameServerController" class="container" ng-init="getServices()">
     <div class="row">
         <h1 class="alert alert-info">Name Server Info</h1>
-        <p>[Name Server placeholder]</p>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="form-group">
+
+                    <table id="loggerServers" class="table" width="100%">
+                        <tr><th width="25%" >Logger Service</th>
+                            <th  width="65%"></th>
+                            <th  width="10%"></th>
+                        </tr>
+                        <tr><th  width="25%">Type</th>
+                            <th width="65%" >Host</th>
+                            <th width="10%" >Port</th>
+                        </tr>
+
+                        <tr>
+                            <td width="25%" >{{loggerType}}</td>
+                            <td  width="65%">{{loggerHost}}</td>
+                            <td  width="10%">{{loggerPort}}</td>
+                        </tr>
+                        </table>
+                    <br>
+                    <br>
+
+                    <table id="uuidServer" class="table " width="100%">
+                        <tr><th width="25%" >UUID Service</th>
+                            <th width="65%" ></th>
+                            <th  width="10%"></th>
+                        </tr>
+                        <tr><th width="25%" >Type</th>
+                            <th width="65%" >Host</th>
+                            <th  width="10%">Port</th>
+                        </tr>
+                        <tr>
+                            <td  width="25%">{{uuidType}}</td>
+                            <td width="65%" >{{uuidHost}}</td>
+                            <td  width="10%">{{uuidPort}}</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <br>
+
+                    <table id="alerterServer" class="table " width="100%">
+                        <tr><th  width="25%">Alerter Service</th>
+                            <th  width="65%"></th>
+                            <th  width="10%"></th>
+                        </tr>
+                        <tr><th width="25%" >Type</th>
+                            <th width="65%" >Host</th>
+                            <th width="10%" >Port</th>
+                        </tr>
+                        <tr>
+                            <td width="25%" >{{alerterType}}</td>
+                            <td  width="65%">{{alerterHost}}</td>
+                            <td width="10%" >{{alerterPort}}</td>
+                        </tr>
+                    </table>
+                    <br><br>
+                    <table id="kafkaServer" class="table " width="100%">
+                        <tr><th  width="25%">Kafka Service</th>
+                            <th  width="65%"></th>
+                            <th  width="10%"></th>
+                        </tr>
+                        <tr><th width="25%" >Type</th>
+                            <th width="65%" >Host</th>
+                            <th width="10%" >Port</th>
+                        </tr>
+                        <tr>
+                            <td width="25%" >{{kafkaType}}</td>
+                            <td  width="65%">{{kafkaHost}}</td>
+                            <td width="10%" >{{kafkaPort}}</td>
+                        </tr>
+                    </table>
+                    <br><br>
+                    <table id="zookeeperServer" class="table " width="100%">
+                        <tr><th  width="25%">Zookeeper Service</th>
+                            <th  width="65%"></th>
+                            <th  width="10%"></th>
+                        </tr>
+                        <tr><th width="25%" >Type</th>
+                            <th width="65%" >Host</th>
+                            <th width="10%" >Port</th>
+                        </tr>
+                        <tr>
+                            <td width="25%" >{{kafkaType}}</td>
+                            <td  width="65%">{{kafkaHost}}</td>
+                            <td width="10%" >{{kafkaPort}}</td>
+                        </tr>
+                    </table>
+
+                    <br><br>
+                    <table id="searchServer" class="table " width="100%">
+                        <tr><th  width="25%">Search Service</th>
+                            <th  width="65%"></th>
+                            <th  width="10%"></th>
+                        </tr>
+                        <tr><th width="25%" >Type</th>
+                            <th width="65%" >Host</th>
+                            <th width="10%" >Port</th>
+                        </tr>
+                        <tr>
+                            <td width="25%" >{{searchType}}</td>
+                            <td  width="65%">{{searchHost}}</td>
+                            <td width="10%" >{{searchPort}}</td>
+                        </tr>
+                    </table>
+
+                    <br><br>
+                    <table id="zingestServer" class="table " width="100%">
+                        <tr><th  width="25%">Ingest Service</th>
+                            <th  width="65%"></th>
+                            <th  width="10%"></th>
+                        </tr>
+                        <tr><th width="25%" >Type</th>
+                            <th width="65%" >Host</th>
+                            <th width="10%" >Port</th>
+                        </tr>
+                        <tr>
+                            <td width="25%" >{{ingestType}}</td>
+                            <td  width="65%">{{ingestHost}}</td>
+                            <td width="10%" >{{ingestPort}}</td>
+                        </tr>
+                    </table>
+
+
+
+                </div>
+                <label id="errorMsg">{{errorMsg}}</label>
+            </div>
+        </div>
+        <br>
     </div>
 </div>
 
