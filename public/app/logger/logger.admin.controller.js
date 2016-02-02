@@ -21,7 +21,7 @@
 
                 $http({
                     method: "GET",
-                    url: "http://" + result.data.address + "/admin",
+                    url: "http://" + result.data.host + "/v1/admin/stats",
                 }).then(function successCallback( html ) {
                     $scope.adminData = html.data;
                     /*angular.forEach($scope.logs, function(item){
@@ -47,14 +47,15 @@
                 url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
             }).then(function(result) {
 
+                var data = {
+                    reason: "Shutdown request from SAK"
+                };
                 $http({
-                    method: "GET",
-                    url: "http://" + result.data.address + "/admin/reset",
+                    method: "POST",
+                    url: "http://" + result.data.host + "/v1/admin/shutdown",
+                    data: data
                 }).then(function successCallback( html ) {
-                    $scope.adminData = html.data;
-                    /*angular.forEach($scope.logs, function(item){
-                     console.log(item);
-                     })*/
+                    $scope.shutdownResponse = html.data;
                 }, function errorCallback(response){
                     console.log("fail");
                     $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
