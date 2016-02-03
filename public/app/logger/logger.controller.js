@@ -12,12 +12,12 @@
 
             $http({
                 method: "GET",
-                url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
+                url: "/discover/pz-logger"
             }).then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "http://"+result.data.host +"/v1/messages",
+                    url: "/logger/v1/messages",
                 }).then(function successCallback( html ) {
                     $scope.logs = html.data;
                     /*angular.forEach($scope.logs, function(item){
@@ -47,18 +47,13 @@
             }
             $http({
                 method: "GET",
-                url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
+                url: "/discover/pz-logger"
             }).then(function(result) {
 
 
                 $http.post(
-                    "http://"+result.data.host +"/v1/messages",
-                    dataObj,
-                    {
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        }
-                    }
+                    "/logger/v1/messages",
+                    dataObj
                 ).then(function successCallback(res) {
                     $scope.message = res;
                     $scope.getLogs();
