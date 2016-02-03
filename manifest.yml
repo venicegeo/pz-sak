@@ -1,3 +1,4 @@
 applications:
 - name: pz-sak
   host: pz-sak
+  buildpack: staticfile_buildpack
