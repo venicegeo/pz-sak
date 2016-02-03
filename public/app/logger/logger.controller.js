@@ -17,7 +17,9 @@
 
                 $http({
                     method: "GET",
-                    url: "/logger/v1/messages",
+                    //url: "/logger/v1/messages",
+                    url: "/proxy?url=http://pz-logger.cf.piazzageo.io/v1/messages",
+
                 }).then(function successCallback( html ) {
                     $scope.logs = html.data;
                     /*angular.forEach($scope.logs, function(item){
@@ -52,7 +54,8 @@
 
 
                 $http.post(
-                    "/logger/v1/messages",
+                    //"/logger/v1/messages",
+                    "/proxy?url=http://pz-logger.cf.piazzageo.io/v1/messages",
                     dataObj
                 ).then(function successCallback(res) {
                     $scope.message = res;
