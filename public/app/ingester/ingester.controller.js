@@ -2,10 +2,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('IngesterController', ['$scope', '$http', '$log', '$q', IngesterController]);
+        .controller('IngesterController', ['$scope', '$http', '$log', '$q', 'toaster', IngesterController]);
 
 
-    function IngesterController($scope, $http, $log, $q) {
+    function IngesterController($scope, $http, $log, $q, toaster) {
         $scope.data = "none";
 
         $scope.ingest = function () {
@@ -42,10 +42,13 @@
                 success: function(data){
                     $scope.jobId = data.jobId;
                     alert(data);
+                    toaster.pop('success', "Success", "Ingest was a success");
                 },
                 error: function(res) {
-                    $scope.errorMsg = res.status;
-                    alert("Error " + res.status);
+                    //$scope.errorMsg = res.status;
+                    console.log("ingester.controller fail"+res.status);
+                    toaster.pop('error', "Error", "There was an error with file ingest.");
+                    //alert("Error " + res.status);
                 }
             });
             /*$.post("urlToCome", function () {
@@ -75,8 +78,8 @@
                 }).then(function successCallback( html ) {
                     $scope.jobStatus = html.data;
                 }, function errorCallback(response){
-                    console.log("fail");
-                    $scope.errorMsg2 = "There was an issue with your request.  Please make sure ..."
+                    console.log("Ingester.controller fail"+response.status);
+                    toaster.pop('error', "Error", "There was an issue with your request.");
                 });
 
             });

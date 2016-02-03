@@ -2,9 +2,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('WfsController', ['$scope', '$log', '$q', 'usSpinnerService', WfsController]);
+        .controller('WfsController', ['$scope', '$log', '$q', 'usSpinnerService', 'toaster', WfsController]);
 
-        function WfsController ($scope, $log, $q, usSpinnerService) {
+        function WfsController ($scope, $log, $q, usSpinnerService, toaster) {
 
                 //OpenLayers.ProxyHost = "/proxy/index?url=";
 
@@ -60,7 +60,7 @@
                     else{
                         $scope.showFeatureTypeSelect = false;
                         $scope.showFeatureTypeTable = false;
-                        alert('Error. Could not retrieve data from end point.  Please check the URL and try again.')
+                        toaster.pop('error', "Error", 'Error. Could not retrieve data from end point.  Please check the URL and try again.');
                     }
 
                 };

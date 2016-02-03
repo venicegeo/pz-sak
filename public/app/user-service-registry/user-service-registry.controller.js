@@ -6,10 +6,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('UserServiceController', ['$scope', '$http', '$log', '$q', UserServiceController]);
+        .controller('UserServiceController', ['$scope', '$http', '$log', '$q', 'toaster', UserServiceController]);
 
 
-    function UserServiceController($scope, $http, $log, $q) {
+    function UserServiceController($scope, $http, $log, $q, toaster) {
         $scope.method = 'GET';
         $scope.responseType = 'application/json';
 
@@ -48,8 +48,8 @@
                 ).then(function successCallback( html ) {
                     $scope.resourceId = html.data.resourceId;
                 }, function errorCallback(response){
-                    console.log("fail");
-                    $scope.serviceMsg = "There was an issue with your request."
+                    console.log("user-service-registry.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
                 });
 
             });
@@ -85,8 +85,8 @@
                 ).then(function successCallback( html ) {
                     $scope.serviceResponse = html.data;
                 }, function errorCallback(response){
-                    console.log("fail");
-                    $scope.executeMsg = "There was an issue with your request."
+                    console.log("user-service-registry.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
                 });
 
             });

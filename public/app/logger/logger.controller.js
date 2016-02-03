@@ -2,9 +2,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('LoggerController', ['$scope', '$http', '$log', '$q',  LoggerController]);
+        .controller('LoggerController', ['$scope', '$http', '$log', '$q',  'toaster', LoggerController]);
 
-    function LoggerController ($scope, $http, $log, $q) {
+    function LoggerController ($scope, $http, $log, $q, toaster) {
 
         $scope.getLogs = function () {
             $scope.logs = "";
@@ -24,8 +24,8 @@
                      console.log(item);
                      })*/
                 }, function errorCallback(response){
-                    console.log("fail");
-                    $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                    console.log("logger.controller fail"+response.status);
+                    toaster.pop('error', "Error", "There was an issue with retrieving the logs.");
                 });
 
             });
@@ -63,12 +63,13 @@
                     $scope.message = res;
                     $scope.getLogs();
                     $scope.logMessage = null;
+                    toaster.pop('success', "Success", "The log was successfully posted.")
 
-                    console.log("Success!");
+                    //console.log("Success!");
                 }, function errorCallback(res) {
-                    console.log("fail");
-                    $scope.successMsg = "There was a problem submitting the Log Message."
-                    $scope.errorMsg = "Failure message: " + JSON.stringify({data: data});
+                    console.log("logger.controller fail"+res.status);
+                    //$scope.successMsg = "There was a problem submitting the Log Message."
+                   toaster.pop('error', "Error", "There was a problem submitting the log message.");
                 });
             })
         }

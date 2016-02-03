@@ -6,9 +6,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('NameServerController', ['$scope', '$http', '$log', '$q',  NameServerController]);
+        .controller('NameServerController', ['$scope', '$http', '$log', '$q', 'toaster',  NameServerController]);
 
-    function NameServerController ($scope, $http, $log, $q) {
+    function NameServerController ($scope, $http, $log, $q, toaster) {
 
         $scope.getServices = function (){
             $scope.getLogger();
@@ -39,8 +39,8 @@
                 }
             )
             request.error(function(){
-                console.log("fail");
-                $scope.errorMsg = "There was an issue with your request.  Please make sure...."
+                console.log("name-server.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request. Logger service not found.");
             });
         };
         $scope.getUUID = function () {
@@ -61,8 +61,8 @@
                 }
             )
             request.error(function(){
-                console.log("fail");
-                $scope.errorMsg = "There was an issue with your request.  Please make sure...."
+                console.log("name-server.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.  UUID Service not found.");
             });
         };
         $scope.getAlerter = function () {
@@ -83,8 +83,8 @@
                 }
             )
             request.error(function(){
-                console.log("fail");
-                $scope.errorMsg = "There was an issue with your request.  Please make sure...."
+                console.log("name-server.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request. Alerter Service not found.");
             });
         };
         $scope.getKafka = function () {
@@ -105,8 +105,8 @@
                 }
             )
             request.error(function(){
-                console.log("fail");
-                $scope.errorMsg = "There was an issue with your request.  Please make sure...."
+                console.log("name-server.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request. Kafka Service not found.");
             });
         };
         $scope.getZookeeper = function () {
@@ -127,8 +127,8 @@
                 }
             )
             request.error(function(){
-                console.log("fail");
-                $scope.errorMsg = "There was an issue with your request.  Please make sure...."
+                console.log("name-server.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.  Zookeeper Service not found.");
             });
         };
 
@@ -150,8 +150,8 @@
                 }
             )
             request.error(function(){
-                console.log("fail");
-                $scope.errorMsg = "There was an issue with your request.  Please make sure...."
+                console.log("name-server.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.  Search Service not found.");
             });
         };
 
@@ -173,8 +173,8 @@
                 }
             )
             request.error(function(){
-                console.log("fail");
-                $scope.errorMsg = "There was an issue with your request.  Please make sure...."
+                console.log("name-server.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.  Ingest Service not found.");
             });
         };
 
