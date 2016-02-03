@@ -16,15 +16,23 @@
         <div>
             <table>
             <tr><td style="width:210px">Last Started:</td><td style="width:250px">{{adminData.starttime}}</td><td>({{getUptime(adminData.starttime)}})</td></tr>
-            <tr><td>Number of messages received:</td> <td>{{adminData.logger.num_messages}}</td></tr>
+            <tr><td>Number of messages received:</td> <td>{{adminData.num_messages}}</td></tr>
             </table>
             <br/>
             <form ng-submit="reset()">
                 <div class="row">
                     <div class="col-md-6">
-                        <button type="submit" class="btn btn-danger">Reset</button>
+                        <label for="reason">Shutdown Reason</label>
+                        <input id="reason" type="text" class="form-control" ng-model="shutdownReason" required />
                     </div>
                 </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-danger">Shutdown</button>
+                    </div>
+                </div>
+                <toaster-container></toaster-container>
             </form>
         </div>
     </div>

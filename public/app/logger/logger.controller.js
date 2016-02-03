@@ -17,7 +17,7 @@
 
                 $http({
                     method: "GET",
-                    url: "http://" + result.data.address,
+                    url: "http://"+result.data.host +"/v1/messages",
                 }).then(function successCallback( html ) {
                     $scope.logs = html.data;
                     /*angular.forEach($scope.logs, function(item){
@@ -35,7 +35,7 @@
         $scope.postLog = function(){
             $scope.errorMsg = "";
 
-            var url = 'http://pz-logger.cf.piazzageo.io/log';
+            //var url = 'http://pz-logger.cf.piazzageo.io/log';
             var currentTime = moment().utc().toISOString();
             var logMessage = $scope.logMessage;
             var dataObj = {
@@ -45,27 +45,32 @@
                 severity: "Info",
                 message: logMessage
             }
+            $http({
+                method: "GET",
+                url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
+            }).then(function(result) {
 
 
-            $http.post(
-                url,
-                dataObj,
-                {
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
+                $http.post(
+                    "http://"+result.data.host +"/v1/messages",
+                    dataObj,
+                    {
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        }
                     }
-                }
-            ).then(function successCallback(res) {
-                $scope.message = res;
-                $scope.getLogs();
-                $scope.logMessage = null;
+                ).then(function successCallback(res) {
+                    $scope.message = res;
+                    $scope.getLogs();
+                    $scope.logMessage = null;
 
-                console.log("Success!");
-            }, function errorCallback(res) {
-                console.log("fail");
-                $scope.successMsg = "There was a problem submitting the Log Message."
-                $scope.errorMsg = "Failure message: " + JSON.stringify({data: data});
-            });
+                    console.log("Success!");
+                }, function errorCallback(res) {
+                    console.log("fail");
+                    $scope.successMsg = "There was a problem submitting the Log Message."
+                    $scope.errorMsg = "Failure message: " + JSON.stringify({data: data});
+                });
+            })
         }
     }
 

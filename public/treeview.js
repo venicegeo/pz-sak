@@ -1,7 +1,7 @@
 (function() {
   var app, deps;
 
-  deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive'];
+  deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive', 'toaster'];
 
   if (angular.version.full.indexOf("1.2") >= 0) {
     deps.push('ngAnimate');

@@ -14,19 +14,17 @@
    <div class="row">
         <h1 class="alert alert-info">Send to the Logger Service</h1>
         <form ng-submit="postLog()">
-            <div class="row">
-                <div class="col-md-6">
+
                     <div class="form-group">
                         <label for="logMessage">Message to send to Logger:</label>
                         <input id="logMessage" ng-model="logMessage" type="text" class="form-control" placeholder="Enter a message">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
 
-                <button type="submit"  class="btn btn-primary">Log Message</button>
 
-            </div>
+
+<br>
+                <button type="submit"  class="btn btn-primary">Log Message</button></div>
+
+
 
             <br>
 
@@ -53,7 +51,7 @@
         <h1 class="alert alert-info">Logs Returned from Service</h1>
 
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-12">
                 <div class="form-group" ng-show="logs">
 
                    <label>Filter: <input ng-model="searchText"></label>
