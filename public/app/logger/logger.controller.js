@@ -45,10 +45,10 @@
                 severity: "Info",
                 message: logMessage
             }
-            $http({
-                method: "GET",
-                url: "/discover/pz-logger"
-            }).then(function(result) {
+            //$http({
+            //    method: "GET",
+            //    url: "/discover/pz-logger"
+            //}).then(function(result) {
 
 
                 $http.post(
@@ -65,7 +65,7 @@
                     $scope.successMsg = "There was a problem submitting the Log Message."
                     $scope.errorMsg = "Failure message: " + JSON.stringify({data: data});
                 });
-            })
+            //})
         }
     }
 
