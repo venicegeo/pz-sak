@@ -17,7 +17,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="uuidCount">Count of UUIDs to query</label>
-                        <input id="uuidCount" ng-model="uuidCount" type="text" class="form-control" placeholder="Enter a count">
+                        <input id="uuidCount" ng-model="uuidCount" type="number" max="255" class="form-control" placeholder="Enter a count">
 
                     </div>
                 </div>
@@ -42,13 +42,25 @@
         <h1 class="alert alert-info">UUIDs Returned from Service</h1>
 
             <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group" style="margin-bottom: 2px;" ng-repeat="uuid in uuids">
-                        <label id="UUIDs">{{uuid}}</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group" ng-show="uuids" style="margin-bottom: 2px;" >
+                            <table id="uuids" class="table table-striped" width="100%">
+                                <tr><th>UUIDs</th>
 
+                                </tr>
+                                <tr ng-repeat="uuid in uuids">
+                                    <td >{{uuid}}</td>
 
+                                </tr>
+                            </table>
+
+                        </div>
+                        <label id="errorMsg">{{errorMsg}}</label>
                     </div>
-                    <label id="errorMsg">{{errorMsg}}</label>
+
+
+
                 </div>
 
 

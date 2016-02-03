@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>UUID Admin</title>
+    <link rel="stylesheet" href="../../css/bootstrap.css">
 </head>
 <body>
 
@@ -13,8 +14,8 @@
         <div>
             <table>
                 <tr><td style="width:210px">Last Started:</td><td style="width:250px">{{adminData.starttime}}</td><td>({{getUptime(adminData.starttime)}})</td></tr>
-                <tr><td>Number of Requests:</td> <td>{{adminData.uuidgen.num_requests}}</td></tr>
-                <tr><td>Number of UUIDs created:</td> <td>{{adminData.uuidgen.num_uuids}}</td></tr>
+                <tr><td>Number of Requests:</td> <td>{{adminData.num_requests}}</td></tr>
+                <tr><td>Number of UUIDs created:</td> <td>{{adminData.num_uuids}}</td></tr>
             </table>
             <br/>
             <form ng-submit="reset()">

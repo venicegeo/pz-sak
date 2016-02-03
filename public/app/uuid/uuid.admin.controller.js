@@ -21,9 +21,10 @@
 
                 $http({
                     method: "GET",
-                    url: "http://" + result.data.address + "/uuid/admin",
+                    url: "http://" + result.data.host + "/v1/admin/stats",
                 }).then(function successCallback( html ) {
                     $scope.adminData = html.data;
+                    console.log($scope.adminData);
                     /*angular.forEach($scope.logs, function(item){
                      console.log(item);
                      })*/
@@ -47,9 +48,10 @@
                 url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-uuidgen"
             }).then(function(result) {
 
+
                 $http({
-                    method: "GET",
-                    url: "http://" + result.data.address + "/uuid/admin/reset",
+                    method: "POST",
+                    url: "http://" + result.data.host + "/v1/admin/shutdown?reason=AdminUtil",
                 }).then(function successCallback( html ) {
                     $scope.adminData = html.data;
                 }, function errorCallback(response){
