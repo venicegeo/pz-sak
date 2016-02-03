@@ -6,10 +6,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('SearchController', ['$scope', '$http', '$log', '$q', SearchController]);
+        .controller('SearchController', ['$scope', '$http', '$log', '$q', 'toaster', SearchController]);
 
 
-    function SearchController($scope, $http, $log, $q) {
+    function SearchController($scope, $http, $log, $q, toaster) {
         $scope.size = 10;
         $scope.from = 0;
 
@@ -50,8 +50,8 @@
                         $scope.errorMsg = "No results to display";
                     }
                 }, function errorCallback(response){
-                    console.log("fail");
-                    $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                    console.log("search.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
                 });
 
             });
@@ -115,14 +115,14 @@
                         $scope.tagMsg = "Keyword added successfully";
                         console.log("Success!");
                     }, function errorCallback(res) {
-                        console.log("fail");
-                        $scope.tagMsg = "A failure occurred on the server";
+                        console.log("search.controller fail");
+                        toaster.pop('error', "Error", "There was an issue with your request.");
                     });
 
 
                 }, function errorCallback(response){
-                    console.log("fail");
-                    $scope.tagMsg = "There was an issue with your request.  Please make sure ..."
+                    console.log("search.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
                 });
 
             });

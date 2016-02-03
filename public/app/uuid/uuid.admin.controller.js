@@ -25,12 +25,14 @@
                 }).then(function successCallback( html ) {
                     $scope.adminData = html.data;
                     console.log($scope.adminData);
+                    //toaster.pop('success', "Success", "logs successfully retrieved.")
                     /*angular.forEach($scope.logs, function(item){
                      console.log(item);
                      })*/
                 }, function errorCallback(response){
                     console.log("fail");
-                    $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                    toaster.pop('error', "Error", "There was a problem retrieving the admin data.")
+
                 });
 
             });
@@ -62,8 +64,9 @@
                     if (response.status == "502") {
                         toaster.pop('success', "Success", "Service successfully shutdown");
                     }
-
-                    $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                    else {
+                        toaster.pop('error', "Error", "There was a problem with the shutdown.  Please try again later.")
+                    }
 
                 });
 

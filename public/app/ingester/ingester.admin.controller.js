@@ -6,9 +6,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('IngesterAdminController', ['$scope', '$http', '$log', '$q',  IngesterAdminController]);
+        .controller('IngesterAdminController', ['$scope', '$http', '$log', '$q', 'toaster',  IngesterAdminController]);
 
-    function IngesterAdminController ($scope, $http, $log, $q) {
+    function IngesterAdminController ($scope, $http, $log, $q, toaster) {
 
         $scope.getStatus = function () {
             $scope.adminData = "";
@@ -28,8 +28,9 @@
                      console.log(item);
                      })*/
                 }, function errorCallback(response){
-                    console.log("fail");
-                    $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                    console.log("ingester.admin.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.")
+                    //$scope.errorMsg = "There was an issue with your request.  Please make sure ..."
                 });
 
             });
@@ -56,8 +57,8 @@
                      console.log(item);
                      })*/
                 }, function errorCallback(response){
-                    console.log("fail");
-                    $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                    console.log("ingester.admin.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
                 });
 
             });

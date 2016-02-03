@@ -2,9 +2,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('WmsController', ['$scope', '$log', '$q', 'olData',  WmsController]);
+        .controller('WmsController', ['$scope', '$log', '$q', 'olData', 'toaster',  WmsController]);
 
-        function WmsController ($scope, $log, $q, olData) {
+        function WmsController ($scope, $log, $q, olData, toaster) {
 
             // $scope.endPoint = 'http://demo.boundlessgeo.com/geoserver/wms';
             // $scope.endPoint = 'http://localhost:8081/geoserver/ows';
@@ -81,7 +81,7 @@
                 }
                 else{
                     $scope.showLayerSelect = false;
-                    alert('Error. Could not retrieve data from end point.  Please check the URL and try again.')
+                    toaster.pop('error', "Error", "Could not retrieve data from end point.  Please check the URL and try again.");
                 }
 
             };

@@ -29,7 +29,8 @@
                      })*/
                 }, function errorCallback(response){
                     console.log("fail");
-                    $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                    toaster.pop('error', "Error", "There was an error retrieving the admin data");
+                    //$scope.errorMsg = "There was an issue with your request.  Please make sure ..."
                 });
 
             });
@@ -62,7 +63,7 @@
                         toaster.pop('success', "Success", "Service successfully shutdown");
                     }
 
-                    $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                    //$scope.errorMsg = "There was an issue with your request.  Please make sure ..."
                 });
 
             });

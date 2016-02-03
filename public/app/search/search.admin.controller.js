@@ -6,9 +6,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('SearchAdminController', ['$scope', '$http', '$log', '$q',  SearchAdminController]);
+        .controller('SearchAdminController', ['$scope', '$http', '$log', '$q', 'toaster',  SearchAdminController]);
 
-    function SearchAdminController ($scope, $http, $log, $q) {
+    function SearchAdminController ($scope, $http, $log, $q, toaster) {
 
         $scope.getStatus = function () {
             $scope.adminData = "";
@@ -25,8 +25,8 @@
                 }).then(function successCallback( html ) {
                     $scope.adminData = html.data;
                 }, function errorCallback(response){
-                    console.log("fail");
-                    $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                    console.log("Search.admin.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
                 });
 
             });
