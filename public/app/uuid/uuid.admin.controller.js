@@ -48,7 +48,7 @@
                 url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-uuidgen"
             }).then(function(result) {
                 var data = {
-                    reason: "Sak util shutdown"
+                    reason: $scope.shutdownReason
                 };
 
                 $http({

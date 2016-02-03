@@ -19,6 +19,13 @@
             </table>
             <br/>
             <form ng-submit="reset()">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="reason">Shutdown Reason</label>
+                            <input id="reason" type="text" class="form-control" ng-model="shutdownReason" required />
+                        </div>
+                    </div>
+                    <br />
                 <div class="row">
                     <div class="col-md-6">
                         <button type="submit" class="btn btn-danger">Reset</button>
