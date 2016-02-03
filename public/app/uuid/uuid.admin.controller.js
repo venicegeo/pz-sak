@@ -51,7 +51,7 @@
 
                 $http({
                     method: "POST",
-                    url: "http://" + result.data.host + "/v1/admin/shutdown?reason=AdminUtil",
+                    url: "http://" + result.data.host + "/v1/admin/shutdown",
                 }).then(function successCallback( html ) {
                     $scope.adminData = html.data;
                 }, function errorCallback(response){
