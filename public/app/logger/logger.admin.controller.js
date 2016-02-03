@@ -6,9 +6,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('LoggerAdminController', ['$scope', '$http', '$log', '$q',  LoggerAdminController]);
+        .controller('LoggerAdminController', ['$scope', '$http', '$log', '$q', 'toaster',  LoggerAdminController]);
 
-    function LoggerAdminController ($scope, $http, $log, $q) {
+    function LoggerAdminController ($scope, $http, $log, $q, toaster) {
 
         $scope.getStatus = function () {
             $scope.adminData = "";
@@ -47,15 +47,21 @@
                 url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
             }).then(function(result) {
 
-                var data = $scope.shutdownReason;
+                var data = {
+                    reason: $scope.shutdownReason
+                };
                 $http({
                     method: "POST",
                     url: "http://" + result.data.host + "/v1/admin/shutdown",
                     data: data
                 }).then(function successCallback( html ) {
                     $scope.shutdownResponse = html.data;
-                }, function errorCallback(response){
-                    console.log("fail");
+                }, function errorCallback(response) {
+                    // 502 means the service was killed
+                    if (response.status == "502") {
+                        toaster.pop('success', "Success", "Service successfully shutdown");
+                    }
+
                     $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
                 });
 
