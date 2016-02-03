@@ -24,7 +24,7 @@
 
             $http({
                 method: "GET",
-                url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/elasticsearch"
+                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/elasticsearch"
             }).then(function(result) {
 
                 var params = {
@@ -41,7 +41,7 @@
 
                 $http({
                     method: "GET",
-                    url: "http://" + result.data.host + "/_search",
+                    url: "/proxy?url=http://" + result.data.host + "/_search",
                     params: params
                 }).then(function successCallback( html ) {
                     $scope.searchResults = html.data.hits.hits;
@@ -77,10 +77,10 @@
             var url = "";
             $http({
                 method: "GET",
-                url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/elasticsearch"
+                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/elasticsearch"
             }).then(function(result) {
                 // TODO: Once elasticsearch is completely setup we probably don't need all these inputs
-                url = "http://" + result.data.host + "/" + $scope.indexId + "/" + $scope.typeId + "/" + $scope.documentId;
+                url = "/proxy?url=http://" + result.data.host + "/" + $scope.indexId + "/" + $scope.typeId + "/" + $scope.documentId;
                 $http({
                     method: "GET",
                     url: url

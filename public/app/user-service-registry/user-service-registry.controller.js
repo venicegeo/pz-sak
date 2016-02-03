@@ -18,7 +18,7 @@
 
             $http({
                 method: "GET",
-                url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-servicecontroller"
+                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-servicecontroller"
             }).then(function(result) {
 
                 // Handle spaces or no spaces between
@@ -38,7 +38,7 @@
                     "responseMimeType":$scope.responseType
                 };
                 $http.post(
-                    "http://" + result.data.address + "/servicecontroller/registerService",
+                    "/proxy?url=http://" + result.data.address + "/servicecontroller/registerService",
                     data,
                     {
                         headers: {
@@ -59,7 +59,7 @@
             $scope.executeMsg = "";
             $http({
                 method: "GET",
-                url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-servicecontroller"
+                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-servicecontroller"
             }).then(function(result) {
 
                 if (angular.isUndefined($scope.dataInput)) {
@@ -75,7 +75,7 @@
                     "dataInputs":dataInputsObj
                 };
                 $http.post(
-                    "http://" + result.data.address + "/servicecontroller/executeService",
+                    "/proxy?url=http://" + result.data.address + "/servicecontroller/executeService",
                     data,
                     {
                         headers: {

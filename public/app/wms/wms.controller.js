@@ -9,6 +9,7 @@
             // $scope.endPoint = 'http://demo.boundlessgeo.com/geoserver/wms';
             // $scope.endPoint = 'http://localhost:8081/geoserver/ows';
 			$scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
+			$scope.proxiedEndPoint = "/proxy?url=" + $scope.endPoint;
 			//$scope.endPoint = '';
             $scope.version = '1.3.0';
             $scope.outputFormat = 'JSON';
@@ -66,7 +67,7 @@
         	
             $scope.getCapabilities = function () {
                 $log.warn('outputFormat', $scope.outputFormat);
-                wmsClient = new OGC.WMS.Client($scope.endPoint, $scope.version);
+                wmsClient = new OGC.WMS.Client($scope.proxiedEndPoint, $scope.version);
 
                 $scope.showLayerSelect = false;
 
