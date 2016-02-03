@@ -10,10 +10,10 @@
             $scope.logs = "";
             $scope.errorMsg = "";
 
-            $http({
-                method: "GET",
-                url: "/discover/pz-logger"
-            }).then(function(result) {
+            //$http({
+            //    method: "GET",
+            //    url: "/discover/pz-logger"
+            //}).then(function(result) {
 
                 $http({
                     method: "GET",
@@ -28,7 +28,7 @@
                     $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
                 });
 
-            });
+            //});
 
         };
 
