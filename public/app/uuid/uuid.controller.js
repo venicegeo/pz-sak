@@ -6,45 +6,41 @@
 
         function UuidController ($scope, $http, $log, $q) {
 
-
-
                 $scope.getUUIDs = function () {
                     $scope.uuids = "";
                     $scope.errorMsg = "";
-                    var url = 'http://pz-uuidgen.cf.piazzageo.io/uuid';
-                    if ($scope.uuidCount === undefined){
-                        url = url;
-                    }
-                    else {
-                        url += "?count="+$scope.uuidCount;
-                    }
-
-                    var request = $http({
-                        method: "post",
+                    var url = 'http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-uuidgen';
+                    var posturl = '';
+                    $http({
+                        method: "GET",
                         url: url
-
-                    });
-
-                    request.success(
-                        function( html ) {
-                            $scope.uuids = html.data;
-                            angular.forEach($scope.uuid, function(item){
-                                console.log(item);
-                            })
+                    }).then(function(result) {
+                       if ($scope.uuidCount === undefined){
+                           posturl = "http://"+result.data.host +"/v1/uuids"
                         }
-                    )
-                    request.error(function(){
-                        console.log("fail");
-                        $scope.errorMsg = "There was an issue with your request.  Please make sure your request contains only numeric values between 0-255."
+                        else {
+                           posturl = "http://"+result.data.host +"/v1/uuids?count="+$scope.uuidCount;
+                        }
+
+                        console.log(posturl);
+                        $http({
+                            method: "POST",
+                            url: posturl,
+                        }).then(function successCallback( html ) {
+                            $scope.uuids = html.data.data;
+                            /*angular.forEach($scope.logs, function(item){
+                             console.log(item);
+                             })*/
+                        }, function errorCallback(response){
+                            console.log("fail");
+                            $scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                        });
+
                     });
-
-
-
-
-
-
 
                 };
+
+
 
         }
 
