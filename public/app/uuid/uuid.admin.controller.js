@@ -16,7 +16,7 @@
 
             $http({
                 method: "GET",
-                url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-uuidgen"
+                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-uuidgen"
             }).then(function(result) {
 
                 $http({
@@ -47,7 +47,7 @@
         $scope.reset = function() {
             $http({
                 method: "GET",
-                url: "http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-uuidgen"
+                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-uuidgen"
             }).then(function(result) {
                 var data = {
                     reason: $scope.shutdownReason
@@ -55,7 +55,7 @@
 
                 $http({
                     method: "POST",
-                    url: "http://" + result.data.host + "/v1/admin/shutdown",
+                    url: "/proxy?url=http://" + result.data.host + "/v1/admin/shutdown",
                     data: data
                 }).then(function successCallback( html ) {
                     $scope.shutdownResponse = html.data;
