@@ -28,10 +28,11 @@ OGC.WMS.Client = OpenLayers.Class({
                 request: 'GetCapabilities'
             };
 
+            var url = this.wmsServer + "?service=WMS&version=" + this.version + "request=GetCapabilities";
+
             OpenLayers.Request.GET( {
-                url: this.wmsServer,
+                url: url,
                 async: isAsync,
-                params: params,
                /* headers: {
                 	"Access-Control-Request-Method": "GET",
                     "Access-Control-Request-Headers": "origin, content-type, accept"
