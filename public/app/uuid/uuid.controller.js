@@ -19,7 +19,7 @@
                            posturl = "/proxy?url=http://"+result.data.host +"/v1/uuids"
                         }
                         else {
-                           posturl = "/proxy?url=http://"+result.data.host +"/v1/uuids%3Fcount="+$scope.uuidCount;
+                           posturl = "/proxy?url=http://"+result.data.host + encodeURIComponent("/v1/uuids?count="+$scope.uuidCount);
                         }
 
                         console.log(posturl);

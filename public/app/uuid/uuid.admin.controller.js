@@ -21,7 +21,7 @@
 
                 $http({
                     method: "GET",
-                    url: "http://" + result.data.host + "/v1/admin/stats",
+                    url: "/proxy?url=http://" + result.data.host + "/v1/admin/stats",
                 }).then(function successCallback( html ) {
                     $scope.adminData = html.data;
                     console.log($scope.adminData);
