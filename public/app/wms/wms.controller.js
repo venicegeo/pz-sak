@@ -55,8 +55,10 @@
                 	 opacity: 1,
                      source: {
                          type: 'ImageWMS',
-                         url: $scope.endPoint,
-                         params: {}
+                         url: '/proxy',//$scope.proxiedEndPoint,
+                         params: {
+							 url: $scope.endPoint
+						 }
                      },
 					 extent: []
                    }
