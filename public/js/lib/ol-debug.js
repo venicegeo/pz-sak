@@ -116564,7 +116564,15 @@ ol.source.ImageWMS.prototype.getRequestUrl_ = function(extent, size, pixelRatio,
   }
   params['BBOX'] = bbox.join(',');
 
-  return goog.uri.utils.appendParamsFromMap(this.url_, params);
+  /*
+   jmcmahon 2/5/2016 *** proxy config ***
+   Adjust url for proxy config
+   */
+  delete params.url;
+  var value = goog.uri.utils.appendParamsFromMap(this.url_, params);
+  var firstAmp = value.indexOf("&");
+  var adjustedValue = value.substring(0, firstAmp) + encodeURIComponent("?"+value.substring(firstAmp + 1, value.length));
+  return adjustedValue;
 };
 
 

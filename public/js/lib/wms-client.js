@@ -28,7 +28,9 @@ OGC.WMS.Client = OpenLayers.Class({
                 request: 'GetCapabilities'
             };
 
-            var url = this.wmsServer + "?service=WMS&version=" + this.version + "&request=GetCapabilities";
+            var encodedURI = encodeURIComponent("?service=WMS&version=" + this.version + "&request=GetCapabilities");
+            console.info("Encoded uri = " + encodedURI);
+            var url = this.wmsServer + encodedURI;
 
             OpenLayers.Request.GET( {
                 url: url,
