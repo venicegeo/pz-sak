@@ -101,10 +101,11 @@ OGC.WFS.Client = OpenLayers.Class({
                 request: 'GetCapabilities'
             };
 
+            var encodedURI = encodeURIComponent("?service=WFS&version=1.1.0&request=GetCapabilities");
+
             OpenLayers.Request.GET( {
-                url: this.wfsServer,
+                url: this.wfsServer + encodedURI,
                 async: isAsync,
-                params: params,
                 success: function ( request )
                 {
                     console.log('request########', request)
@@ -192,9 +193,16 @@ OGC.WFS.Client = OpenLayers.Class({
 
         console.log('DescribeFeatureType Params ######', params);
 
+        var unencodedURI = "?service=" + params.service +
+                            "&version=" + params.version +
+                            "&request=" + params.request +
+                            "&typeName=" + params.typeName +
+                            "&namespace=" + params.namespace;
+        var encodedURI = encodeURIComponent(unencodedURI);
+
         OpenLayers.Request.GET( {
-            url: this.wfsServer,
-            params: params,
+            url: this.wfsServer + encodedURI,
+            //params: params,
             //dataType: "html",
             async: isAsync,
             success: function ( request )
@@ -276,9 +284,17 @@ OGC.WFS.Client = OpenLayers.Class({
                 break;
         }
 
+        var unencodedURI = "?service=" + params.service +
+                "&version=" + params.version +
+                "&request=" + params.request +
+                "&maxFeatures=" + params.maxFeatures +
+                "&typeName=" + params.typeName +
+                "&outputFormat=" + params.outputFormat;
+        var encodedURI = encodeURIComponent(unencodedURI);
+
         OpenLayers.Request.GET({
-            url: this.wfsServer,
-            params: params,
+            url: this.wfsServer + encodedURI,
+            //params: params,
             success: function (request){
                 var response = request;
 
