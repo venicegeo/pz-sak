@@ -43,7 +43,7 @@
                 //Refactored: 10.05.2015 - GetCapabilities
                 $scope.getCapabilities = function () {
                     $log.warn('outputFormat', $scope.outputFormat);
-                    $scope.proxiedEndPoint = "/proxy?url=" + $scope.endPoint;
+                    $scope.proxiedEndPoint = "/proxy?url=" + encodeURIComponent($scope.endPoint);
                     wfsClient = new OGC.WFS.Client($scope.proxiedEndPoint);
 
                     $scope.showFeatureTypeSelect = false;
