@@ -104,7 +104,7 @@ OGC.WFS.Client = OpenLayers.Class({
             var unencodedURI = "?service=WFS&version=1.1.0&request=GetCapabilities";
 
             OpenLayers.Request.GET( {
-                url: this.wfsServer + unencodedURI,
+                url: this.wfsServer + encodeURIComponent(unencodedURI),
                 async: isAsync,
                 success: function ( request )
                 {
@@ -200,7 +200,7 @@ OGC.WFS.Client = OpenLayers.Class({
                             "&namespace=" + params.namespace;
 
         OpenLayers.Request.GET( {
-            url: this.wfsServer + unencodedURI,
+            url: this.wfsServer + encodeURIComponent(unencodedURI),
             //params: params,
             //dataType: "html",
             async: isAsync,
@@ -291,7 +291,7 @@ OGC.WFS.Client = OpenLayers.Class({
                 "&outputFormat=" + params.outputFormat;
 
         OpenLayers.Request.GET({
-            url: this.wfsServer + unencodedURI,
+            url: this.wfsServer + encodeURIComponent(unencodedURI),
             //params: params,
             success: function (request){
                 var response = request;
