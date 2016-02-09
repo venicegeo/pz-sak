@@ -16,12 +16,12 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-ingester"
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-ingester"
             }).then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=http://" + result.data.host + "/admin",
+                    url: "/proxy?url=" + result.data.host + "/admin",
                 }).then(function successCallback( html ) {
                     $scope.adminData = html.data;
                     /*angular.forEach($scope.logs, function(item){
@@ -45,12 +45,12 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-ingester"
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-ingester"
             }).then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=http://" + result.data.host + "/admin/reset",
+                    url: "/proxy?url=" + result.data.host + "/admin/reset",
                 }).then(function successCallback( html ) {
                     $scope.adminData = html.data;
                     /*angular.forEach($scope.logs, function(item){
