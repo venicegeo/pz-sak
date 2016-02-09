@@ -12,12 +12,12 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
             }).then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=http://" + result.data.host + "/v1/messages",
+                    url: "/proxy?url=" + result.data.host + "/v1/messages",
                 }).then(function successCallback( html ) {
                     $scope.logs = html.data;
                 }, function errorCallback(response){
@@ -43,12 +43,12 @@
             }
             $http({
                 method: "GET",
-                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
             }).then(function(result) {
 
 
                 $http.post(
-                    "/proxy?url=http://" + result.data.host + "/v1/messages",
+                    "/proxy?url=" + result.data.host + "/v1/messages",
                     dataObj
                 ).then(function successCallback(res) {
                     $scope.message = res;
