@@ -5,11 +5,17 @@
         .controller('WmsController', ['$scope', '$log', '$q', 'olData', 'toaster',  WmsController]);
 
         function WmsController ($scope, $log, $q, olData, toaster) {
-
             // $scope.endPoint = 'http://demo.boundlessgeo.com/geoserver/wms';
             // $scope.endPoint = 'http://localhost:8081/geoserver/ows';
+			var getEndPoint = function() {
+				var endPoint = $scope.endPoint;
+				if ($scope.endPoint.startsWith("http://")) {
+					endPoint = $scope.endPoint.substring(7);
+				}
+				return endPoint;
+			};
 			$scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
-			$scope.proxiedEndPoint = "/proxy?url=" + $scope.endPoint;
+			$scope.proxiedEndPoint = "/proxy/" + getEndPoint();
 			//$scope.endPoint = '';
             $scope.version = '1.3.0';
             $scope.outputFormat = 'JSON';
@@ -55,10 +61,8 @@
                 	 opacity: 1,
                      source: {
                          type: 'ImageWMS',
-                         url: '/proxy',//$scope.proxiedEndPoint,
-                         params: {
-							 url: $scope.endPoint
-						 }
+                         url: $scope.proxiedEndPoint,
+						 params: {}
                      },
 					 extent: []
                    }
@@ -68,7 +72,7 @@
         	var wmsClient;
         	
             $scope.getCapabilities = function () {
-                $log.warn('outputFormat', $scope.outputFormat);
+				$log.warn('outputFormat', $scope.outputFormat);
                 wmsClient = new OGC.WMS.Client($scope.proxiedEndPoint, $scope.version);
 
                 $scope.showLayerSelect = false;
