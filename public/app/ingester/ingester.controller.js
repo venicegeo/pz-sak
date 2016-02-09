@@ -70,12 +70,12 @@
         $scope.getJobStatus = function() {
             $http({
                 method: "GET",
-                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-gateway"
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-gateway"
             }).then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=http://" + result.data.address + "/jobStatus",
+                    url: "/proxy?url=" + result.data.address + "/jobStatus",
                 }).then(function successCallback( html ) {
                     $scope.jobStatus = html.data;
                 }, function errorCallback(response){

@@ -16,12 +16,12 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/elasticsearch"
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/elasticsearch"
             }).then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=http://" + result.data.host + "/_cluster/health",
+                    url: "/proxy?url=" + result.data.host + "/_cluster/health",
                 }).then(function successCallback( html ) {
                     $scope.adminData = html.data;
                 }, function errorCallback(response){

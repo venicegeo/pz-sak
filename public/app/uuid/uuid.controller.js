@@ -9,17 +9,17 @@
                 $scope.getUUIDs = function () {
                     $scope.uuids = "";
                     $scope.errorMsg = "";
-                    var url = '/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-uuidgen';
+                    var url = '/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-uuidgen';
                     var posturl = '';
                     $http({
                         method: "GET",
                         url: url
                     }).then(function(result) {
                        if ($scope.uuidCount === undefined){
-                           posturl = "/proxy?url=http://"+result.data.host +"/v1/uuids"
+                           posturl = "/proxy?url="+result.data.host +"/v1/uuids"
                         }
                         else {
-                           posturl = "/proxy?url=http://"+result.data.host + "/v1/uuids?count="+$scope.uuidCount;
+                           posturl = "/proxy?url="+result.data.host + "/v1/uuids?count="+$scope.uuidCount;
                         }
 
                         console.log(posturl);
