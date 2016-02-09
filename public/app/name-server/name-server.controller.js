@@ -12,7 +12,7 @@
 
         $scope.getServices = function (){
 
-            var url = '/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources';
+            var url = '/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources';
             var request = $http({
                 method: "GET",
                 url: url
