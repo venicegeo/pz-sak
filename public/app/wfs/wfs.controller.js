@@ -20,7 +20,9 @@
                 //$scope.endPoint = 'http://10.0.10.183:9999/wfs';
                 //$scope.endPoint = 'http://10.0.10.183/geoserver/wfs';
                 //$scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
-                $scope.endPoint = '';
+
+                // Only allow our geoserver instance for now (until we figure out proxy madness
+                $scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
 
                 $scope.version = '1.1.0';
                 $scope.outputFormat = 'JSON';
@@ -48,6 +50,7 @@
                         endPoint = $scope.endPoint.substring(7);
                     }
                     $scope.proxiedEndPoint = "/proxy/" + endPoint;
+                    // $scope.proxiedEndPoint = "/geoserver/geoserver/ows";
                     wfsClient = new OGC.WFS.Client($scope.proxiedEndPoint);
 
                     $scope.showFeatureTypeSelect = false;
