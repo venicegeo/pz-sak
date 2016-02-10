@@ -135,9 +135,12 @@
                 },
 
         children: [
-        {
-        label: 'Admin'
-        }
+          {
+            label: 'Admin',
+            onSelect: function(branch) {
+              return $scope.bodyDiv = "app/alerts/alerts.admin.tpl.html";
+            }
+          }
         ]
 
         },
