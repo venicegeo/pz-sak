@@ -41,7 +41,7 @@
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.host + "/_search",
+                    url: "/proxy/" + result.data.host + "/_search",
                     params: params
                 }).then(function successCallback( html ) {
                     $scope.searchResults = html.data.hits.hits;
