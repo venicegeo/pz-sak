@@ -5,6 +5,7 @@
     <!-- Bootstrap 2 or Bootstrap 3 ?-->
     <!---->
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
     <link rel="stylesheet" href="css/toaster.css">
     <!---->
     <!-- Angular 1.1.5 or 1.2.12 ?-->
@@ -55,10 +56,12 @@
 	<script src="js/lib/angular-sanitize.js"></script>
 	<script src="js/lib/angular-openlayers-directive.js"></script>
 
-</head>
-<body ng-controller="SAKappController" style="margin:20px">
+    <link rel="stylesheet" type="text/css" href="css/sak.css">
 
-<h2>PZ-Client Swiss Army Knife Utility <img src="images/pz-client-logo.png" width="150" height="66"></h2>
+</head>
+<body ng-controller="SAKappController">
+<div class="page-wrap">
+<h2 style="margin-top: 10px">PZ-Client Swiss Army Knife Utility <img src="images/pz-client-logo.png" width="150" height="66"></h2>
 
 
 
@@ -77,6 +80,11 @@
         </td>
     </tr>
 </table>
-
+</div>
+<footer class="site-footer">
+    <div class="pull-right">
+        <p class="text-muted">	&copy; RadiantBlue Technologies {{year}}</p>
+    </div>
+</footer>
 </body>
 </html>
