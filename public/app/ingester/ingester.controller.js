@@ -33,13 +33,21 @@
 
 
             var ingestObj = {
-                apiKey: "some auth key",
-                jobType: {
-                    type: "ingest",
-                    data: {
-                        // Maybe the file goes in here (ResourceMetadata - fill out as much as possible)
-                        key : "value",
-                        //file: f
+                "apiKey": "my-api-key-929304",
+                "jobType": {
+                    "type": "ingest",
+                    "host": "true",
+                    "data" : {
+                        "dataType": {
+                            "type": "text",
+                            "mimeType": "application/text",
+                            "content": "This text itself is the raw data to be ingested. In reality, it could be some GML, or GeoJSON, or whatever."
+                        },
+                        "metadata": {
+                            "name": "Testing some Text Input",
+                            "description": "This is a test.",
+                            "classType": "unclassified"
+                        }
                     }
                 }
             };
@@ -50,8 +58,8 @@
             fd.append( 'file', f );
 
             $.ajax({
-                url: '/proxy?url=someURLToBeDeterminedLater',
-                data: fd,
+                url: '/proxy?url=pz-gateway.cf.piazzageo.io/job',
+                data: ingestObj,
                 processData: false,
                 contentType: false,
                 type: 'POST',
@@ -79,7 +87,7 @@
                 .always(function () {
                     alert("finished");
                 });*/
-            $scope.jobId = "39492023940958201209348";
+           // $scope.jobId = "39492023940958201209348";
         }
 
         $scope.getJobStatus = function() {
@@ -90,7 +98,7 @@
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.address + "/jobStatus",
+                    url: "/proxy?url=" + result.data.host + "/job",
                 }).then(function successCallback( html ) {
                     $scope.jobStatus = html.data;
                 }, function errorCallback(response){
