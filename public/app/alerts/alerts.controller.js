@@ -66,8 +66,8 @@
         })
     }
 
-        $scope.getConditions = function () {
-            $scope.conditions = "";
+        $scope.getTriggers = function () {
+            $scope.triggerss = "";
             $scope.errorMsg = "";
 
             $http({
@@ -77,23 +77,23 @@
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=http://" + result.data.host + "/v1/conditions",
+                    url: "/proxy?url=http://" + result.data.host + "/v1/triggerss",
                 }).then(function successCallback( html ) {
                     $scope.conditions = html.data;
                 }, function errorCallback(response){
                     console.log("alerts.controller fail"+response.status);
-                    toaster.pop('error', "Error", "There was an issue with retrieving the conditions.");
+                    toaster.pop('error', "Error", "There was an issue with retrieving the triggerss.");
                 });
 
             });
 
         };
 
-        $scope.postConditions = function(){
+        $scope.postTriggers = function(){
             $scope.errorMsg = "";
 
             var currentTime = moment().utc().toISOString();
-            var alertMessage = $scope.alertMessage;
+            var triggerMessage = $scope.triggerMessage;
             var dataObj = {
                 title: "short string",
                 description: "long string",
@@ -107,25 +107,25 @@
 
 
                 $http.post(
-                    "/proxy?url=http://" + result.data.host + "/v1/conditions",
+                    "/proxy?url=http://" + result.data.host + "/v1/triggers",
                     dataObj
                 ).then(function successCallback(res) {
                     $scope.message = res;
                     $scope.getEvents();
                     $scope.alertMessage = null;
-                    toaster.pop('success', "Success", "The condition was successfully posted.")
+                    toaster.pop('success', "Success", "The trigger was successfully posted.")
 
                 }, function errorCallback(res) {
                     console.log("alerter.controller fail"+res.status);
 
-                    toaster.pop('error', "Error", "There was a problem submitting the condition message.");
+                    toaster.pop('error', "Error", "There was a problem submitting the trigger message.");
                 });
             })
         }
 
-        $scope.getConditionById = function () {
-            $scope.conditionById = "";
-            $scope.conditionId = "";
+        $scope.getTriggerById = function () {
+            $scope.triggerById = "";
+            $scope.triggerId = "";
             $scope.errorMsg = "";
 
             $http({
@@ -135,21 +135,21 @@
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=http://" + result.data.host + "/v1/conditions/:"+conditionId,
+                    url: "/proxy?url=http://" + result.data.host + "/v1/conditions/:"+triggerId,
                 }).then(function successCallback( html ) {
-                    $scope.condition = html.data;
+                    $scope.trigger = html.data;
                 }, function errorCallback(response){
                     console.log("alerts.controller fail"+response.status);
-                    toaster.pop('error', "Error", "There was an issue with retrieving the condition.");
+                    toaster.pop('error', "Error", "There was an issue with retrieving the trigger.");
                 });
 
             });
 
         };
 
-        $scope.deleteConditionById = function(){
+        $scope.deleteTriggerById = function(){
             $scope.errorMsg = "";
-            $scope.conditionId = "";
+            $scope.triggerId = "";
             var alertMessage = $scope.alertMessage;
 
             $http({
@@ -159,17 +159,17 @@
 
 
                 $http.delete(
-                    "/proxy?url=http://" + result.data.host + "/v1/conditions/:id"+conditionId
+                    "/proxy?url=http://" + result.data.host + "/v1/conditions/:id"+triggerId
                     ).then(function successCallback(res) {
                     $scope.message = res;
-                    $scope.getEvents();
+                    $scope.getTriggers();
                     $scope.alertMessage = null;
-                    toaster.pop('success', "Success", "The condition was successfully deleted.")
+                    toaster.pop('success', "Success", "The trigger was successfully deleted.")
 
                 }, function errorCallback(res) {
                     console.log("alerter.controller fail"+res.status);
 
-                    toaster.pop('error', "Error", "There was a problem deleting the condition message.");
+                    toaster.pop('error', "Error", "There was a problem deleting the trigger message.");
                 });
             })
         }
