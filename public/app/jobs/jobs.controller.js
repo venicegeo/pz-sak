@@ -122,8 +122,9 @@
                     $http({
                         method: "GET",
                         url: "/proxy?url=pz-jobmanager.cf.piazzageo.io/job/status",
+                        withCredentials: true,
                         headers: {
-                            Accept: "application/xml"
+                            "Accept": "application/xml"
                         }
                         //url: "/proxy?url=" + result.data.host + "/job/status"
                     }).then(function successCallback( html ) {
