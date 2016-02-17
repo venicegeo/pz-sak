@@ -122,23 +122,10 @@
                     $http({
                         method: "GET",
                         url: "/proxy?url=pz-jobmanager.cf.piazzageo.io/job/status",
-                        //withCredentials: true,
-                        headers: {
-                            "Accept": "application/json"
-                        }
                         //url: "/proxy?url=" + result.data.host + "/job/status"
                     }).then(function successCallback( html ) {
-                        //var d = jQuery.parseXML(html.data);
                         $scope.jobStatuses = [];
-                        // Handle either xml or a json array
-                        //if (d !== null) {
-                        //    var childNodes = d.childNodes[0].childNodes;
-                        //    for (var i = 0; i < childNodes.length; i++) {
-                        //        $scope.jobStatuses.push(childNodes[i].textContent)
-                        //    }
-                        //} else {
                         $scope.jobStatuses.push.apply($scope.jobStatuses, html.data);
-                        //}
                         $scope.jobStatuses.push("All");
                     }, function errorCallback(response){
                         console.log("search.controller fail");
