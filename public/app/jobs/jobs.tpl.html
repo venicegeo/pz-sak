@@ -29,6 +29,21 @@
             -ms-user-select: none;
         }
 
+        .two-column {
+            -webkit-column-count: 2; /* Chrome, Safari, Opera */
+            -moz-column-count: 2; /* Firefox */
+            column-count: 2;
+        }
+
+        .separator {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+
+        .alert-warning hr {
+            border-top-color: #9AD9F7;
+        }
+
     </style>
 
 </head>
@@ -114,7 +129,26 @@
             </div>
             <div class="row">
                 <div ng-show="jobsList" ng-repeat="job in jobsList">
-                    <pre>{{job | json}}</pre>
+                    <dl class="dl-horizontal two-column">
+                        <dt>Job ID</dt>
+                        <dd>{{job.jobId}}</dd>
+                        <dt>Submitted</dt>
+                        <dd>{{job.submitted}}</dd>
+                        <dt>Status</dt>
+                        <dd>{{job.status}}</dd>
+                        <dt>Job Type</dt>
+                        <dd>{{job.jobType.type}}</dd>
+                        <dt>Progress</dt>
+                        <dd>{{job.progress.percentComplete}}%</dd>
+                        <dt>Name</dt>
+                        <dd>{{job.jobType.data.metadata.name}}</dd>
+                        <dt>Description</dt>
+                        <dd>{{job.jobType.data.metadata.description}}</dd>
+                        <dt>Classification</dt>
+                        <dd>{{job.jobType.data.metadata.classType}}</dd>
+                    </dl>
+                    <hr class="separator">
+                    <!--<pre>{{job | json}}</pre>-->
                 </div>
             </div>
             <br>
