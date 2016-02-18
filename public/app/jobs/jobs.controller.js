@@ -43,37 +43,20 @@
                             "jobId": $scope.jobId
                         }
                     };
-                    //var data = "{" +
-                    //    "'apiKey': 'my-api-key-kdjfkaj'," +
-                    //    "'jobType': {" +
-                    //    "'type': 'get'," +
-                    //    " 'jobId': '" + $scope.jobId +
-                    //"' }}";
-                    var fd = new FormData();
-                    fd.append( 'body', data );
 
-                    var params = {
-                        body: data,
-                        file: ""
-                    };
+                    var fd = new FormData();
+                    fd.append( 'body', JSON.stringify(data) );
 
                     $http({
                         method: "POST",
-                        url: "/proxy/pz-gateway.cf.piazzageo.io/job",
+                        url: "/proxy?url=pz-gateway.cf.piazzageo.io/job",
                         //url: "/proxy/" + result.data.host + "/job",
-                        params: data,
-                        data: data,
-                        //headers: {
-                        //    "Content-Type": "multipart/form-data",
-                        //    "Content-Disposition": "form-data"
-                        //}
-                        transformRequest: function(data) {
-                            var formData = new FormData();
-                            formData.append('data', data);
-                            return formData;
+                        data: fd,
+                        headers: {
+                            "Content-Type": undefined
                         }
                     }).then(function successCallback( html ) {
-                        $scope.jobStatusResult = html.data.jobStatus;
+                        $scope.jobStatusResult = html.data;
                     }, function errorCallback(response){
                         console.log("search.controller fail");
                         toaster.pop('error', "Error", "There was an issue with your request.");
