@@ -31,81 +31,67 @@
 
             $scope.getJobStatus = function() {
 
+                var data = {
+                    "apiKey": "my-api-key-kidkeid",
+                    "jobType": {
+                        "type": "get",
+                        "jobId": $scope.jobId
+                    }
+                };
+
+                var fd = new FormData();
+                fd.append( 'body', JSON.stringify(data) );
+
                 $http({
-                    method: "GET",
-                    url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-gateway"
-                }).then(function(result) {
-
-                    var data = {
-                        "apiKey": "my-api-key-kidkeid",
-                        "jobType": {
-                            "type": "get",
-                            "jobId": $scope.jobId
-                        }
-                    };
-
-                    var fd = new FormData();
-                    fd.append( 'body', JSON.stringify(data) );
-
-                    $http({
-                        method: "POST",
-                        url: "/proxy?url=pz-gateway.cf.piazzageo.io/job",
-                        //url: "/proxy/" + result.data.host + "/job",
-                        data: fd,
-                        headers: {
-                            "Content-Type": undefined
-                        }
-                    }).then(function successCallback( html ) {
-                        $scope.jobStatusResult = html.data;
-                    }, function errorCallback(response){
-                        console.log("search.controller fail");
-                        toaster.pop('error', "Error", "There was an issue with your request.");
-                    });
-
+                    method: "POST",
+                    url: "/proxy?url=pz-gateway.cf.piazzageo.io/job",
+                    data: fd,
+                    headers: {
+                        "Content-Type": undefined
+                    }
+                }).then(function successCallback( html ) {
+                    $scope.jobStatusResult = html.data;
+                }, function errorCallback(response){
+                    console.log("search.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
                 });
-
             };
 
             $scope.getResourceData = function() {
 
+                var data = {
+                    "apiKey": "my-api-key-kidkeid",
+                    "jobType": {
+                        "type": "get-resource",
+                        "resourceId": $scope.resourceId
+                    }
+                };
+
+                var fd = new FormData();
+                fd.append( 'body', JSON.stringify(data) );
+
                 $http({
-                    method: "GET",
-                    url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-gateway"
-                }).then(function(result) {
-
-                    var data = {
-                        "apiKey": "my-api-key-kidkeid",
-                        "jobType": {
-                            "type": "get-resource",
-                            "resourceId": $scope.resourceId
-                        }
-                    };
-                    $http({
-                        method: "POST",
-                        url: "/proxy?url=" + result.data.host + "/job",
-                        data: data
-                    }).then(function successCallback( html ) {
-                        $scope.resourceData = html.data.resourceId;
-                    }, function errorCallback(response){
-                        console.log("search.controller fail");
-                        toaster.pop('error', "Error", "There was an issue with your request.");
-                    });
-
+                    method: "POST",
+                    url: "/proxy?url=pz-gateway.cf.piazzageo.io/job",
+                    data: fd,
+                    headers: {
+                        "Content-Type": undefined
+                    }
+                }).then(function successCallback( html ) {
+                    $scope.resourceData = html.data;
+                }, function errorCallback(response){
+                    console.log("search.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
                 });
+
             };
 
 
             $scope.getAllStatuses = function() {
 
-                $http({
-                    method: "GET",
-                    url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-gateway"
-                }).then(function(result) {
-
                     $http({
                         method: "GET",
                         url: "/proxy?url=pz-jobmanager.cf.piazzageo.io/job/status",
-                        //url: "/proxy?url=" + result.data.host + "/job/status"
                     }).then(function successCallback( html ) {
                         $scope.jobStatuses = [];
                         $scope.jobStatuses.push.apply($scope.jobStatuses, html.data);
@@ -115,17 +101,12 @@
                         toaster.pop('error', "Error", "There was an issue with your request.");
                     });
 
-                });
 
             };
 
 
             $scope.updateFilter = function() {
 
-                $http({
-                    method: "GET",
-                    url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-gateway"
-                }).then(function(result) {
 
                     var query = "";
                     if (angular.isDefined($scope.jobStatusQuery) && $scope.jobStatusQuery !== "" && $scope.jobStatusQuery !== "All") {
@@ -139,7 +120,6 @@
                     $http({
                         method: "GET",
                         url: "/proxy/pz-jobmanager.cf.piazzageo.io/job" + query,
-                        //url: "/proxy?url=" + result.data.host + "/job/status"
                         params: params
                     }).then(function successCallback( html ) {
                         $scope.jobsList = html.data;
@@ -151,7 +131,6 @@
                     $http({
                         method: "GET",
                         url: "/proxy/pz-jobmanager.cf.piazzageo.io/job" + query + "/count",
-                        //url: "/proxy?url=" + result.data.host + "/job/status"
                         params: params
                     }).then(function successCallback( html ) {
                         $scope.total = html.data;
@@ -160,7 +139,6 @@
                         console.log("search.controller fail");
                         toaster.pop('error', "Error", "There was an issue with your request.");
                     });
-                });
 
             };
 
