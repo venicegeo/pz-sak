@@ -69,13 +69,25 @@
                     <button type="submit" class="btn btn-primary">Get Job Status</button>
                 </div>
 
+            </div>
+            <div class="row">
                 <div ng-show="jobStatusResult">
-                    <label>{{jobStatusResult}}</label>
+                    <dl class="dl-horizontal">
+                        <dt>Job ID</dt>
+                        <dd>{{jobStatusResult.jobId}}</dd>
+                        <dt>Status</dt>
+                        <dd>{{jobStatusResult.status}}</dd>
+                        <dt>Progress</dt>
+                        <dd>{{jobStatusResult.progress.percentComplete}}%</dd>
+                        <dt>Result Type</dt>
+                        <dd>{{jobStatusResult.result.type}}</dd>
+                        <dt>Data ID</dt>
+                        <dd>{{jobStatusResult.result.dataId}}</dd>
+                    </dl>
+                    <!--<pre>{{jobStatusResult | json}}</pre>-->
                 </div>
             </div>
-            <br>
 
-        <br>
         </form>
 
         <h1 class="alert alert-info">Get Resource Data</h1>
