@@ -72,18 +72,23 @@
             </div>
             <div class="row">
                 <div ng-show="jobStatusResult">
-                    <dl class="dl-horizontal">
+                    <dl class="dl-horizontal" ng-hide="jobStatusResult.message">
                         <dt>Job ID</dt>
                         <dd>{{jobStatusResult.jobId}}</dd>
                         <dt>Status</dt>
                         <dd>{{jobStatusResult.status}}</dd>
-                        <dt>Progress</dt>
-                        <dd>{{jobStatusResult.progress.percentComplete}}%</dd>
+                        <dt ng-show="jobStatusResult.progress.percentComplete">Progress</dt>
+                        <dd ng-show="jobStatusResult.progress.percentComplete">{{jobStatusResult.progress.percentComplete}}%</dd>
                         <dt>Result Type</dt>
                         <dd>{{jobStatusResult.result.type}}</dd>
-                        <dt>Resource ID</dt>
-                        <dd>{{jobStatusResult.result.dataId}}</dd>
+                        <dt ng-show="jobStatusResult.result.text">Result Text</dt>
+                        <dd ng-show="jobStatusResult.result.text">{{jobStatusResult.result.text}}</dd>
+                        <dt ng-show="jobStatusResult.result.dataId">Resource ID</dt>
+                        <dd ng-show="jobStatusResult.result.dataId">{{jobStatusResult.result.dataId}}</dd>
                     </dl>
+                    <div class="col-md-6" ng-show="jobStatusResult.message">
+                        <label>{{jobStatusResult.message}}</label>
+                    </div>
                     <!--<pre>{{jobStatusResult | json}}</pre>-->
                 </div>
             </div>
@@ -109,7 +114,7 @@
             </div>
             <div class="row">
                 <div ng-show="resourceData">
-                    <dl class="dl-horizontal two-column">
+                    <dl class="dl-horizontal two-column" ng-hide="resourceData.message">
                         <dt>Resource ID</dt>
                         <dd>{{resourceData.data.dataId}}</dd>
                         <dt>Data Type</dt>
@@ -121,6 +126,9 @@
                         <dt ng-repeat-start="(key, value) in resourceData.data.metadata">{{key | capitalize}}</dt>
                         <dd ng-repeat-end>{{value}}</dd>
                     </dl>
+                    <div class="col-md-6" ng-show="resourceData.message">
+                        <label>{{resourceData.message}}</label>
+                    </div>
                     <!--<pre>{{resourceData | json}}</pre>-->
                 </div>
             </div>
