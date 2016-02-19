@@ -156,6 +156,18 @@
                 }
             };
 
+            $scope.firstResultOnPage = function() {
+                return ($scope.page * $scope.pageSize) + 1;
+            };
+
+            $scope.lastResultOnPage = function() {
+                var lastItem = ($scope.page + 1) * $scope.pageSize;
+                if (lastItem > $scope.total) {
+                    return $scope.total;
+                }
+                return lastItem;
+            };
+
         }
 
 
