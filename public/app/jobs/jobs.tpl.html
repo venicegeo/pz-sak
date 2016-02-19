@@ -72,18 +72,23 @@
             </div>
             <div class="row">
                 <div ng-show="jobStatusResult">
-                    <dl class="dl-horizontal">
+                    <dl class="dl-horizontal" ng-hide="jobStatusResult.message">
                         <dt>Job ID</dt>
                         <dd>{{jobStatusResult.jobId}}</dd>
                         <dt>Status</dt>
                         <dd>{{jobStatusResult.status}}</dd>
-                        <dt>Progress</dt>
-                        <dd>{{jobStatusResult.progress.percentComplete}}%</dd>
+                        <dt ng-show="jobStatusResult.progress.percentComplete">Progress</dt>
+                        <dd ng-show="jobStatusResult.progress.percentComplete">{{jobStatusResult.progress.percentComplete}}%</dd>
                         <dt>Result Type</dt>
                         <dd>{{jobStatusResult.result.type}}</dd>
-                        <dt>Data ID</dt>
-                        <dd>{{jobStatusResult.result.dataId}}</dd>
+                        <dt ng-show="jobStatusResult.result.text">Result Text</dt>
+                        <dd ng-show="jobStatusResult.result.text">{{jobStatusResult.result.text}}</dd>
+                        <dt ng-show="jobStatusResult.result.dataId">Resource ID</dt>
+                        <dd ng-show="jobStatusResult.result.dataId">{{jobStatusResult.result.dataId}}</dd>
                     </dl>
+                    <div class="col-md-6" ng-show="jobStatusResult.message">
+                        <label>{{jobStatusResult.message}}</label>
+                    </div>
                     <!--<pre>{{jobStatusResult | json}}</pre>-->
                 </div>
             </div>
@@ -91,25 +96,40 @@
         </form>
 
         <h1 class="alert alert-info">Get Resource Data</h1>
-        <form id="jobResourceData">
+        <form id="jobResourceData" ng-submit="getResourceData()">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="resourceId">Resource ID</label>
-                        <input id="resourceId" type="text" class="form-control" ng-model="resourceId" placeholder="Enter a valid Job ID">
+                        <input id="resourceId" type="text" class="form-control" ng-model="resourceId" placeholder="Enter a valid Resource ID">
 
                     </div>
                 </div>
 
                 <div class="col-md-2">
                     <br>
-                    <button type="button" class="btn btn-primary" ng-click="getResourceData()">Get Resource Data</button>
+                    <button type="submit" class="btn btn-primary">Get Resource Data</button>
                 </div>
 
             </div>
             <div class="row">
                 <div ng-show="resourceData">
-                    <pre>{{resourceData | json}}</pre>
+                    <dl class="dl-horizontal two-column" ng-hide="resourceData.message">
+                        <dt>Resource ID</dt>
+                        <dd>{{resourceData.data.dataId}}</dd>
+                        <dt>Data Type</dt>
+                        <dd>{{resourceData.data.dataType.type}}</dd>
+                        <dt>Data Content</dt>
+                        <dd>{{resourceData.data.dataType.content}}</dd>
+                        <dt>Data Mimetype</dt>
+                        <dd>{{resourceData.data.dataType.mimeType}}</dd>
+                        <dt ng-repeat-start="(key, value) in resourceData.data.metadata">{{key | capitalize}}</dt>
+                        <dd ng-repeat-end>{{value}}</dd>
+                    </dl>
+                    <div class="col-md-6" ng-show="resourceData.message">
+                        <label>{{resourceData.message}}</label>
+                    </div>
+                    <!--<pre>{{resourceData | json}}</pre>-->
                 </div>
             </div>
 
@@ -126,6 +146,13 @@
                         </select>
                     </div>
 
+                </div>
+
+                <div class="col-md-8 text-center" style="margin-top: 35px;">
+                    <div class="form-group">
+                        <label ng-show="total > 0">Displaying {{firstResultOnPage()}} - {{lastResultOnPage()}} of {{total}}</label>
+                        <label ng-show="total == 0">No results to display</label>
+                    </div>
                 </div>
 
                 <div class="col-md-1 pull-right">
@@ -149,14 +176,10 @@
                         <dd>{{job.status}}</dd>
                         <dt>Job Type</dt>
                         <dd>{{job.jobType.type}}</dd>
-                        <dt>Progress</dt>
-                        <dd>{{job.progress.percentComplete}}%</dd>
-                        <dt>Name</dt>
-                        <dd>{{job.jobType.data.metadata.name}}</dd>
-                        <dt>Description</dt>
-                        <dd>{{job.jobType.data.metadata.description}}</dd>
-                        <dt>Classification</dt>
-                        <dd>{{job.jobType.data.metadata.classType}}</dd>
+                        <dt ng-show="job.progress.percentComplete">Progress</dt>
+                        <dd ng-show="job.progress.percentComplete">{{job.progress.percentComplete}}%</dd>
+                        <dt ng-repeat-start="(key, value) in job.jobType.data.metadata">{{key | capitalize}}</dt>
+                        <dd ng-repeat-end>{{value}}</dd>
                     </dl>
                     <hr class="separator">
                     <!--<pre>{{job | json}}</pre>-->
