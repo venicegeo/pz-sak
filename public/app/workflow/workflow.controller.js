@@ -19,7 +19,8 @@
                 method: "GET",
                 url: "/proxy?url=" + result.data.host + "/v1/events",
             }).then(function successCallback( html ) {
-                $scope.events = html.data;
+                // Only return non-null values in the array
+                $scope.events = html.data.filter(function(n) { return n != undefined });
             }, function errorCallback(response){
                 console.log("workflow.controller fail"+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the events.");
