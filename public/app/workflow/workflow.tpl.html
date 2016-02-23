@@ -1,0 +1,103 @@
+<!--
+ Copyright 2016, RadiantBlue Technologies, Inc.
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html lang="en" ng-app="SAKapp" ng-strict-di xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Workflow service Info</title>
+    <link rel="stylesheet" href="../../css/bootstrap.css">
+
+
+
+
+</head>
+<body>
+<toaster-container toaster-options="{'time-out': 3000}"></toaster-container>
+<div ng-controller="WorkflowController" class="container">
+
+    <div class="row">
+        <h1 class="alert alert-info">Send to the Workflow Service</h1>
+        <form ng-submit="postLog()">
+
+            <div class="form-group">
+                <label for="workflowMessage">Message to send to Workflow:</label>
+                <input id="workflowMessage" ng-model="workflowMessage" type="text" class="form-control" placeholder="Enter a message">
+
+
+
+                <br>
+                <button type="submit"  class="btn btn-primary">Submit Alert Message</button></div>
+
+
+
+            <br>
+
+            <br>
+        </form>
+    </div>
+
+    <div class="row">
+        <h1 class="alert alert-info">Workflow Service Info</h1>
+        <p>Use the following to query the Workflow service. </p>
+        <form ng-submit="getEvents()">
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-primary">Get Event(s)</button>
+                </div>
+            </div>
+            <toaster-container></toaster-container>
+        </form>
+    </div>
+
+
+
+    <div class="row">
+        <h1 class="alert alert-info">Alerts Returned from Service</h1>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group" ng-show="events">
+
+                    <label>Filter: <input ng-model="searchText"></label>
+                    <table id="searchTextResults" class="table table-striped" width="100%">
+                        <tr><th >Event Id</th>
+                            <th >Type</th>
+                            <th >Date</th>
+                            <th >Data</th>
+
+                        </tr>
+                        <tr ng-repeat="event in events | filter:searchText">
+                            <td >{{object.workflow.id}}</td>
+                            <td >{{object.workflow.type}}</td>
+                            <td >{{object.workflow.date}}</td>
+                            <td >{{object.workflow.data}}</td>
+                        </tr>
+                    </table>
+
+
+                </div>
+
+            </div>
+        </div>
+        <br>
+
+        <br>
+
+
+
+
+    </div>
+</div>
+</body>
+</html>

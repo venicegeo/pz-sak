@@ -129,16 +129,16 @@
 
         },
         {
-        label: 'Alerts',
+        label: 'Workflow',
                 onSelect: function(branch) {
-                     return $scope.bodyDiv = "app/alerts/alerts.tpl.html";
+                     return $scope.bodyDiv = "app/workflow/workflow.tpl.html";
                 },
 
         children: [
           {
             label: 'Admin',
             onSelect: function(branch) {
-              return $scope.bodyDiv = "app/alerts/alerts.admin.tpl.html";
+              return $scope.bodyDiv = "app/workflow/workflow.admin.tpl.html";
             }
           }
         ]

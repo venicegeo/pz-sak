@@ -2,9 +2,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('AlerterController', ['$scope', '$http', '$log', '$q',  'toaster', AlerterController]);
+        .controller('WorkflowController', ['$scope', '$http', '$log', '$q',  'toaster', WorkflowController]);
 
-    function AlerterController ($scope, $http, $log, $q, toaster) {
+    function WorkflowController ($scope, $http, $log, $q, toaster) {
 
         $scope.getEvents = function () {
         $scope.events = "";
@@ -12,16 +12,16 @@
 
         $http({
             method: "GET",
-            url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-alerter"
+            url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
         }).then(function(result) {
 
             $http({
                 method: "GET",
-                url: "/proxy?url=http://" + result.data.host + "/v1/events",
+                url: "/proxy?url=" + result.data.host + "/v1/events",
             }).then(function successCallback( html ) {
-                $scope.alerts = html.data;
+                $scope.events = html.data;
             }, function errorCallback(response){
-                console.log("alerts.controller fail"+response.status);
+                console.log("workflow.controller fail"+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the events.");
             });
 
@@ -45,12 +45,12 @@
         }
         $http({
             method: "GET",
-            url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-alerter"
+            url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
         }).then(function(result) {
 
 
             $http.post(
-                "/proxy?url=http://" + result.data.host + "/v1/events",
+                "/proxy?url=" + result.data.host + "/v1/events",
                 dataObj
             ).then(function successCallback(res) {
                 $scope.message = res;
@@ -59,12 +59,12 @@
                 toaster.pop('success', "Success", "The alert was successfully posted.")
 
             }, function errorCallback(res) {
-                console.log("alerter.controller fail"+res.status);
+                console.log("workflow.controller fail"+res.status);
 
                 toaster.pop('error', "Error", "There was a problem submitting the alert message.");
             });
         })
-    }
+    };
 
         $scope.getTriggers = function () {
             $scope.triggerss = "";
@@ -72,16 +72,16 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-alerter"
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
             }).then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=http://" + result.data.host + "/v1/triggerss",
+                    url: "/proxy?url=" + result.data.host + "/v1/triggers",
                 }).then(function successCallback( html ) {
                     $scope.conditions = html.data;
                 }, function errorCallback(response){
-                    console.log("alerts.controller fail"+response.status);
+                    console.log("workflow.controller fail"+response.status);
                     toaster.pop('error', "Error", "There was an issue with retrieving the triggerss.");
                 });
 
@@ -102,12 +102,12 @@
             }
             $http({
                 method: "GET",
-                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-alerter"
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
             }).then(function(result) {
 
 
                 $http.post(
-                    "/proxy?url=http://" + result.data.host + "/v1/triggers",
+                    "/proxy?url=" + result.data.host + "/v1/triggers",
                     dataObj
                 ).then(function successCallback(res) {
                     $scope.message = res;
@@ -116,12 +116,12 @@
                     toaster.pop('success', "Success", "The trigger was successfully posted.")
 
                 }, function errorCallback(res) {
-                    console.log("alerter.controller fail"+res.status);
+                    console.log("workflow.controller fail"+res.status);
 
                     toaster.pop('error', "Error", "There was a problem submitting the trigger message.");
                 });
             })
-        }
+        };
 
         $scope.getTriggerById = function () {
             $scope.triggerById = "";
@@ -130,16 +130,16 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-alerter"
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
             }).then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=http://" + result.data.host + "/v1/conditions/:"+triggerId,
+                    url: "/proxy?url=" + result.data.host + "/v1/conditions/:"+triggerId,
                 }).then(function successCallback( html ) {
                     $scope.trigger = html.data;
                 }, function errorCallback(response){
-                    console.log("alerts.controller fail"+response.status);
+                    console.log("workflow.controller fail"+response.status);
                     toaster.pop('error', "Error", "There was an issue with retrieving the trigger.");
                 });
 
@@ -150,29 +150,29 @@
         $scope.deleteTriggerById = function(){
             $scope.errorMsg = "";
             $scope.triggerId = "";
-            var alertMessage = $scope.alertMessage;
+            var workflowMessage = $scope.workflowMessage;
 
             $http({
                 method: "GET",
-                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/pz-alerter"
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
             }).then(function(result) {
 
 
                 $http.delete(
-                    "/proxy?url=http://" + result.data.host + "/v1/conditions/:id"+triggerId
+                    "/proxy?url=" + result.data.host + "/v1/conditions/:id"+triggerId
                     ).then(function successCallback(res) {
                     $scope.message = res;
                     $scope.getTriggers();
-                    $scope.alertMessage = null;
+                    $scope.workflowMessage = null;
                     toaster.pop('success', "Success", "The trigger was successfully deleted.")
 
                 }, function errorCallback(res) {
-                    console.log("alerter.controller fail"+res.status);
+                    console.log("workflow.controller fail"+res.status);
 
                     toaster.pop('error', "Error", "There was a problem deleting the trigger message.");
                 });
             })
-        }
+        };
 
 
 }

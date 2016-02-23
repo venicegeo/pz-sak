@@ -27,9 +27,9 @@
                     $scope.uuidHost = html["pz-uuidgen"].host;
                     $scope.uuidType = html["pz-uuidgen"].type;
                     $scope.uuidPort = html["pz-uuidgen"].port;
-                    $scope.alerterHost = html["pz-alerter"].host;
-                    $scope.alerterType = html["pz-alerter"].type;
-                    $scope.alerterPort = html["pz-alerter"].port;
+                    $scope.workflowHost = html["pz-workflow"].host;
+                    $scope.workflowType = html["pz-workflow"].type;
+                    $scope.workflowPort = html["pz-workflow"].port;
                     $scope.kafkaHost = html["kafka"].host;
                     $scope.kafkaType = html["kafka"].type;
                     $scope.kafkaPort = html["kafka"].port;
