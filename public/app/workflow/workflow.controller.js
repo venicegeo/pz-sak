@@ -42,13 +42,11 @@
                 two: "two",
                 three: "three"
             }
-        }
+        };
         $http({
             method: "GET",
             url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
         }).then(function(result) {
-
-
             $http.post(
                 "/proxy?url=" + result.data.host + "/v1/events",
                 dataObj
@@ -67,7 +65,7 @@
     };
 
         $scope.getTriggers = function () {
-            $scope.triggerss = "";
+            $scope.triggers = "";
             $scope.errorMsg = "";
 
             $http({
@@ -79,7 +77,7 @@
                     method: "GET",
                     url: "/proxy?url=" + result.data.host + "/v1/triggers",
                 }).then(function successCallback( html ) {
-                    $scope.conditions = html.data;
+                    $scope.triggers = html.data;
                 }, function errorCallback(response){
                     console.log("workflow.controller fail"+response.status);
                     toaster.pop('error', "Error", "There was an issue with retrieving the triggerss.");
@@ -89,16 +87,20 @@
 
         };
 
-        $scope.postTriggers = function(){
+        $scope.postTrigger = function(){
             $scope.errorMsg = "";
 
             var currentTime = moment().utc().toISOString();
             var triggerMessage = $scope.triggerMessage;
             var dataObj = {
-                title: "short string",
-                description: "long string",
-                type: "event type string",
-                userid: "just some string for now"
+                title: $scope.triggerTitle,
+                condition:{
+                    query: $scope.triggerQuery,
+                    type: $scope.triggerType,
+                },
+                job: {
+                    task: $scope.triggerTask
+                }
             }
             $http({
                 method: "GET",
@@ -111,7 +113,7 @@
                     dataObj
                 ).then(function successCallback(res) {
                     $scope.message = res;
-                    $scope.getEvents();
+                    $scope.getTriggers();
                     $scope.alertMessage = null;
                     toaster.pop('success', "Success", "The trigger was successfully posted.")
 

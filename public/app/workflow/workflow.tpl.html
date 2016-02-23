@@ -27,77 +27,145 @@
 <div ng-controller="WorkflowController" class="container">
 
     <div class="row">
-        <h1 class="alert alert-info">Send to the Workflow Service</h1>
-        <form ng-submit="postLog()">
-
-            <div class="form-group">
-                <label for="workflowMessage">Message to send to Workflow:</label>
-                <input id="workflowMessage" ng-model="workflowMessage" type="text" class="form-control" placeholder="Enter a message">
-
-
-
+        <h1 class="alert alert-info">Send an event to the Workflow Service</h1>
+        <form ng-submit="postEvent()">
+            <div class="col-md-6">
+                <label for="eventMessage">Event to send:</label>
+                <input id="eventMessage" ng-model="eventMessage" type="text" class="form-control" placeholder="Enter a message">
+                </div>
+                <div class="col-md-4">
+                    <label for="eventType">Event Type</label>
+                    <select id="eventType" class="form-control" ng-model="eventType">
+                        <option>foo</option>
+                        <option>bar</option>
+                    </select>
+                </div>
                 <br>
-                <button type="submit"  class="btn btn-primary">Submit Alert Message</button></div>
-
-
-
+                <button type="submit"  class="btn btn-primary">Submit Event</button>
             <br>
-
             <br>
         </form>
     </div>
 
     <div class="row">
-        <h1 class="alert alert-info">Workflow Service Info</h1>
-        <p>Use the following to query the Workflow service. </p>
+        <h1 class="alert alert-info">Events</h1>
+        <p>Use the following to query the Workflow events service. </p>
         <form ng-submit="getEvents()">
-            <div class="row">
+
                 <div class="col-md-6">
                     <button type="submit" class="btn btn-primary">Get Event(s)</button>
                 </div>
-            </div>
-            <toaster-container></toaster-container>
+
+
         </form>
     </div>
-
-
-
     <div class="row">
-        <h1 class="alert alert-info">Alerts Returned from Service</h1>
-
-        <div class="row">
+        <h1 class="alert alert-info">Events Returned from Service</h1>
             <div class="col-md-12">
                 <div class="form-group" ng-show="events">
 
-                    <label>Filter: <input ng-model="searchText"></label>
-                    <table id="searchTextResults" class="table table-striped" width="100%">
+                    <table id="searchEventsResults" class="table table-striped" width="100%">
                         <tr><th >Event Id</th>
                             <th >Type</th>
                             <th >Date</th>
                             <th >Data</th>
 
                         </tr>
-                        <tr ng-repeat="event in events | filter:searchText">
-                            <td >{{object.workflow.id}}</td>
-                            <td >{{object.workflow.type}}</td>
-                            <td >{{object.workflow.date}}</td>
-                            <td >{{object.workflow.data}}</td>
+                        <tr ng-repeat="event in events">
+                            <td >{{event.id}}</td>
+                            <td >{{event.type}}</td>
+                            <td >{{event.date}}</td>
+                            <td >{{event.data}}</td>
                         </tr>
                     </table>
-
-
                 </div>
-
-            </div>
+           </div>
         </div>
         <br>
-
         <br>
+    <div class="row">
+        <h1 class="alert alert-info">Send a Trigger to the Workflow Service</h1>
+        <form ng-submit="postTrigger()">
+            <div class="col-md-12">
+                <label for="triggerTitle">Trigger title:</label>
+                <input id="triggerTitle" ng-model="triggerTitle" type="text" class="form-control" placeholder="Enter a trigger title">
+                <br>
+            </div>
+<br>
+            <div class="col-md-6">
+                <label for="triggerType">Trigger type:</label>
+                <input id="triggerType" ng-model="triggerType" type="text" class="form-control" placeholder="Enter a trigger type">
+                </div>
+            <div class="col-md-6">
+                <label for="triggerQuery">Trigger query:</label>
+                <input id="triggerQuery" ng-model="triggerQuery" type="text" class="form-control" placeholder="Enter a trigger query">
+                <br>
+            </div>
+<br>
+            <div class="col-md-6">
+                <label for="triggerTask">Trigger task:</label>
+                <input id="triggerTask" ng-model="triggerTask" type="text" class="form-control" placeholder="Enter a trigger task">
+            <br>
+            </div>
+            <br>
+            <div class="col-md-12">
+            <button type="submit"  class="btn btn-primary">Submit Trigger</button>
+            </div>
+            <br>
+            <br>
+        </form>
+    </div>
 
+    <div class="row">
+        <h1 class="alert alert-info">Triggers</h1>
+        <p>Use the following to query the Workflow trigger service. </p>
+        <form ng-submit="getTriggers()">
+
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary">Get Trigger(s)</button>
+            </div>
+
+        </form>
+    </div>
+        <div class="row">
+            <h1 class="alert alert-info">Triggers Returned from Service</h1>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group" ng-show="triggers">
+
+                        <label>Filter: <input ng-model="searchText"></label>
+                        <table id="searchTriggerResults" class="table table-striped" width="100%">
+                            <tr><th >Id</th>
+                                <th >Title</th>
+                                <th >Type</th>
+                                <th >Query</th>
+                                <th >Task</th>
+
+                            </tr>
+                            <tr ng-repeat="trigger in triggers | filter:searchText">
+                                <td >{{trigger.id}}</td>
+                                <td >{{trigger.title}}</td>
+                                <td >{{trigger.condition.type}}</td>
+                                <td >{{trigger.condition.query}}</td>
+                                <td >{{trigger.job.task}}</td>
+                            </tr>
+                        </table>
+
+
+                    </div>
+
+                </div>
+            </div>
+            <br>
+
+            <br>
 
 
 
     </div>
-</div>
+        </div>
+    </div>
+<toaster-container></toaster-container>
 </body>
 </html>
