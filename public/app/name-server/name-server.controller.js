@@ -39,9 +39,9 @@
                     $scope.uuidHost = html["pz-uuidgen"].host;
                     $scope.uuidType = html["pz-uuidgen"].type;
                     $scope.uuidPort = html["pz-uuidgen"].port;
-                    $scope.alerterHost = html["pz-alerter"].host;
-                    $scope.alerterType = html["pz-alerter"].type;
-                    $scope.alerterPort = html["pz-alerter"].port;
+                    $scope.workflowHost = html["pz-workflow"].host;
+                    $scope.workflowType = html["pz-workflow"].type;
+                    $scope.workflowPort = html["pz-workflow"].port;
                     $scope.kafkaHost = html["kafka"].host;
                     $scope.kafkaType = html["kafka"].type;
                     $scope.kafkaPort = html["kafka"].port;
@@ -63,9 +63,9 @@
                     $scope.gatewayHost = html["pz-gateway"].host;
                     $scope.gatewayType = html["pz-gateway"].type;
                     $scope.gatewayPort = html["pz-gateway"].port;
-                    $scope.jobManagerHost = html["pz-jobmanager"].host;
-                    $scope.jobManagerType = html["pz-jobmanager"].type;
-                    $scope.jobManagerPort = html["pz-jobmanager"].port;
+                    $scope.jobManagerHost = "pz-jobmanager.cf.piazzageo.io";//html["pz-jobmanager"].host;
+                    $scope.jobManagerType = "core-service";//html["pz-jobmanager"].type;
+                    $scope.jobManagerPort = "";//html["pz-jobmanager"].port;
                 }
             )
             request.error(function(){
