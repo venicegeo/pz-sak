@@ -22,6 +22,7 @@
 
     function IngesterController($scope, $http, $log, $q, toaster) {
         $scope.data = "none";
+        $scope.metadata = "{}";
 
         $scope.ingest = function () {
             /*var f = document.getElementById('file').files[0],
@@ -31,6 +32,15 @@
             };
             r.readAsBinaryString(f);*/
 
+            var metadata = {};
+            try{
+                if (angular.isDefined($scope.metadata) && $scope.metadata !== "") {
+                   metadata = JSON.parse($scope.metadata);
+                }
+            } catch (err) {
+                toaster.pop("warning", "Parsing Error", "Improper JSON included in metadata: " + err.message);
+                return;
+            }
             var data = {};
             if (angular.isDefined($scope.ingestType) && $scope.ingestType == "Text") {
                 if (angular.isUndefined($scope.message) || $scope.message == "") {
@@ -39,15 +49,11 @@
                 }
                 data = {
                     "dataType": {
-                        "type": "text",
-                        "mimeType": "application/text",
+                        "type": $scope.ingestType.toLowerCase(),
+                        "mimeType": $scope.mimeType,
                         "content": $scope.message
                     },
-                    "metadata": {
-                        "name": "Testing some SAK ingester",
-                        "description": "This is a UI Test.",
-                        "classType": "unclassified"
-                    }
+                    "metadata": metadata
                 };
             } else if (angular.isDefined($scope.ingestType) && $scope.ingestType == "File") {
                 if (angular.isUndefined($scope.file) || $scope.file == "") {
@@ -56,11 +62,11 @@
                 }
                 data = {
                     "dataType": {
-                        "type": "file",
-                        "mimeType": "image/jpeg",
+                        "type": $scope.ingestType.toLowerCase(),
+                        "mimeType": $scope.mimeType,
                         "content": $scope.file
                     },
-                    "metadata": {}
+                    "metadata": metadata
                 };
             }
             var ingestObj = {

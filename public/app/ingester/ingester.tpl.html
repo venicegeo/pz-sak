@@ -39,11 +39,22 @@
                         </select>
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="mimeType">Mime Type</label>
+                        <input id="mimeType" list="mimeTypes" class="form-control" ng-model="mimeType" required/>
+                        <datalist id="mimeTypes">
+                            <option>application/text</option>
+                            <option>image/jpeg</option>
+                            <option>image/bmp</option>
+                        </datalist>
+                    </div>
+                </div>
             </div>
             <div class="row" ng-show="ingestType == 'Text'">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label for="message">Text to ingest</label>
+                        <label for="message">Content</label>
                         <input id="message" type="text" class="form-control" ng-model="message">
                     </div>
                 </div>
@@ -51,8 +62,16 @@
             <div class="row" ng-show="ingestType == 'File'">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label for="file">File to upload</label>
+                        <label for="file">File</label>
                         <input id="file" type="file" class="form-control" ng-model="file" accept="image/*">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="metadata">Metadata</label>
+                        <textarea id="metadata" type="textarea" class="form-control" ng-model="metadata" style="height:200px;"></textarea>
                     </div>
                 </div>
             </div>
