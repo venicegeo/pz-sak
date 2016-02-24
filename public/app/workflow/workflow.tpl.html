@@ -23,7 +23,6 @@
 
 </head>
 <body>
-<toaster-container toaster-options="{'time-out': 3000}"></toaster-container>
 <div ng-controller="WorkflowController" class="container">
 
     <div class="row">
@@ -31,7 +30,7 @@
         <form ng-submit="postEvent()">
             <div class="col-md-6">
                 <label for="eventMessage">Event to send:</label>
-                <input id="eventMessage" ng-model="eventMessage" type="text" class="form-control" placeholder="Enter a message">
+                <input id="eventMessage" ng-model="eventMessage" type="text" class="form-control" placeholder="Does nothing right now.">
                 </div>
                 <div class="col-md-4">
                     <label for="eventType">Event Type</label>
@@ -64,11 +63,12 @@
             <div class="col-md-12">
                 <div class="form-group" ng-show="events">
 
-                    <table id="searchEventsResults" class="table table-striped" width="100%">
+                    <table id="searchEventsResults" class="table-striped table-bordered table table-hover" width="100%">
                         <tr><th >Event Id</th>
                             <th >Type</th>
                             <th >Date</th>
                             <th >Data</th>
+                            <th></th>
 
                         </tr>
                         <tr ng-repeat="event in events">
@@ -76,6 +76,7 @@
                             <td >{{event.type}}</td>
                             <td >{{event.date}}</td>
                             <td >{{event.data}}</td>
+                            <td align="center"> <button ng-click="deleteEvent(event.id)" class="btn btn-primary">Delete Event</button></td>
                         </tr>
                     </table>
                 </div>
@@ -83,6 +84,63 @@
         </div>
         <br>
         <br>
+    <div class="row">
+        <h1 class="alert alert-info">Send an alert to the Workflow Service</h1>
+        <form ng-submit="postAlert()">
+            <div class="col-md-6">
+                <label for="alertTrigger">Trigger Id:</label>
+                <input id="alertTrigger" ng-model="alertTrigger" type="text" class="form-control" placeholder="Enter a Trigger Id">
+            </div>
+            <div class="col-md-4">
+                <label for="alertEvent">Event Id:</label>
+                <input id="alertEvent" ng-model="alertEvent" type="text" class="form-control" placeholder="Enter an Event Id">
+            </div>
+            <br>
+            <button type="submit"  class="btn btn-primary">Submit Alert</button>
+            <br>
+            <br>
+        </form>
+    </div>
+
+    <div class="row">
+        <h1 class="alert alert-info">Alerts</h1>
+        <p>Use the following to query the Workflow alerts service. </p>
+        <form ng-submit="getAlerts()">
+
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary">Get Alerts(s)</button>
+            </div>
+
+
+        </form>
+    </div>
+    <div class="row">
+        <h1 class="alert alert-info">Alerts Returned from Service</h1>
+        <div class="col-md-12">
+            <div class="form-group" ng-show="alerts">
+
+                <table id="searchAlertsResults" class="table-striped table-bordered table table-hover" width="100%">
+                    <tr><th >Id</th>
+                        <th >Trigger Id</th>
+                        <th >Event Id</th>
+                        <th></th>
+
+                    </tr>
+                    <tr ng-repeat="alert in alerts">
+                        <td >{{alert.id}}</td>
+                        <td >{{alert.trigger-id}}</td>
+                        <td >{{alert.event-id}}</td>
+                        <td align="center"> <button ng-click="deleteAlert(alert.id)" class="btn btn-primary">Delete Alert</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+
+
+
     <div class="row">
         <h1 class="alert alert-info">Send a Trigger to the Workflow Service</h1>
         <form ng-submit="postTrigger()">
@@ -135,12 +193,13 @@
                     <div class="form-group" ng-show="triggers">
 
                         <label>Filter: <input ng-model="searchText"></label>
-                        <table id="searchTriggerResults" class="table table-striped" width="100%">
+                        <table id="searchTriggerResults" class="table-striped table-bordered table table-hover" width="100%">
                             <tr><th >Id</th>
                                 <th >Title</th>
                                 <th >Type</th>
                                 <th >Query</th>
-                                <th >Task</th>
+                                <th >Task
+                                <th></th>
 
                             </tr>
                             <tr ng-repeat="trigger in triggers | filter:searchText">
@@ -149,6 +208,7 @@
                                 <td >{{trigger.condition.type}}</td>
                                 <td >{{trigger.condition.query}}</td>
                                 <td >{{trigger.job.task}}</td>
+                                <td align="center"> <button ng-click="deleteTrigger(trigger.id)" class="btn btn-primary">Delete Trigger</button></td>
                             </tr>
                         </table>
 
