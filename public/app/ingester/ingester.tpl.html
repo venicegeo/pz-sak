@@ -29,21 +29,41 @@
         <h1 class="alert alert-info">Ingester Service Info</h1>
         <p>Use the following input to ingest a file into the system.</p>
         <form>
-            <div class="row">
+            <div class="row" ng-init="ingestType = 'Text'">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="type">Ingest Type</label>
+                        <select id="type" ng-model="ingestType" class="form-control">
+                            <option>Text</option>
+                            <option>File</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-show="ingestType == 'Text'">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="message">Text to ingest</label>
+                        <input id="message" type="text" class="form-control" ng-model="message">
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-show="ingestType == 'File'">
                 <div class="col-md-5">
                     <div class="form-group">
                         <label for="file">File to upload</label>
                         <input id="file" type="file" class="form-control" ng-model="file" accept="image/*">
-
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-1">
                     <br>
-                    <button type="button" class="btn btn-primary" ng-click="ingest()">Ingest file</button>
+                    <button type="button" class="btn btn-primary" ng-click="ingest()" ng-disabled="ingestType== 'File'">Ingest Content</button>
                 </div>
             </div>
             <label id="errorMsg">{{errorMsg}}</label>
-            <h3 ng-show="jobId">{{jobId}}</h3>
+            <h3 ng-show="jobIdResult">{{jobIdResult}}</h3>
             <!--<p>{{data}}</p>-->
         </form>
 
@@ -62,7 +82,10 @@
                 </div>
             </div>
             <label id="errorMsg2">{{errorMsg2}}</label>
-            <div ng-show="jobStatus">
+            <div class="col-md-6" ng-show="jobStatus.message">
+                <label>{{jobStatus.message}}</label>
+            </div>
+            <div ng-show="jobStatus.progress">
                 Time Remaining: {{jobStatus.progress.timeRemaining}}<br/>
                 Time Spent: {{jobStatus.progress.timeSpent}}<br/>
                 <progress title="jobStatus.progress.percentComplete" max="100" value="jobStatus.progress.percentComplete"></progress>
