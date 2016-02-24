@@ -1,3 +1,19 @@
+/**
+ Copyright 2016, RadiantBlue Technologies, Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+
 (function(){
     'use strict';
     angular
@@ -20,7 +36,9 @@
                 //$scope.endPoint = 'http://10.0.10.183:9999/wfs';
                 //$scope.endPoint = 'http://10.0.10.183/geoserver/wfs';
                 //$scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
-                $scope.endPoint = '';
+
+                // Only allow our geoserver instance for now (until we figure out proxy madness
+                $scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
 
                 $scope.version = '1.1.0';
                 $scope.outputFormat = 'JSON';
@@ -43,7 +61,12 @@
                 //Refactored: 10.05.2015 - GetCapabilities
                 $scope.getCapabilities = function () {
                     $log.warn('outputFormat', $scope.outputFormat);
-                    $scope.proxiedEndPoint = "/proxy?url=" + $scope.endPoint;
+                    var endPoint = $scope.endPoint;
+                    if ($scope.endPoint.startsWith("http://")) {
+                        endPoint = $scope.endPoint.substring(7);
+                    }
+                    $scope.proxiedEndPoint = "/proxy/" + endPoint;
+                    // $scope.proxiedEndPoint = "/geoserver/geoserver/ows";
                     wfsClient = new OGC.WFS.Client($scope.proxiedEndPoint);
 
                     $scope.showFeatureTypeSelect = false;

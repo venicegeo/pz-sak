@@ -1,3 +1,18 @@
+<!--
+ Copyright 2016, RadiantBlue Technologies, Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
 <!DOCTYPE html>
 <html lang="en" ng-app="SAKapp" ng-strict-di>
 <head>
@@ -5,6 +20,31 @@
     <title>Jobs Service Info</title>
     <link rel="stylesheet" href="../../css/bootstrap.css">
 
+    <style>
+        .navbutton {
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .two-column {
+            -webkit-column-count: 2; /* Chrome, Safari, Opera */
+            -moz-column-count: 2; /* Firefox */
+            column-count: 2;
+        }
+
+        .separator {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+
+        .alert-warning hr {
+            border-top-color: #9AD9F7;
+        }
+
+    </style>
 
 </head>
 <body>
@@ -14,36 +54,149 @@
         <h1 class="alert alert-info">Jobs Service Info</h1>
         <p>Use the following input to query a Job. A successful query will return a list of Jobs.  NOTE: This does not do anything yet.  This serves
         as a placeholder for future Job app in the SAK Tool.</p>
-        <form>
+        <form id="jobStatus" ng-submit="getJobStatus()">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="endPoint">Jobs to query</label>
-                        <input id="endPoint" type="text" class="form-control" placeholder="Enter a valid Job ID">
+                        <label for="jobId">Jobs to query</label>
+                        <input id="jobId" type="text" class="form-control" ng-model="jobId" placeholder="Enter a valid Job ID">
 
                     </div>
                 </div>
+
+                <div class="col-md-2">
+                    <br>
+                    <button type="submit" class="btn btn-primary">Get Job Status</button>
+                </div>
+
+            </div>
+            <div class="row">
+                <div ng-show="jobStatusResult">
+                    <dl class="dl-horizontal" ng-hide="jobStatusResult.message">
+                        <dt>Job ID</dt>
+                        <dd>{{jobStatusResult.jobId}}</dd>
+                        <dt>Status</dt>
+                        <dd>{{jobStatusResult.status}}</dd>
+                        <dt ng-show="jobStatusResult.progress.percentComplete">Progress</dt>
+                        <dd ng-show="jobStatusResult.progress.percentComplete">{{jobStatusResult.progress.percentComplete}}%</dd>
+                        <dt>Result Type</dt>
+                        <dd>{{jobStatusResult.result.type}}</dd>
+                        <dt ng-show="jobStatusResult.result.text">Result Text</dt>
+                        <dd ng-show="jobStatusResult.result.text">{{jobStatusResult.result.text}}</dd>
+                        <dt ng-show="jobStatusResult.result.dataId">Resource ID</dt>
+                        <dd ng-show="jobStatusResult.result.dataId">{{jobStatusResult.result.dataId}}</dd>
+                    </dl>
+                    <div class="col-md-6" ng-show="jobStatusResult.message">
+                        <label>{{jobStatusResult.message}}</label>
+                    </div>
+                    <!--<pre>{{jobStatusResult | json}}</pre>-->
+                </div>
+            </div>
+
+        </form>
+
+        <h1 class="alert alert-info">Get Resource Data</h1>
+        <form id="jobResourceData" ng-submit="getResourceData()">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="resourceId">Resource ID</label>
+                        <input id="resourceId" type="text" class="form-control" ng-model="resourceId" placeholder="Enter a valid Resource ID">
+
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <br>
+                    <button type="submit" class="btn btn-primary">Get Resource Data</button>
+                </div>
+
+            </div>
+            <div class="row">
+                <div ng-show="resourceData">
+                    <dl class="dl-horizontal two-column" ng-hide="resourceData.message">
+                        <dt>Resource ID</dt>
+                        <dd>{{resourceData.data.dataId}}</dd>
+                        <dt>Data Type</dt>
+                        <dd>{{resourceData.data.dataType.type}}</dd>
+                        <dt>Data Content</dt>
+                        <dd>{{resourceData.data.dataType.content}}</dd>
+                        <dt>Data Mimetype</dt>
+                        <dd>{{resourceData.data.dataType.mimeType}}</dd>
+                        <dt ng-repeat-start="(key, value) in resourceData.data.metadata">{{key | capitalize}}</dt>
+                        <dd ng-repeat-end>{{value}}</dd>
+                    </dl>
+                    <div class="col-md-6" ng-show="resourceData.message">
+                        <label>{{resourceData.message}}</label>
+                    </div>
+                    <!--<pre>{{resourceData | json}}</pre>-->
+                </div>
+            </div>
+
+        </form>
+        <h1 class="alert alert-info">Jobs List</h1>
+        <form id="jobsList" ng-init="getAllStatuses()">
+            <div class="row">
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label for="outputFormat">Output</label>
-                        <select id="outputFormat" class="form-control" ng-model="outputFormat">
-                            <option>JSON</option>
-                            <option>GML3</option>
-                            <option>GML2</option>
+                        <label for="jobStatuses">Job Status</label>
+                        <select id="jobStatuses" ng-change="updateFilter()" ng-options="jobStatus for jobStatus in jobStatuses | orderBy:jobStatus" ng-model="jobStatusQuery"
+                                class="form-control">
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="col-md-8 text-center" style="margin-top: 35px;">
+                    <div class="form-group">
+                        <label ng-show="total > 0">Displaying {{firstResultOnPage()}} - {{lastResultOnPage()}} of {{total}}</label>
+                        <label ng-show="total == 0">No results to display</label>
+                    </div>
+                </div>
+
+                <div class="col-md-1 pull-right">
+                    <div class="form-group">
+                        <label for="pageSize">Per page</label>
+                        <select id="pageSize" ng-change="updateFilter()" ng-options="option for option in pageSizeOptions" ng-model="pageSize"
+                                class="form-control">
                         </select>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <br>
-                    <button type="button" class="btn btn-primary" ng-click="getCapabilities()">Get Info</button>
+
+            </div>
+            <div class="row">
+                <div ng-show="jobsList" ng-repeat="job in jobsList">
+                    <dl class="dl-horizontal two-column">
+                        <dt>Job ID</dt>
+                        <dd>{{job.jobId}}</dd>
+                        <dt>Submitted</dt>
+                        <dd>{{job.submitted}}</dd>
+                        <dt>Status</dt>
+                        <dd>{{job.status}}</dd>
+                        <dt>Job Type</dt>
+                        <dd>{{job.jobType.type}}</dd>
+                        <dt ng-show="job.progress.percentComplete">Progress</dt>
+                        <dd ng-show="job.progress.percentComplete">{{job.progress.percentComplete}}%</dd>
+                        <dt ng-repeat-start="(key, value) in job.jobType.data.metadata">{{key | capitalize}}</dt>
+                        <dd ng-repeat-end>{{value}}</dd>
+                    </dl>
+                    <hr class="separator">
+                    <!--<pre>{{job | json}}</pre>-->
                 </div>
             </div>
             <br>
 
-    <br>
+            <br>
 
-</form>
+            <nav ng-show="jobsList && total > pageSize">
+                <ul class="pager">
+                    <li><a ng-click="prevPage()" class="navbutton">Previous</a></li>
+                    <li><a ng-click="nextPage()" class="navbutton">Next</a></li>
+                </ul>
+            </nav>
+
+        </form>
 </div>
 </div>
 </body>

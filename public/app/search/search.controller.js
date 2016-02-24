@@ -1,5 +1,17 @@
 /**
- * Created by jmcmahon on 1/25/2016.
+ Copyright 2016, RadiantBlue Technologies, Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
  */
 
 (function () {
@@ -24,7 +36,7 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/elasticsearch"
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/elasticsearch"
             }).then(function(result) {
 
                 var params = {
@@ -41,7 +53,7 @@
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=http://" + result.data.host + "/_search",
+                    url: "/proxy/" + result.data.host + "/_search",
                     params: params
                 }).then(function successCallback( html ) {
                     $scope.searchResults = html.data.hits.hits;
@@ -77,10 +89,10 @@
             var url = "";
             $http({
                 method: "GET",
-                url: "/proxy?url=http://pz-discover.cf.piazzageo.io/api/v1/resources/elasticsearch"
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/elasticsearch"
             }).then(function(result) {
                 // TODO: Once elasticsearch is completely setup we probably don't need all these inputs
-                url = "/proxy?url=http://" + result.data.host + "/" + $scope.indexId + "/" + $scope.typeId + "/" + $scope.documentId;
+                url = "/proxy?url=" + result.data.host + "/" + $scope.indexId + "/" + $scope.typeId + "/" + $scope.documentId;
                 $http({
                     method: "GET",
                     url: url
