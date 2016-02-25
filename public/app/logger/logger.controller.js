@@ -17,9 +17,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('LoggerController', ['$scope', '$http', '$log', '$q',  'toaster', LoggerController]);
+        .controller('LoggerController', ['$scope', '$http', '$log', '$q',  'toaster', '$window', LoggerController]);
 
-    function LoggerController ($scope, $http, $log, $q, toaster) {
+    function LoggerController ($scope, $http, $log, $q, toaster, $window) {
 
         $scope.getLogs = function () {
             $scope.logs = "";
@@ -79,6 +79,24 @@
                 });
             })
         }
+
+
+
+
+        $scope.tabs = [
+            { title:'Dynamic Title 1', content:'Dynamic content 1' },
+            { title:'Dynamic Title 2', content:'Dynamic content 2', disabled: true }
+        ];
+
+        $scope.alertMe = function() {
+            setTimeout(function() {
+                $window.alert('You\'ve selected the alert tab!');
+            });
+        };
+
+        $scope.model = {
+            name: 'Tabs'
+        };
     }
 
 })();

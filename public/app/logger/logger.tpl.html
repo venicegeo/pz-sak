@@ -25,27 +25,50 @@
 <body>
 <toaster-container toaster-options="{'time-out': 3000}"></toaster-container>
 <div ng-controller="LoggerController" class="container">
+<uib-tabset>
+    <uib-tab heading="Send Log">
+        <div class="row">
+            <h1 class="alert alert-info">Send to the Logger Service</h1>
+            <form ng-submit="postLog()">
 
-   <div class="row">
-        <h1 class="alert alert-info">Send to the Logger Service</h1>
-        <form ng-submit="postLog()">
+                <div class="form-group">
+                    <label for="logMessage">Message to send to Logger:</label>
+                    <input id="logMessage" ng-model="logMessage" type="text" class="form-control" placeholder="Enter a message">
+                    <br>
+                    <button type="submit"  class="btn btn-primary">Log Message</button></div>
+                <br>
+                <br>
+            </form>
+        </div>
 
-                    <div class="form-group">
-                        <label for="logMessage">Message to send to Logger:</label>
-                        <input id="logMessage" ng-model="logMessage" type="text" class="form-control" placeholder="Enter a message">
+    </uib-tab>
+</uib-tabset>
 
+<!--
 
+    <p>Select a tab by setting active binding to true:</p>
+    <p>
+        <button type="button" class="btn btn-default btn-sm" ng-click="tabs[0].active = true">Select second tab</button>
+        <button type="button" class="btn btn-default btn-sm" ng-click="tabs[1].active = true">Select third tab</button>
+    </p>
+    <p>
+        <button type="button" class="btn btn-default btn-sm" ng-click="tabs[1].disabled = ! tabs[1].disabled">Enable / Disable third tab</button>
+    </p>
+    <hr />
+-->
 
-<br>
-                <button type="submit"  class="btn btn-primary">Log Message</button></div>
-
-
-
-            <br>
-
-            <br>
-        </form>
-    </div>
+    <uib-tabset>
+        <uib-tab heading="Static title">Static content</uib-tab>
+        <uib-tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled">
+            {{tab.content}}
+        </uib-tab>
+        <uib-tab select="alertMe()">
+            <uib-tab-heading>
+                <i class="glyphicon glyphicon-bell"></i> Alert!
+            </uib-tab-heading>
+            I've got an HTML heading, and a select callback. Pretty cool!
+        </uib-tab>
+    </uib-tabset>
 
     <div class="row">
         <h1 class="alert alert-info">Logger Service Info</h1>
