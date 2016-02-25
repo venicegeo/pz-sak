@@ -63,9 +63,9 @@
                     $scope.gatewayHost = html["pz-gateway"].host;
                     $scope.gatewayType = html["pz-gateway"].type;
                     $scope.gatewayPort = html["pz-gateway"].port;
-                    $scope.jobManagerHost = html["pz-jobmanager"].host;
-                    $scope.jobManagerType = html["pz-jobmanager"].type;
-                    $scope.jobManagerPort = html["pz-jobmanager"].port;
+                    $scope.jobManagerHost = "pz-jobmanager.cf.piazzageo.io";//html["pz-jobmanager"].host;
+                    $scope.jobManagerType = "core-service";//html["pz-jobmanager"].type;
+                    $scope.jobManagerPort = "";//html["pz-jobmanager"].port;
                 }
             )
             request.error(function(){
