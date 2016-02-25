@@ -90,7 +90,7 @@
             }).then(function(result) {
                 $http({
                     method: "DELETE",
-                    url: "/proxy?url=" + result.data.host + "/v1/events:"+eventId,
+                    url: "/proxy?url=" + result.data.host + "/v1/events/"+eventId,
                 }).then(function successCallback( html ) {
                     $scope.message = html;
                     console.log("success");
@@ -175,7 +175,7 @@
             }).then(function(result) {
                 $http({
                     method: "DELETE",
-                    url: "/proxy?url=" + result.data.host + "/v1/alerts:"+alertId,
+                    url: "/proxy?url=" + result.data.host + "/v1/alerts/"+alertId,
                 }).then(function successCallback( html ) {
                     $scope.message = html;
                     console.log("success");
@@ -278,7 +278,7 @@
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.host + "/v1/conditions/:"+triggerId,
+                    url: "/proxy?url=" + result.data.host + "/v1/triggerss/"+triggerId,
                 }).then(function successCallback( html ) {
                     $scope.trigger = html.data;
                 }, function errorCallback(response){
@@ -290,9 +290,8 @@
 
         };
 
-        $scope.deleteTrigger = function(){
+        $scope.deleteTrigger = function(triggerId){
             $scope.errorMsg = "";
-            $scope.triggerId = "";
             var workflowMessage = $scope.workflowMessage;
 
             $http({
@@ -302,7 +301,7 @@
 
 
                 $http.delete(
-                    "/proxy?url=" + result.data.host + "/v1/conditions/:"+triggerId
+                    "/proxy?url=" + result.data.host + "/v1/triggers/"+triggerId
                     ).then(function successCallback(res) {
                     $scope.message = res;
                     $scope.getTriggers();
