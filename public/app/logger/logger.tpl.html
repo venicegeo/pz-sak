@@ -35,96 +35,70 @@
                     <label for="logMessage">Message to send to Logger:</label>
                     <input id="logMessage" ng-model="logMessage" type="text" class="form-control" placeholder="Enter a message">
                     <br>
-                    <button type="submit"  class="btn btn-primary">Log Message</button></div>
+                    <button type="submit" class="btn btn-primary">Log Message</button></div>
                 <br>
                 <br>
             </form>
         </div>
+    </uib-tab>
 
+    <uib-tab heading="Get Logs">
+        <div class="row">
+            <h1 class="alert alert-info">Logger Service Info</h1>
+            <p>Use the following to query the Logger service. </p>
+            <form ng-submit="getLogs()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary">Get Log(s)</button>
+                    </div>
+                </div>
+                <toaster-container></toaster-container>
+            </form>
+        </div>
+
+
+
+        <div class="row">
+            <!--<h1 class="alert alert-info">Logs Returned from Service</h1>-->
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group" ng-show="logs">
+
+                        <label>Filter: <input ng-model="searchText"></label>
+                        <table id="searchTextResults" class="table table-striped" width="100%">
+                            <tr><th >Time</th>
+                                <th >Service</th>
+                                <th >Address</th>
+                                <th >Severity</th>
+                                <th >Message</th>
+                            </tr>
+                            <tr ng-repeat="log in logs | filter:searchText">
+                                <td >{{log.time}}</td>
+                                <td >{{log.service}}</td>
+                                <td >{{log.address}}</td>
+                                <td >{{log.severity}}</td>
+                                <td >{{log.message}}</td>
+                            </tr>
+                        </table>
+
+                        <!--<div id="logs" ng-repeat="log in logs | filter:searchText">
+                             {{log.time}} - {{log.service}} - {{log.address}} - {{log.severity}}: {{log.message}}
+                        </div>-->
+
+                    </div>
+
+                </div>
+            </div>
+            <br>
+
+            <br>
+
+        </div>
     </uib-tab>
 </uib-tabset>
 
-<!--
 
-    <p>Select a tab by setting active binding to true:</p>
-    <p>
-        <button type="button" class="btn btn-default btn-sm" ng-click="tabs[0].active = true">Select second tab</button>
-        <button type="button" class="btn btn-default btn-sm" ng-click="tabs[1].active = true">Select third tab</button>
-    </p>
-    <p>
-        <button type="button" class="btn btn-default btn-sm" ng-click="tabs[1].disabled = ! tabs[1].disabled">Enable / Disable third tab</button>
-    </p>
-    <hr />
--->
-
-    <uib-tabset>
-        <uib-tab heading="Static title">Static content</uib-tab>
-        <uib-tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled">
-            {{tab.content}}
-        </uib-tab>
-        <uib-tab select="alertMe()">
-            <uib-tab-heading>
-                <i class="glyphicon glyphicon-bell"></i> Alert!
-            </uib-tab-heading>
-            I've got an HTML heading, and a select callback. Pretty cool!
-        </uib-tab>
-    </uib-tabset>
-
-    <div class="row">
-        <h1 class="alert alert-info">Logger Service Info</h1>
-        <p>Use the following to query the Logger service. </p>
-        <form ng-submit="getLogs()">
-            <div class="row">
-                <div class="col-md-6">
-                    <button type="submit" class="btn btn-primary">Get Log(s)</button>
-                </div>
-            </div>
-            <toaster-container></toaster-container>
-        </form>
-    </div>
-
-
-
-    <div class="row">
-        <h1 class="alert alert-info">Logs Returned from Service</h1>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group" ng-show="logs">
-
-                   <label>Filter: <input ng-model="searchText"></label>
-                   <table id="searchTextResults" class="table table-striped" width="100%">
-                        <tr><th >Time</th>
-                            <th >Service</th>
-                            <th >Address</th>
-                            <th >Severity</th>
-                            <th >Message</th>
-                        </tr>
-                        <tr ng-repeat="log in logs | filter:searchText">
-                            <td >{{log.time}}</td>
-                            <td >{{log.service}}</td>
-                            <td >{{log.address}}</td>
-                            <td >{{log.severity}}</td>
-                            <td >{{log.message}}</td>
-                        </tr>
-                    </table>
-
-                   <!--<div id="logs" ng-repeat="log in logs | filter:searchText">
-                        {{log.time}} - {{log.service}} - {{log.address}} - {{log.severity}}: {{log.message}}
-                   </div>-->
-
-                </div>
-
-            </div>
-        </div>
-        <br>
-
-        <br>
-
-
-
-
-    </div>
 </div>
 </body>
 </html>
