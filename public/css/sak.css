@@ -1,5 +1,6 @@
 * {
     margin: 0;
+    font-family: bodoni;
 }
 html, body {
     height: 99%;
@@ -17,4 +18,8 @@ html, body {
 .site-footer {
     background: #F3F3F7;
     padding-right: 10px;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
 }
