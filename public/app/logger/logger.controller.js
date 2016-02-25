@@ -17,9 +17,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('LoggerController', ['$scope', '$http', '$log', '$q',  'toaster', '$window', LoggerController]);
+        .controller('LoggerController', ['$scope', '$http', '$log', '$q',  'toaster', LoggerController]);
 
-    function LoggerController ($scope, $http, $log, $q, toaster, $window) {
+    function LoggerController ($scope, $http, $log, $q, toaster) {
 
         $scope.getLogs = function () {
             $scope.logs = "";

@@ -25,20 +25,22 @@
 <body>
 <toaster-container toaster-options="{'time-out': 3000}"></toaster-container>
 <div ng-controller="LoggerController" class="container">
-<uib-tabset>
+<uib-tabset type="pills">
     <uib-tab heading="Send Log">
         <div class="row">
             <h1 class="alert alert-info">Send to the Logger Service</h1>
-            <form ng-submit="postLog()">
+            <form id="postLog" ng-submit="postLog()">
 
                 <div class="form-group">
                     <label for="logMessage">Message to send to Logger:</label>
                     <input id="logMessage" ng-model="logMessage" type="text" class="form-control" placeholder="Enter a message">
                     <br>
-                    <button type="submit" class="btn btn-primary">Log Message</button></div>
-                <br>
-                <br>
+                    <button type="submit" class="btn btn-primary">Log Message</button>
+                </div>
+
             </form>
+            <br>
+            <br>
         </div>
     </uib-tab>
 
@@ -46,20 +48,18 @@
         <div class="row">
             <h1 class="alert alert-info">Logger Service Info</h1>
             <p>Use the following to query the Logger service. </p>
-            <form ng-submit="getLogs()">
+            <form id="getLogs" ng-submit="getLogs()">
                 <div class="row">
                     <div class="col-md-6">
                         <button type="submit" class="btn btn-primary">Get Log(s)</button>
                     </div>
                 </div>
-                <toaster-container></toaster-container>
             </form>
         </div>
 
 
 
         <div class="row">
-            <!--<h1 class="alert alert-info">Logs Returned from Service</h1>-->
             <br>
             <div class="row">
                 <div class="col-md-12">
