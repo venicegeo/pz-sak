@@ -1,0 +1,130 @@
+<!--
+ Copyright 2016, RadiantBlue Technologies, Inc.
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html lang="en" ng-app="SAKapp" ng-strict-di xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Triggers</title>
+    <link rel="stylesheet" href="../../css/bootstrap.css">
+
+
+
+
+</head>
+<body>
+<div ng-controller="WorkflowController" class="container">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" id="myTabs" role="tablist">
+        <li role="presentation" class="active"><a href="#gettriggers" aria-controls="gettriggers" role="tab" data-toggle="tab">Get Triggers</a></li>
+        <li role="presentation"><a href="#posttrigger" aria-controls="posttrigger" role="tab" data-toggle="tab">Post Trigger</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="gettriggers">
+
+            <div class="row">
+                <h1 class="alert alert-info">Triggers</h1>
+                <p>Use the following to query the Workflow trigger service. </p>
+                <form ng-submit="getTriggers()">
+
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary">Get Trigger(s)</button>
+                    </div>
+
+                </form>
+            </div>
+            <div class="row">
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group" ng-show="triggers">
+
+                            <label>Filter: <input ng-model="searchText"></label>
+                            <table id="searchTriggerResults" class="table-striped table-bordered table table-hover" width="100%">
+                                <tr><th >Id</th>
+                                    <th >Title</th>
+                                    <th >Type</th>
+                                    <th >Query</th>
+                                    <th >Task
+                                    <th></th>
+
+                                </tr>
+                                <tr ng-repeat="trigger in triggers | filter:searchText">
+                                    <td >{{trigger.id}}</td>
+                                    <td >{{trigger.title}}</td>
+                                    <td >{{trigger.condition.type}}</td>
+                                    <td >{{trigger.condition.query}}</td>
+                                    <td >{{trigger.job.task}}</td>
+                                    <td align="center"> <button ng-click="deleteTrigger(trigger.id)" class="btn btn-primary">Delete Trigger</button></td>
+                                </tr>
+                            </table>
+
+
+                        </div>
+
+                    </div>
+                </div>
+                <br>
+
+                <br>
+
+            </div>
+
+        </div>
+
+        <div role="tabpanel" class="tab-pane fade" id="posttrigger">
+
+            <div class="row">
+                <h1 class="alert alert-info">Send a Trigger to the Workflow Service</h1>
+                <form ng-submit="postTrigger()">
+                    <div class="col-md-12">
+                        <label for="triggerTitle">Trigger title:</label>
+                        <input id="triggerTitle" ng-model="triggerTitle" type="text" class="form-control" placeholder="Enter a trigger title">
+                        <br>
+                    </div>
+                    <br>
+                    <div class="col-md-6">
+                        <label for="triggerType">Trigger type:</label>
+                        <input id="triggerType" ng-model="triggerType" type="text" class="form-control" placeholder="Enter a trigger type">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="triggerQuery">Trigger query:</label>
+                        <input id="triggerQuery" ng-model="triggerQuery" type="text" class="form-control" placeholder="Enter a trigger query">
+                        <br>
+                    </div>
+                    <br>
+                    <div class="col-md-6">
+                        <label for="triggerTask">Trigger task:</label>
+                        <input id="triggerTask" ng-model="triggerTask" type="text" class="form-control" placeholder="Enter a trigger task">
+                        <br>
+                    </div>
+                    <br>
+                    <div class="col-md-12">
+                        <button type="submit"  class="btn btn-primary">Submit Trigger</button>
+                    </div>
+                    <br>
+                    <br>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<toaster-container></toaster-container>
+</body>
+</html>
