@@ -1,0 +1,104 @@
+<!--
+ Copyright 2016, RadiantBlue Technologies, Inc.
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html lang="en" ng-app="SAKapp" ng-strict-di xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Alerts</title>
+    <link rel="stylesheet" href="../../css/bootstrap.css">
+
+
+
+
+</head>
+<body>
+<div ng-controller="WorkflowController" class="container">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" id="myTabs" role="tablist">
+        <li role="presentation" class="active"><a href="#getalerts" aria-controls="getalerts" role="tab" data-toggle="tab">Get Alerts</a></li>
+        <li role="presentation"><a href="#postalert" aria-controls="postalert" role="tab" data-toggle="tab">Post Alert</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="getalerts">
+
+            <div class="row">
+                <h1 class="alert alert-info">Alerts</h1>
+                <p>Use the following to query the Workflow alerts service. </p>
+                <form ng-submit="getAlerts()">
+
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary">Get Alerts(s)</button>
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="row">
+                <br>
+                <div class="col-md-12">
+                    <div class="form-group" ng-show="alerts">
+
+                        <table id="searchAlertsResults" class="table-striped table-bordered table table-hover" width="100%">
+                            <tr><th >Id</th>
+                                <th >Trigger Id</th>
+                                <th >Event Id</th>
+                                <th></th>
+
+                            </tr>
+                            <tr ng-repeat="alert in alerts">
+                                <td >{{alert.id}}</td>
+                                <td >{{alert.trigger-id}}</td>
+                                <td >{{alert.event-id}}</td>
+                                <td align="center"> <button ng-click="deleteAlert(alert.id)" class="btn btn-primary">Delete Alert</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div role="tabpanel" class="tab-pane fade" id="postalert">
+
+            <div class="row">
+                <h1 class="alert alert-info">Send an alert to the Workflow Service</h1>
+                <form ng-submit="postAlert()">
+                    <div class="col-md-6">
+                        <label for="alertTrigger">Trigger Id:</label>
+                        <input id="alertTrigger" ng-model="alertTrigger" type="text" class="form-control" placeholder="Enter a Trigger Id">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="alertEvent">Event Id:</label>
+                        <input id="alertEvent" ng-model="alertEvent" type="text" class="form-control" placeholder="Enter an Event Id">
+                    </div>
+                    <br>
+                    <button type="submit"  class="btn btn-primary">Submit Alert</button>
+                    <br>
+                    <br>
+                </form>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+<toaster-container></toaster-container>
+</body>
+</html>

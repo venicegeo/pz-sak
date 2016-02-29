@@ -147,11 +147,30 @@
         },
         {
         label: 'Workflow',
-                onSelect: function(branch) {
-                     return $scope.bodyDiv = "app/workflow/workflow.tpl.html";
-                },
+          onSelect: function(branch) {
+            console.log(branch);
+            branch.expanded = !branch.expanded;
+          },
 
         children: [
+          {
+            label: 'Events',
+            onSelect: function(branch) {
+              return $scope.bodyDiv = "app/workflow/events.tpl.html";
+            }
+          },
+          {
+            label: 'Alerts',
+            onSelect: function(branch) {
+              return $scope.bodyDiv = "app/workflow/alerts.tpl.html";
+            }
+          },
+          {
+            label: 'Triggers',
+            onSelect: function(branch) {
+              return $scope.bodyDiv = "app/workflow/triggers.tpl.html";
+            }
+          },
           {
             label: 'Admin',
             onSelect: function(branch) {
@@ -169,10 +188,10 @@
 
         children: [
         {
-        label: 'Admin',
-          onSelect: function(branch) {
-            return $scope.bodyDiv = "app/logger/logger.admin.tpl.html";
-          }
+          label: 'Admin',
+            onSelect: function(branch) {
+              return $scope.bodyDiv = "app/logger/logger.admin.tpl.html";
+            }
         }
         ]
 
