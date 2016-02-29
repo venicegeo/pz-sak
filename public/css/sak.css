@@ -1,9 +1,11 @@
 * {
     margin: 0;
-    font-family: bodoni;
 }
 html, body {
     height: 99%;
+}
+h1, h2 {
+    font-family: "Bodoni MT Poster Compressed" !important;
 }
 .page-wrap {
     min-height: 100%;
