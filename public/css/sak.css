@@ -4,6 +4,9 @@
 html, body {
     height: 99%;
 }
+h1, h2 {
+    font-family: "Bodoni MT Poster Compressed" !important;
+}
 .page-wrap {
     min-height: 100%;
     /* equal to footer height */
@@ -17,4 +20,8 @@ html, body {
 .site-footer {
     background: #F3F3F7;
     padding-right: 10px;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
 }
