@@ -35,44 +35,16 @@
 <body>
 
 <div ng-controller="SearchController" class="container">
-    <div class="row">
 
-                <h1 class="alert alert-info">Add Keywords</h1>
-                <form id="tagForm" ng-submit="addTags()">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="indexId">Index</label>
-                                <input id="indexId" type="text" class="form-control" ng-model="indexId" required>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="typeId">Type</label>
-                                <input id="typeId" type="text" class="form-control" ng-model="typeId" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="documentId">Document ID</label>
-                                <input id="documentId" type="text" class="form-control" ng-model="documentId" required>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="tag">Keyword</label>
-                                <input id="tag" type="text" class="form-control" ng-model="tag" required>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <button class="btn btn-primary" type="submit" id="tagBtn" style="margin-top: 24px">Add Keyword</button>
-                        </div>
-                    </div>
-                    <div>
-                        <label id="tagMsg">{{tagMsg}}</label>
-                    </div>
-                </form>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#search" aria-controls="search" role="tab" data-toggle="tab">Search</a></li>
+        <li role="presentation"><a href="#keywords" aria-controls="keywords" role="tab" data-toggle="tab">Keywords</a></li>
+    </ul>
 
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="search">
             <h1 class="alert alert-info">Search Service Info</h1>
             <p>Perform searches on indexed data</p>
             <form id="searchForm" ng-submit="getSearchResults($event)">
@@ -103,8 +75,49 @@
                     </ul>
                 </nav>
             </form>
-        <toaster-container></toaster-container>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="keywords">
+            <h1 class="alert alert-info">Add Keywords</h1>
+            <form id="tagForm" ng-submit="addTags()">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="indexId">Index</label>
+                            <input id="indexId" type="text" class="form-control" ng-model="indexId" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="typeId">Type</label>
+                            <input id="typeId" type="text" class="form-control" ng-model="typeId" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="documentId">Document ID</label>
+                            <input id="documentId" type="text" class="form-control" ng-model="documentId" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="tag">Keyword</label>
+                            <input id="tag" type="text" class="form-control" ng-model="tag" required>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-primary" type="submit" id="tagBtn" style="margin-top: 24px">Add Keyword</button>
+                    </div>
+                </div>
+                <div>
+                    <label id="tagMsg">{{tagMsg}}</label>
+                </div>
+            </form>
+        </div>
     </div>
+
+
+
+   <toaster-container></toaster-container>
 </div>
 
 
