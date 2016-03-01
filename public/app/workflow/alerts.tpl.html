@@ -37,20 +37,12 @@
 
             <div class="row">
                 <h1 class="alert alert-info">Alerts</h1>
-                <p>Use the following to query the Workflow alerts service. </p>
-                <form ng-submit="getAlerts()">
 
-                    <div class="col-md-6">
-                        <button type="submit" class="btn btn-primary">Get Alerts(s)</button>
-                    </div>
-
-
-                </form>
             </div>
             <div class="row">
                 <br>
                 <div class="col-md-12">
-                    <div class="form-group" ng-show="alerts">
+                    <div class="form-group" ng-show="alerts" ng-init="getAlerts()">
 
                         <table id="searchAlertsResults" class="table-striped table-bordered table table-hover" width="100%">
                             <tr><th >Id</th>
