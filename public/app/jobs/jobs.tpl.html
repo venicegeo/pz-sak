@@ -50,154 +50,168 @@
 <body>
 
 <div ng-controller="JobsController" class="container">
-    <div class="row">
-        <h1 class="alert alert-info">Jobs Service Info</h1>
-        <p>Use the following input to query a Job. A successful query will return a list of Jobs.  NOTE: This does not do anything yet.  This serves
-        as a placeholder for future Job app in the SAK Tool.</p>
-        <form id="jobStatus" ng-submit="getJobStatus()">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="jobId">Jobs to query</label>
-                        <input id="jobId" type="text" class="form-control" ng-model="jobId" placeholder="Enter a valid Job ID">
 
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#getstatus" aria-controls="getstatus" role="tab" data-toggle="tab">Status</a></li>
+        <li role="presentation"><a href="#getresource" aria-controls="getresource" role="tab" data-toggle="tab">Resource Data</a></li>
+        <li role="presentation"><a href="#joblist" aria-controls="joblist" role="tab" data-toggle="tab">Jobs List</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="getstatus">
+            <h1 class="alert alert-info">Jobs Service Info</h1>
+            <p>Use the following input to query a Job. A successful query will return the job information for the given job ID.</p>
+            <form id="jobStatus" ng-submit="getJobStatus()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="jobId">Jobs to query</label>
+                            <input id="jobId" type="text" class="form-control" ng-model="jobId" placeholder="Enter a valid Job ID">
+
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-md-2">
-                    <br>
-                    <button type="submit" class="btn btn-primary">Get Job Status</button>
-                </div>
-
-            </div>
-            <div class="row">
-                <div ng-show="jobStatusResult">
-                    <dl class="dl-horizontal" ng-hide="jobStatusResult.message">
-                        <dt>Job ID</dt>
-                        <dd>{{jobStatusResult.jobId}}</dd>
-                        <dt>Status</dt>
-                        <dd>{{jobStatusResult.status}}</dd>
-                        <dt ng-show="jobStatusResult.progress.percentComplete">Progress</dt>
-                        <dd ng-show="jobStatusResult.progress.percentComplete">{{jobStatusResult.progress.percentComplete}}%</dd>
-                        <dt>Result Type</dt>
-                        <dd>{{jobStatusResult.result.type}}</dd>
-                        <dt ng-show="jobStatusResult.result.text">Result Text</dt>
-                        <dd ng-show="jobStatusResult.result.text">{{jobStatusResult.result.text}}</dd>
-                        <dt ng-show="jobStatusResult.result.dataId">Resource ID</dt>
-                        <dd ng-show="jobStatusResult.result.dataId">{{jobStatusResult.result.dataId}}</dd>
-                    </dl>
-                    <div class="col-md-6" ng-show="jobStatusResult.message">
-                        <label>{{jobStatusResult.message}}</label>
-                    </div>
-                    <!--<pre>{{jobStatusResult | json}}</pre>-->
-                </div>
-            </div>
-
-        </form>
-
-        <h1 class="alert alert-info">Get Resource Data</h1>
-        <form id="jobResourceData" ng-submit="getResourceData()">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="resourceId">Resource ID</label>
-                        <input id="resourceId" type="text" class="form-control" ng-model="resourceId" placeholder="Enter a valid Resource ID">
-
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <br>
-                    <button type="submit" class="btn btn-primary">Get Resource Data</button>
-                </div>
-
-            </div>
-            <div class="row">
-                <div ng-show="resourceData">
-                    <dl class="dl-horizontal two-column" ng-hide="resourceData.message">
-                        <dt>Resource ID</dt>
-                        <dd>{{resourceData.data.dataId}}</dd>
-                        <dt>Data Type</dt>
-                        <dd>{{resourceData.data.dataType.type}}</dd>
-                        <dt>Data Content</dt>
-                        <dd>{{resourceData.data.dataType.content}}</dd>
-                        <dt>Data Mimetype</dt>
-                        <dd>{{resourceData.data.dataType.mimeType}}</dd>
-                        <dt ng-repeat-start="(key, value) in resourceData.data.metadata">{{key | capitalize}}</dt>
-                        <dd ng-repeat-end>{{value}}</dd>
-                    </dl>
-                    <div class="col-md-6" ng-show="resourceData.message">
-                        <label>{{resourceData.message}}</label>
-                    </div>
-                    <!--<pre>{{resourceData | json}}</pre>-->
-                </div>
-            </div>
-
-        </form>
-        <h1 class="alert alert-info">Jobs List</h1>
-        <form id="jobsList" ng-init="getAllStatuses()">
-            <div class="row">
-
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label for="jobStatuses">Job Status</label>
-                        <select id="jobStatuses" ng-change="updateFilter()" ng-options="jobStatus for jobStatus in jobStatuses | orderBy:jobStatus" ng-model="jobStatusQuery"
-                                class="form-control">
-                        </select>
+                    <div class="col-md-2">
+                        <br>
+                        <button type="submit" class="btn btn-primary">Get Job Status</button>
                     </div>
 
                 </div>
-
-                <div class="col-md-8 text-center" style="margin-top: 35px;">
-                    <div class="form-group">
-                        <label ng-show="total > 0">Displaying {{firstResultOnPage()}} - {{lastResultOnPage()}} of {{total}}</label>
-                        <label ng-show="total == 0">No results to display</label>
+                <div class="row">
+                    <div ng-show="jobStatusResult">
+                        <dl class="dl-horizontal" ng-hide="jobStatusResult.message">
+                            <dt>Job ID</dt>
+                            <dd>{{jobStatusResult.jobId}}</dd>
+                            <dt>Status</dt>
+                            <dd>{{jobStatusResult.status}}</dd>
+                            <dt ng-show="jobStatusResult.progress.percentComplete">Progress</dt>
+                            <dd ng-show="jobStatusResult.progress.percentComplete">{{jobStatusResult.progress.percentComplete}}%</dd>
+                            <dt>Result Type</dt>
+                            <dd>{{jobStatusResult.result.type}}</dd>
+                            <dt ng-show="jobStatusResult.result.text">Result Text</dt>
+                            <dd ng-show="jobStatusResult.result.text">{{jobStatusResult.result.text}}</dd>
+                            <dt ng-show="jobStatusResult.result.dataId">Resource ID</dt>
+                            <dd ng-show="jobStatusResult.result.dataId">{{jobStatusResult.result.dataId}}</dd>
+                        </dl>
+                        <div class="col-md-6" ng-show="jobStatusResult.message">
+                            <label>{{jobStatusResult.message}}</label>
+                        </div>
+                        <!--<pre>{{jobStatusResult | json}}</pre>-->
                     </div>
                 </div>
 
-                <div class="col-md-1 pull-right">
-                    <div class="form-group">
-                        <label for="pageSize">Per page</label>
-                        <select id="pageSize" ng-change="updateFilter()" ng-options="option for option in pageSizeOptions" ng-model="pageSize"
-                                class="form-control">
-                        </select>
+            </form>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="getresource">
+            <h1 class="alert alert-info">Get Resource Data</h1>
+            <form id="jobResourceData" ng-submit="getResourceData()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="resourceId">Resource ID</label>
+                            <input id="resourceId" type="text" class="form-control" ng-model="resourceId" placeholder="Enter a valid Resource ID">
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <br>
+                        <button type="submit" class="btn btn-primary">Get Resource Data</button>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div ng-show="resourceData">
+                        <dl class="dl-horizontal two-column" ng-hide="resourceData.message">
+                            <dt>Resource ID</dt>
+                            <dd>{{resourceData.data.dataId}}</dd>
+                            <dt>Data Type</dt>
+                            <dd>{{resourceData.data.dataType.type}}</dd>
+                            <dt>Data Content</dt>
+                            <dd>{{resourceData.data.dataType.content}}</dd>
+                            <dt>Data Mimetype</dt>
+                            <dd>{{resourceData.data.dataType.mimeType}}</dd>
+                            <dt ng-repeat-start="(key, value) in resourceData.data.metadata">{{key | capitalize}}</dt>
+                            <dd ng-repeat-end>{{value}}</dd>
+                        </dl>
+                        <div class="col-md-6" ng-show="resourceData.message">
+                            <label>{{resourceData.message}}</label>
+                        </div>
+                        <!--<pre>{{resourceData | json}}</pre>-->
                     </div>
                 </div>
 
-            </div>
-            <div class="row">
-                <div ng-show="jobsList" ng-repeat="job in jobsList">
-                    <dl class="dl-horizontal two-column">
-                        <dt>Job ID</dt>
-                        <dd>{{job.jobId}}</dd>
-                        <dt>Submitted</dt>
-                        <dd>{{job.submitted}}</dd>
-                        <dt>Status</dt>
-                        <dd>{{job.status}}</dd>
-                        <dt>Job Type</dt>
-                        <dd>{{job.jobType.type}}</dd>
-                        <dt ng-show="job.progress.percentComplete">Progress</dt>
-                        <dd ng-show="job.progress.percentComplete">{{job.progress.percentComplete}}%</dd>
-                        <dt ng-repeat-start="(key, value) in job.jobType.data.metadata">{{key | capitalize}}</dt>
-                        <dd ng-repeat-end>{{value}}</dd>
-                    </dl>
-                    <hr class="separator">
-                    <!--<pre>{{job | json}}</pre>-->
+            </form>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="joblist">
+            <h1 class="alert alert-info">Jobs List</h1>
+            <form id="jobsList" ng-init="getAllStatuses()">
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="jobStatuses">Job Status</label>
+                            <select id="jobStatuses" ng-change="updateFilter()" ng-options="jobStatus for jobStatus in jobStatuses | orderBy:jobStatus" ng-model="jobStatusQuery"
+                                    class="form-control">
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-8 text-center" style="margin-top: 35px;">
+                        <div class="form-group">
+                            <label ng-show="total > 0">Displaying {{firstResultOnPage()}} - {{lastResultOnPage()}} of {{total}}</label>
+                            <label ng-show="total == 0">No results to display</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-1 pull-right">
+                        <div class="form-group">
+                            <label for="pageSize">Per page</label>
+                            <select id="pageSize" ng-change="updateFilter()" ng-options="option for option in pageSizeOptions" ng-model="pageSize"
+                                    class="form-control">
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
-            <br>
+                <div class="row">
+                    <div ng-show="jobsList" ng-repeat="job in jobsList">
+                        <dl class="dl-horizontal two-column">
+                            <dt>Job ID</dt>
+                            <dd>{{job.jobId}}</dd>
+                            <dt>Submitted</dt>
+                            <dd>{{job.submitted}}</dd>
+                            <dt>Status</dt>
+                            <dd>{{job.status}}</dd>
+                            <dt>Job Type</dt>
+                            <dd>{{job.jobType.type}}</dd>
+                            <dt ng-show="job.progress.percentComplete">Progress</dt>
+                            <dd ng-show="job.progress.percentComplete">{{job.progress.percentComplete}}%</dd>
+                            <dt ng-repeat-start="(key, value) in job.jobType.data.metadata">{{key | capitalize}}</dt>
+                            <dd ng-repeat-end>{{value}}</dd>
+                        </dl>
+                        <hr class="separator">
+                        <!--<pre>{{job | json}}</pre>-->
+                    </div>
+                </div>
+                <br>
 
-            <br>
+                <br>
 
-            <nav ng-show="jobsList && total > pageSize">
-                <ul class="pager">
-                    <li><a ng-click="prevPage()" class="navbutton">Previous</a></li>
-                    <li><a ng-click="nextPage()" class="navbutton">Next</a></li>
-                </ul>
-            </nav>
+                <nav ng-show="jobsList && total > pageSize">
+                    <ul class="pager">
+                        <li><a ng-click="prevPage()" class="navbutton">Previous</a></li>
+                        <li><a ng-click="nextPage()" class="navbutton">Next</a></li>
+                    </ul>
+                </nav>
 
-        </form>
-</div>
+            </form>
+        </div>
+    </div>
+
 </div>
 </body>
 </html>
