@@ -25,118 +25,130 @@
 <body>
 
 <div ng-controller="UserServiceController" class="container">
-    <div class="row">
-        <h1 class="alert alert-info">User Service Registry Info</h1>
-        <p>Register a service</p>
-        <form id="serviceRegistrationForm" ng-submit="registerService()">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="name">Service Name</label>
-                        <input id="name" type="text" class="form-control" ng-model="serviceName" required>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label for="method">Method</label>
-                        <select id="method" class="form-control" ng-model="method" required>
-                            <option>GET</option>
-                            <option>POST</option>
-                            <option>PUT</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="url">Service URL</label>
-                        <input id="url" type="text" class="form-control" ng-model="serviceUrl" required>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label for="responseType">Response Type</label>
-                        <input id="responseType" list="mimeTypes" class="form-control" ng-model="responseType" required/>
-                        <datalist id="mimeTypes">
-                            <option>application/json</option>
-                            <option>application/octet-stream</option>
-                            <option>text/plain</option>
-                            <option>text/html</option>
-                            <option>image/bmp</option>
-                            <option>image/jpeg</option>
-                        </datalist>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="description">Service Description</label>
-                        <input id="description" type="text" class="form-control" ng-model="serviceDescription">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="params">Parameters</label>
-                        <input id="params" type="text" class="form-control" ng-model="params" placeholder="Comma delimited list of parameters">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-1">
-                    <button class="btn btn-primary" type="submit" id="registerBtn" style="margin-top: 24px">Register Service</button>
-                </div>
-            </div>
-            <div>
-                <label id="serviceMsg">{{serviceMsg}}</label>
-            </div>
-            <div ng-show="resourceId">
-                Resource ID: {{resourceId}}
-            </div>
 
-        </form>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#register" aria-controls="register" role="tab" data-toggle="tab">Register</a></li>
+        <li role="presentation"><a href="#execute" aria-controls="execute" role="tab" data-toggle="tab">Execute</a></li>
+    </ul>
 
-        <h1 class="alert alert-info">Executing a service</h1>
-        <form id="runService" ng-submit="executeService()">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="resource">Resource ID</label>
-                        <input id="resource" type="text" class="form-control" ng-model="resource" required>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="register">
+            <h1 class="alert alert-info">User Service Registry Info</h1>
+            <p>Register a service</p>
+            <form id="serviceRegistrationForm" ng-submit="registerService()">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="name">Service Name</label>
+                            <input id="name" type="text" class="form-control" ng-model="serviceName" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="method">Method</label>
+                            <select id="method" class="form-control" ng-model="method" required>
+                                <option>GET</option>
+                                <option>POST</option>
+                                <option>PUT</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="dataInput">Data Input</label>
-                        <input id="dataInput" type="text" class="form-control" ng-model="dataInput" placeholder="JSON string">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="url">Service URL</label>
+                            <input id="url" type="text" class="form-control" ng-model="serviceUrl" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="responseType">Response Type</label>
+                            <input id="responseType" list="mimeTypes" class="form-control" ng-model="responseType" required/>
+                            <datalist id="mimeTypes">
+                                <option>application/json</option>
+                                <option>application/octet-stream</option>
+                                <option>text/plain</option>
+                                <option>text/html</option>
+                                <option>image/bmp</option>
+                                <option>image/jpeg</option>
+                            </datalist>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="dataInputs">Data Inputs</label>
-                        <input id="dataInputs" type="text" class="form-control" ng-model="dataInputs" placeholder="JSON object">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="description">Service Description</label>
+                            <input id="description" type="text" class="form-control" ng-model="serviceDescription">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-1">
-                    <button class="btn btn-primary" type="submit" id="executeBtn" style="margin-top: 24px">Execute Service</button>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="params">Parameters</label>
+                            <input id="params" type="text" class="form-control" ng-model="params" placeholder="Comma delimited list of parameters">
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="row">
+                    <div class="col-md-1">
+                        <button class="btn btn-primary" type="submit" id="registerBtn" style="margin-top: 24px">Register Service</button>
+                    </div>
+                </div>
+                <div>
+                    <label id="serviceMsg">{{serviceMsg}}</label>
+                </div>
+                <div ng-show="resourceId">
+                    Resource ID: {{resourceId}}
+                </div>
 
-        </form>
-        <div>
-            <label id="executeMsg">{{executeMsg}}</label>
+            </form>
+
         </div>
-        <div ng-show="serviceResponse">
-            <pre>{{serviceResponse | json}}</pre>
+        <div role="tabpanel" class="tab-pane fade" id="execute">
+            <h1 class="alert alert-info">Executing a service</h1>
+            <form id="runService" ng-submit="executeService()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="resource">Resource ID</label>
+                            <input id="resource" type="text" class="form-control" ng-model="resource" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="dataInput">Data Input</label>
+                            <input id="dataInput" type="text" class="form-control" ng-model="dataInput" placeholder="JSON string">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="dataInputs">Data Inputs</label>
+                            <input id="dataInputs" type="text" class="form-control" ng-model="dataInputs" placeholder="JSON object">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1">
+                        <button class="btn btn-primary" type="submit" id="executeBtn" style="margin-top: 24px">Execute Service</button>
+                    </div>
+                </div>
+
+            </form>
+            <div>
+                <label id="executeMsg">{{executeMsg}}</label>
+            </div>
+            <div ng-show="serviceResponse">
+                <pre>{{serviceResponse | json}}</pre>
+            </div>
         </div>
     </div>
 </div>
