@@ -37,11 +37,11 @@
 
             <div class="row">
                 <h1 class="alert alert-info">Events</h1>
-                <p>Use the following to query the Workflow events service. </p>
+
                 <form ng-submit="getEvents()">
 
-                    <div class="col-md-6">
-                        <button type="submit" class="btn btn-primary">Get Event(s)</button>
+                    <div class="col-md-12" align="right">
+                        <button type="submit" class="btn btn-primary">Refresh Table</button>
                     </div>
 
 
@@ -50,7 +50,7 @@
             <div class="row">
                 <br>
                 <div class="col-md-12">
-                    <div class="form-group" ng-show="events">
+                    <div class="form-group" ng-show="events" ng-init="getEvents()">
 
                         <table id="searchEventsResults" class="table-striped table-bordered table table-hover" width="100%">
                             <tr><th >Event Id</th>

@@ -62,7 +62,7 @@
             url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
         }).then(function(result) {
             $http.post(
-                "/proxy?url=" + result.data.host + "/v1/events",
+                "/proxy?url=" + result.data.host + "/v1/events/"+$scope.eventType,
                 dataObj
             ).then(function successCallback(res) {
                 $scope.message = res;
@@ -224,7 +224,7 @@
             $scope.errorMsg = "";
 
             var currentTime = moment().utc().toISOString();
-            var triggerMessage = $scope.triggerMessage;
+            //var triggerMessage = $scope.triggerMessage;
             var dataObj = {
                 title: $scope.triggerTitle,
                 condition:{
@@ -251,7 +251,7 @@
                     $scope.getTriggers();
 
                     //set input fields to null to clear
-                    $scope.triggerMessage = null;
+                    //$scope.triggerMessage = null;
                     $scope.triggerTitle = null;
                     $scope.triggerQuery = null;
                     $scope.triggerType = null;

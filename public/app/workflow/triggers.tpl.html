@@ -37,11 +37,11 @@
 
             <div class="row">
                 <h1 class="alert alert-info">Triggers</h1>
-                <p>Use the following to query the Workflow trigger service. </p>
+
                 <form ng-submit="getTriggers()">
 
-                    <div class="col-md-6">
-                        <button type="submit" class="btn btn-primary">Get Trigger(s)</button>
+                    <div class="col-md-12" align="right">
+                        <button type="submit" class="btn btn-primary">Refresh Table</button>
                     </div>
 
                 </form>
@@ -50,7 +50,7 @@
                 <br>
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="form-group" ng-show="triggers">
+                        <div class="form-group" ng-show="triggers" ng-init="getTriggers()">
 
                             <label>Filter: <input ng-model="searchText"></label>
                             <table id="searchTriggerResults" class="table-striped table-bordered table table-hover" width="100%">
