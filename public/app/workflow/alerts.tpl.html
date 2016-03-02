@@ -61,8 +61,8 @@
                             </tr>
                             <tr ng-repeat="alert in alerts">
                                 <td >{{alert.id}}</td>
-                                <td >{{alert.trigger-id}}</td>
-                                <td >{{alert.event-id}}</td>
+                                <td >{{alert.trigger_id}}</td>
+                                <td >{{alert.event_id}}</td>
                                 <td align="center"> <button ng-click="deleteAlert(alert.id)" class="btn btn-primary">Delete Alert</button></td>
                             </tr>
                         </table>
@@ -79,11 +79,11 @@
                 <form ng-submit="postAlert()">
                     <div class="col-md-6">
                         <label for="alertTrigger">Trigger Id:</label>
-                        <input id="alertTrigger" ng-model="alertTrigger" type="text" class="form-control" placeholder="Enter a Trigger Id">
+                        <input id="alertTrigger" ng-model="alertTrigger" type="text" class="form-control" placeholder="Enter a Trigger Id" required>
                     </div>
                     <div class="col-md-4">
                         <label for="alertEvent">Event Id:</label>
-                        <input id="alertEvent" ng-model="alertEvent" type="text" class="form-control" placeholder="Enter an Event Id">
+                        <input id="alertEvent" ng-model="alertEvent" type="text" class="form-control" placeholder="Enter an Event Id" required>
                     </div>
                     <br>
                     <button type="submit"  class="btn btn-primary">Submit Alert</button>

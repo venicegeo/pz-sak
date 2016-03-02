@@ -37,7 +37,7 @@
         <div role="tabpanel" class="tab-pane fade in active" id="ingest">
             <h1 class="alert alert-info">Ingester Service Info</h1>
             <p>Use the following input to ingest a file into the system.</p>
-            <form>
+            <form ng-submit="ingest()">
                 <div class="row" ng-init="ingestType = 'Text'">
                     <div class="col-md-2">
                         <div class="form-group">
@@ -51,7 +51,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="mimeType">Mime Type</label>
-                            <input id="mimeType" list="mimeTypes" class="form-control" ng-model="mimeType" required/>
+                            <input id="mimeType" list="mimeTypes" class="form-control" ng-model="mimeType" />
                             <datalist id="mimeTypes">
                                 <option>application/text</option>
                                 <option>image/jpeg</option>
@@ -64,7 +64,7 @@
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="message">Content</label>
-                            <input id="message" type="text" class="form-control" ng-model="message">
+                            <input id="message" type="text" class="form-control" ng-model="message" ng-required="ingestType == 'Text'" >
                         </div>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="file">File</label>
-                            <input id="file" type="file" class="form-control" ng-model="file" accept="image/*">
+                            <input id="file" type="file" class="form-control" ng-model="file" accept="image/*" ng-required="ingestType == 'File'" >
                         </div>
                     </div>
                 </div>
@@ -80,14 +80,14 @@
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="metadata">Metadata</label>
-                            <textarea id="metadata" type="textarea" class="form-control" ng-model="metadata" style="height:200px;"></textarea>
+                            <textarea id="metadata" type="textarea" class="form-control" ng-model="metadata" style="height:200px;" required ></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-1">
                         <br>
-                        <button type="button" class="btn btn-primary" ng-click="ingest()" ng-disabled="ingestType== 'File'">Ingest Content</button>
+                        <button type="submit" class="btn btn-primary" ng-disabled="ingestType== 'File'">Ingest Content</button>
                     </div>
                 </div>
                 <label id="errorMsg">{{errorMsg}}</label>
@@ -102,7 +102,7 @@
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="jobId">Job ID</label>
-                            <input id="jobId" type="text" class="form-control" ng-model="jobId">
+                            <input id="jobId" type="text" class="form-control" ng-model="jobId" required>
                         </div>
                     </div>
                     <div class="col-md-1">
@@ -115,9 +115,12 @@
                     <label>{{jobStatus.message}}</label>
                 </div>
                 <div ng-show="jobStatus.progress">
-                    Time Remaining: {{jobStatus.progress.timeRemaining}}<br/>
-                    Time Spent: {{jobStatus.progress.timeSpent}}<br/>
-                    <progress title="jobStatus.progress.percentComplete" max="100" value="jobStatus.progress.percentComplete"></progress>
+                    <div ng-show="jobStatus.progress.timeRemaining">Time Remaining: {{jobStatus.progress.timeRemaining}}</div>
+                    <div ng-show="jobStatus.progress.timeSpent">Time Spent: {{jobStatus.progress.timeSpent}}</div>
+                    <div ng-show="jobStatus.progress.percentComplete">Percent Complete:
+                        <progress style="margin-top:10px;" ng-title="jobStatus.progress.percentComplete" max="100" ng-value="jobStatus.progress.percentComplete"></progress>
+                        ({{jobStatus.progress.percentComplete}}%)
+                    </div>
                 </div>
             </form>
         </div>

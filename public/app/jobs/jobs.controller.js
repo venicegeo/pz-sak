@@ -25,8 +25,17 @@
             $scope.page = 0;
 
             // If pageSize or Job Status change, move back to the first page
-            $scope.$watch("[pageSize,jobStatusQuery]", function(newValue, oldValue) {
+            $scope.$watch("pageSize", function(newValue, oldValue) {
                 $scope.page = 0;
+                if ($scope.jobStatusQuery) {
+                    $scope.updateFilter(false);
+                }
+            });
+            $scope.$watch("jobStatusQuery", function(newValue, oldValue) {
+                if (angular.isDefined(newValue)) {
+                    $scope.page = 0;
+                    $scope.updateFilter(true);
+                }
             });
 
             $scope.getJobStatus = function() {
@@ -105,54 +114,55 @@
             };
 
 
-            $scope.updateFilter = function() {
+            $scope.updateFilter = function(getCount) {
 
 
-                    var query = "";
-                    if (angular.isDefined($scope.jobStatusQuery) && $scope.jobStatusQuery !== "" && $scope.jobStatusQuery !== "All") {
-                        query = "/status/" + $scope.jobStatusQuery;
-                    }
+                var query = "";
+                if (angular.isDefined($scope.jobStatusQuery) && $scope.jobStatusQuery !== "" && $scope.jobStatusQuery !== "All") {
+                    query = "/status/" + $scope.jobStatusQuery;
+                }
 
-                    var params = {
-                        page: $scope.page,
-                        pageSize: $scope.pageSize
-                    };
+                var params = {
+                    page: $scope.page,
+                    pageSize: $scope.pageSize
+                };
+                $http({
+                    method: "GET",
+                    url: "/proxy/pz-jobmanager.cf.piazzageo.io/job" + query,
+                    params: params
+                }).then(function successCallback(html) {
+                    $scope.jobsList = html.data;
+                }, function errorCallback(response) {
+                    console.log("search.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
+                });
+
+                if (getCount) {
                     $http({
                         method: "GET",
-                        url: "/proxy/pz-jobmanager.cf.piazzageo.io/job" + query,
-                        params: params
-                    }).then(function successCallback( html ) {
-                        $scope.jobsList = html.data;
-                    }, function errorCallback(response){
-                        console.log("search.controller fail");
-                        toaster.pop('error', "Error", "There was an issue with your request.");
-                    });
-
-                    $http({
-                        method: "GET",
-                        url: "/proxy/pz-jobmanager.cf.piazzageo.io/job" + query + "/count",
-                        params: params
-                    }).then(function successCallback( html ) {
+                        url: "/proxy/pz-jobmanager.cf.piazzageo.io/job" + query + "/count"
+                    }).then(function successCallback(html) {
                         $scope.total = html.data;
-                        $scope.maxPage = Math.ceil( $scope.total / $scope.pageSize ) - 1;
-                    }, function errorCallback(response){
+                        $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
+                    }, function errorCallback(response) {
                         console.log("search.controller fail");
                         toaster.pop('error', "Error", "There was an issue with your request.");
                     });
+                }
 
             };
 
             $scope.prevPage = function() {
                 if ($scope.page > 0) {
                     $scope.page--;
-                    $scope.updateFilter();
+                    $scope.updateFilter(false);
                 }
             };
 
             $scope.nextPage = function() {
                 if ($scope.page < $scope.maxPage) {
                     $scope.page++;
-                    $scope.updateFilter();
+                    $scope.updateFilter(false);
                 }
             };
 

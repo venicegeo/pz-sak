@@ -68,7 +68,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="jobId">Jobs to query</label>
-                            <input id="jobId" type="text" class="form-control" ng-model="jobId" placeholder="Enter a valid Job ID">
+                            <input id="jobId" type="text" class="form-control" ng-model="jobId" placeholder="Enter a valid Job ID" required>
 
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="resourceId">Resource ID</label>
-                            <input id="resourceId" type="text" class="form-control" ng-model="resourceId" placeholder="Enter a valid Resource ID">
+                            <input id="resourceId" type="text" class="form-control" ng-model="resourceId" placeholder="Enter a valid Resource ID" required>
 
                         </div>
                     </div>
@@ -153,7 +153,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="jobStatuses">Job Status</label>
-                            <select id="jobStatuses" ng-change="updateFilter()" ng-options="jobStatus for jobStatus in jobStatuses | orderBy:jobStatus" ng-model="jobStatusQuery"
+                            <select id="jobStatuses" ng-options="jobStatus for jobStatus in jobStatuses | orderBy:jobStatus" ng-model="jobStatusQuery"
                                     class="form-control">
                             </select>
                         </div>
@@ -167,10 +167,10 @@
                         </div>
                     </div>
 
-                    <div class="col-md-1 pull-right">
+                    <div class="col-md-2 pull-right">
                         <div class="form-group">
                             <label for="pageSize">Per page</label>
-                            <select id="pageSize" ng-change="updateFilter()" ng-options="option for option in pageSizeOptions" ng-model="pageSize"
+                            <select id="pageSize" ng-options="option for option in pageSizeOptions" ng-model="pageSize"
                                     class="form-control">
                             </select>
                         </div>
