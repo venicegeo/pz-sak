@@ -85,7 +85,8 @@
                     </div>
                     <div class="col-md-4">
                         <label for="eventType">Event Type</label>
-                        <select id="eventType" class="form-control" ng-model="eventType">
+                        <select id="eventType" class="form-control" ng-model="eventType" required>
+                            <option value="">Please select</option>
                             <option>foo</option>
                             <option>bar</option>
                         </select>
