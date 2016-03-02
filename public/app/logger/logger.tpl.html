@@ -38,11 +38,10 @@
         <div role="tabpanel" class="tab-pane fade in active" id="getlogs">
             <div class="row">
                 <h1 class="alert alert-info">Logger Service Info</h1>
-                <p>Use the following to query the Logger service. </p>
                 <form ng-submit="getLogs()">
                     <div class="row">
-                        <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary">Get Log(s)</button>
+                        <div class="col-md-12"  align="right">
+                            <button type="submit" class="btn btn-primary">Refresh Table</button>
                         </div>
                     </div>
                 </form>
@@ -54,7 +53,7 @@
                 <br>
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="form-group" ng-show="logs">
+                        <div class="form-group" ng-show="logs" ng-init="getLogs()">
 
                             <label>Filter: <input ng-model="searchText"></label>
                             <table id="searchTextResults" class="table table-striped" width="100%">
