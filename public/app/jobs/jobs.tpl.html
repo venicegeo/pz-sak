@@ -167,19 +167,21 @@
                         </div>
                     </div>
 
-                    <div class="col-md-2 pull-right">
+                    <div class="col-md-2 pull-right" ng-init="displayJson=false">
                         <div class="form-group">
                             <label for="pageSize">Per page</label>
                             <select id="pageSize" ng-options="option for option in pageSizeOptions" ng-model="pageSize"
                                     class="form-control">
                             </select>
+                            <input id="displayJson" type="checkbox" ng-model="displayJson">
+                            <label for="displayJson">Display JSON</label>
                         </div>
                     </div>
 
                 </div>
                 <div class="row">
                     <div ng-show="jobsList" ng-repeat="job in jobsList">
-                        <dl class="dl-horizontal two-column">
+                        <dl class="dl-horizontal two-column" ng-hide="displayJson">
                             <dt>Job ID</dt>
                             <dd>{{job.jobId}}</dd>
                             <dt>Submitted</dt>
@@ -193,8 +195,8 @@
                             <dt ng-repeat-start="(key, value) in job.jobType.data.metadata">{{key | capitalize}}</dt>
                             <dd ng-repeat-end>{{value}}</dd>
                         </dl>
+                        <pre ng-show="displayJson">{{job | json}}</pre>
                         <hr class="separator">
-                        <!--<pre>{{job | json}}</pre>-->
                     </div>
                 </div>
                 <br>
