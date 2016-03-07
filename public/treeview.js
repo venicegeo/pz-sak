@@ -35,74 +35,10 @@
 
 
     treedata_avm = [
-    {
-      label: 'Name Server',
-      onSelect: function(branch) {
-      return $scope.bodyDiv = "app/name-server/name-server.tpl.html";
-      },
-
-        children: [
-        {
-        label: 'Admin'
-        }
-        ]
-       },
-      {
-        label: 'WFS',
-        onSelect: function(branch) {
-            return $scope.bodyDiv = "app/wfs/wfs.tpl.html";
-        },
-
-
-      }, {
-        label: 'WMS',
-        onSelect: function(branch) {
-                    return $scope.bodyDiv = "app/wms/wms.tpl.html";
-                },
 
 
 
-      }, {
-        label: 'Jobs',
-        onSelect: function(branch) {
-                    return $scope.bodyDiv = "app/jobs/jobs.tpl.html";
-                },
 
-        children: [
-        {
-        label: 'Admin'
-        }
-        ]
-
-      },
-      {
-        label: 'UUIDs',
-        onSelect: function(branch) {
-                    return $scope.bodyDiv = "app/uuid/uuid.tpl.html";
-                },
-
-        children: [
-        {
-        label: 'Admin',
-          onSelect: function(branch) {
-            return $scope.bodyDiv = "app/uuid/uuid.admin.tpl.html";
-          }
-        }
-        ]
-        },
-        {
-        label: 'Ingester',
-        onSelect: function(branch) {
-                    return $scope.bodyDiv = "app/ingester/ingester.tpl.html";
-                },
-
-        children: [
-        {
-        label: 'Admin'
-        }
-        ]
-
-        },
         {
         label: 'Access',
         onSelect: function(branch) {
@@ -116,6 +52,60 @@
         ]
 
         },
+      {
+        label: 'Ingester',
+        onSelect: function(branch) {
+          return $scope.bodyDiv = "app/ingester/ingester.tpl.html";
+        },
+
+        children: [
+          {
+            label: 'Admin'
+          }
+        ]
+
+      },
+      {
+        label: 'Jobs',
+        onSelect: function(branch) {
+          return $scope.bodyDiv = "app/jobs/jobs.tpl.html";
+        },
+
+        children: [
+          {
+            label: 'Admin'
+          }
+        ]
+
+      },
+      {
+        label: 'Logger',
+        onSelect: function(branch) {
+          return $scope.bodyDiv = "app/logger/logger.tpl.html";
+        },
+
+        children: [
+          {
+            label: 'Admin',
+            onSelect: function(branch) {
+              return $scope.bodyDiv = "app/logger/logger.admin.tpl.html";
+            }
+          }
+        ]
+
+      },
+      {
+        label: 'Name Server',
+        onSelect: function(branch) {
+          return $scope.bodyDiv = "app/name-server/name-server.tpl.html";
+        },
+
+        children: [
+          {
+            label: 'Admin'
+          }
+        ]
+      },
         {
         label: 'Search',
                 onSelect: function(branch) {
@@ -145,6 +135,21 @@
         ]
 
         },
+      {
+        label: 'UUIDs',
+        onSelect: function(branch) {
+          return $scope.bodyDiv = "app/uuid/uuid.tpl.html";
+        },
+
+        children: [
+          {
+            label: 'Admin',
+            onSelect: function(branch) {
+              return $scope.bodyDiv = "app/uuid/uuid.admin.tpl.html";
+            }
+          }
+        ]
+      },
         {
         label: 'Workflow',
           onSelect: function(branch) {
@@ -180,22 +185,23 @@
         ]
 
         },
-        {
-        label: 'Logger',
-                onSelect: function(branch) {
-                      return $scope.bodyDiv = "app/logger/logger.tpl.html";
-                },
 
-        children: [
-        {
-          label: 'Admin',
-            onSelect: function(branch) {
-              return $scope.bodyDiv = "app/logger/logger.admin.tpl.html";
-            }
-        }
-        ]
+      {
+        label: 'WFS',
+        onSelect: function(branch) {
+          return $scope.bodyDiv = "app/wfs/wfs.tpl.html";
+        },
 
-        }
+
+      }, {
+        label: 'WMS',
+        onSelect: function(branch) {
+          return $scope.bodyDiv = "app/wms/wms.tpl.html";
+        },
+
+
+
+      }
     ];
 
     $scope.my_data = treedata_avm;
