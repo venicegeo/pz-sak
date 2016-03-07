@@ -27,31 +27,51 @@
 <div ng-controller="UserServiceRegistryAdminController" class="container" ng-init="getStatus()">
     <div class="row" ng-cloak>
         <h1 class="alert alert-info">User Service Registry Admin Info</h1>
-        <div>
-            <table>
-                <tr><td>Classes:</td> <td>{{adminData.classes}}</td></tr>
-                <tr><td>Loaded Classes:</td> <td>{{adminData.classes.loaded}}</td></tr>
-                <tr><td>Unloaded Classes:</td> <td>{{adminData.classes.unloaded}}</td></tr>
-                <tr><td>200 Status Counter:</td> <td>{{adminData.counter.status.200.metrics}}</td></tr>
-                <tr><td>302 Status Counter:</td> <td>{{adminData.counter.status.302.admin.stats}}</td></tr>
-                <tr><td>404 Status Counter:</td> <td>{{adminData.counter.status.404.unmapped}}</td></tr>
-                <tr><td>Gauge Response Admin Stats:</td> <td>{{adminData.gauge.response.admin.stats}}</td></tr>
-                <tr><td>Gauge Response Metrics:</td> <td>{{adminData.gauge.response.metrics}}</td></tr>
-                <tr><td>Gauge Response Unmapped:</td> <td>{{adminData.gauge.response.unmapped}}</td></tr>
-                <tr><td>Marksweep Count:</td> <td>{{adminData.gc.ps_marksweep.count}}</td></tr>
-                <tr><td>Marksweep Time:</td> <td>{{adminData.gc.ps_marksweep.time}}</td></tr>
-                <tr><td>Scavenge Count:</td> <td>{{adminData.gc.ps_scavenge.count}}</td></tr>
-                <tr><td>Scavenge Time:</td> <td>{{adminData.gc.ps_scavenge.time}}</td></tr>
-                <tr><td>Heap:</td> <td>{{adminData.heap}}</td></tr>
-                <tr><td>Head Committed:</td> <td>{{adminData.heap.committed}}</td></tr>
-                <tr><td>Hape Init:</td> <td>{{adminData.heap.init}}</td></tr>
-                <tr><td>Heap Used:</td> <td>{{adminData.heap.used}}</td></tr>
-                <tr><td>Active Http Sessions:</td> <td>{{adminData.httpsessions.active}}</td></tr>
-                <tr><td>Max Http Sessions:</td> <td>{{adminData.httpsessions.max}}</td></tr>
-                <tr><td>Instance Uptime:</td> <td>{{adminData.instance.uptime}}</td></tr>
-                <tr><td>Memory:</td> <td>{{adminData.mem}}</td></tr>
-                <tr><td>Memory Free:</td> <td>{{adminData.mem.free}}</td></tr>
-                <tr><td>Processors:</td> <td>{{adminData.processors}}</td></tr>
+        <div class="col-md-6">
+            <table class="table table-striped">
+                <tr><th width="300px">Admin Service</th>
+                    <th width="300px">Returned Data</th>
+
+                </tr>
+                <tr><td>Classes:</td> <td>{{classes}}</td></tr>
+                <tr><td>Loaded Classes:</td> <td>{{classesLoaded}}</td></tr>
+                <tr><td>Unloaded Classes:</td> <td>{{classesUnloaded}}</td></tr>
+                <tr><td>200 Status Counter ToLower:</td> <td>{{twoStatusCounterLower}}</td></tr>
+                <tr><td>200 Status Counter Metrics:</td><td>{{twoStatusCounterMetrics}}</td></tr>
+                <tr><td>200 Status Counter Delete:</td> <td>{{twoStatusCounterDelete}}</td></tr>
+                <tr><td>200 Status Counter Describe:</td> <td>{{twoStatusCounterDescribe}}</td></tr>
+                <tr><td>200 Status Counter Execute:</td> <td>{{twoStatusCounterExecute}}</td></tr>
+                <tr><td>200 Status Counter List:</td> <td>{{twoStatusCounterList}}</td></tr>
+                <tr><td>200 Status Counter Register:</td> <td>{{twoStatusCounterRegister}}</td></tr>
+                <tr><td>200 Status Counter Update:</td> <td>{{twoStatusCounterUpdate}}</td></tr>
+                <tr><td>Gauge Status Counter ToLower:</td> <td>{{gaugeStatusCounterLower}}</td></tr>
+                <tr><td>Gauge Status Counter Metrics:</td><td>{{gaugeStatusCounterMetrics}}</td></tr>
+                <tr><td>Gauge Status Counter Delete:</td> <td>{{gaugeStatusCounterDelete}}</td></tr>
+                <tr><td>Gauge Status Counter Describe:</td> <td>{{gaugeStatusCounterDescribe}}</td></tr>
+                <tr><td>Gauge Status Counter Execute:</td> <td>{{gaugeStatusCounterExecute}}</td></tr>
+                <tr><td>Gauge Status Counter List:</td> <td>{{gaugeStatusCounterList}}</td></tr>
+                <tr><td>Gauge Status Counter Register:</td> <td>{{gaugeStatusCounterRegister}}</td></tr>
+                <tr><td>Gauge Status Counter Update:</td> <td>{{gaugeStatusCounterUpdate}}</td></tr>
+                <tr><td>Marksweep Count:</td> <td>{{marksweepCount}}</td></tr>
+                <tr><td>Marksweep Time:</td> <td>{{marksweepTime}}</td></tr>
+                <tr><td>Scavenge Count:</td> <td>{{scavengeCount}}</td></tr>
+                <tr><td>Scavenge Time:</td> <td>{{scavengeTime}}</td></tr>
+                <tr><td>Heap:</td> <td>{{heap}}</td></tr>
+                <tr><td>Head Committed:</td> <td>{{heapCommitted}}</td></tr>
+                <tr><td>Hape Init:</td> <td>{{heapInit}}</td></tr>
+                <tr><td>Heap Used:</td> <td>{{heapUsed}}</td></tr>
+                <tr><td>Active Http Sessions:</td> <td>{{httpsessionsActive}}</td></tr>
+                <tr><td>Max Http Sessions:</td> <td>{{httpsessionsMax}}</td></tr>
+                <tr><td>Instance Uptime:</td> <td>{{instanceUptime}}</td></tr>
+                <tr><td>Memory:</td> <td>{{mem}}</td></tr>
+                <tr><td>Memory Free:</td> <td>{{memFree}}</td></tr>
+                <tr><td>Processors:</td> <td>{{processors}}</td></tr>
+                <tr><td>Average System Load:</td> <td>{{systemloadAverage}}</td></tr>
+                <tr><td>Threads:</td> <td>{{threads}}</td></tr>
+                <tr><td>Daemon Threads:</td> <td>{{threadsDaemon}}</td></tr>
+                <tr><td>Peak Threads:</td> <td>{{threadsPeak}}</td></tr>
+                <tr><td>Total Started Threads:</td> <td>{{threadsTotalStarted}}</td></tr>
+                <tr><td>Uptime:</td> <td>{{uptime}}</td></tr>
             </table>
         </div>
     </div>

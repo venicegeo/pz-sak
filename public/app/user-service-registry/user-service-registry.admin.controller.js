@@ -35,7 +35,47 @@
                     method: "GET",
                     url: "/proxy?url=" + result.data.address + "/metrics",
                 }).then(function successCallback( html ) {
-                    $scope.adminData = html.data;
+                    $scope.classes = html.data["classes"];
+                    $scope.classesLoaded = html.data["classes.loaded"];
+                    $scope.classesUnloaded = html.data["classes.unloaded"];
+                    $scope.twoStatusCounterLower = html.data["counter.status.200.jumpstart.string.toLower"];
+                    $scope.twoStatusCounterMetrics = html.data["counter.status.200.metrics"];
+                    $scope.twoStatusCounterDelete = html.data["counter.status.200.servicecontroller.deleteService"];
+                    $scope.twoStatusCounterDescribe = html.data["counter.status.200.servicecontroller.describeService"];
+                    $scope.twoStatusCounterExecute = html.data["counter.status.200.servicecontroller.executeService"];
+                    $scope.twoStatusCounterList = html.data["counter.status.200.servicecontroller.listService"];
+                    $scope.twoStatusCounterRegister = html.data["counter.status.200.servicecontroller.registerService"];
+                    $scope.twoStatusCounterUpdate = html.data["counter.status.200.servicecontroller.updateService"];
+                    $scope.gaugeStatusCounterLower = html.data["gauge.response.jumpstart.string.toLower"];
+                    $scope.gaugeStatusCounterMetrics = html.data["gauge.response.metrics"];
+                    $scope.gaugeStatusCounterDelete = html.data["gauge.response.servicecontroller.deleteService"];
+                    $scope.gaugeStatusCounterDescribe = html.data["gauge.response.servicecontroller.describeService"];
+                    $scope.gaugeStatusCounterExecute = html.data["gauge.response.servicecontroller.executeService"];
+                    $scope.gaugeStatusCounterList = html.data["gauge.response.servicecontroller.listService"];
+                    $scope.gaugeStatusCounterRegister = html.data["gauge.response.servicecontroller.registerService"];
+                    $scope.gaugeStatusCounterUpdate = html.data["gauge.response.servicecontroller.updateService"];
+                    $scope.marksweepCount = html.data["gc.ps_marksweep.count"];
+                    $scope.marksweepTime = html.data["gc.ps_marksweep.time"];
+                    $scope.scavengeCount = html.data["gc.ps_scavenge.count"];
+                    $scope.scavengeTime = html.data["gc.ps_scavenge.time"];
+                    $scope.heap = html.data["heap"];
+                    $scope.heapCommitted = html.data["heap.committed"];
+                    $scope.heapInit = html.data["heap.init"];
+                    $scope.heapUsed = html.data["heap.used"];
+                    $scope.httpsessionsActive = html.data["httpsessions.active"];
+                    $scope.httpsessionsMax = html.data["httpsessions.max"];
+                    $scope.instanceUptime = html.data["instance.uptime"];
+                    $scope.mem = html.data["mem"];
+                    $scope.memFree = html.data["mem.free"];
+                    $scope.processors = html.data["processors"];
+                    $scope.systemloadAverage = html.data["systemload.average"];
+                    $scope.threads = html.data["threads"];
+                    $scope.threadsDaemon = html.data["threads.daemon"];
+                    $scope.threadsPeak = html.data["threads.peak"];
+                    $scope.threadsTotalStarted = html.data["threads.totalStarted"];
+                    $scope.uptime = html.data["uptime"];
+
+
 
                 }, function errorCallback(response){
                     console.log("fail");

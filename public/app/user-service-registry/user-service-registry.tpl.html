@@ -30,6 +30,9 @@
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#register" aria-controls="register" role="tab" data-toggle="tab">Register</a></li>
         <li role="presentation"><a href="#execute" aria-controls="execute" role="tab" data-toggle="tab">Execute</a></li>
+        <li role="presentation"><a href="#list" aria-controls="list" role="tab" data-toggle="tab">List</a></li>
+        <li role="presentation"><a href="#search" aria-controls="search" role="tab" data-toggle="tab">Search</a></li>
+
     </ul>
 
     <!-- Tab panes -->
@@ -109,6 +112,8 @@
             </form>
 
         </div>
+
+
         <div role="tabpanel" class="tab-pane fade" id="execute">
             <h1 class="alert alert-info">Executing a service</h1>
             <form id="runService" ng-submit="executeService()">
@@ -150,7 +155,26 @@
                 <pre>{{serviceResponse | json}}</pre>
             </div>
         </div>
+
+
+    <div role="tabpanel" class="tab-pane fade" id="list">
+        <h1 class="alert alert-info">List of Services</h1>
+        <form id="listServices" ng-submit="listServices()">
+
+
+        </form>
+        </div>
+
+        <div role="tabpanel" class="tab-pane fade" id="search">
+            <h1 class="alert alert-info">Search Services</h1>
+            <form id="searchServices" ng-submit="searchServices()">
+
+
+            </form>
+
     </div>
+
+
 </div>
 <toaster-container></toaster-container>
 
