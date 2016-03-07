@@ -1,0 +1,62 @@
+<!--
+ Copyright 2016, RadiantBlue Technologies, Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!DOCTYPE html>
+<html lang="en" ng-app="SAKapp" ng-strict-di>
+<head>
+    <meta charset="UTF-8">
+    <title>User Service Registry Admin Info</title>
+    <link rel="stylesheet" href="../../css/bootstrap.css">
+
+
+</head>
+<body>
+
+<div ng-controller="UserServiceRegistryAdminController" class="container" ng-init="getStatus()">
+    <div class="row" ng-cloak>
+        <h1 class="alert alert-info">User Service Registry Admin Info</h1>
+        <div>
+            <table>
+                <tr><td>Classes:</td> <td>{{adminData.classes}}</td></tr>
+                <tr><td>Loaded Classes:</td> <td>{{adminData.classes.loaded}}</td></tr>
+                <tr><td>Unloaded Classes:</td> <td>{{adminData.classes.unloaded}}</td></tr>
+                <tr><td>200 Status Counter:</td> <td>{{adminData.counter.status.200.metrics}}</td></tr>
+                <tr><td>302 Status Counter:</td> <td>{{adminData.counter.status.302.admin.stats}}</td></tr>
+                <tr><td>404 Status Counter:</td> <td>{{adminData.counter.status.404.unmapped}}</td></tr>
+                <tr><td>Gauge Response Admin Stats:</td> <td>{{adminData.gauge.response.admin.stats}}</td></tr>
+                <tr><td>Gauge Response Metrics:</td> <td>{{adminData.gauge.response.metrics}}</td></tr>
+                <tr><td>Gauge Response Unmapped:</td> <td>{{adminData.gauge.response.unmapped}}</td></tr>
+                <tr><td>Marksweep Count:</td> <td>{{adminData.gc.ps_marksweep.count}}</td></tr>
+                <tr><td>Marksweep Time:</td> <td>{{adminData.gc.ps_marksweep.time}}</td></tr>
+                <tr><td>Scavenge Count:</td> <td>{{adminData.gc.ps_scavenge.count}}</td></tr>
+                <tr><td>Scavenge Time:</td> <td>{{adminData.gc.ps_scavenge.time}}</td></tr>
+                <tr><td>Heap:</td> <td>{{adminData.heap}}</td></tr>
+                <tr><td>Head Committed:</td> <td>{{adminData.heap.committed}}</td></tr>
+                <tr><td>Hape Init:</td> <td>{{adminData.heap.init}}</td></tr>
+                <tr><td>Heap Used:</td> <td>{{adminData.heap.used}}</td></tr>
+                <tr><td>Active Http Sessions:</td> <td>{{adminData.httpsessions.active}}</td></tr>
+                <tr><td>Max Http Sessions:</td> <td>{{adminData.httpsessions.max}}</td></tr>
+                <tr><td>Instance Uptime:</td> <td>{{adminData.instance.uptime}}</td></tr>
+                <tr><td>Memory:</td> <td>{{adminData.mem}}</td></tr>
+                <tr><td>Memory Free:</td> <td>{{adminData.mem.free}}</td></tr>
+                <tr><td>Processors:</td> <td>{{adminData.processors}}</td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+<toaster-container></toaster-container>
+
+</body>
+</html>
