@@ -1,0 +1,82 @@
+<!--
+ Copyright 2016, RadiantBlue Technologies, Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!DOCTYPE html>
+<html lang="en" ng-app="SAKapp" ng-strict-di>
+<head>
+    <meta charset="UTF-8">
+    <title>User Service Registry Admin Info</title>
+    <link rel="stylesheet" href="../../css/bootstrap.css">
+
+
+</head>
+<body>
+
+<div ng-controller="UserServiceRegistryAdminController" class="container" ng-init="getStatus()">
+    <div class="row" ng-cloak>
+        <h1 class="alert alert-info">User Service Registry Admin Info</h1>
+        <div class="col-md-6">
+            <table class="table table-striped">
+                <tr><th width="300px">Admin Service</th>
+                    <th width="300px">Returned Data</th>
+
+                </tr>
+                <tr><td>Classes:</td> <td>{{classes}}</td></tr>
+                <tr><td>Loaded Classes:</td> <td>{{classesLoaded}}</td></tr>
+                <tr><td>Unloaded Classes:</td> <td>{{classesUnloaded}}</td></tr>
+                <tr><td>200 Status Counter ToLower:</td> <td>{{twoStatusCounterLower}}</td></tr>
+                <tr><td>200 Status Counter Metrics:</td><td>{{twoStatusCounterMetrics}}</td></tr>
+                <tr><td>200 Status Counter Delete:</td> <td>{{twoStatusCounterDelete}}</td></tr>
+                <tr><td>200 Status Counter Describe:</td> <td>{{twoStatusCounterDescribe}}</td></tr>
+                <tr><td>200 Status Counter Execute:</td> <td>{{twoStatusCounterExecute}}</td></tr>
+                <tr><td>200 Status Counter List:</td> <td>{{twoStatusCounterList}}</td></tr>
+                <tr><td>200 Status Counter Register:</td> <td>{{twoStatusCounterRegister}}</td></tr>
+                <tr><td>200 Status Counter Update:</td> <td>{{twoStatusCounterUpdate}}</td></tr>
+                <tr><td>Gauge Status Counter ToLower:</td> <td>{{gaugeStatusCounterLower}}</td></tr>
+                <tr><td>Gauge Status Counter Metrics:</td><td>{{gaugeStatusCounterMetrics}}</td></tr>
+                <tr><td>Gauge Status Counter Delete:</td> <td>{{gaugeStatusCounterDelete}}</td></tr>
+                <tr><td>Gauge Status Counter Describe:</td> <td>{{gaugeStatusCounterDescribe}}</td></tr>
+                <tr><td>Gauge Status Counter Execute:</td> <td>{{gaugeStatusCounterExecute}}</td></tr>
+                <tr><td>Gauge Status Counter List:</td> <td>{{gaugeStatusCounterList}}</td></tr>
+                <tr><td>Gauge Status Counter Register:</td> <td>{{gaugeStatusCounterRegister}}</td></tr>
+                <tr><td>Gauge Status Counter Update:</td> <td>{{gaugeStatusCounterUpdate}}</td></tr>
+                <tr><td>Marksweep Count:</td> <td>{{marksweepCount}}</td></tr>
+                <tr><td>Marksweep Time:</td> <td>{{marksweepTime}}</td></tr>
+                <tr><td>Scavenge Count:</td> <td>{{scavengeCount}}</td></tr>
+                <tr><td>Scavenge Time:</td> <td>{{scavengeTime}}</td></tr>
+                <tr><td>Heap:</td> <td>{{heap}}</td></tr>
+                <tr><td>Head Committed:</td> <td>{{heapCommitted}}</td></tr>
+                <tr><td>Hape Init:</td> <td>{{heapInit}}</td></tr>
+                <tr><td>Heap Used:</td> <td>{{heapUsed}}</td></tr>
+                <tr><td>Active Http Sessions:</td> <td>{{httpsessionsActive}}</td></tr>
+                <tr><td>Max Http Sessions:</td> <td>{{httpsessionsMax}}</td></tr>
+                <tr><td>Instance Uptime:</td> <td>{{instanceUptime}}</td></tr>
+                <tr><td>Memory:</td> <td>{{mem}}</td></tr>
+                <tr><td>Memory Free:</td> <td>{{memFree}}</td></tr>
+                <tr><td>Processors:</td> <td>{{processors}}</td></tr>
+                <tr><td>Average System Load:</td> <td>{{systemloadAverage}}</td></tr>
+                <tr><td>Threads:</td> <td>{{threads}}</td></tr>
+                <tr><td>Daemon Threads:</td> <td>{{threadsDaemon}}</td></tr>
+                <tr><td>Peak Threads:</td> <td>{{threadsPeak}}</td></tr>
+                <tr><td>Total Started Threads:</td> <td>{{threadsTotalStarted}}</td></tr>
+                <tr><td>Uptime:</td> <td>{{uptime}}</td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+<toaster-container></toaster-container>
+
+</body>
+</html>

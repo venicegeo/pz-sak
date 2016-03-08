@@ -130,7 +130,10 @@
 
         children: [
         {
-        label: 'Admin'
+        label: 'Admin',
+                onSelect: function(branch) {
+                    return $scope.bodyDiv = "app/user-service-registry/user-service-registry.admin.tpl.html";
+              },
         }
         ]
 
