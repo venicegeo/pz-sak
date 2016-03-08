@@ -23,18 +23,34 @@
             $scope.pageSizeOptions = [10, 50, 100];
             $scope.pageSize = 10;
             $scope.page = 0;
+            $scope.jobStatusQuery = "All";
+            var BY_JOB_STATUS = "byJobStatus";
+            var BY_USER_ID = "byUserId";
 
             // If pageSize or Job Status change, move back to the first page
             $scope.$watch("pageSize", function(newValue, oldValue) {
                 $scope.page = 0;
                 if ($scope.jobStatusQuery) {
-                    $scope.updateFilter(false);
+                    if ($scope.searchType == BY_JOB_STATUS) {
+                        $scope.updateFilter(false);
+                    } else if ($scope.searchType == BY_USER_ID) {
+                        $scope.getJobsByUserId(false);
+                    }
                 }
             });
             $scope.$watch("jobStatusQuery", function(newValue, oldValue) {
                 if (angular.isDefined(newValue)) {
                     $scope.page = 0;
                     $scope.updateFilter(true);
+                }
+            });
+            $scope.$watch("searchType", function(newValue, oldValue) {
+                if (angular.isDefined(newValue) && newValue == BY_JOB_STATUS) {
+                    $scope.page = 0;
+                    $scope.updateFilter(true);
+                } else if (angular.isDefined(newValue) && newValue == BY_USER_ID) {
+                    $scope.page = 0;
+                    $scope.getJobsByUserId(true);
                 }
             });
 
@@ -155,14 +171,22 @@
             $scope.prevPage = function() {
                 if ($scope.page > 0) {
                     $scope.page--;
-                    $scope.updateFilter(false);
+                    if ($scope.searchType == BY_JOB_STATUS) {
+                        $scope.updateFilter(false);
+                    } else if ($scope.searchType == BY_USER_ID) {
+                        $scope.getJobsByUserId(false);
+                    }
                 }
             };
 
             $scope.nextPage = function() {
                 if ($scope.page < $scope.maxPage) {
                     $scope.page++;
-                    $scope.updateFilter(false);
+                    if ($scope.searchType == BY_JOB_STATUS) {
+                        $scope.updateFilter(false);
+                    } else if ($scope.searchType == BY_USER_ID) {
+                        $scope.getJobsByUserId(false);
+                    }
                 }
             };
 
@@ -178,9 +202,28 @@
                 return lastItem;
             };
 
+            $scope.getJobsByUserId = function(getCount) {
+                var params = {
+                    page: $scope.page,
+                    pageSize: $scope.pageSize
+                };
+                if (angular.isUndefined($scope.userId) || $scope.userId == "") {
+                    return;
+                }
+                $http({
+                    method: "GET",
+                    url: "/proxy/pz-jobmanager.cf.piazzageo.io/job/apikey/" + $scope.userId,
+                    params: params
+                }).then(function successCallback(html) {
+                    $scope.jobsList = html.data;
+                    if (getCount) {
+                        $scope.total = html.data.length;
+                        $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
+                    }
+                }, function errorCallback(response) {
+                    console.log("search.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
+                });
+            };
         }
-
-
-
-
 })();
