@@ -67,6 +67,8 @@
             });
         };
 
+
+
         $scope.executeService = function() {
             $scope.executeMsg = "";
             $http({
@@ -103,6 +105,42 @@
 
             });
 
+        };
+        $scope.listServices = function() {
+            var jobId = "";
+            $http({
+                method: "GET",
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-servicecontroller"
+            }).then(function(result) {
+                $http.post(
+                    "/proxy?url=" + result.data.address + "/servicecontroller/executeService",
+                    {
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                )
+                    .then(function(resultJobList)
+                {
+                    $http.get(
+                        "/porxy?url=" +result.data.address + "/servicecontroller/job",
+                    jobId,
+                {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+                    ).then(function successCallback( html ) {
+                    $scope.jobsList = html.data.result.text;
+                }, function errorCallback(response){
+                    console.log("user-service-registry.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
+                });
+
+
+            });
+
+        });
         };
 
     }
