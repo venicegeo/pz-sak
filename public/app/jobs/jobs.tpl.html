@@ -150,24 +150,39 @@
             <form id="jobsList" ng-init="getAllStatuses()">
                 <div class="row">
 
-                    <div class="col-md-2">
-                        <div class="form-group">
+                    <div class="col-md-3" ng-init="searchType = 'byJobStatus'">
+                        <div class="form-group" ng-show="searchType == 'byJobStatus'" style="margin-bottom: 1px;">
                             <label for="jobStatuses">Job Status</label>
                             <select id="jobStatuses" ng-options="jobStatus for jobStatus in jobStatuses | orderBy:jobStatus" ng-model="jobStatusQuery"
                                     class="form-control">
                             </select>
                         </div>
 
+                        <div class="input-group" ng-show="searchType == 'byUserId'" style="margin-top: 25px; margin-bottom: 1px;">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="getJobsByUserId(true)" id="searchBtn">
+                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                </button>
+                            </span>
+                            <input id="userId" type="text" class="form-control" ng-model="userId" placeholder="User ID">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="radio-inline"><input type="radio" name="optradio" ng-model="searchType" value="byJobStatus">Status</label>
+                            <label class="radio-inline"><input type="radio" name="optradio" ng-model="searchType" value="byUserId">User ID</label>
+                        </div>
+
                     </div>
 
-                    <div class="col-md-8 text-center" style="margin-top: 35px;">
+                    <div class="col-md-6 text-center" style="margin-top: 35px;">
                         <div class="form-group">
                             <label ng-show="total > 0">Displaying {{firstResultOnPage()}} - {{lastResultOnPage()}} of {{total}}</label>
                             <label ng-show="total == 0">No results to display</label>
                         </div>
                     </div>
 
-                    <div class="col-md-2 pull-right" ng-init="displayJson=false">
+                    <div class="col-md-3 pull-right" ng-init="displayJson=false">
                         <div class="form-group">
                             <label for="pageSize">Per page</label>
                             <select id="pageSize" ng-options="option for option in pageSizeOptions" ng-model="pageSize"
