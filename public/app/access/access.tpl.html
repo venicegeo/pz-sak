@@ -20,17 +20,81 @@
     <title>Access Service Info</title>
     <link rel="stylesheet" href="../../css/bootstrap.css">
 
+    <style>
+        .navbutton {
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+    </style>
 
 </head>
 <body>
 
-<div class="container">
-    <div class="row">
-        <h1 class="alert alert-info">Access Service Info</h1>
-        <p>[Access service placeholder]</p>
-    </div>
-</div>
+<div ng-controller="AccessController" class="container">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#accesses" aria-controls="accesses" role="tab" data-toggle="tab">Access List</a></li>
+        <li role="presentation"><a href="#access" aria-controls="access" role="tab" data-toggle="tab">Access By ID</a></li>
+        <!--<li role="presentation"><a href="#fileaccess" aria-controls="fileaccess" role="tab" data-toggle="tab">File Access</a></li>-->
+    </ul>
 
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="accesses" ng-init="getData()">
+            <h1 class="alert alert-info">Access List</h1>
+            <form id="searchForm" ng-submit="getData($event)">
+                <div class="row">
+                    <div class="col-md-1 pull-right">
+                        <button class="btn btn-primary" type="submit" id="searchBtn">
+                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+                <div style="margin-top: 10px" ng-show="total == 0">{{errorMsg}}</div>
+                <div style="margin-top: 10px" ng-show="total">Displaying {{firstResultOnPage()}} to {{lastResultOnPage()}} of {{total}} results</div><br/>
+                <div ng-show="accessDataList" ng-repeat="data in accessDataList">
+                    <pre>{{data | json}}</pre>
+                    <br/>
+                </div>
+                <nav ng-show="total > pageSize">
+                    <ul class="pager">
+                        <li><a ng-click="prevPage()" class="navbutton">Previous</a></li>
+                        <li><a ng-click="nextPage()" class="navbutton">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="access">
+            <h1 class="alert alert-info">Access By ID</h1>
+            <form id="tagForm" ng-submit="getAccess()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="dataId">Data ID</label>
+                            <input id="dataId" type="text" class="form-control" ng-model="dataId" required>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-primary" type="submit" id="tagBtn" style="margin-top: 24px">Get Data</button>
+                    </div>
+                </div>
+                <div ng-show="accessData">
+                    <pre>{{accessData | json}}</pre>
+                </div>
+            </form>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="fileaccess">
+            <h1 class="alert alert-info">File Access</h1>
+            <div>[Coming soon]</div>
+        </div>
+    </div>
+
+    <toaster-container></toaster-container>
+</div>
 
 </body>
 </html>
