@@ -22,6 +22,31 @@
 
     function WorkflowController ($scope, $http, $log, $q, toaster) {
 
+        $scope.updateTypeTable = function (eventTypeId) {
+
+            $http({
+                method: "GET",
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
+            }).then(function(result) {
+
+                $http({
+                    method: "GET",
+                    url: "/proxy?url=" + result.data.host + "/v1/eventtypes?id="+eventTypeId,
+                }).then(function successCallback( html ) {
+                    //TODO: When the get eventtypes by ID is fixed in services, change the following to take out the [0] array call.
+                    $scope.eventTypeId = html.data[0].id;
+                    $scope.eventTypeName = html.data[0].name;
+                    $scope.eventTypeItemId = html.data[0].mapping.code;
+                    $scope.eventTypeSeverity = html.data[0].mapping.severity;
+                    $scope.eventTypeProblem = html.data[0].mapping.filename;
+                }, function errorCallback(response){
+                    console.log("workflow.controller fail"+response.status);
+                    toaster.pop('error', "Error", "There was an issue with retrieving the event types.");
+                });
+
+            });
+
+};
         $scope.getEvents = function () {
         $scope.events = "";
         $scope.errorMsg = "";
@@ -45,6 +70,103 @@
         });
 
     };
+        $scope.loadEventsPage = function() {
+            //TODO: on page load, hide the table that shows event types and the table that adds an eventtype.
+            //TODO: the only thing showing should be the eventType drop down and the button that says "Add an Event Type".
+            //TODO: Have the event Type table load with the event type metadata that is selected from drop down.
+            //TODO: only show the table to create an event type once the 'create event type' button is clicked.
+            $scope.getEventTypes();
+           // $scope.hideTable = {'visibility': 'hidden'};
+            //$scope.createEventTypes.visible = false;
+
+
+        }
+        $scope.getEventTypes = function () {
+            $scope.eventType = "";
+            $scope.eventTypes = [];
+
+            $http({
+                method: "GET",
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
+            }).then(function(result) {
+
+                $http({
+                    method: "GET",
+                    url: "/proxy?url=" + result.data.host + "/v1/eventtypes",
+                }).then(function successCallback( html ) {
+                    $scope.eventTypes = html.data;
+                }, function errorCallback(response){
+                    console.log("workflow.controller fail"+response.status);
+                    toaster.pop('error', "Error", "There was an issue with retrieving the event types.");
+                });
+
+            });
+
+        };
+        $scope.createEventType = function(newEventType) {
+
+            var eventDataObj = {
+                name: $scope.newEventTypeName,
+                mapping: {
+                    code:$scope.newEventTypeCode,
+                    severity: $scope.newEventTypeSeverity,
+                    filename: $scope.newEventTypeFilename,
+                }
+            };
+            $http({
+                method: "GET",
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
+            }).then(function(result) {
+                $http.post(
+                    "/proxy?url=" + result.data.host + "/v1/eventtypes",
+                    eventDataObj
+                ).then(function successCallback(res) {
+                    $scope.message = res;
+
+                    //reload events table
+                    $scope.getEventTypes();
+
+                    //clear input values
+                    $scope.newEventTypeName = null;
+                    $scope.newEventTypeCode = null;
+                    $scope.newEventTypeSeverity = null;
+                    $scope.newEventTypeFilename = null;
+
+                    toaster.pop('success', "Success", "The event was successfully posted.")
+
+                }, function errorCallback(res) {
+                    console.log("workflow.controller fail"+res.status);
+
+                    toaster.pop('error', "Error", "There was a problem submitting the event message.");
+                });
+            })
+        };
+        $scope.deleteEventType = function(eventTypeId) {
+            $http({
+                method: "GET",
+                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
+            }).then(function(result) {
+                $http({
+                    method: "DELETE",
+                    url: "/proxy?url=" + result.data.host + "/v1/eventtypes/"+eventTypeId,
+                }).then(function successCallback( html ) {
+                    $scope.message = html;
+                    console.log("success");
+
+                    $scope.eventTypeId = "";
+                    $scope.eventTypeName = "";
+                    $scope.eventTypeItemId = "";
+                    $scope.eventTypeSeverity = "";
+                    $scope.eventTypeProblem = "";
+                    $scope.getEventTypes();
+
+                    toaster.pop('success', "Success", "The eventtype was successfully deleted.");
+                }, function errorCallback(response) {
+                    console.log("workflow.controller fail"+response.status);
+                    toaster.pop('error', "Error", "There was a problem deleting the eventtype.");
+                });
+            });
+        };
 
     $scope.postEvent = function(){
         $scope.errorMsg = "";
@@ -73,12 +195,12 @@
                 //clear input values
                 $scope.alertMessage = null;
                 $scope.eventType = null;
-                toaster.pop('success', "Success", "The alert was successfully posted.")
+                toaster.pop('success', "Success", "The event was successfully posted.")
 
             }, function errorCallback(res) {
                 console.log("workflow.controller fail"+res.status);
 
-                toaster.pop('error', "Error", "There was a problem submitting the alert message.");
+                toaster.pop('error', "Error", "There was a problem submitting the event message.");
             });
         })
     };
@@ -102,10 +224,10 @@
                     $scope.alertMessage = null;
                     $scope.eventType = null;
 
-                    toaster.pop('success', "Success", "The alert was successfully deleted.");
+                    toaster.pop('success', "Success", "The event was successfully deleted.");
                 }, function errorCallback(response) {
                     console.log("workflow.controller fail"+response.status);
-                    toaster.pop('error', "Error", "There was a problem deleting the alert message.");
+                    toaster.pop('error', "Error", "There was a problem deleting the event.");
                 });
             });
         };
@@ -213,7 +335,7 @@
                     $scope.triggers = html.data;
                 }, function errorCallback(response){
                     console.log("workflow.controller fail"+response.status);
-                    toaster.pop('error', "Error", "There was an issue with retrieving the triggerss.");
+                    toaster.pop('error', "Error", "There was an issue with retrieving the triggers.");
                 });
 
             });
@@ -278,7 +400,7 @@
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.host + "/v1/triggerss/"+triggerId,
+                    url: "/proxy?url=" + result.data.host + "/v1/triggers/"+triggerId,
                 }).then(function successCallback( html ) {
                     $scope.trigger = html.data;
                 }, function errorCallback(response){
