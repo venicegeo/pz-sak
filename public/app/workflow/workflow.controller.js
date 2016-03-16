@@ -22,6 +22,8 @@
 
     function WorkflowController ($scope, $http, $log, $q, toaster) {
 
+        $scope.showNewEventTypeForm = false;
+
         $scope.updateTypeTable = function (eventTypeId) {
 
             $http({
@@ -70,6 +72,11 @@
         });
 
     };
+
+        $scope.showHideNewEventType = function() {
+            $scope.showNewEventTypeForm = !$scope.showNewEventTypeForm;
+        };
+
         $scope.loadEventsPage = function() {
             //TODO: on page load, hide the table that shows event types and the table that adds an eventtype.
             //TODO: the only thing showing should be the eventType drop down and the button that says "Add an Event Type".

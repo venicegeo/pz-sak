@@ -93,7 +93,7 @@
                     <label for="eventType">OR</label>
                 </div>
                 <div class="col-md-3">
-                    <button ng-click="createEventType()" ng-model="btnCreateEvent" class="btn btn-primary">Create New Event Type</button>
+                    <button ng-click="showHideNewEventType()" ng-model="btnCreateEvent" class="btn btn-primary">Create New Event Type</button>
                 </div>
                 <div class="col-md-12">
                     <table id="spaceHolder"  class="table-striped table-bordered table table-hover" width="100%">
@@ -125,7 +125,7 @@
 
                 </div>
             </div>
-            <form id="createEventType"  ng-model="createEventTypes"  ng-submit="createEventType()">
+            <form id="createEventType"  ng-model="createEventTypes"  ng-submit="createEventType()" ng-show="showNewEventTypeForm">
                 <div class="row">
                         <h1 class="alert alert-info">Create New Event Type</h1>
                     <div class="col-md-4">
