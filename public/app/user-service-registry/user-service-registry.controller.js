@@ -24,9 +24,68 @@
     function UserServiceController($scope, $http, $log, $q, toaster) {
         $scope.method = 'GET';
         $scope.responseType = 'application/json';
+        $scope.inputs = [];
+        $scope.outputs = [];
 
+
+        $scope.addInput = function() {
+
+            var newInput = {
+                "name" : "aString",
+                "minOccurs" : 1,
+                "maxOccurs" : 1,
+                "dataType" : {
+                    "type" : "body",
+                    "mimeType" : "application/json"
+                },
+                "metadata" : null,
+                "formats" : []
+            }
+
+            $scope.inputs.push(newInput);
+        };
+
+        $scope.addOutput = function() {
+
+            var newOutput = {
+                "name" : "aString",
+                "minOccurs" : 1,
+                "maxOccurs" : 1,
+                "dataType" : {
+                    "type" : "body",
+                    "mimeType" : "application/json"
+                },
+                "metadata" : null,
+                "formats" : []
+            }
+
+            $scope.outputs.push(newOutput);
+        };
+
+        $scope.addFormat = function($index) {
+            var newFormat = {
+                "mimeType" : "application/json",
+                "encoding" : null,
+                "schema" : null,
+                "maximumMegabytes" : null,
+                "dataType" : null
+            }
+            $scope.inputs[$index].formats.push(newFormat);
+        };
         $scope.registerService = function() {
             $scope.errorMsg = "";
+            $http({
+                method: 'GET',
+                url: 'http://localhost:11080/proxy/localhost:8086/servicecontroller/describeService?resourceId=97c21e9b-465d-44fc-a8d2-e5b81ea785ce'
+            }).then(function(result){
+                console.log(result);
+            });
+            $http({
+                method: 'GET',
+                url: 'http://localhost:11080/proxy/localhost:8086/servicecontroller/describeService?resourceId=97c21e9b-465d-44fc-a8d2-e5b81ea785ce'
+            }).then(function(result){
+                console.log(result);
+            });
 
             $http({
                 method: "GET",
