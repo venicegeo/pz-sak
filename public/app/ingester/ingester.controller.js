@@ -24,6 +24,21 @@
         $scope.data = "none";
         $scope.metadata = "{}";
 
+        /*$scope.file_changed = function(element) {
+
+            $scope.$apply(function(scope) {
+                var photofile = element.files[0];
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    // handle onload
+                    scope.file = e.target.result;
+                    console.log("file substr: " + e.target.result.substring(0, 100));
+                };
+                reader.readAsDataURL(photofile);
+                //reader.readAsBinaryString(photofile);
+            });
+        };*/
+
         $scope.ingest = function () {
             /*var f = document.getElementById('file').files[0],
                 r = new FileReader();
@@ -31,6 +46,7 @@
                 $scope.data = e.target.result;
             };
             r.readAsBinaryString(f);*/
+            $scope.file = document.getElementById('file').files[0];
 
             var metadata = {};
             try{
@@ -62,9 +78,7 @@
                 }
                 data = {
                     "dataType": {
-                        "type": $scope.ingestType.toLowerCase(),
-                        "mimeType": $scope.mimeType,
-                        "content": $scope.file
+                        "type": "raster",
                     },
                     "metadata": metadata
                 };
@@ -81,11 +95,13 @@
             // TODO: Either include the JSON in the url as a param or include it in the form data
             var fd = new FormData();
             fd.append( 'body',  JSON.stringify(ingestObj) );
-            // fd.append( 'file', f );
+            if ($scope.ingestType == 'File') {
+                fd.append('file', document.getElementById('file').files[0]);
+            }
 
             $http({
                 method: "POST",
-                url: "/proxy?url=pz-gateway.cf.piazzageo.io/job",
+                url: "/proxy?url=pz-gateway.stage.geointservices.io/job",
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -93,6 +109,9 @@
             }).then(function successCallback( html ) {
                 $scope.jobIdResult = html.data.jobId;
             }, function errorCallback(response){
+                if (response.data.message) {
+                    $scope.errorMsg = response.data.message;
+                }
                 console.log("search.controller fail");
                 toaster.pop('error', "Error", "There was an issue with your request.");
             });
@@ -116,7 +135,7 @@
 
             $http({
                 method: "POST",
-                url: "/proxy?url=pz-gateway.cf.piazzageo.io/job",
+                url: "/proxy?url=pz-gateway.stage.geointservices.io/job",
                 data: fd,
                 headers: {
                     "Content-Type": undefined
