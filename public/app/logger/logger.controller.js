@@ -21,6 +21,15 @@
 
     function LoggerController ($scope, $http, $log, $q, toaster, discover) {
 
+        $scope.showHideSearchForm = function() {
+            $scope.showSearchLogs = !$scope.showSearchLogs;
+        };
+
+
+        $scope.searchLogs = function() {
+            //TODO:Once Logger Search API is updated, we need to update this call to pass search params and show only what is returned.
+        };
+
         $scope.getLogs = function () {
             $scope.logs = "";
             $scope.errorMsg = "";
