@@ -55,14 +55,28 @@
                 <div class="row">
                     <div class="col-md-3">
                     <div class="form-group">
-                        <label for="afterDate">After Date</label>
-                        <input id="afterDate" type="datetime" class="form-control" ng-model="afterDate">
+                        <label for="afterDate">After Date:</label>
+                        <input type="date" class="form-control" id="afterDate" name="input" ng-model="afterDate"
+                               placeholder="yyyy-MM-dd"/>
+
+                        <div role="alert">
+                        <span class="error" ng-show="searchLogs.input.$error.date">
+                            Not a valid date!</span>
+                        </div>
+
+
                     </div>
                 </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="beforeDate">Before Date</label>
-                            <input id="beforeDate" type="datetime" class="form-control" ng-model="beforeDate">
+                            <input type="date" class="form-control" id="beforeDate" name="input" ng-model="beforeDate"
+                                   placeholder="yyyy-MM-dd"/>
+
+                            <div role="alert">
+                        <span class="error" ng-show="searchLogs.input.$error.date">
+                            Not a valid date!</span>
+                            </div>
                         </div>
                     </div>
 
@@ -73,7 +87,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="containsString">Contains</label>
-                            <input id="containsString" class="form-control" ng-model="containsString">
+                            <input id="containsString" type="text" class="form-control" ng-model="containsString">
                         </div>
                     </div>
 
@@ -100,13 +114,13 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="fromPagination">From</label>
-                            <input id="fromPagination" class="form-control" ng-model="fromPagination">
+                            <input id="fromPagination" type="number" class="form-control" ng-model="fromPagination">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="sizePagination">Size</label>
-                            <input id="sizePagination" class="form-control" ng-model="sizePagination">
+                            <input id="sizePagination" type="number" class="form-control" ng-model="sizePagination">
                         </div>
                     </div>
 
