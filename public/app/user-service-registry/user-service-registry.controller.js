@@ -72,8 +72,19 @@
             }
             $scope.inputs[$index].formats.push(newFormat);
         };
+        $scope.addOutputFormat = function($index) {
+            var newFormat = {
+                "mimeType" : "application/json",
+                "encoding" : null,
+                "schema" : null,
+                "maximumMegabytes" : null,
+                "dataType" : null
+            }
+            $scope.outputs[$index].formats.push(newFormat);
+        };
         $scope.registerService = function() {
             $scope.errorMsg = "";
+            /*
             $http({
                 method: 'GET',
                 url: 'http://localhost:11080/proxy/localhost:8086/servicecontroller/describeService?resourceId=97c21e9b-465d-44fc-a8d2-e5b81ea785ce'
@@ -87,43 +98,43 @@
                 console.log(result);
             });
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-servicecontroller"
-            }).then(function(result) {
+        */
 
-                // Handle spaces or no spaces between
-                var params = [""];
-                if (!angular.isUndefined($scope.params) && $scope.params !== "") {
-                    params = $scope.params.split(", ");
-                    if (params.length == 1) {
-                        params = params[0].split(",");
-                    }
-                }
-                var data = {
-                    "name":$scope.serviceName,
-                    "description":$scope.serviceDescription,
-                    "url":$scope.serviceUrl,
-                    "method":$scope.method,
-                    "params":params,
-                    "responseMimeType":$scope.responseType
-                };
-                $http.post(
-                    "/proxy?url=" + result.data.address + "/servicecontroller/registerService",
-                    data,
-                    {
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
-                    }
-                ).then(function successCallback( html ) {
-                    $scope.resourceId = html.data.resourceId;
-                }, function errorCallback(response){
-                    console.log("user-service-registry.controller fail");
-                    toaster.pop('error', "Error", "There was an issue with your request.");
-                });
+            var resourceMetadata = {
+                "name":$scope.serviceName,
+                "description":$scope.serviceDescription,
+                "url":$scope.serviceUrl,
+                "method":$scope.method
+            };
 
-            });
+            var data = {
+                "resourceMetadata" : resourceMetadata,
+                "inputs" : $scope.inputs,
+                "outputs" : $scope.outputs
+            };
+            /*
+             $http.post(
+             "http://localhost:11080/proxy/" + "localhost:8086" + "/servicecontroller/registerService",
+             data
+             ).then(function successCallback( html ) {
+             $scope.resourceId = html.data.resourceId;
+             }, function errorCallback(response){
+             console.log("user-service-registry.controller fail");
+             toaster.pop('error', "Error", "There was an issue with your request.");
+             });
+             */
+
+
+            var request = $http({
+                method: "POST",
+                url: 'http://localhost:11080/servicecontroller/registerService',
+                data :data,
+                headers: {'Content-Type': 'application/json'}
+            }).then(function(result){
+                console.log(result);
+            });;
+
+
         };
 
         $scope.executeService = function() {
