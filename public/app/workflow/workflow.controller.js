@@ -23,8 +23,17 @@
     function WorkflowController ($scope, $http, $log, $q, toaster) {
 
         $scope.showNewEventTypeForm = false;
+        $scope.showEventTypeTable = false;
+        $scope.showEventTable = false;
 
         $scope.updateTypeTable = function (eventTypeId) {
+
+            if (!$scope.showEventTypeTable){
+                $scope.showEventTypeTable = true;
+            }
+            else{
+                $scope.showeventTypeTable = false;
+            }
 
             $http({
                 method: "GET",
@@ -77,17 +86,34 @@
             $scope.showNewEventTypeForm = !$scope.showNewEventTypeForm;
         };
 
+        $scope.showHideEventTypeTable = function() {
+            $scope.showEventTypeTable = !$scope.showEventTypeTable;
+        };
+
+        $scope.cancelCreateEventType = function() {
+            $scope.showNewEventTypeForm = !$scope.showNewEventTypeForm;
+        };
+
+        $scope.showHideEventTable = function() {
+            $scope.showEventTable = !$scope.showEventTable;
+        };
+
+        $scope.showHideNewEventForm = function() {
+            $scope.showNewEventForm = !$scope.showNewEventForm;
+        };
+
+        $scope.cancelCreateEvent = function() {
+            $scope.showNewEventForm = !$scope.showNewEventForm;
+        };
+
         $scope.loadEventsPage = function() {
-            //TODO: on page load, hide the table that shows event types and the table that adds an eventtype.
-            //TODO: the only thing showing should be the eventType drop down and the button that says "Add an Event Type".
-            //TODO: Have the event Type table load with the event type metadata that is selected from drop down.
-            //TODO: only show the table to create an event type once the 'create event type' button is clicked.
+
+            //Load event Types drop down with values from service
             $scope.getEventTypes();
-           // $scope.hideTable = {'visibility': 'hidden'};
-            //$scope.createEventTypes.visible = false;
 
 
-        }
+        };
+
         $scope.getEventTypes = function () {
             $scope.eventType = "";
             $scope.eventTypes = [];
@@ -110,14 +136,15 @@
             });
 
         };
+
         $scope.createEventType = function(newEventType) {
 
             var eventDataObj = {
                 name: $scope.newEventTypeName,
                 mapping: {
-                    code:$scope.newEventTypeCode,
+                    itemId:$scope.newEventTypeItemId,
                     severity: $scope.newEventTypeSeverity,
-                    filename: $scope.newEventTypeFilename,
+                    problem: $scope.newEventTypeProblem,
                 }
             };
             $http({
@@ -135,9 +162,12 @@
 
                     //clear input values
                     $scope.newEventTypeName = null;
-                    $scope.newEventTypeCode = null;
+                    $scope.newEventTypeItemId = null;
                     $scope.newEventTypeSeverity = null;
-                    $scope.newEventTypeFilename = null;
+                    $scope.newEventTypeProblem = null;
+
+                    //hide create new eventtype table:
+                    $scope.showHideNewEventType();
 
                     toaster.pop('success', "Success", "The event was successfully posted.")
 
@@ -148,6 +178,17 @@
                 });
             })
         };
+
+        $scope.selectEventType = function(newEventType) {
+            //User selected to create an event associated with an event type
+
+            //TODO: Show/hide new event table
+            $scope.showHideNewEventForm();
+            $scope.newEventType = newEventType;
+
+            //TODO: On submit, hide the event type table and have toaster pop open showing success.
+        };
+
         $scope.deleteEventType = function(eventTypeId) {
             $http({
                 method: "GET",
@@ -181,9 +222,12 @@
         var currentTime = moment().utc().toISOString();
         var alertMessage = $scope.alertMessage;
         var dataObj = {
-            type: $scope.eventType,
+            type: $scope.newEventType,
             date: currentTime,
             data:{
+                itemId: $scope.newEventItemId,
+                severity: $scope.newEventSeverity,
+                problem: $scope.newEventProblem
                  }
         };
         $http({
@@ -191,7 +235,7 @@
             url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
         }).then(function(result) {
             $http.post(
-                "/proxy?url=" + result.data.host + "/v1/events/"+$scope.eventType,
+                "/proxy?url=" + result.data.host + "/v1/events/",
                 dataObj
             ).then(function successCallback(res) {
                 $scope.message = res;

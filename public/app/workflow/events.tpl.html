@@ -44,7 +44,7 @@
 
                 <form ng-submit="getEvents()">
 
-                    <div class="col-md-6" align="right">
+                    <div class="col-md-12" align="right">
                         <button type="submit" class="btn btn-primary">Refresh Table</button>
                     </div>
 
@@ -102,7 +102,7 @@
                 </div>
 
                 <div class="col-md-12">
-                    <table id="eventTypeDetails" ng-model="eventTypeDetails" class="table-striped table-bordered table table-hover" width="100%">
+                    <table id="eventTypeDetails" ng-show="showEventTypeTable" ng-model="eventTypeDetails" class="table-striped table-bordered table table-hover" width="100%">
                         <tr><th >Event Type Id</th>
                             <th >Event Type</th>
                             <th >Item Id</th>
@@ -118,8 +118,8 @@
                             <td >{{eventTypeItemId}}</td>
                             <td >{{eventTypeSeverity}}</td>
                             <td >{{eventTypeProblem}}</td>
-                            <td align="center"><button  ng-click="selectEventType(eventType.id)" class="btn btn-primary">Create Event</button></td>
-                            <td align="center"> <button ng-click="deleteEventType(eventType.id)" class="btn btn-primary">Delete Event Type</button></td>
+                            <td align="center"><button  ng-click="selectEventType(eventTypeId)" class="btn btn-primary">Create Event</button></td>
+                            <td align="center"> <button ng-click="deleteEventType(eventTypeId)" class="btn btn-primary">Delete Event Type</button></td>
                         </tr>
                     </table>
 
@@ -140,15 +140,14 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="newEventTypeCode">Code</label>
-                            <select id="newEventTypeCode" class="form-control" ng-model="newEventTypeCode" required>
+                            <label for="newEventTypeItemId">ItemId</label>
+                            <select id="newEventTypeItemId" class="form-control" ng-model="newEventTypeItemId" required>
                                 <option>string</option>
                                 <option>boolean</option>
                                 <option>integer</option>
                                 <option>double</option>
                                 <option>date</option>
                                 <option>float</option>
-                                <option>byte</option>
                                 <option>short</option>
                                 <option>long</option>
                             </select>
@@ -172,8 +171,8 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="newEventTypeFilename">Filename</label>
-                            <select id="newEventTypeFilename" class="form-control" ng-model="newEventTypeFilename" required>
+                            <label for="newEventTypeProblem">Problem</label>
+                            <select id="newEventTypeProblem" class="form-control" ng-model="newEventTypeProblem" required>
                                 <option>string</option>
                                 <option>boolean</option>
                                 <option>integer</option>
@@ -186,14 +185,55 @@
                             </select>
                         </div>
                     </div>
+                    </div>
                     <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="form-group">
                             <button ng-model="btnCreateEventType" type="submit" class="btn btn-primary">Create Event Type</button>
+                            <button ng-model="btnCancelCreateEventType" type="reset" ng-click="cancelCreateEventType()" class="btn btn-primary">Cancel</button>
                         </div>
                     </div>
                     </div>
+
+            </form>
+
+            <form id="createEvent"  ng-model="createEvent"  ng-submit="postEvent()" ng-show="showNewEventForm">
+                <div class="row">
+                    <h1 class="alert alert-info">Create New Event</h1>
+                    <label>{{newEventType}}</label>
+
                 </div>
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="newEventItemId">ItemId</label>
+                            <input id="newEventItemId" type="text" class="form-control" ng-model="newEventItemId" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="newEventSeverity">Severity</label>
+                            <input id="newEventSeverity" type="text" class="form-control" ng-model="newEventSeverity" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="newEventProblem">Problem</label>
+                            <input id="newEventProblem" type="text" class="form-control" ng-model="newEventProblem" required>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <button ng-model="btnCreateEvent" type="submit" class="btn btn-primary">Create Event</button>
+                            <button ng-model="btnCancelCreateEvent" type="reset" ng-click="cancelCreateEvent()" class="btn btn-primary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
             </form>
 
 
