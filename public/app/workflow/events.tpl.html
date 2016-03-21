@@ -19,8 +19,6 @@
     <link rel="stylesheet" href="../../css/bootstrap.css">
 
 
-
-
 </head>
 <body>
 <div ng-controller="WorkflowController" class="container">
@@ -52,7 +50,7 @@
                 <div class="col-md-12">
                     <div class="form-group" ng-show="events" ng-init="getEvents()">
 
-                        <table id="searchEventsResults" class="table-striped table-bordered table table-hover" width="100%">
+                        <table id="searchEventsResults"  class="table-striped table-bordered table table-hover" width="100%">
                             <tr><th >Event Id</th>
                                 <th >Type</th>
                                 <th >Date</th>
@@ -74,29 +72,164 @@
 
         </div>
 
-        <div role="tabpanel" class="tab-pane fade" id="postevent">
+        <div role="tabpanel" class="tab-pane fade" id="postevent" ng-init="loadEventsPage()">
 
             <div class="row">
                 <h1 class="alert alert-info">Send an event to the Workflow Service</h1>
-                <form ng-submit="postEvent()">
-                    <div class="col-md-6">
-                        <label for="eventMessage">Event to send:</label>
-                        <input id="eventMessage" ng-model="eventMessage" type="text" class="form-control" placeholder="Does nothing right now.">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="eventType">Event Type</label>
-                        <select id="eventType" class="form-control" ng-model="eventType" required>
+
+                   <div class="col-md-3">
+                        <label for="eventType">Select Event Type</label>
+                        <select id="eventType" class="form-control" ng-model="eventType" ng-change="updateTypeTable(eventType.id)" ng-options="eventType.id for eventType in eventTypes">
                             <option value="">Please select</option>
-                            <option>foo</option>
-                            <option>bar</option>
                         </select>
-                    </div>
-                    <br>
-                    <button type="submit"  class="btn btn-primary">Submit Event</button>
-                    <br>
-                    <br>
-                </form>
+                    </div><br>
+                <div class="col-md-1">
+                    <label for="eventType">OR</label>
+                </div>
+                <div class="col-md-3">
+                    <button ng-click="showHideNewEventType()" ng-model="btnCreateEvent" class="btn btn-primary">Create New Event Type</button>
+                </div>
+                <div class="col-md-12">
+                    <table id="spaceHolder"  class="table-striped table-bordered table table-hover" width="100%">
+
+                    </table>
+                </div>
+
+                <div class="col-md-12">
+                    <table id="eventTypeDetails" ng-show="showEventTypeTable" ng-model="eventTypeDetails" class="table-striped table-bordered table table-hover" width="100%">
+                        <tr><th >Event Type Id</th>
+                            <th >Event Type</th>
+                            <th >Item Id</th>
+                            <th >Severity</th>
+                            <th >Problem</th>
+                            <th></th>
+                            <th></th>
+
+                        </tr>
+                        <tr >
+                            <td >{{eventTypeId}}</td>
+                            <td >{{eventTypeName}}</td>
+                            <td >{{eventTypeItemId}}</td>
+                            <td >{{eventTypeSeverity}}</td>
+                            <td >{{eventTypeProblem}}</td>
+                            <td align="center"><button  ng-click="selectEventType(eventTypeId)" class="btn btn-primary">Create Event</button></td>
+                            <td align="center"> <button ng-click="deleteEventType(eventTypeId)" class="btn btn-primary">Delete Event Type</button></td>
+                        </tr>
+                    </table>
+
+                </div>
             </div>
+            <form id="createEventType"  ng-model="createEventTypes"  ng-submit="createEventType()" ng-show="showNewEventTypeForm">
+                <div class="row">
+                        <h1 class="alert alert-info">Create New Event Type</h1>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="name">Event Type Name</label>
+                            <input id="name" type="text" class="form-control" ng-model="newEventTypeName" required>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="newEventTypeItemId">ItemId</label>
+                            <select id="newEventTypeItemId" class="form-control" ng-model="newEventTypeItemId" required>
+                                <option>string</option>
+                                <option>boolean</option>
+                                <option>integer</option>
+                                <option>double</option>
+                                <option>date</option>
+                                <option>float</option>
+                                <option>short</option>
+                                <option>long</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="newEventTypeSeverity">Severity</label>
+                            <select id="newEventTypeSeverity" class="form-control" ng-model="newEventTypeSeverity" required>
+                                <option>string</option>
+                                <option>boolean</option>
+                                <option>integer</option>
+                                <option>double</option>
+                                <option>date</option>
+                                <option>float</option>
+                                <option>byte</option>
+                                <option>short</option>
+                                <option>long</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="newEventTypeProblem">Problem</label>
+                            <select id="newEventTypeProblem" class="form-control" ng-model="newEventTypeProblem" required>
+                                <option>string</option>
+                                <option>boolean</option>
+                                <option>integer</option>
+                                <option>double</option>
+                                <option>date</option>
+                                <option>float</option>
+                                <option>byte</option>
+                                <option>short</option>
+                                <option>long</option>
+                            </select>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <button ng-model="btnCreateEventType" type="submit" class="btn btn-primary">Create Event Type</button>
+                            <button ng-model="btnCancelCreateEventType" type="reset" ng-click="cancelCreateEventType()" class="btn btn-primary">Cancel</button>
+                        </div>
+                    </div>
+                    </div>
+
+            </form>
+
+            <form id="createEvent"  ng-model="createEvent"  ng-submit="postEvent()" ng-show="showNewEventForm">
+                <div class="row">
+                    <h1 class="alert alert-info">Create New Event</h1>
+                    <label>{{newEventType}}</label>
+
+                </div>
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="newEventItemId">ItemId</label>
+                            <input id="newEventItemId" type="text" class="form-control" ng-model="newEventItemId" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="newEventSeverity">Severity</label>
+                            <input id="newEventSeverity" type="text" class="form-control" ng-model="newEventSeverity" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="newEventProblem">Problem</label>
+                            <input id="newEventProblem" type="text" class="form-control" ng-model="newEventProblem" required>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <button ng-model="btnCreateEvent" type="submit" class="btn btn-primary">Create Event</button>
+                            <button ng-model="btnCancelCreateEvent" type="reset" ng-click="cancelCreateEvent()" class="btn btn-primary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
 
         </div>
 
