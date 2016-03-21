@@ -15,22 +15,19 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('WorkflowAdminController', ['$scope', '$http', '$log', '$q', 'toaster',  WorkflowAdminController]);
+        .controller('WorkflowAdminController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', WorkflowAdminController]);
 
-    function WorkflowAdminController ($scope, $http, $log, $q, toaster) {
+    function WorkflowAdminController ($scope, $http, $log, $q, toaster, discover) {
 
         $scope.getStatus = function () {
             $scope.adminData = "";
             $scope.errorMsg = "";
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.host + "/v1/admin/stats",
+                    url: "/proxy?url=" + result.workflowHost + "/v1/admin/stats",
                 }).then(function successCallback( html ) {
                     $scope.adminData = html.data;
 
@@ -47,14 +44,11 @@
             $scope.settingsData = "";
             $scope.errorMsg = "";
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.host + "/v1/admin/settings",
+                    url: "/proxy?url=" + result.workflowHost + "/v1/admin/settings",
                 }).then(function successCallback( html ) {
                     $scope.settingsData = html.data;
                 }, function errorCallback(response){
@@ -73,15 +67,12 @@
             var workflowMessage = $scope.workflowMessage;
             var dataObj = {
                 debug: "true"
-            }
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            };
+            discover.async().then(function(result) {
 
 
                 $http.post(
-                    "/proxy?url=" + result.data.host + "/v1/admin/settings",
+                    "/proxy?url=" + result.workflowHost + "/v1/admin/settings",
                     dataObj
                 ).then(function successCallback(res) {
                     $scope.settings = res;
@@ -101,17 +92,14 @@
 
         $scope.reset = function() {
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
                 var data = {
                     reason: $scope.shutdownReason
                 };
                 $http({
                     method: "POST",
-                    url: "/proxy?url=" + result.data.host + "/v1/admin/shutdown",
+                    url: "/proxy?url=" + result.workflowHost + "/v1/admin/shutdown",
                     data: data
                 }).then(function successCallback( html ) {
                     $scope.shutdownResponse = html.data;

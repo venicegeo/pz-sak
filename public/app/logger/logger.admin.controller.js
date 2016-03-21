@@ -18,31 +18,24 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('LoggerAdminController', ['$scope', '$http', '$log', '$q', 'toaster',  LoggerAdminController]);
+        .controller('LoggerAdminController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', LoggerAdminController]);
 
-    function LoggerAdminController ($scope, $http, $log, $q, toaster) {
+    function LoggerAdminController ($scope, $http, $log, $q, toaster, discover) {
 
         $scope.getStatus = function () {
             $scope.adminData = "";
             $scope.errorMsg = "";
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.host + "/v1/admin/stats",
+                    url: "/proxy?url=" + result.loggerHost + "/v1/admin/stats",
                 }).then(function successCallback( html ) {
                     $scope.adminData = html.data;
-                    /*angular.forEach($scope.logs, function(item){
-                     console.log(item);
-                     })*/
                 }, function errorCallback(response){
                     console.log("fail");
                     toaster.pop('error', "Error", "There was an error retrieving the admin data");
-                    //$scope.errorMsg = "There was an issue with your request.  Please make sure ..."
                 });
 
             });
@@ -55,17 +48,14 @@
 
         $scope.reset = function() {
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
                 var data = {
                     reason: $scope.shutdownReason
                 };
                 $http({
                     method: "POST",
-                    url: "/proxy?url=" + result.data.host + "/v1/admin/shutdown",
+                    url: "/proxy?url=" + result.loggerHost + "/v1/admin/shutdown",
                     data: data
                 }).then(function successCallback( html ) {
                     $scope.shutdownResponse = html.data;
@@ -75,7 +65,6 @@
                         toaster.pop('success', "Success", "Service successfully shutdown");
                     }
 
-                    //$scope.errorMsg = "There was an issue with your request.  Please make sure ..."
                 });
 
             });
