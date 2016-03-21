@@ -18,22 +18,19 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('SearchAdminController', ['$scope', '$http', '$log', '$q', 'toaster',  SearchAdminController]);
+        .controller('SearchAdminController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', SearchAdminController]);
 
-    function SearchAdminController ($scope, $http, $log, $q, toaster) {
+    function SearchAdminController ($scope, $http, $log, $q, toaster, discover) {
 
         $scope.getStatus = function () {
             $scope.adminData = "";
             $scope.errorMsg = "";
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/elasticsearch"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.host + "/_cluster/health",
+                    url: "/proxy?url=" + result.searchHost + "/_cluster/health",
                 }).then(function successCallback( html ) {
                     $scope.adminData = html.data;
                 }, function errorCallback(response){
