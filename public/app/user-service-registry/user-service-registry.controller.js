@@ -84,21 +84,7 @@
         };
         $scope.registerService = function() {
             $scope.errorMsg = "";
-            /*
-            $http({
-                method: 'GET',
-                url: 'http://localhost:11080/proxy/localhost:8086/servicecontroller/describeService?resourceId=97c21e9b-465d-44fc-a8d2-e5b81ea785ce'
-            }).then(function(result){
-                console.log(result);
-            });
-            $http({
-                method: 'GET',
-                url: 'http://localhost:11080/proxy/localhost:8086/servicecontroller/describeService?resourceId=97c21e9b-465d-44fc-a8d2-e5b81ea785ce'
-            }).then(function(result){
-                console.log(result);
-            });
-
-        */
+           
 
             var resourceMetadata = {
                 "name":$scope.serviceName,
@@ -112,27 +98,30 @@
                 "inputs" : $scope.inputs,
                 "outputs" : $scope.outputs
             };
-            /*
-             $http.post(
-             "http://localhost:11080/proxy/" + "localhost:8086" + "/servicecontroller/registerService",
-             data
-             ).then(function successCallback( html ) {
-             $scope.resourceId = html.data.resourceId;
-             }, function errorCallback(response){
-             console.log("user-service-registry.controller fail");
-             toaster.pop('error', "Error", "There was an issue with your request.");
-             });
-             */
+            var job = {
+                "apiKey": "my-api-key-38n987",
+                "jobType" : {
+                    "type": "register-service",
+                    "data" : data
+                }
+            };
+
+            var fd = new FormData();
+            fd.append( 'body', JSON.stringify(job) );
+
+
 
 
             var request = $http({
                 method: "POST",
-                url: 'http://localhost:11080/servicecontroller/registerService',
-                data :data,
-                headers: {'Content-Type': 'application/json'}
+                url: 'http://localhost:11080/job',
+                data :fd,
+                headers: {"Content-Type": undefined}
             }).then(function(result){
                 console.log(result);
-            });;
+            });
+
+
 
 
         };
