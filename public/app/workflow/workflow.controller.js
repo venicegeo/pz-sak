@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('WorkflowController', ['$scope', '$http', '$log', '$q',  'toaster', WorkflowController]);
+        .controller('WorkflowController', ['$scope', '$http', '$log', '$q',  'toaster', 'discover', WorkflowController]);
 
-    function WorkflowController ($scope, $http, $log, $q, toaster) {
+    function WorkflowController ($scope, $http, $log, $q, toaster, discover) {
 
         $scope.showNewEventTypeForm = false;
         $scope.showEventTypeTable = false;
@@ -35,14 +35,11 @@
                 $scope.showeventTypeTable = false;
             }
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.host + "/v1/eventtypes?id="+eventTypeId,
+                    url: "/proxy?url=" + result.workflowHost + "/v1/eventtypes?id="+eventTypeId,
                 }).then(function successCallback( html ) {
                     //TODO: When the get eventtypes by ID is fixed in services, change the following to take out the [0] array call.
                     $scope.eventTypeId = html.data[0].id;
@@ -62,14 +59,11 @@
         $scope.events = "";
         $scope.errorMsg = "";
 
-        $http({
-            method: "GET",
-            url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-        }).then(function(result) {
+            discover.async().then(function(result) {
 
             $http({
                 method: "GET",
-                url: "/proxy?url=" + result.data.host + "/v1/events",
+                url: "/proxy?url=" + result.workflowHost + "/v1/events",
             }).then(function successCallback( html ) {
                 // Only return non-null values in the array
                 $scope.events = html.data.filter(function(n) { return n != undefined });
@@ -118,14 +112,11 @@
             $scope.eventType = "";
             $scope.eventTypes = [];
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.host + "/v1/eventtypes",
+                    url: "/proxy?url=" + result.workflowHost + "/v1/eventtypes",
                 }).then(function successCallback( html ) {
                     $scope.eventTypes = html.data;
                 }, function errorCallback(response){
@@ -147,12 +138,9 @@
                     problem: $scope.newEventTypeProblem,
                 }
             };
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
                 $http.post(
-                    "/proxy?url=" + result.data.host + "/v1/eventtypes",
+                    "/proxy?url=" + result.workflowHost + "/v1/eventtypes",
                     eventDataObj
                 ).then(function successCallback(res) {
                     $scope.message = res;
@@ -190,13 +178,10 @@
         };
 
         $scope.deleteEventType = function(eventTypeId) {
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
                 $http({
                     method: "DELETE",
-                    url: "/proxy?url=" + result.data.host + "/v1/eventtypes/"+eventTypeId,
+                    url: "/proxy?url=" + result.workflowHost + "/v1/eventtypes/"+eventTypeId,
                 }).then(function successCallback( html ) {
                     $scope.message = html;
                     console.log("success");
@@ -230,12 +215,9 @@
                 problem: $scope.newEventProblem
                  }
         };
-        $http({
-            method: "GET",
-            url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-        }).then(function(result) {
+        discover.async().then(function(result) {
             $http.post(
-                "/proxy?url=" + result.data.host + "/v1/events/",
+                "/proxy?url=" + result.workflowHost + "/v1/events/",
                 dataObj
             ).then(function successCallback(res) {
                 $scope.message = res;
@@ -257,13 +239,10 @@
     };
 
         $scope.deleteEvent = function(eventId) {
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
                 $http({
                     method: "DELETE",
-                    url: "/proxy?url=" + result.data.host + "/v1/events/"+eventId,
+                    url: "/proxy?url=" + result.workflowHost + "/v1/events/"+eventId,
                 }).then(function successCallback( html ) {
                     $scope.message = html;
                     console.log("success");
@@ -287,14 +266,11 @@
             $scope.alerts = "";
             $scope.errorMsg = "";
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.host + "/v1/alerts",
+                    url: "/proxy?url=" + result.workflowHost + "/v1/alerts",
                 }).then(function successCallback( html ) {
                     // Only return non-null values in the array
                     $scope.alerts = html.data.filter(function(n) { return n != undefined });
@@ -315,12 +291,9 @@
                 trigger_id: alertTrigger,
                 event_id: alertEvent
             };
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
                 $http.post(
-                    "/proxy?url=" + result.data.host + "/v1/alerts",
+                    "/proxy?url=" + result.workflowHost + "/v1/alerts",
                     dataObj
                 ).then(function successCallback(res) {
                     $scope.message = res;
@@ -342,13 +315,10 @@
         };
 
         $scope.deleteAlert = function(alertId) {
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
                 $http({
                     method: "DELETE",
-                    url: "/proxy?url=" + result.data.host + "/v1/alerts/"+alertId,
+                    url: "/proxy?url=" + result.workflowHost + "/v1/alerts/"+alertId,
                 }).then(function successCallback( html ) {
                     $scope.message = html;
                     console.log("success");
@@ -374,14 +344,11 @@
             $scope.triggers = "";
             $scope.errorMsg = "";
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.host + "/v1/triggers",
+                    url: "/proxy?url=" + result.workflowHost + "/v1/triggers",
                 }).then(function successCallback( html ) {
                     $scope.triggers = html.data;
                 }, function errorCallback(response){
@@ -407,15 +374,12 @@
                 job: {
                     task: $scope.triggerTask
                 }
-            }
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            };
+            discover.async().then(function(result) {
 
 
                 $http.post(
-                    "/proxy?url=" + result.data.host + "/v1/triggers",
+                    "/proxy?url=" + result.workflowHost + "/v1/triggers",
                     dataObj
                 ).then(function successCallback(res) {
                     $scope.message = res;
@@ -444,14 +408,11 @@
             $scope.triggerId = "";
             $scope.errorMsg = "";
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.host + "/v1/triggers/"+triggerId,
+                    url: "/proxy?url=" + result.workflowHost + "/v1/triggers/"+triggerId,
                 }).then(function successCallback( html ) {
                     $scope.trigger = html.data;
                 }, function errorCallback(response){
@@ -467,14 +428,11 @@
             $scope.errorMsg = "";
             var workflowMessage = $scope.workflowMessage;
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-workflow"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
 
                 $http.delete(
-                    "/proxy?url=" + result.data.host + "/v1/triggers/"+triggerId
+                    "/proxy?url=" + result.workflowHost + "/v1/triggers/"+triggerId
                     ).then(function successCallback(res) {
                     $scope.message = res;
                     $scope.getTriggers();
