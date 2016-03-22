@@ -28,8 +28,34 @@
         $scope.outputs = [];
         $scope.serviceId = "";
         $scope.jobId = "";
+        $scope.bodyInputs = [];
+        $scope.urlInputs = [];
+        $scope.rasterInputs = [];
+        $scope.textInputs = [];
+
+        $scope.rasterOutputs = [];
+        $scope.textOutputs = [];
 
 
+        function processServiceInputs(inputs) {
+            var i;
+            for (i=0;i<inputs.length;i++){
+                switch(inputs[i].dataType.type) {
+                    case "body":
+                        $scope.bodyInputs.push(inputs[i]);
+                        break;
+                    case "urlparameter":
+                        $scope.urlInputs.push(inputs[i]);
+                        break;
+                    case "raster":
+                        $scope.rasterInputs.push(inputs[i]);
+                        break;
+                    case "text":
+                        $scope.textInputs.push(inputs[i]);
+                        break;
+                }
+            }
+        }
         function getRegisterResult(jobId) {
             var data = {
                 "apiKey": "my-api-key-kidkeid",
@@ -87,6 +113,7 @@
                     $scope.serviceId = serviceMetadata.id;
                     $scope.inputs = serviceMetadata.inputs;
                     $scope.outputs = serviceMetadata.outputs;
+                    processServiceInputs($scope.inputs);
                     console.log($scope.serviceId);
                 }
                 else {
