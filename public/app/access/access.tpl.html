@@ -29,6 +29,11 @@
             -ms-user-select: none;
         }
 
+        .vcenter {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
     </style>
 
 </head>
@@ -57,6 +62,9 @@
                 <div style="margin-top: 10px" ng-show="total == 0">{{errorMsg}}</div>
                 <div style="margin-top: 10px" ng-show="total">Displaying {{firstResultOnPage()}} to {{lastResultOnPage()}} of {{total}} results</div><br/>
                 <div ng-show="accessDataList" ng-repeat="data in accessDataList">
+                    <button class="btn btn-primary pull-right" ng-show="data.dataType.location" type="button" ng-click="downloadFile(data, true)" id="download" style="margin-top: 24px" title="Download File">
+                        <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                    </button>
                     <pre>{{data | json}}</pre>
                     <br/>
                 </div>
@@ -83,6 +91,9 @@
                     </div>
                 </div>
                 <div ng-show="accessData">
+                    <button class="btn btn-primary pull-right" type="button" ng-click="downloadFile(accessData, false)" id="downloadBtn" style="margin-top: 24px" title="Download File">
+                        <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                    </button>
                     <pre>{{accessData | json}}</pre>
                 </div>
             </form>

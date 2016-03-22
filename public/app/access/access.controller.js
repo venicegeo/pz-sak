@@ -30,7 +30,7 @@
             };
             $http({
                 method: "GET",
-                url: "/proxy/pz-access.cf.piazzageo.io/data",
+                url: "/proxy/pz-access.stage.geointservices.io/data",
                 params: params
             }).then(function successCallback(html) {
                 $scope.accessDataList = html.data;
@@ -49,7 +49,7 @@
             }
             $http({
                 method: "GET",
-                url: "/proxy/pz-access.cf.piazzageo.io/data/" + $scope.dataId
+                url: "/proxy/pz-access.stage.geointservices.io/data/" + $scope.dataId
             }).then(function successCallback(html) {
                 $scope.accessData = html.data;
             }, function errorCallback(response) {
@@ -57,6 +57,17 @@
                 toaster.pop('error', "Error", "There was an issue with your request.");
             });
 
+        };
+
+        $scope.downloadFile = function(accessData, isFromList) {
+            var location;
+            if (isFromList) {
+                location = accessData.dataType.location;
+            } else {
+                location = accessData.data.dataType.location;
+            }
+            var url = "http://" + location.bucketName + "." + location.domainName + "/" + location.fileName;
+            window.location=url;
         };
 
         $scope.prevPage = function() {
