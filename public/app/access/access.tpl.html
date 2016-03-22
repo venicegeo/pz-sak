@@ -91,7 +91,7 @@
                     </div>
                 </div>
                 <div ng-show="accessData">
-                    <button class="btn btn-primary pull-right" type="button" ng-click="downloadFile(accessData, false)" id="downloadBtn" style="margin-top: 24px" title="Download File">
+                    <button class="btn btn-primary pull-right" ng-show="accessData.data.dataType.location" type="button" ng-click="downloadFile(accessData, false)" id="downloadBtn" style="margin-top: 24px" title="Download File">
                         <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
                     </button>
                     <pre>{{accessData | json}}</pre>
