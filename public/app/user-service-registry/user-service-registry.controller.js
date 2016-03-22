@@ -63,6 +63,41 @@
             });
         }
 
+        function getDescribeServiceResult(jobId) {
+            var data = {
+                "apiKey": "my-api-key-kidkeid",
+                "jobType": {
+                    "type": "get",
+                    "jobId": $scope.jobId
+                }
+            };
+
+            var fd = new FormData();
+            fd.append( 'body', JSON.stringify(data) );
+            $http({
+                method: "POST",
+                url: 'http://localhost:11080/job',
+                data: fd,
+                headers: {
+                    "Content-Type": undefined
+                }
+            }).then(function successCallback(html) {
+                if (html.data.status.indexOf("Success") > -1) {
+                    var serviceMetadata = JSON.parse(html.data.result.text);
+                    $scope.serviceId = serviceMetadata.id;
+                    $scope.inputs = serviceMetadata.inputs;
+                    $scope.outputs = serviceMetadata.outputs;
+                    console.log($scope.serviceId);
+                }
+                else {
+                    getDescribeServiceResult(jobId);
+                }
+            }, function errorCallback(response) {
+                console.log("search.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.");
+            });
+        }
+
 
         $scope.addInput = function() {
 
@@ -118,6 +153,34 @@
             }
             $scope.outputs[$index].formats.push(newFormat);
         };
+
+        $scope.describeService = function() {
+            $scope.errorMsg = "";
+            var job = {
+                "apiKey": "my-api-key-38n987",
+                "jobType" : {
+                    "type": "read-service",
+                    "serviceID" : $scope.serviceId
+                }
+            };
+            var fd = new FormData();
+            fd.append( 'body', angular.toJson(job) );
+            var request = $http({
+                method: "POST",
+                url: 'http://localhost:11080/job',
+                data :fd,
+                headers: {"Content-Type": undefined}
+            }).then(function successCallback( html ) {
+                $scope.jobId = html.data.jobId;
+                getDescribeServiceResult($scope.jobId)
+
+
+            }, function errorCallback(response){
+                console.log("user-service-registry.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.");
+            });
+
+        }
         $scope.registerService = function() {
             $scope.errorMsg = "";
 
