@@ -24,28 +24,7 @@
         $scope.data = "none";
         $scope.metadata = "{}";
 
-        /*$scope.file_changed = function(element) {
-
-            $scope.$apply(function(scope) {
-                var photofile = element.files[0];
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    // handle onload
-                    scope.file = e.target.result;
-                    console.log("file substr: " + e.target.result.substring(0, 100));
-                };
-                reader.readAsDataURL(photofile);
-                //reader.readAsBinaryString(photofile);
-            });
-        };*/
-
         $scope.ingest = function () {
-            /*var f = document.getElementById('file').files[0],
-                r = new FileReader();
-            r.onloadend = function (e) {
-                $scope.data = e.target.result;
-            };
-            r.readAsBinaryString(f);*/
             $scope.file = document.getElementById('file').files[0];
 
             var metadata = {};
@@ -78,7 +57,7 @@
                 }
                 data = {
                     "dataType": {
-                        "type": "raster",
+                        "type": "raster"
                     },
                     "metadata": metadata
                 };
@@ -92,7 +71,6 @@
                 }
             };
 
-            // TODO: Either include the JSON in the url as a param or include it in the form data
             var fd = new FormData();
             fd.append( 'body',  JSON.stringify(ingestObj) );
             if ($scope.ingestType == 'File') {
@@ -123,7 +101,7 @@
                 return;
             }
             var data = {
-                "apiKey": "my-api-key-sak",
+                "apiKey": "my-api-key-sakui",
                 "jobType": {
                     "type": "get",
                     "jobId": $scope.jobId
