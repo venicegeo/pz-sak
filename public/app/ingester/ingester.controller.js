@@ -86,6 +86,7 @@
                 }
             }).then(function successCallback( html ) {
                 $scope.jobIdResult = html.data.jobId;
+                toaster.pop('success', "Success", "The data was successfully sent to the ingester.")
             }, function errorCallback(response){
                 if (response.data.message) {
                     $scope.errorMsg = response.data.message;
