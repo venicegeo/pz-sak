@@ -26,6 +26,42 @@
         $scope.responseType = 'application/json';
         $scope.inputs = [];
         $scope.outputs = [];
+        $scope.serviceId = "";
+        $scope.jobId = "";
+
+
+        function getRegisterResult(jobId) {
+            var data = {
+                "apiKey": "my-api-key-kidkeid",
+                "jobType": {
+                    "type": "get",
+                    "jobId": $scope.jobId
+                }
+            };
+
+            var fd = new FormData();
+            fd.append( 'body', JSON.stringify(data) );
+            $http({
+                method: "POST",
+                url: 'http://localhost:11080/job',
+                data: fd,
+                headers: {
+                    "Content-Type": undefined
+                }
+            }).then(function successCallback(html) {
+                if (html.data.status.indexOf("Success") > -1) {
+                    $scope.serviceId = (JSON.parse(html.data.result.text).resourceId);
+                    $scope.jobStatusResult = html.data;
+                    console.log($scope.serviceId);
+                }
+                else {
+                    getRegisterResult(jobId);
+                }
+            }, function errorCallback(response) {
+                console.log("search.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.");
+            });
+        }
 
 
         $scope.addInput = function() {
@@ -84,7 +120,7 @@
         };
         $scope.registerService = function() {
             $scope.errorMsg = "";
-           
+
 
             var resourceMetadata = {
                 "name":$scope.serviceName,
@@ -107,7 +143,7 @@
             };
 
             var fd = new FormData();
-            fd.append( 'body', JSON.stringify(job) );
+            fd.append( 'body', angular.toJson(job) );
 
 
 
@@ -117,12 +153,15 @@
                 url: 'http://localhost:11080/job',
                 data :fd,
                 headers: {"Content-Type": undefined}
-            }).then(function(result){
-                console.log(result);
+            }).then(function successCallback( html ) {
+               $scope.jobId = html.data.jobId;
+                getRegisterResult($scope.jobId)
+
+
+            }, function errorCallback(response){
+                console.log("user-service-registry.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.");
             });
-
-
-
 
         };
 
