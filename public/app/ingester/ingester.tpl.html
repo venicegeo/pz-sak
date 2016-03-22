@@ -72,7 +72,8 @@
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="file">File</label>
-                            <input id="file" type="file" class="form-control" ng-model="file" accept="image/*" ng-required="ingestType == 'File'" >
+                            <input id="file" type="file" class="form-control"
+                                   accept="image/*" ng-required="ingestType == 'File'" >
                         </div>
                     </div>
                 </div>
@@ -87,12 +88,11 @@
                 <div class="row">
                     <div class="col-md-1">
                         <br>
-                        <button type="submit" class="btn btn-primary" ng-disabled="ingestType== 'File'">Ingest Content</button>
+                        <button type="submit" class="btn btn-primary">Ingest Content</button>
                     </div>
                 </div>
                 <label id="errorMsg">{{errorMsg}}</label>
                 <h3 ng-show="jobIdResult">{{jobIdResult}}</h3>
-                <!--<p>{{data}}</p>-->
             </form>
         </div>
         <div role="tabpanel" class="tab-pane fade" id="jobinfo">

@@ -69,7 +69,7 @@
 
                 $http({
                     method: "POST",
-                    url: "/proxy?url=pz-gateway.cf.piazzageo.io/job",
+                    url: "/proxy?url=pz-gateway.stage.geointservices.io/job",
                     data: fd,
                     headers: {
                         "Content-Type": undefined
@@ -97,7 +97,7 @@
 
                 $http({
                     method: "POST",
-                    url: "/proxy?url=pz-gateway.cf.piazzageo.io/job",
+                    url: "/proxy?url=pz-gateway.stage.geointservices.io/job",
                     data: fd,
                     headers: {
                         "Content-Type": undefined
@@ -144,7 +144,7 @@
                 };
                 $http({
                     method: "GET",
-                    url: "/proxy/pz-jobmanager.cf.piazzageo.io/job" + query,
+                    url: "/proxy/pz-jobmanager.stage.geointservices.io/job" + query,
                     params: params
                 }).then(function successCallback(html) {
                     $scope.jobsList = html.data;
@@ -156,7 +156,7 @@
                 if (getCount) {
                     $http({
                         method: "GET",
-                        url: "/proxy/pz-jobmanager.cf.piazzageo.io/job" + query + "/count"
+                        url: "/proxy/pz-jobmanager.stage.geointservices.io/job" + query + "/count"
                     }).then(function successCallback(html) {
                         $scope.total = html.data;
                         $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
@@ -212,7 +212,7 @@
                 }
                 $http({
                     method: "GET",
-                    url: "/proxy/pz-jobmanager.cf.piazzageo.io/job/apikey/" + $scope.userId,
+                    url: "/proxy/pz-jobmanager.stage.geointservices.io/job/apikey/" + $scope.userId,
                     params: params
                 }).then(function successCallback(html) {
                     $scope.jobsList = html.data;
