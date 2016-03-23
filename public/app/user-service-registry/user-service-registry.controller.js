@@ -106,6 +106,9 @@
         };
 
         $scope.getServices = function() {
+
+            //TODO: Go through gateway
+
             $scope.services = "";
 
             discover.async().then(function(result) {
@@ -124,6 +127,8 @@
         };
 
         $scope.searchServices = function() {
+
+            //TODO: go through gateway
             $scope.search = "";
             var dataObj = {
                 field: $scope.searchField,
@@ -149,6 +154,82 @@
 
             });
 
+        };
+
+        $scope.cancelUpdateService = function() {
+            $scope.showUpdateService = !$scope.showUpdateService;
+        };
+
+        $scope.showUpdateServiceForm = function(serviceId){
+            var jobId = "";
+            if (!$scope.showUpdateService){
+                $scope.showUpdateService = true;
+            }
+            else{
+                $scope.showUpdateService = false;
+            }
+            discover.async().then(function(result) {
+
+                $http({
+                    method: "GET",
+                    url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/describeService?resourceId="+serviceId,
+                }).then(function successCallback( html ) {
+                    $scope.updateResourceId = html.data.id;
+                    $scope.updateResourceName = html.data.resourceMetadata.name;
+                    $scope.updateResourceDescrip = html.data.resourceMetadata.description;
+                    $scope.updateResourceUrl = html.data.resourceMetadata.url;
+                }, function errorCallback(response){
+                    console.log("service.controller fail"+response.status);
+                    toaster.pop('error', "Error", "There was an issue with retrieving the services.");
+                });
+
+            });
+
+        };
+
+
+
+        $scope.describeService = function() {
+            $scope.errorMsg = "";
+
+
+        }
+
+        $scope.updateService = function(){
+            var jobId = "";
+            var serviceId = $scope.updateResourceId;
+            if (!$scope.showUpdateService){
+                $scope.showUpdateService = true;
+            }
+            else{
+                $scope.showUpdateService = false;
+            }
+
+
+
+        };
+
+
+        $scope.deleteService = function(serviceId){
+
+            //TODO: go through the gateway
+             discover.async().then(function(result) {
+
+                $http({
+                    method: "GET",
+                    url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/deleteService?="+serviceId,
+                }).then(function successCallback(res) {
+                    console.log(res);
+                    $scope.getServices();
+
+                    toaster.pop('success', "Success", "The service was successfully deleted.")
+
+                }, function errorCallback(res) {
+                    console.log("User Service.controller fail"+res.status);
+
+                    toaster.pop('error', "Error", "There was a problem deleting the Service.");
+                });
+            })
         };
 
     }
