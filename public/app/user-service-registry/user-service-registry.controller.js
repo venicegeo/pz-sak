@@ -136,7 +136,12 @@
                     "type" : "body",
                     "mimeType" : "application/json"
                 },
-                "metadata" : null,
+                "metadata" : {
+                    "about" : "",
+                    "href" : "",
+                    "role" : "",
+                    "title" : ""
+                },
                 "formats" : []
             }
 
@@ -153,7 +158,12 @@
                     "type" : "body",
                     "mimeType" : "application/json"
                 },
-                "metadata" : null,
+                "metadata" :  {
+                    "about" : "",
+                    "href" : "",
+                    "role" : "",
+                    "title" : ""
+                },
                 "formats" : []
             }
 

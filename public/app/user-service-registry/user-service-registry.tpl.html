@@ -66,6 +66,22 @@
                             <input type="text" ng-model="ninput.dataType.mimeType">
                         </p>
                         <p>
+                            <label> metadata about </label>
+                            <input type="text" ng-model="ninput.metadata.about">
+                        </p>
+                        <p>
+                            <label> metadata href </label>
+                            <input type="text" ng-model="ninput.metadata.href">
+                        </p>
+                        <p>
+                            <label> metadata role </label>
+                            <input type="text" ng-model="ninput.metadata.role">
+                        </p>
+                        <p>
+                            <label> metadata title </label>
+                            <input type="text" ng-model="ninput.metadata.title">
+                        </p>
+                        <p>
                             <label> Format </label>
                            <div class="row">
                         <div ng-repeat="nformat in ninput.formats">
@@ -93,6 +109,7 @@
                             <label> data mimetype </label>
                             <input type="text" ng-model="nformat.dataType.mimeType">
                         </p>
+
 
                             </div>
                            <button ng-click="addFormat($index)">New Format</button>
@@ -124,6 +141,22 @@
             <p>
                 <label> data mimetype </label>
                 <input type="text" ng-model="noutput.dataType.mimeType">
+            </p>
+            <p>
+                <label> metadata about </label>
+                <input type="text" ng-model="noutput.metadata.about">
+            </p>
+            <p>
+                <label> metadata href </label>
+                <input type="text" ng-model="noutput.metadata.href">
+            </p>
+            <p>
+                <label> metadata role </label>
+                <input type="text" ng-model="noutput.metadata.role">
+            </p>
+            <p>
+                <label> metadata title </label>
+                <input type="text" ng-model="noutput.metadata.title">
             </p>
             <p>
                 <label> Format </label>
