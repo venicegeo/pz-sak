@@ -22,6 +22,8 @@
 
 
     function UserServiceController($scope, $http, $log, $q, toaster) {
+        $scope.executeInputMap = {};
+        $scope.executeOutputMap = {};
         $scope.method = 'GET';
         $scope.responseType = 'application/json';
         $scope.inputs = [];
@@ -35,6 +37,8 @@
 
         $scope.rasterOutputs = [];
         $scope.textOutputs = [];
+        $scope.selectedOutput = 0;
+        $scope.resourceResult = "";
 
 
         function processServiceInputs(inputs) {
@@ -52,6 +56,20 @@
                         break;
                     case "text":
                         $scope.textInputs.push(inputs[i]);
+                        break;
+                }
+            }
+        }
+
+        function processServiceOutputs(outputs) {
+            var i;
+            for (i=0;i<outputs.length;i++) {
+                switch(outputs[i].dataType.type) {
+                    case "raster":
+                        $scope.rasterOutputs.push(outputs[i]);
+                        break;
+                    case "text":
+                        $scope.textOutputs.push(outputs[i]);
                         break;
                 }
             }
@@ -82,6 +100,63 @@
                 }
                 else {
                     getRegisterResult(jobId);
+                }
+            }, function errorCallback(response) {
+                console.log("search.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.");
+            });
+        }
+        function getResourceResult(resourceId){
+            var data = {
+                "apiKey": "my-api-key-kidkeid",
+                "jobType": {
+                    "type": "get-resource",
+                    "resourceId": resourceId
+                }
+            };
+            var fd = new FormData();
+            fd.append( 'body', JSON.stringify(data) );
+            $http({
+                method: "POST",
+                url: 'http://localhost:11080/job',
+                data: fd,
+                headers: {
+                    "Content-Type": undefined
+                }
+            }).then(function successCallback(html) {
+                $scope.resourceResult = JSON.stringify(html.data);
+            }, function errorCallback(response) {
+                console.log("search.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.");
+            });
+        }
+        function getExecuteResult(jobId) {
+            var data = {
+                "apiKey": "my-api-key-kidkeid",
+                "jobType": {
+                    "type": "get",
+                    "jobId": $scope.jobId
+                }
+            };
+
+            var fd = new FormData();
+            fd.append( 'body', JSON.stringify(data) );
+            $http({
+                method: "POST",
+                url: 'http://localhost:11080/job',
+                data: fd,
+                headers: {
+                    "Content-Type": undefined
+                }
+            }).then(function successCallback(html) {
+                if (html.data.status.indexOf("Success") > -1) {
+                    $scope.dataId = html.data.result.dataId;
+                    getResourceResult($scope.dataId)
+                    $scope.jobStatusResult = html.data;
+                    console.log($scope.serviceId);
+                }
+                else {
+                    getExecuteResult(jobId);
                 }
             }, function errorCallback(response) {
                 console.log("search.controller fail");
@@ -265,40 +340,73 @@
 
         };
 
-        $scope.executeService = function() {
-            $scope.executeMsg = "";
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-servicecontroller"
-            }).then(function(result) {
-
-                if (angular.isUndefined($scope.dataInput)) {
-                    $scope.dataInput = "";
-                }
-                var dataInputsObj = {};
-                if (!angular.isUndefined($scope.dataInputs) && $scope.dataInputs !== "") {
-                    dataInputsObj = JSON.parse($scope.dataInputs);
-                }
-                var data = {
-                    "resourceId":$scope.resource,
-                    "dataInput":$scope.dataInput,
-                    "dataInputs":dataInputsObj
-                };
-                $http.post(
-                    "/proxy?url=" + result.data.address + "/servicecontroller/executeService",
-                    data,
-                    {
-                        headers: {
-                            "Content-Type": "application/json"
+        function createExecuteInputMap(inputs) {
+            //executeInputMap
+            var i = 0;
+            for (i = 0; i < inputs.length; i++) {
+                switch (inputs[i].dataType.type) {
+                    case "body":
+                        $scope.executeInputMap[inputs[i].name] = {
+                            "content": inputs[i].content,
+                            "type": inputs[i].dataType.type,
+                            "mimeType": inputs[i].dataType.mimeType
                         }
-                    }
-                ).then(function successCallback( html ) {
-                    $scope.serviceResponse = html.data;
-                }, function errorCallback(response){
-                    console.log("user-service-registry.controller fail");
-                    toaster.pop('error', "Error", "There was an issue with your request.");
-                });
+                        break;
+                    case "urlparameter":
+                        $scope.executeInputMap[inputs[i].name] = {
+                            "content": inputs[i].content,
+                            "type": "text"
+                        }
+                        break;
+                    case "raster":
+                        $scope.executeInputMap[inputs[i].name] = {
+                            "content": inputs[i].content,
+                            "type": inputs[i].dataType.type,
+                            "mimeType": inputs[i].dataType.mimeType
+                        }
+                        break;
+                    case "text":
+                        $scope.executeInputMap[inputs[i].name] = {
+                            "content": inputs[i].content,
+                            "type": inputs[i].dataType.type,
+                            "mimeType": inputs[i].dataType.mimeType
+                        }
+                        break;
 
+                }
+            }
+        }
+        $scope.executeService = function() {
+            createExecuteInputMap($scope.inputs);
+            $scope.executeMsg = "";
+           var executeServiceData = {
+               "serviceId" : $scope.serviceId,
+               "dataInputs" : $scope.executeInputMap
+               //TODO When use latest version of executeServiceData, "dataOutput" : $scope.outputs[$scope.selectedOutput].dataType
+           };
+            var job = {
+                "apiKey": "my-api-key-38n987",
+                "jobType" : {
+                    "type": "execute-service",
+                    "data" : executeServiceData
+                }
+            };
+
+            var fd = new FormData();
+            fd.append( 'body', angular.toJson(job) );
+            var request = $http({
+                method: "POST",
+                url: 'http://localhost:11080/job',
+                data :fd,
+                headers: {"Content-Type": undefined}
+            }).then(function successCallback( html ) {
+                $scope.jobId = html.data.jobId;
+                getExecuteResult($scope.jobId)
+
+
+            }, function errorCallback(response){
+                console.log("user-service-registry.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.");
             });
 
         };

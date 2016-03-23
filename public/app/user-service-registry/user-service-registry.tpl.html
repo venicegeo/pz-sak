@@ -266,26 +266,62 @@
 
 
         <div role="tabpanel" class="tab-pane fade" id="execute">
-            <form id="runService" ng-submit="describeService()">
+            <form id="describeService" ng-submit="describeService()">
                 <label>ServiceId</label>
                 <input id="service" type="text" class="form-control" ng-model="serviceId" required>
                 <button class="btn btn-primary" type="submit" id="describeBtn" style="margin-top: 24px">Get Service Info</button>
             </form>
             <h1 class="alert alert-info">Executing a service</h1>
+
             <form id="runService" ng-submit="executeService()">
+                <h1 class="alert alert-info">Inputs</h1>
                 <div ng-repeat="textInput in textInputs">
                     <p>
                         <label> {{textInput.name}}</label>
                         <input type="text" ng-model="textInput.content">
                     </p>
+                </div>
+                <div ng-repeat="urlInput in urlInputs">
+                    <p>
+                        <label> {{urlInput.name}}</label>
+                        <input type="text" ng-model="urlInput.content">
+                    </p>
                     </div>
                 <div ng-repeat="textInput in bodyInputs">
                     <p>
-                        <label>BODY  {{textInput.name}}</label>
-                        <textarea ng-model="textInput.content" rows=10">
+                        <label> {{textInput.name}}</label>
+                        <textarea ng-model="textInput.content" rows="10" cols="80">
                             </textarea>
                     </p>
                 </div>
+                <div ng-repeat="rasterInput in rasterInputs">
+                    <label> {{rasterInput.name}}</label>
+                    <p>
+                    <p>
+                        <label> location</label>
+                        <input type="text" ng-model="rasterInput.location">
+                    </p>
+                    <p>
+                        <label> mimeType</label>
+                        <input type="text" ng-model="rasterInput.mimeType">
+                    </p>
+                </div>
+                <h1 class="alert alert-info">Outputs</h1>
+                <div ng-repeat="textOutput in textOutputs">
+                    <label> {{textInput.name}}</label>
+                    <p>
+                        <label> mimeType</label>
+                        <input type="text" ng-model="textOutput.mimeType">
+                    </p>
+                </div>
+                <div ng-repeat="rasterOutput in rasterOutputs">
+                    <label> {{rasterOutput.name}}</label>
+                    <p>
+                        <label> mimeType</label>
+                        <input type="text" ng-model="rasterOutput.mimeType">
+                    </p>
+                </div>
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -317,6 +353,10 @@
                 </div>
 
             </form>
+            <div>
+                 <textarea ng-model="resourceResult" rows="10" cols="80">
+                            </textarea>
+                </div>
             <div>
                 <label id="executeMsg">{{executeMsg}}</label>
             </div>
