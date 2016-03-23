@@ -40,8 +40,8 @@
         <div role="tabpanel" class="tab-pane fade in active" id="register">
             <h1 class="alert alert-info">User Service Registry Info</h1>
 
-            <p>Register a service</p>
-            <form id="serviceRegistrationForm" ng-submit="registerService()">
+            <p><{{serviceId}}</p>
+
                 <h2>Inputs</h2>
                 <div class="row">
                     <div ng-repeat="ninput in inputs">
@@ -155,7 +155,7 @@
             </p>
 
         </div>
-        <button ng-click="addFormat($index)">New Format</button>
+        <button ng-click="addOutputFormat($index)">New Format</button>
 
     </div>
     </p>
@@ -211,34 +211,48 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="params">Parameters</label>
-                            <input id="params" type="text" class="form-control" ng-model="params" placeholder="Comma delimited list of parameters">
-                        </div>
-                    </div>
-                </div>
+
                 <div class="row">
                     <div class="col-md-1">
-                        <button class="btn btn-primary" type="submit" id="registerBtn" style="margin-top: 24px">Register Service</button>
+                        <button class="btn btn-primary" ng-click="registerService()">Register Service</button>
                     </div>
                 </div>
                 <div>
                     <label id="serviceMsg">{{serviceMsg}}</label>
                 </div>
-                <div ng-show="resourceId">
-                    Resource ID: {{resourceId}}
+                <div>
+                    <label id="serviceID">{{serviceId}}</label>
+                </div>
+                <div ng-show="serviceId">
+                    Resource ID: {{serviceId}}
                 </div>
 
-            </form>
+
 
         </div>
 
 
         <div role="tabpanel" class="tab-pane fade" id="execute">
+            <form id="runService" ng-submit="describeService()">
+                <label>ServiceId</label>
+                <input id="service" type="text" class="form-control" ng-model="serviceId" required>
+                <button class="btn btn-primary" type="submit" id="describeBtn" style="margin-top: 24px">Get Service Info</button>
+            </form>
             <h1 class="alert alert-info">Executing a service</h1>
             <form id="runService" ng-submit="executeService()">
+                <div ng-repeat="textInput in textInputs">
+                    <p>
+                        <label> {{textInput.name}}</label>
+                        <input type="text" ng-model="textInput.content">
+                    </p>
+                    </div>
+                <div ng-repeat="textInput in bodyInputs">
+                    <p>
+                        <label>BODY  {{textInput.name}}</label>
+                        <textarea ng-model="textInput.content" rows=10">
+                            </textarea>
+                    </p>
+                </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
