@@ -134,7 +134,7 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: '/proxy?url=/pz-gateway.stage.geointservices.io/job',
+                url: '/proxy?url=pz-gateway.stage.geointservices.io/job',
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -296,7 +296,7 @@
             fd.append( 'body', angular.toJson(job) );
             var request = $http({
                 method: "POST",
-                url: '/proxy?url=/pz-gateway.stage.geointservices.io/job',
+                url: '/proxy?url=pz-gateway.stage.geointservices.io/job',
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
