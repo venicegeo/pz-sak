@@ -88,7 +88,7 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: 'http://localhost:11080/job',
+                url: '/proxy?url=pz-gateway.stage.geointservices.io/job',
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -119,7 +119,7 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: 'http://localhost:11080/job',
+                url: '/proxy?url=pz-gateway.stage.geointservices.io/job',
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -144,7 +144,7 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: 'http://localhost:11080/job',
+                url: '/proxy?url=pz-gateway.stage.geointservices.io/job',
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -178,7 +178,7 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: 'http://localhost:11080/job',
+                url: '/proxy?url=pz-gateway.stage.geointservices.io/job',
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -280,7 +280,7 @@
             fd.append( 'body', angular.toJson(job) );
             var request = $http({
                 method: "POST",
-                url: 'http://localhost:11080/job',
+                url: '/proxy?url=pz-gateway.stage.geointservices.io/job',
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
@@ -326,7 +326,7 @@
 
             var request = $http({
                 method: "POST",
-                url: 'http://localhost:11080/job',
+                url: '/proxy?url=pz-gateway.stage.geointservices.io/job',
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
@@ -346,6 +346,7 @@
             var i = 0;
             for (i = 0; i < inputs.length; i++) {
                 switch (inputs[i].dataType.type) {
+                    // TODO: Looks like this can be simplified because body, raster and text all do the same thing
                     case "body":
                         $scope.executeInputMap[inputs[i].name] = {
                             "content": inputs[i].content,
@@ -397,7 +398,7 @@
             fd.append( 'body', angular.toJson(job) );
             var request = $http({
                 method: "POST",
-                url: 'http://localhost:11080/job',
+                url: '/proxy?url=pz-gateway.stage.geointservices.io/job',
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
@@ -415,11 +416,13 @@
         $scope.getServices = function() {
             $scope.services = "";
 
-            discover.async().then(function(result) {
+            //discover.async().then(function(result) {
 
+                // Service controller through discover was still pointed at the old env so hard coded for now
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/listService",
+                    //url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/listService",
+                    url: "/proxy?url=pz-servicecontroller.stage.geointservices.io/servicecontroller/listService"
                 }).then(function successCallback( html ) {
                     $scope.services = html.data;
                 }, function errorCallback(response){
@@ -427,7 +430,7 @@
                     toaster.pop('error', "Error", "There was an issue with retrieving the services.");
                 });
 
-            });
+            //});
         };
 
         $scope.searchServices = function() {
@@ -437,10 +440,12 @@
                 pattern: $scope.searchPattern
             };
 
-            discover.async().then(function(result) {
+            //discover.async().then(function(result) {
 
+                // Service controller through discover was still pointed at the old env so hard coded for now
                 $http.post(
-                    "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/search",
+                    //"/proxy?url=" + result.serviceControllerHost + "/servicecontroller/search",
+                    "/proxy?url=pz-servicecontroller.stage.geointservices.io/servicecontroller/search",
                     dataObj,
                     {
                         headers: {
@@ -454,7 +459,7 @@
                     toaster.pop('error', "Error", "There was an issue with your request.");
                 });
 
-            });
+            //});
 
         };
 
