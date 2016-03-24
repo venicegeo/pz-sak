@@ -273,86 +273,65 @@
             </form>
             <h1 class="alert alert-info">Executing a service</h1>
 
-            <form id="runService" ng-submit="executeService()">
-                <h1 class="alert alert-info">Inputs</h1>
-                <div ng-repeat="textInput in textInputs">
-                    <p>
-                        <label> {{textInput.name}}</label>
-                        <input type="text" ng-model="textInput.content">
-                    </p>
-                </div>
-                <div ng-repeat="urlInput in urlInputs">
-                    <p>
-                        <label> {{urlInput.name}}</label>
-                        <input type="text" ng-model="urlInput.content">
-                    </p>
-                    </div>
-                <div ng-repeat="textInput in bodyInputs">
-                    <p>
-                        <label> {{textInput.name}}</label>
-                        <textarea ng-model="textInput.content" rows="10" cols="80">
-                            </textarea>
-                    </p>
-                </div>
-                <div ng-repeat="rasterInput in rasterInputs">
-                    <label> {{rasterInput.name}}</label>
-                    <p>
-                    <p>
-                        <label> location</label>
-                        <input type="text" ng-model="rasterInput.location">
-                    </p>
-                    <p>
-                        <label> mimeType</label>
-                        <input type="text" ng-model="rasterInput.mimeType">
-                    </p>
-                </div>
-                <h1 class="alert alert-info">Outputs</h1>
-                <div ng-repeat="textOutput in textOutputs">
+
+            <h1 class="alert alert-info">Inputs</h1>
+            <div ng-repeat="textInput in textInputs">
+                <p>
+                    <label> {{textInput.metadata.about}}</label>
                     <label> {{textInput.name}}</label>
-                    <p>
-                        <label> mimeType</label>
-                        <input type="text" ng-model="textOutput.mimeType">
-                    </p>
+                    <input type="text" ng-model="textInput.content">
+                </p>
+            </div>
+            <div ng-repeat="urlInput in urlInputs">
+                <p>
+                    <label> {{urlInput.metadata.about}}</label>
+                    <label> {{urlInput.name}}</label>
+                    <input type="text" ng-model="urlInput.content">
+                </p>
                 </div>
-                <div ng-repeat="rasterOutput in rasterOutputs">
-                    <label> {{rasterOutput.name}}</label>
-                    <p>
-                        <label> mimeType</label>
-                        <input type="text" ng-model="rasterOutput.mimeType">
-                    </p>
-                </div>
+            <div ng-repeat="textInput in bodyInputs">
+                <p>
+                    <label> {{textInput.name}}</label>
+                    <textarea ng-model="textInput.content" rows="10" cols="80">
+                        </textarea>
+                </p>
+            </div>
+            <div ng-repeat="rasterInput in rasterInputs">
+                <label> {{rasterInput.name}}</label>
+                <p>
+                <p>
+                    <label> location</label>
+                    <input type="text" ng-model="rasterInput.location">
+                </p>
+                <p>
+                    <label> mimeType</label>
+                    <input type="text" ng-model="rasterInput.mimeType">
+                </p>
+            </div>
+            <h1 class="alert alert-info">Outputs</h1>
+            <div ng-repeat="textOutput in textOutputs">
+                <label> {{textInput.name}}</label>
+                <p>
+                    <label> mimeType</label>
+                    <input type="text" ng-model="textOutput.mimeType">
+                </p>
+            </div>
+            <div ng-repeat="rasterOutput in rasterOutputs">
+                <label> {{rasterOutput.name}}</label>
+                <p>
+                    <label> mimeType</label>
+                    <input type="text" ng-model="rasterOutput.mimeType">
+                </p>
+            </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="resource">Resource ID</label>
-                            <input id="resource" type="text" class="form-control" ng-model="resource" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="dataInput">Data Input</label>
-                            <input id="dataInput" type="text" class="form-control" ng-model="dataInput" placeholder="JSON string">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="dataInputs">Data Inputs</label>
-                            <input id="dataInputs" type="text" class="form-control" ng-model="dataInputs" placeholder="JSON object">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-1">
-                        <button class="btn btn-primary" type="submit" id="executeBtn" style="margin-top: 24px">Execute Service</button>
-                    </div>
-                </div>
 
-            </form>
+            <div class="row">
+                <div class="col-md-1">
+                    <button ng-click="executeService()">Execute Service</button>
+                </div>
+            </div>
+
+
             <div>
                  <textarea ng-model="resourceResult" rows="10" cols="80">
                             </textarea>
