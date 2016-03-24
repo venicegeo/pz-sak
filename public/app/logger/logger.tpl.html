@@ -40,14 +40,102 @@
                 <h1 class="alert alert-info">Logger Service Info</h1>
                 <form ng-submit="getLogs()">
                     <div class="row">
-                        <div class="col-md-12"  align="right">
+                        <div class="col-md-6"  align="left">
+                            <button ng-click="showHideSearchForm()" class="btn btn-primary">Search Logs</button>
+                        </div>
+                        <div class="col-md-6"  align="right">
                             <button type="submit" class="btn btn-primary">Refresh Table</button>
                         </div>
                     </div>
                 </form>
             </div>
 
+            <br>
+            <form id="searchLogs"  ng-model="searchLogs"  ng-submit="searchLogs()" ng-show="showSearchLogs">
+                <div class="row">
+                    <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="afterDate">After Date:</label>
+                        <input type="date" class="form-control" id="afterDate" name="input" ng-model="afterDate"
+                               placeholder="yyyy-MM-dd"/>
 
+                        <div role="alert">
+                        <span class="error" ng-show="searchLogs.input.$error.date">
+                            Not a valid date!</span>
+                        </div>
+
+
+                    </div>
+                </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="beforeDate">Before Date</label>
+                            <input type="date" class="form-control" id="beforeDate" name="input" ng-model="beforeDate"
+                                   placeholder="yyyy-MM-dd"/>
+
+                            <div role="alert">
+                        <span class="error" ng-show="searchLogs.input.$error.date">
+                            Not a valid date!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="containsString">Contains</label>
+                            <input id="containsString" type="text" class="form-control" ng-model="containsString">
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="serviceInvolved">Service</label>
+                            <select id="serviceInvolved" class="form-control" ng-model="serviceInvolved">
+                                <option>Job Manager</option>
+                                <option>etc...</option>
+                                <option>1...</option>
+                                <option>2...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="fromPagination">Pagination:</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="fromPagination">From</label>
+                            <input id="fromPagination" type="number" class="form-control" ng-model="fromPagination">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="sizePagination">Size</label>
+                            <input id="sizePagination" type="number" class="form-control" ng-model="sizePagination">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <button ng-model="btnSearchLogs" type="submit" class="btn btn-primary">Search</button>
+                            <button ng-model="btnCancelSearchLogs" type="reset" ng-click="showHideSearchForm()" class="btn btn-primary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
 
             <div class="row">
                 <br>

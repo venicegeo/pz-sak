@@ -347,19 +347,85 @@
 
     <div role="tabpanel" class="tab-pane fade" id="list">
         <h1 class="alert alert-info">List of Services</h1>
-        <form id="listServices" ng-submit="listServices()">
+        <div class="row">
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group" ng-show="services" ng-init="getServices()">
 
-
-        </form>
+                            <label>Filter: <input ng-model="searchText"></label>
+                            <table id="searchTextResults" class="table table-striped" width="100%">
+                                <tr><th >ResourceId</th>
+                                    <th >Name</th>
+                                    <th >Description</th>
+                                    <th >URL</th>
+                                </tr>
+                                <tr ng-repeat="service in services | filter:searchText">
+                                    <td >{{service.id}}</td>
+                                    <td >{{service.resourceMetadata.name}}</td>
+                                    <td >{{service.resourceMetadata.description}}</td>
+                                    <td >{{service.resourceMetadata.url}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
         </div>
+    </div>
 
         <div role="tabpanel" class="tab-pane fade" id="search">
             <h1 class="alert alert-info">Search Services</h1>
-            <form id="searchServices" ng-submit="searchServices()">
+            <div class="row">
+                <form id="searchServices"  ng-model="searchServices"  ng-submit="searchServices()">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="searchField">Field</label>
+                                <input id="searchField" type="text" class="form-control" ng-model="searchField">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="searchPattern">Contains</label>
+                                <input id="searchPattern" type="text" class="form-control" ng-model="searchPattern">
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <button ng-model="btnSearchServices" type="submit" class="btn btn-primary">Search</button>
+                                <button ng-model="btnCancelSearchServices" type="reset" class="btn btn-primary">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                <div class="row">
+                    <br>
+                    </div>
 
-            </form>
-
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Filter: <input ng-model="searchResultsInput"></label>
+                            <table id="searchServicesResults" class="table table-striped" width="100%">
+                                <tr><th >ResourceId</th>
+                                    <th >Name</th>
+                                    <th >Description</th>
+                                    <th >URL</th>
+                                </tr>
+                                <tr ng-repeat="result in results | filter:searchResultsInput">
+                                    <td >{{result.id}}</td>
+                                    <td >{{result.name}}</td>
+                                    <td >{{result.description}}</td>
+                                    <td >{{result.url}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </div>
 
 

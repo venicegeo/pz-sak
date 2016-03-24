@@ -17,22 +17,28 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('LoggerController', ['$scope', '$http', '$log', '$q',  'toaster', LoggerController]);
+        .controller('LoggerController', ['$scope', '$http', '$log', '$q',  'toaster', 'discover', LoggerController]);
 
-    function LoggerController ($scope, $http, $log, $q, toaster) {
+    function LoggerController ($scope, $http, $log, $q, toaster, discover) {
+
+        $scope.showHideSearchForm = function() {
+            $scope.showSearchLogs = !$scope.showSearchLogs;
+        };
+
+
+        $scope.searchLogs = function() {
+            //TODO:Once Logger Search API is updated, we need to update this call to pass search params and show only what is returned.
+        };
 
         $scope.getLogs = function () {
             $scope.logs = "";
             $scope.errorMsg = "";
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.data.host + "/v1/messages",
+                    url: "/proxy?url=" + result.loggerHost + "/v1/messages",
                 }).then(function successCallback( html ) {
                     $scope.logs = html.data;
                 }, function errorCallback(response){
@@ -55,27 +61,20 @@
                 time: currentTime,
                 severity: "Info",
                 message: logMessage
-            }
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
-            }).then(function(result) {
-
+            };
+            discover.async().then(function(result) {
 
                 $http.post(
-                    "/proxy?url=" + result.data.host + "/v1/messages",
+                    "/proxy?url=" + result.loggerHost + "/v1/messages",
                     dataObj
                 ).then(function successCallback(res) {
                     $scope.message = res;
                     $scope.getLogs();
                     $scope.logMessage = null;
                     toaster.pop('success', "Success", "The log was successfully posted.")
-
-                    //console.log("Success!");
                 }, function errorCallback(res) {
                     console.log("logger.controller fail"+res.status);
-                    //$scope.successMsg = "There was a problem submitting the Log Message."
-                   toaster.pop('error', "Error", "There was a problem submitting the log message.");
+                    toaster.pop('error', "Error", "There was a problem submitting the log message.");
                 });
             })
         }

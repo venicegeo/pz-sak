@@ -18,10 +18,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('SearchController', ['$scope', '$http', '$log', '$q', 'toaster', SearchController]);
+        .controller('SearchController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', SearchController]);
 
 
-    function SearchController($scope, $http, $log, $q, toaster) {
+    function SearchController($scope, $http, $log, $q, toaster, discover) {
         $scope.size = 10;
         $scope.from = 0;
 
@@ -34,10 +34,7 @@
                 $scope.from = 0;
             }
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/elasticsearch"
-            }).then(function(result) {
+            discover.async().then(function(result) {
 
                 var params = {
                     from: $scope.from,
@@ -53,7 +50,7 @@
 
                 $http({
                     method: "GET",
-                    url: "/proxy/" + result.data.host + "/_search",
+                    url: "/proxy/" + result.searchHost + "/_search",
                     params: params
                 }).then(function successCallback( html ) {
                     $scope.searchResults = html.data.hits.hits;
@@ -72,7 +69,7 @@
         var isUndefinedOrEmpty = function(str) {
             var undefinedOrEmpty = false;
             return angular.isUndefined(str) || str.lengh == 0;
-        }
+        };
 
         $scope.addTags = function() {
             $scope.tagMsg = "";
@@ -87,12 +84,9 @@
             }
 
             var url = "";
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/elasticsearch"
-            }).then(function(result) {
+            discover.async().then(function(result) {
                 // TODO: Once elasticsearch is completely setup we probably don't need all these inputs
-                url = "/proxy?url=" + result.data.host + "/" + $scope.indexId + "/" + $scope.typeId + "/" + $scope.documentId;
+                url = "/proxy?url=" + result.searchHost + "/" + $scope.indexId + "/" + $scope.typeId + "/" + $scope.documentId;
                 $http({
                     method: "GET",
                     url: url

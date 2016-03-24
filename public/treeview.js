@@ -227,4 +227,55 @@
     };
   });
 
+  app.factory('discover', ['$http', function($http) {
+    var discover = {
+      async: function() {
+        var promise = $http({
+          method: "GET",
+          url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources"
+        }).then(function successCallback( html ) {
+          var data = {};
+
+          data.loggerHost = html.data["pz-logger"].host;
+          data.loggerType = html.data["pz-logger"].type;
+          data.loggerPort = html.data["pz-logger"].port;
+          data.uuidHost = html.data["pz-uuidgen"].host;
+          data.uuidType = html.data["pz-uuidgen"].type;
+          data.uuidPort = html.data["pz-uuidgen"].port;
+          data.workflowHost = html.data["pz-workflow"].host;
+          data.workflowType = html.data["pz-workflow"].type;
+          data.workflowPort = html.data["pz-workflow"].port;
+          data.kafkaHost = html.data["kafka"].host;
+          data.kafkaType = html.data["kafka"].type;
+          data.kafkaPort = html.data["kafka"].port;
+          data.zookeeperHost = html.data["zookeeper"].host;
+          data.zookeeperType = html.data["zookeeper"].type;
+          data.zookeeperPort = html.data["zookeeper"].port;
+          data.searchHost = html.data["elasticsearch"].host;
+          data.searchType = html.data["elasticsearch"].type;
+          data.searchPort = html.data["elasticsearch"].port;
+          data.serviceControllerHost = html.data["pz-servicecontroller"].address;
+          data.serviceControllerType = html.data["pz-servicecontroller"].type;
+          data.serviceControllerPort = html.data["pz-servicecontroller"].port;
+          data.dispatcherHost = html.data["pz-dispatcher"].host;
+          data.dispatcherType = html.data["pz-dispatcher"].type;
+          data.dispatcherPort = html.data["pz-dispatcher"].port;
+          data.gatewayHost = html.data["pz-gateway"].host;
+          data.gatewayType = html.data["pz-gateway"].type;
+          data.gatewayPort = html.data["pz-gateway"].port;
+
+          return data;
+        }, function errorCallback(response){
+          console.log("search.controller fail");
+          return "";
+        });
+
+        return promise;
+
+      }
+    };
+    return discover;
+
+  }]);
+
 }).call(this);

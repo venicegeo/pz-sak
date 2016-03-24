@@ -18,10 +18,11 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('UserServiceController', ['$scope', '$http', '$log', '$q', 'toaster', UserServiceController]);
+        .controller('UserServiceController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', UserServiceController]);
 
 
-    function UserServiceController($scope, $http, $log, $q, toaster) {
+
+    function UserServiceController($scope, $http, $log, $q, toaster, discover) {
         $scope.executeInputMap = {};
         $scope.executeOutputMap = {};
         $scope.method = 'GET';
@@ -407,6 +408,52 @@
             }, function errorCallback(response){
                 console.log("user-service-registry.controller fail");
                 toaster.pop('error', "Error", "There was an issue with your request.");
+            });
+
+        };
+
+        $scope.getServices = function() {
+            $scope.services = "";
+
+            discover.async().then(function(result) {
+
+                $http({
+                    method: "GET",
+                    url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/listService",
+                }).then(function successCallback( html ) {
+                    $scope.services = html.data;
+                }, function errorCallback(response){
+                    console.log("service.controller fail"+response.status);
+                    toaster.pop('error', "Error", "There was an issue with retrieving the services.");
+                });
+
+            });
+        };
+
+        $scope.searchServices = function() {
+            $scope.search = "";
+            var dataObj = {
+                field: $scope.searchField,
+                pattern: $scope.searchPattern
+            };
+
+            discover.async().then(function(result) {
+
+                $http.post(
+                    "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/search",
+                    dataObj,
+                    {
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                ).then(function successCallback( html ) {
+                    $scope.results = html.data;
+                }, function errorCallback(response){
+                    console.log("user-service-registry.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
+                });
+
             });
 
         };
