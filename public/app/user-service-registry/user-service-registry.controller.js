@@ -41,8 +41,22 @@
         $scope.selectedOutput = 0;
         $scope.resourceResult = "";
 
+        function resetServiceInputArrays() {
+            $scope.bodyInputs = [];
+            $scope.urlInputs = [];
+            $scope.rasterInputs = [];
+            $scope.textInputs = [];
+
+
+        }
+        function resetServiceOutputArrays(){
+            $scope.rasterOutputs = [];
+            $scope.textOutputs = [];
+
+        }
 
         function processServiceInputs(inputs) {
+            resetServiceInputArrays();
             var i;
             for (i=0;i<inputs.length;i++){
                 switch(inputs[i].dataType.type) {
@@ -63,6 +77,7 @@
         }
 
         function processServiceOutputs(outputs) {
+            resetServiceOutputArrays();
             var i;
             for (i=0;i<outputs.length;i++) {
                 switch(outputs[i].dataType.type) {
@@ -119,7 +134,7 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: '/proxy?url=pz-gateway.stage.geointservices.io/job',
+                url: '/proxy?url=/pz-gateway.stage.geointservices.io/job',
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -190,6 +205,7 @@
                     $scope.inputs = serviceMetadata.inputs;
                     $scope.outputs = serviceMetadata.outputs;
                     processServiceInputs($scope.inputs);
+                    processServiceOutputs($scope.outputs);
                     console.log($scope.serviceId);
                 }
                 else {
@@ -280,7 +296,7 @@
             fd.append( 'body', angular.toJson(job) );
             var request = $http({
                 method: "POST",
-                url: '/proxy?url=pz-gateway.stage.geointservices.io/job',
+                url: '/proxy?url=/pz-gateway.stage.geointservices.io/job',
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
@@ -383,7 +399,8 @@
             $scope.executeMsg = "";
            var executeServiceData = {
                "serviceId" : $scope.serviceId,
-               "dataInputs" : $scope.executeInputMap
+               "dataInputs" : $scope.executeInputMap,
+               "dataOutput" : $scope.outputs[$scope.selectedOutput].dataType
                //TODO When use latest version of executeServiceData, "dataOutput" : $scope.outputs[$scope.selectedOutput].dataType
            };
             var job = {
