@@ -194,16 +194,20 @@
             }
 
             var dataObj = {
+                id: serviceId,
                 name: $scope.updateServiceName,
-                description: $scope.updateServiceDescrip,
-                url: $scope.updateServiceUrl
+                resourceMetadata:{
+                    name: $scope.updateServiceName,
+                    description: $scope.updateServiceDescrip,
+                    url: $scope.updateServiceUrl
+                }
             };
 
             //TODO: go through the gateway
             discover.async().then(function(result) {
 
-                $http.post(
-                    "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/updateService?resourceId="+serviceId,
+                $http.put(
+                    "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/updateService",
                     dataObj
                 ).then(function successCallback(res) {
                     console.log(res);
