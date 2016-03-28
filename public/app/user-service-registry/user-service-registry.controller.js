@@ -41,6 +41,15 @@
         $scope.selectedOutput = 0;
         $scope.resourceResult = "";
 
+        //Request Limits
+        $scope.maxExecuteResultsRetries = 50;
+        $scope.maxRegisterResultsRetries = 10;
+        $scope.maxDescribeServiceRetries = 10;
+
+        $scope.ExecuteResultsRetries = 0;
+        $scope.RegisterResultsRetries = 0;
+        $scope.DescribeServiceRetries = 0;
+
         function resetServiceInputArrays() {
             $scope.bodyInputs = [];
             $scope.urlInputs = [];
@@ -91,6 +100,7 @@
             }
         }
         function getRegisterResult(jobId) {
+            $scope.RegisterResultsRetries += 1;
             var data = {
                 "apiKey": "my-api-key-kidkeid",
                 "jobType": {
@@ -115,7 +125,14 @@
                     console.log($scope.serviceId);
                 }
                 else {
-                    getRegisterResult(jobId);
+                    if ($scope.RegisterResultsRetries < $scope.maxRegisterResultsRetries) {
+                        window.setTimeout(getRegisterResult, 1000, jobId);
+                    }
+                    else {
+                        console.log("Get Register Results max tries exceeded");
+                        toaster.pop('error', "Error", "Get Register Results max tries exceeded");
+                    }
+                    //getRegisterResult(jobId);
                 }
             }, function errorCallback(response) {
                 console.log("search.controller fail");
@@ -147,6 +164,7 @@
             });
         }
         function getExecuteResult(jobId) {
+            $scope.ExecuteResultsRetries += 1;
             var data = {
                 "apiKey": "my-api-key-kidkeid",
                 "jobType": {
@@ -172,7 +190,14 @@
                     console.log($scope.serviceId);
                 }
                 else {
-                    getExecuteResult(jobId);
+                    if ($scope.ExecuteResultsRetries < $scope.maxExecuteResultsRetries) {
+                        window.setTimeout(getExecuteResult, 5000, jobId);
+                    }
+                    else {
+                        console.log("Exceeded Get Execute Results retry limit");
+                        toaster.pop('error', "Error", "Exceeded Get Execute Results retry limit")
+                    }
+                    //getgetExecuteResult(jobId);
                 }
             }, function errorCallback(response) {
                 console.log("search.controller fail");
@@ -181,6 +206,7 @@
         }
 
         function getDescribeServiceResult(jobId) {
+            $scope.DescribeServiceRetries += 1;
             var data = {
                 "apiKey": "my-api-key-kidkeid",
                 "jobType": {
@@ -209,7 +235,14 @@
                     console.log($scope.serviceId);
                 }
                 else {
-                    getDescribeServiceResult(jobId);
+                    if ($scope.DescribeServiceRetries < $scope.maxDescribeServiceRetries) {
+                        window.setTimeout(getDescribeServiceResult, 1000, jobId);
+                    }
+                    else {
+                        console.log("Get Describe Service Retries limit exceeded");
+                        toaster.pop('error', "Error", "Get Describe Service Retries limit exceeded.");
+                    }
+                    //getDescribeServiceResult(jobId);
                 }
             }, function errorCallback(response) {
                 console.log("search.controller fail");
@@ -284,6 +317,7 @@
         };
 
         $scope.describeService = function() {
+
             $scope.errorMsg = "";
             var job = {
                 "apiKey": "my-api-key-38n987",
@@ -301,6 +335,7 @@
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
                 $scope.jobId = html.data.jobId;
+                $scope.DescribeServiceRetries = 0;
                 getDescribeServiceResult($scope.jobId)
 
 
@@ -347,6 +382,7 @@
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
                $scope.jobId = html.data.jobId;
+                $scope.RegisterResultsRetries = 0;
                 getRegisterResult($scope.jobId)
 
 
@@ -363,26 +399,14 @@
             for (i = 0; i < inputs.length; i++) {
                 switch (inputs[i].dataType.type) {
                     // TODO: Looks like this can be simplified because body, raster and text all do the same thing
-                    case "body":
-                        $scope.executeInputMap[inputs[i].name] = {
-                            "content": inputs[i].content,
-                            "type": inputs[i].dataType.type,
-                            "mimeType": inputs[i].dataType.mimeType
-                        }
-                        break;
                     case "urlparameter":
                         $scope.executeInputMap[inputs[i].name] = {
                             "content": inputs[i].content,
                             "type": "text"
                         }
                         break;
+                    case "body":
                     case "raster":
-                        $scope.executeInputMap[inputs[i].name] = {
-                            "content": inputs[i].content,
-                            "type": inputs[i].dataType.type,
-                            "mimeType": inputs[i].dataType.mimeType
-                        }
-                        break;
                     case "text":
                         $scope.executeInputMap[inputs[i].name] = {
                             "content": inputs[i].content,
@@ -390,6 +414,7 @@
                             "mimeType": inputs[i].dataType.mimeType
                         }
                         break;
+
 
                 }
             }
@@ -420,6 +445,7 @@
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
                 $scope.jobId = html.data.jobId;
+                $scope.ExecuteResultsRetries = 0;
                 getExecuteResult($scope.jobId)
 
 
