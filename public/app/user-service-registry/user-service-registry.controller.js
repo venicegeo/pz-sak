@@ -521,11 +521,12 @@
             else{
                 $scope.showUpdateService = false;
             }
-            discover.async().then(function(result) {
+            //discover.async().then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/describeService?resourceId="+serviceId,
+                    //url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/describeService?resourceId="+serviceId,
+                    url: "/proxy?url=pz-servicecontroller.stage.geointservices.io/servicecontroller/describeService?resourceId="+serviceId,
                 }).then(function successCallback( html ) {
                     $scope.updateResourceId = html.data.id;
                     $scope.updateServiceName = html.data.resourceMetadata.name;
@@ -535,7 +536,7 @@
                     console.log("service.controller fail"+response.status);
                     toaster.pop('error', "Error", "There was an issue with retrieving the services.");
                 });
-            });
+            //});
         };
 
         $scope.updateService = function(){
@@ -561,10 +562,11 @@
             };
 
             //TODO: go through the gateway
-            discover.async().then(function(result) {
+            //discover.async().then(function(result) {
 
                 $http.put(
-                    "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/updateService",
+                    //"/proxy?url=" + result.serviceControllerHost + "/servicecontroller/updateService",
+                    "/proxy?url=pz-servicecontroller.stage.geointservices.io/servicecontroller/updateService",
                     dataObj
                 ).then(function successCallback(res) {
                     console.log(res);
@@ -577,7 +579,7 @@
 
                     toaster.pop('error', "Error", "There was a problem updating the Service.");
                 });
-            })
+            //})
             $scope.updateResourceId = "";
             $scope.updateServiceName = "";
             $scope.updateServiceDescrip = "";
@@ -588,11 +590,12 @@
         $scope.deleteService = function(serviceId){
 
             //TODO: go through the gateway
-             discover.async().then(function(result) {
+             //discover.async().then(function(result) {
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/deleteService?resourceId="+serviceId,
+                    //url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/deleteService?resourceId="+serviceId,
+                    url: "/proxy?url=pz-servicecontroller.stage.geointservices.io/servicecontroller/deleteService?resourceId="+serviceId,
                 }).then(function successCallback(res) {
                     console.log(res);
                     $scope.getServices();
@@ -604,7 +607,7 @@
 
                     toaster.pop('error', "Error", "There was a problem deleting the Service.");
                 });
-            })
+            //})
         };
 
     }
