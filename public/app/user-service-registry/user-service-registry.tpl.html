@@ -164,25 +164,25 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label ng-model="updateResourceId">ResourceId</label>
+                            <label ng-model="updateResourceId">ResourceId: {{updateResourceId}}</label>
                         </div>
                     </div>
                 </div>
                 <div class="row">
 
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="updateServiceName">Name</label>
                             <input id="updateServiceName" type="text" class="form-control" ng-model="updateServiceName">
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="updateServiceDescrip">Description</label>
                             <input id="updateServiceDescrip" type="text" class="form-control" ng-model="updateServiceDescrip">
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="updateServiceUrl">Url</label>
                             <input id="updateServiceUrl" type="text" class="form-control" ng-model="updateServiceUrl">
@@ -199,6 +199,8 @@
                 </div>
 
             </form>
+
+            <div class="row"><br><br></div>
 
             <div class="row">
                     <div class="col-md-12">
@@ -265,14 +267,14 @@
                             <table id="searchServicesResults" class="table table-striped" width="100%">
                                 <tr><th >ResourceId</th>
                                     <th >Name</th>
-                                    <th >Description</th>
-                                    <th >URL</th>
+                                    <th >Availability</th>
+
                                 </tr>
                                 <tr ng-repeat="result in results | filter:searchResultsInput">
                                     <td >{{result.id}}</td>
                                     <td >{{result.name}}</td>
-                                    <td >{{result.description}}</td>
-                                    <td >{{result.url}}</td>
+                                    <td >{{result.resourceMetadata.availability}}</td>
+
                                 </tr>
                             </table>
                         </div>

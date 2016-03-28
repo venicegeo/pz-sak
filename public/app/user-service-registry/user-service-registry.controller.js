@@ -122,7 +122,6 @@
                     console.log("service.controller fail"+response.status);
                     toaster.pop('error', "Error", "There was an issue with retrieving the services.");
                 });
-
             });
         };
 
@@ -151,9 +150,7 @@
                     console.log("user-service-registry.controller fail");
                     toaster.pop('error', "Error", "There was an issue with your request.");
                 });
-
             });
-
         };
 
         $scope.cancelUpdateService = function() {
@@ -175,29 +172,20 @@
                     url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/describeService?resourceId="+serviceId,
                 }).then(function successCallback( html ) {
                     $scope.updateResourceId = html.data.id;
-                    $scope.updateResourceName = html.data.resourceMetadata.name;
-                    $scope.updateResourceDescrip = html.data.resourceMetadata.description;
-                    $scope.updateResourceUrl = html.data.resourceMetadata.url;
+                    $scope.updateServiceName = html.data.resourceMetadata.name;
+                    $scope.updateServiceDescrip = html.data.resourceMetadata.description;
+                    $scope.updateServiceUrl = html.data.resourceMetadata.url;
                 }, function errorCallback(response){
                     console.log("service.controller fail"+response.status);
                     toaster.pop('error', "Error", "There was an issue with retrieving the services.");
                 });
-
             });
-
         };
-
-
-
-        $scope.describeService = function() {
-            $scope.errorMsg = "";
-
-
-        }
 
         $scope.updateService = function(){
             var jobId = "";
             var serviceId = $scope.updateResourceId;
+
             if (!$scope.showUpdateService){
                 $scope.showUpdateService = true;
             }
@@ -205,8 +193,34 @@
                 $scope.showUpdateService = false;
             }
 
+            var dataObj = {
+                name: $scope.updateServiceName,
+                description: $scope.updateServiceDescrip,
+                url: $scope.updateServiceUrl
+            };
 
+            //TODO: go through the gateway
+            discover.async().then(function(result) {
 
+                $http.post(
+                    "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/updateService?resourceId="+serviceId,
+                    dataObj
+                ).then(function successCallback(res) {
+                    console.log(res);
+                    $scope.getServices();
+
+                    toaster.pop('success', "Success", "The service was successfully updated.")
+
+                }, function errorCallback(res) {
+                    console.log("User Service.controller fail"+res.status);
+
+                    toaster.pop('error', "Error", "There was a problem updating the Service.");
+                });
+            })
+            $scope.updateResourceId = "";
+            $scope.updateServiceName = "";
+            $scope.updateServiceDescrip = "";
+            $scope.updateServiceUrl = "";
         };
 
 
@@ -217,7 +231,7 @@
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/deleteService?="+serviceId,
+                    url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/deleteService?resourceId="+serviceId,
                 }).then(function successCallback(res) {
                     console.log(res);
                     $scope.getServices();
