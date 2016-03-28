@@ -68,7 +68,7 @@
 
                 $http({
                     method: "POST",
-                    url: "https://www.pzgateway.com:8443/job", //pz-gateway.stage.geointservices.io/job",
+                    url: "https://pz-gateway.stage.geointservices.io/job",
                     data: fd,
                     headers: {
                         "Content-Type": undefined
@@ -95,7 +95,7 @@
 
                 $http({
                     method: "POST",
-                    url: "https://www.pzgateway.com:8443/job", //pz-gateway.stage.geointservices.io/job",
+                    url: "https://pz-gateway.stage.geointservices.io/job",
                     data: fd,
                     headers: {
                         "Content-Type": undefined
