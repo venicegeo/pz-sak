@@ -39,8 +39,163 @@
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane fade in active" id="register">
             <h1 class="alert alert-info">User Service Registry Info</h1>
-            <p>Register a service</p>
-            <form id="serviceRegistrationForm" ng-submit="registerService()">
+
+            <p><{{serviceId}}</p>
+
+                <h2>Inputs</h2>
+                <div class="row">
+                    <div ng-repeat="ninput in inputs">
+                        <p>
+                            <label> Name</label>
+                        <input type="text" ng-model="ninput.name">
+                            </p>
+                        <p>
+                        <label> MinOccurs</label>
+                        <input type="text" ng-model="ninput.minOccurs">
+                        </p>
+                        <p>
+                            <label> MaxOccurs</label>
+                            <input type="text" ng-model="ninput.maxOccurs">
+                        </p>
+                        <p>
+                            <label> data type </label>
+                            <input type="text" ng-model="ninput.dataType.type">
+                        </p>
+                        <p>
+                            <label> data mimetype </label>
+                            <input type="text" ng-model="ninput.dataType.mimeType">
+                        </p>
+                        <p>
+                            <label> metadata about </label>
+                            <input type="text" ng-model="ninput.metadata.about">
+                        </p>
+                        <p>
+                            <label> metadata href </label>
+                            <input type="text" ng-model="ninput.metadata.href">
+                        </p>
+                        <p>
+                            <label> metadata role </label>
+                            <input type="text" ng-model="ninput.metadata.role">
+                        </p>
+                        <p>
+                            <label> metadata title </label>
+                            <input type="text" ng-model="ninput.metadata.title">
+                        </p>
+                        <p>
+                            <label> Format </label>
+                           <div class="row">
+                        <div ng-repeat="nformat in ninput.formats">
+                        <p>
+                            <label> mimeType </label>
+                            <input type="text" ng-model="nformat.mimeType">
+                        </p>
+                        <p>
+                            <label> encoding </label>
+                            <input type="text" ng-model="nformat.encoding">
+                        </p>
+                        <p>
+                            <label> schema </label>
+                            <input type="text" ng-model="nformat.schema">
+                        </p>
+                        <p>
+                            <label> maximum Megabytes </label>
+                            <input type="text" ng-model="nformat.maximumMegabytes">
+                        </p>
+                        <p>
+                            <label> data type </label>
+                            <input type="text" ng-model="nformat.dataType.type">
+                        </p>
+                        <p>
+                            <label> data mimetype </label>
+                            <input type="text" ng-model="nformat.dataType.mimeType">
+                        </p>
+
+
+                            </div>
+                           <button ng-click="addFormat($index)">New Format</button>
+
+                           </div>
+                        </p>
+                    </div>
+                    <button ng-click="addInput()">New Input</button>
+                </div>
+    <h2>Outputs</h2>
+    <div class="row">
+        <div ng-repeat="noutput in outputs">
+            <p>
+                <label> Name</label>
+                <input type="text" ng-model="noutput.name">
+            </p>
+            <p>
+                <label> MinOccurs</label>
+                <input type="text" ng-model="noutputt.minOccurs">
+            </p>
+            <p>
+                <label> MaxOccurs</label>
+                <input type="text" ng-model="noutput.maxOccurs">
+            </p>
+            <p>
+                <label> data type </label>
+                <input type="text" ng-model="noutput.dataType.type">
+            </p>
+            <p>
+                <label> data mimetype </label>
+                <input type="text" ng-model="noutput.dataType.mimeType">
+            </p>
+            <p>
+                <label> metadata about </label>
+                <input type="text" ng-model="noutput.metadata.about">
+            </p>
+            <p>
+                <label> metadata href </label>
+                <input type="text" ng-model="noutput.metadata.href">
+            </p>
+            <p>
+                <label> metadata role </label>
+                <input type="text" ng-model="noutput.metadata.role">
+            </p>
+            <p>
+                <label> metadata title </label>
+                <input type="text" ng-model="noutput.metadata.title">
+            </p>
+            <p>
+                <label> Format </label>
+                <div class="row">
+                    <div ng-repeat="nformat in noutput.formats">
+            <p>
+                <label> mimeType </label>
+                <input type="text" ng-model="nformat.mimeType">
+            </p>
+            <p>
+                <label> encoding </label>
+                <input type="text" ng-model="nformat.encoding">
+            </p>
+            <p>
+                <label> schema </label>
+                <input type="text" ng-model="nformat.schema">
+            </p>
+            <p>
+                <label> maximum Megabytes </label>
+                <input type="text" ng-model="nformat.maximumMegabytes">
+            </p>
+            <p>
+                <label> data type </label>
+                <input type="text" ng-model="nformat.dataType.type">
+            </p>
+            <p>
+                <label> data mimetype </label>
+                <input type="text" ng-model="nformat.dataType.mimeType">
+            </p>
+
+        </div>
+        <button ng-click="addOutputFormat($index)">New Format</button>
+
+    </div>
+    </p>
+</div>
+<button ng-click="addOutput()">New Output</button>
+</div>
+<h2>Service Metadata</h2>
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -89,65 +244,98 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="params">Parameters</label>
-                            <input id="params" type="text" class="form-control" ng-model="params" placeholder="Comma delimited list of parameters">
-                        </div>
-                    </div>
-                </div>
+
                 <div class="row">
                     <div class="col-md-1">
-                        <button class="btn btn-primary" type="submit" id="registerBtn" style="margin-top: 24px">Register Service</button>
+                        <button class="btn btn-primary" ng-click="registerService()">Register Service</button>
                     </div>
                 </div>
                 <div>
                     <label id="serviceMsg">{{serviceMsg}}</label>
                 </div>
-                <div ng-show="resourceId">
-                    Resource ID: {{resourceId}}
+                <div>
+                    <label id="serviceID">{{serviceId}}</label>
+                </div>
+                <div ng-show="serviceId">
+                    Resource ID: {{serviceId}}
                 </div>
 
-            </form>
+
 
         </div>
 
 
         <div role="tabpanel" class="tab-pane fade" id="execute">
-            <h1 class="alert alert-info">Executing a service</h1>
-            <form id="runService" ng-submit="executeService()">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="resource">Resource ID</label>
-                            <input id="resource" type="text" class="form-control" ng-model="resource" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="dataInput">Data Input</label>
-                            <input id="dataInput" type="text" class="form-control" ng-model="dataInput" placeholder="JSON string">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="dataInputs">Data Inputs</label>
-                            <input id="dataInputs" type="text" class="form-control" ng-model="dataInputs" placeholder="JSON object">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-1">
-                        <button class="btn btn-primary" type="submit" id="executeBtn" style="margin-top: 24px">Execute Service</button>
-                    </div>
-                </div>
-
+            <form id="describeService" ng-submit="describeService()">
+                <label>ServiceId</label>
+                <input id="service" type="text" class="form-control" ng-model="serviceId" required>
+                <button class="btn btn-primary" type="submit" id="describeBtn" style="margin-top: 24px">Get Service Info</button>
             </form>
+            <h1 class="alert alert-info">Executing a service</h1>
+
+
+            <h1 class="alert alert-info">Inputs</h1>
+            <div ng-repeat="textInput in textInputs">
+                <p>
+                    <label> {{textInput.metadata.about}}</label>
+                    <label> {{textInput.name}}</label>
+                    <input type="text" ng-model="textInput.content">
+                </p>
+            </div>
+            <div ng-repeat="urlInput in urlInputs">
+                <p>
+                    <label> {{urlInput.metadata.about}}</label>
+                    <label> {{urlInput.name}}</label>
+                    <input type="text" ng-model="urlInput.content">
+                </p>
+                </div>
+            <div ng-repeat="textInput in bodyInputs">
+                <p>
+                    <label> {{textInput.name}}</label>
+                    <textarea ng-model="textInput.content" rows="10" cols="80">
+                        </textarea>
+                </p>
+            </div>
+            <div ng-repeat="rasterInput in rasterInputs">
+                <label> {{rasterInput.name}}</label>
+                <p>
+                <p>
+                    <label> location</label>
+                    <input type="text" ng-model="rasterInput.location">
+                </p>
+                <p>
+                    <label> mimeType</label>
+                    <input type="text" ng-model="rasterInput.mimeType">
+                </p>
+            </div>
+            <h1 class="alert alert-info">Outputs</h1>
+            <div ng-repeat="textOutput in textOutputs">
+                <label> {{textInput.name}}</label>
+                <p>
+                    <label> mimeType</label>
+                    <input type="text" ng-model="textOutput.mimeType">
+                </p>
+            </div>
+            <div ng-repeat="rasterOutput in rasterOutputs">
+                <label> {{rasterOutput.name}}</label>
+                <p>
+                    <label> mimeType</label>
+                    <input type="text" ng-model="rasterOutput.mimeType">
+                </p>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-1">
+                    <button ng-click="executeService()">Execute Service</button>
+                </div>
+            </div>
+
+
+            <div>
+                 <textarea ng-model="resourceResult" rows="10" cols="80">
+                            </textarea>
+                </div>
             <div>
                 <label id="executeMsg">{{executeMsg}}</label>
             </div>
