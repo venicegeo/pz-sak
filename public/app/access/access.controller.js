@@ -23,7 +23,22 @@
         $scope.pageSize = 10;
         $scope.page = 0;
 
+        var getCount = function() {
+            $http({
+                method: "GET",
+                url: "/proxy/pz-access.stage.geointservices.io/data/count",
+            }).then(function successCallback(html) {
+                $scope.total = html.data;
+                $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
+            }, function errorCallback(response) {
+                console.log("access.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.");
+            });
+
+        };
+
         $scope.getData = function($event) {
+            getCount();
             var params = {
                 page: $scope.page,
                 pageSize: $scope.pageSize
@@ -34,8 +49,6 @@
                 params: params
             }).then(function successCallback(html) {
                 $scope.accessDataList = html.data;
-                $scope.total = html.data.length;
-                $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
             }, function errorCallback(response) {
                 console.log("access.controller fail");
                 toaster.pop('error', "Error", "There was an issue with your request.");
