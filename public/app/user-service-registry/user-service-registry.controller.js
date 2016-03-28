@@ -106,6 +106,9 @@
         };
 
         $scope.getServices = function() {
+
+            //TODO: Go through gateway
+
             $scope.services = "";
 
             discover.async().then(function(result) {
@@ -119,11 +122,12 @@
                     console.log("service.controller fail"+response.status);
                     toaster.pop('error', "Error", "There was an issue with retrieving the services.");
                 });
-
             });
         };
 
         $scope.searchServices = function() {
+
+            //TODO: go through gateway
             $scope.search = "";
             var dataObj = {
                 field: $scope.searchField,
@@ -146,9 +150,104 @@
                     console.log("user-service-registry.controller fail");
                     toaster.pop('error', "Error", "There was an issue with your request.");
                 });
-
             });
+        };
 
+        $scope.cancelUpdateService = function() {
+            $scope.showUpdateService = !$scope.showUpdateService;
+        };
+
+        $scope.showUpdateServiceForm = function(serviceId){
+            var jobId = "";
+            if (!$scope.showUpdateService){
+                $scope.showUpdateService = true;
+            }
+            else{
+                $scope.showUpdateService = false;
+            }
+            discover.async().then(function(result) {
+
+                $http({
+                    method: "GET",
+                    url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/describeService?resourceId="+serviceId,
+                }).then(function successCallback( html ) {
+                    $scope.updateResourceId = html.data.id;
+                    $scope.updateServiceName = html.data.resourceMetadata.name;
+                    $scope.updateServiceDescrip = html.data.resourceMetadata.description;
+                    $scope.updateServiceUrl = html.data.resourceMetadata.url;
+                }, function errorCallback(response){
+                    console.log("service.controller fail"+response.status);
+                    toaster.pop('error', "Error", "There was an issue with retrieving the services.");
+                });
+            });
+        };
+
+        $scope.updateService = function(){
+            var jobId = "";
+            var serviceId = $scope.updateResourceId;
+
+            if (!$scope.showUpdateService){
+                $scope.showUpdateService = true;
+            }
+            else{
+                $scope.showUpdateService = false;
+            }
+
+            var dataObj = {
+                id: serviceId,
+                name: $scope.updateServiceName,
+                resourceMetadata:{
+                    name: $scope.updateServiceName,
+                    description: $scope.updateServiceDescrip,
+                    url: $scope.updateServiceUrl
+                }
+            };
+
+            //TODO: go through the gateway
+            discover.async().then(function(result) {
+
+                $http.put(
+                    "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/updateService",
+                    dataObj
+                ).then(function successCallback(res) {
+                    console.log(res);
+                    $scope.getServices();
+
+                    toaster.pop('success', "Success", "The service was successfully updated.")
+
+                }, function errorCallback(res) {
+                    console.log("User Service.controller fail"+res.status);
+
+                    toaster.pop('error', "Error", "There was a problem updating the Service.");
+                });
+            })
+            $scope.updateResourceId = "";
+            $scope.updateServiceName = "";
+            $scope.updateServiceDescrip = "";
+            $scope.updateServiceUrl = "";
+        };
+
+
+        $scope.deleteService = function(serviceId){
+
+            //TODO: go through the gateway
+             discover.async().then(function(result) {
+
+                $http({
+                    method: "GET",
+                    url: "/proxy?url=" + result.serviceControllerHost + "/servicecontroller/deleteService?resourceId="+serviceId,
+                }).then(function successCallback(res) {
+                    console.log(res);
+                    $scope.getServices();
+
+                    toaster.pop('success', "Success", "The service was successfully deleted.")
+
+                }, function errorCallback(res) {
+                    console.log("User Service.controller fail"+res.status);
+
+                    toaster.pop('error', "Error", "There was a problem deleting the Service.");
+                });
+            })
         };
 
     }
