@@ -76,7 +76,10 @@
 
         children: [
           {
-            label: 'Admin'
+            label: 'Admin',
+              onSelect: function(branch) {
+                  return $scope.bodyDiv = "app/jobs/jobs.admin.tpl.html";
+              }
           }
         ]
 
@@ -269,6 +272,9 @@
           accessHost : "pz-access" + hostname,
           accessType : CORE_SERVICE,
           accessPort : "",
+          jobsHost : "pz-jobmanager" + hostname,
+          jobsType : CORE_SERVICE,
+          jobsPort : "",
     };
     return discover;
 
