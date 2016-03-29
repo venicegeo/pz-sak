@@ -39,14 +39,13 @@
 
                 $http({
                     method: "GET",
-                    url: "/proxy?url=" + result.workflowHost + "/v1/eventtypes?id="+eventTypeId,
+                    url: "/proxy?url=" + result.workflowHost + "/v1/eventtypes/"+eventTypeId,
                 }).then(function successCallback( html ) {
-                    //TODO: When the get eventtypes by ID is fixed in services, change the following to take out the [0] array call.
-                    $scope.eventTypeId = html.data[0].id;
-                    $scope.eventTypeName = html.data[0].name;
-                    $scope.eventTypeItemId = html.data[0].mapping.code;
-                    $scope.eventTypeSeverity = html.data[0].mapping.severity;
-                    $scope.eventTypeProblem = html.data[0].mapping.filename;
+                    $scope.eventTypeId = html.data.id;
+                    $scope.eventTypeName = html.data.name;
+                    $scope.eventTypeItemId = html.data.mapping.itemId;
+                    $scope.eventTypeSeverity = html.data.mapping.severity;
+                    $scope.eventTypeProblem = html.data.mapping.problem;
                 }, function errorCallback(response){
                     console.log("workflow.controller fail"+response.status);
                     toaster.pop('error', "Error", "There was an issue with retrieving the event types.");
