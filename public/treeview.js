@@ -230,9 +230,10 @@
   app.factory('discover', [function() {
     var hostname;
     if (window.location.hostname == "localhost") {
-      hostname = ".stage.geointservices.io"
+        hostname = ".stage.geointservices.io"
     } else {
-      hostname = window.location.hostname.substring(6);
+        var firstDotIndex = window.location.hostname.indexOf(".");
+        hostname = window.location.hostname.substring(firstDotIndex);
     }
 
     var CORE_SERVICE = "core-service";
