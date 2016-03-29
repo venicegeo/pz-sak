@@ -25,8 +25,7 @@
                 $scope.getUUIDs = function () {
                     $scope.uuids = "";
                     $scope.errorMsg = "";
-                    discover.async().then(function(data) {
-                        var url = data.uuidHost;
+                        var url = discover.uuidHost;
                         var posturl = '';
                         if ($scope.uuidCount === undefined){
                             posturl = "/proxy?url="+ url +"/v1/uuids"
@@ -45,7 +44,6 @@
                             console.log("fail");
                             toaster.pop('error', "Error", "There was an issue retrieving UUID(s)");
                         });
-                    });
 
 
                 };

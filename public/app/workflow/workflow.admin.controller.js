@@ -23,20 +23,16 @@
             $scope.adminData = "";
             $scope.errorMsg = "";
 
-            discover.async().then(function(result) {
+            $http({
+                method: "GET",
+                url: "/proxy?url=" + discover.workflowHost + "/v1/admin/stats",
+            }).then(function successCallback( html ) {
+                $scope.adminData = html.data;
 
-                $http({
-                    method: "GET",
-                    url: "/proxy?url=" + result.workflowHost + "/v1/admin/stats",
-                }).then(function successCallback( html ) {
-                    $scope.adminData = html.data;
-
-                }, function errorCallback(response){
-                    console.log("fail");
-                    toaster.pop('error', "Error", "There was an error retrieving the admin workflow data");
-                    //$scope.errorMsg = "There was an issue with your request.  Please make sure ..."
-                });
-
+            }, function errorCallback(response){
+                console.log("fail");
+                toaster.pop('error', "Error", "There was an error retrieving the admin workflow data");
+                //$scope.errorMsg = "There was an issue with your request.  Please make sure ..."
             });
 
         };
@@ -44,18 +40,14 @@
             $scope.settingsData = "";
             $scope.errorMsg = "";
 
-            discover.async().then(function(result) {
-
-                $http({
-                    method: "GET",
-                    url: "/proxy?url=" + result.workflowHost + "/v1/admin/settings",
-                }).then(function successCallback( html ) {
-                    $scope.settingsData = html.data;
-                }, function errorCallback(response){
-                    console.log("fail");
-                    toaster.pop('error', "Error", "There was an error retrieving the admin settings data");
-
-                });
+            $http({
+                method: "GET",
+                url: "/proxy?url=" + discover.workflowHost + "/v1/admin/settings",
+            }).then(function successCallback( html ) {
+                $scope.settingsData = html.data;
+            }, function errorCallback(response){
+                console.log("fail");
+                toaster.pop('error', "Error", "There was an error retrieving the admin settings data");
 
             });
 
@@ -68,22 +60,19 @@
             var dataObj = {
                 debug: "true"
             };
-            discover.async().then(function(result) {
 
+            $http.post(
+                "/proxy?url=" + discover.workflowHost + "/v1/admin/settings",
+                dataObj
+            ).then(function successCallback(res) {
+                $scope.settings = res;
+                $scope.workflowMessage = null;
+                toaster.pop('success', "Success", "The admin settings was successfully posted.")
 
-                $http.post(
-                    "/proxy?url=" + result.workflowHost + "/v1/admin/settings",
-                    dataObj
-                ).then(function successCallback(res) {
-                    $scope.settings = res;
-                    $scope.workflowMessage = null;
-                    toaster.pop('success', "Success", "The admin settings was successfully posted.")
-
-                }, function errorCallback(res) {
-                    console.log("workflow.controller fail"+res.status);
-                    toaster.pop('error', "Error", "There was a problem submitting the admin settings.");
-                });
-            })
+            }, function errorCallback(res) {
+                console.log("workflow.controller fail"+res.status);
+                toaster.pop('error', "Error", "There was a problem submitting the admin settings.");
+            });
         };
 
         $scope.getUptime = function(dateString) {
@@ -92,25 +81,23 @@
 
         $scope.reset = function() {
 
-            discover.async().then(function(result) {
+            var data = {
+                reason: $scope.shutdownReason
+            };
 
-                var data = {
-                    reason: $scope.shutdownReason
-                };
-                $http({
-                    method: "POST",
-                    url: "/proxy?url=" + result.workflowHost + "/v1/admin/shutdown",
-                    data: data
-                }).then(function successCallback( html ) {
-                    $scope.shutdownResponse = html.data;
-                }, function errorCallback(response) {
-                    // 502 means the service was killed
-                    if (response.status == "502") {
-                        toaster.pop('success', "Success", "Service successfully shutdown");
-                    }
-                });
-
+            $http({
+                method: "POST",
+                url: "/proxy?url=" + discover.workflowHost + "/v1/admin/shutdown",
+                data: data
+            }).then(function successCallback( html ) {
+                $scope.shutdownResponse = html.data;
+            }, function errorCallback(response) {
+                // 502 means the service was killed
+                if (response.status == "502") {
+                    toaster.pop('success', "Success", "Service successfully shutdown");
+                }
             });
+
 
         };
 

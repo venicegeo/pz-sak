@@ -17,16 +17,16 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('AccessController', ['$scope', '$log', '$q', '$http', 'toaster', AccessController]);
+        .controller('AccessController', ['$scope', '$log', '$q', '$http', 'toaster', 'discover', AccessController]);
 
-    function AccessController($scope, $log, $q, $http, toaster) {
+    function AccessController($scope, $log, $q, $http, toaster, discover) {
         $scope.pageSize = 10;
         $scope.page = 0;
 
         var getCount = function() {
             $http({
                 method: "GET",
-                url: "/proxy/pz-access.stage.geointservices.io/data/count",
+                url: "/proxy/" + discover.accessHost + "/data/count",
             }).then(function successCallback(html) {
                 $scope.total = html.data;
                 $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
@@ -45,7 +45,7 @@
             };
             $http({
                 method: "GET",
-                url: "/proxy/pz-access.stage.geointservices.io/data",
+                url: "/proxy/" + discover.accessHost + "/data",
                 params: params
             }).then(function successCallback(html) {
                 $scope.accessDataList = html.data;
@@ -62,7 +62,7 @@
             }
             $http({
                 method: "GET",
-                url: "/proxy/pz-access.stage.geointservices.io/data/" + $scope.dataId
+                url: "/proxy/" + discover.accessHost + "/data/" + $scope.dataId
             }).then(function successCallback(html) {
                 $scope.accessData = html.data;
             }, function errorCallback(response) {

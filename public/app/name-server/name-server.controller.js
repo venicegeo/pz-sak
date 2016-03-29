@@ -24,12 +24,7 @@
 
         $scope.getServices = function (){
 
-            discover.async().then(function(data) {
-                if (data == "") {
-                    toaster.pop('error', "Error", "There was an issue retrieving name server information");
-                }
-                $scope.data = data;
-            });
+        $scope.data = discover;
 
         };
     }
