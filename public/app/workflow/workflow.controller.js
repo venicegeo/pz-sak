@@ -207,7 +207,7 @@
         var currentTime = moment().utc().toISOString();
         var alertMessage = $scope.alertMessage;
         var dataObj = {
-            type: $scope.newEventType,
+            eventtype_id: $scope.newEventType,
             date: currentTime,
             data:{
                 itemId: $scope.newEventItemId,
@@ -217,7 +217,7 @@
         };
         discover.async().then(function(result) {
             $http.post(
-                "/proxy?url=" + result.workflowHost + "/v1/events/",
+                "/proxy?url=" + result.workflowHost + "/v1/events/" + $scope.newEventType,
                 dataObj
             ).then(function successCallback(res) {
                 $scope.message = res;
