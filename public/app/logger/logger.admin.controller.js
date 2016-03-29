@@ -26,18 +26,14 @@
             $scope.adminData = "";
             $scope.errorMsg = "";
 
-            discover.async().then(function(result) {
-
-                $http({
-                    method: "GET",
-                    url: "/proxy?url=" + result.loggerHost + "/v1/admin/stats",
-                }).then(function successCallback( html ) {
-                    $scope.adminData = html.data;
-                }, function errorCallback(response){
-                    console.log("fail");
-                    toaster.pop('error', "Error", "There was an error retrieving the admin data");
-                });
-
+            $http({
+                method: "GET",
+                url: "/proxy?url=" + discover.loggerHost + "/v1/admin/stats",
+            }).then(function successCallback( html ) {
+                $scope.adminData = html.data;
+            }, function errorCallback(response){
+                console.log("fail");
+                toaster.pop('error', "Error", "There was an error retrieving the admin data");
             });
 
         };
@@ -48,24 +44,20 @@
 
         $scope.reset = function() {
 
-            discover.async().then(function(result) {
-
-                var data = {
-                    reason: $scope.shutdownReason
-                };
-                $http({
-                    method: "POST",
-                    url: "/proxy?url=" + result.loggerHost + "/v1/admin/shutdown",
-                    data: data
-                }).then(function successCallback( html ) {
-                    $scope.shutdownResponse = html.data;
-                }, function errorCallback(response) {
-                    // 502 means the service was killed
-                    if (response.status == "502") {
-                        toaster.pop('success', "Success", "Service successfully shutdown");
-                    }
-
-                });
+            var data = {
+                reason: $scope.shutdownReason
+            };
+            $http({
+                method: "POST",
+                url: "/proxy?url=" + discover.loggerHost + "/v1/admin/shutdown",
+                data: data
+            }).then(function successCallback( html ) {
+                $scope.shutdownResponse = html.data;
+            }, function errorCallback(response) {
+                // 502 means the service was killed
+                if (response.status == "502") {
+                    toaster.pop('success', "Success", "Service successfully shutdown");
+                }
 
             });
 

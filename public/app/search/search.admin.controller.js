@@ -26,19 +26,16 @@
             $scope.adminData = "";
             $scope.errorMsg = "";
 
-            discover.async().then(function(result) {
-
-                $http({
-                    method: "GET",
-                    url: "/proxy?url=" + result.searchHost + "/_cluster/health",
-                }).then(function successCallback( html ) {
-                    $scope.adminData = html.data;
-                }, function errorCallback(response){
-                    console.log("Search.admin.controller fail");
-                    toaster.pop('error', "Error", "There was an issue with your request.");
-                });
-
+            $http({
+                method: "GET",
+                url: "/proxy?url=" + discover.searchHost + "/_cluster/health",
+            }).then(function successCallback( html ) {
+                $scope.adminData = html.data;
+            }, function errorCallback(response){
+                console.log("Search.admin.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.");
             });
+
 
         };
 

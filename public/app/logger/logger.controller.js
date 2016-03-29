@@ -34,18 +34,14 @@
             $scope.logs = "";
             $scope.errorMsg = "";
 
-            discover.async().then(function(result) {
-
-                $http({
-                    method: "GET",
-                    url: "/proxy?url=" + result.loggerHost + "/v1/messages",
-                }).then(function successCallback( html ) {
-                    $scope.logs = html.data;
-                }, function errorCallback(response){
-                    console.log("logger.controller fail"+response.status);
-                    toaster.pop('error', "Error", "There was an issue with retrieving the logs.");
-                });
-
+            $http({
+                method: "GET",
+                url: "/proxy?url=" + discover.loggerHost + "/v1/messages",
+            }).then(function successCallback( html ) {
+                $scope.logs = html.data;
+            }, function errorCallback(response){
+                console.log("logger.controller fail"+response.status);
+                toaster.pop('error', "Error", "There was an issue with retrieving the logs.");
             });
 
         };
@@ -62,21 +58,19 @@
                 severity: "Info",
                 message: logMessage
             };
-            discover.async().then(function(result) {
 
-                $http.post(
-                    "/proxy?url=" + result.loggerHost + "/v1/messages",
-                    dataObj
-                ).then(function successCallback(res) {
-                    $scope.message = res;
-                    $scope.getLogs();
-                    $scope.logMessage = null;
-                    toaster.pop('success', "Success", "The log was successfully posted.")
-                }, function errorCallback(res) {
-                    console.log("logger.controller fail"+res.status);
-                    toaster.pop('error', "Error", "There was a problem submitting the log message.");
-                });
-            })
+            $http.post(
+                "/proxy?url=" + discover.loggerHost + "/v1/messages",
+                dataObj
+            ).then(function successCallback(res) {
+                $scope.message = res;
+                $scope.getLogs();
+                $scope.logMessage = null;
+                toaster.pop('success', "Success", "The log was successfully posted.")
+            }, function errorCallback(res) {
+                console.log("logger.controller fail"+res.status);
+                toaster.pop('error', "Error", "There was a problem submitting the log message.");
+            });
         }
     }
 

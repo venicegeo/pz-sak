@@ -34,36 +34,33 @@
                 $scope.from = 0;
             }
 
-            discover.async().then(function(result) {
+            var params = {
+                from: $scope.from,
+                size: $scope.size
+            };
 
-                var params = {
-                    from: $scope.from,
-                    size: $scope.size
-                };
-
-                if (!angular.isUndefined($scope.searchTerm) && $scope.searchTerm !== "") {
-                    // TODO: we probably want to set a specific type to query (eg: q=_type:tweet AND trying
-                    angular.extend(params, {
-                        q: $scope.searchTerm,
-                    });
-                }
-
-                $http({
-                    method: "GET",
-                    url: "/proxy/" + result.searchHost + "/_search",
-                    params: params
-                }).then(function successCallback( html ) {
-                    $scope.searchResults = html.data.hits.hits;
-                    $scope.totalResults = html.data.hits.total;
-                    if ($scope.totalResults == 0) {
-                        $scope.errorMsg = "No results to display";
-                    }
-                }, function errorCallback(response){
-                    console.log("search.controller fail");
-                    toaster.pop('error', "Error", "There was an issue with your request.");
+            if (!angular.isUndefined($scope.searchTerm) && $scope.searchTerm !== "") {
+                // TODO: we probably want to set a specific type to query (eg: q=_type:tweet AND trying
+                angular.extend(params, {
+                    q: $scope.searchTerm,
                 });
+            }
 
+            $http({
+                method: "GET",
+                url: "/proxy/" + discover.searchHost + "/_search",
+                params: params
+            }).then(function successCallback( html ) {
+                $scope.searchResults = html.data.hits.hits;
+                $scope.totalResults = html.data.hits.total;
+                if ($scope.totalResults == 0) {
+                    $scope.errorMsg = "No results to display";
+                }
+            }, function errorCallback(response){
+                console.log("search.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.");
             });
+
         };
 
         var isUndefinedOrEmpty = function(str) {
@@ -84,55 +81,51 @@
             }
 
             var url = "";
-            discover.async().then(function(result) {
-                // TODO: Once elasticsearch is completely setup we probably don't need all these inputs
-                url = "/proxy?url=" + result.searchHost + "/" + $scope.indexId + "/" + $scope.typeId + "/" + $scope.documentId;
-                $http({
-                    method: "GET",
-                    url: url
-                }).then(function successCallback( html ) {
-                    $scope.document = html.data._source;
-                    var returnObj = {};
-                    if (angular.isUndefined($scope.document.keywords)) {
-                        returnObj = {
-                            "doc": {
-                                "keywords": [$scope.tag]
-                            }
-                        };
-                    } else {
-                        var tags = $scope.document.keywords;
-                        tags.push($scope.tag);
-                        returnObj = {
-                            "doc": {
-                                "keywords": tags
-                            }
-                        };
-                    }
-
-                    $http.post(
-                        url + "/_update",
-                        returnObj,
-                        {
-                            headers: {
-                                "Content-Type": "application/x-www-form-urlencoded"
-                            }
+            // TODO: Once elasticsearch is completely setup we probably don't need all these inputs
+            url = "/proxy?url=" + discover.searchHost + "/" + $scope.indexId + "/" + $scope.typeId + "/" + $scope.documentId;
+            $http({
+                method: "GET",
+                url: url
+            }).then(function successCallback( html ) {
+                $scope.document = html.data._source;
+                var returnObj = {};
+                if (angular.isUndefined($scope.document.keywords)) {
+                    returnObj = {
+                        "doc": {
+                            "keywords": [$scope.tag]
                         }
-                    ).then(function successCallback(res) {
-                        $scope.tagMsg = "Keyword added successfully";
-                        console.log("Success!");
-                    }, function errorCallback(res) {
-                        console.log("search.controller fail");
-                        toaster.pop('error', "Error", "There was an issue with your request.");
-                    });
+                    };
+                } else {
+                    var tags = $scope.document.keywords;
+                    tags.push($scope.tag);
+                    returnObj = {
+                        "doc": {
+                            "keywords": tags
+                        }
+                    };
+                }
 
-
-                }, function errorCallback(response){
+                $http.post(
+                    url + "/_update",
+                    returnObj,
+                    {
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        }
+                    }
+                ).then(function successCallback(res) {
+                    $scope.tagMsg = "Keyword added successfully";
+                    console.log("Success!");
+                }, function errorCallback(res) {
                     console.log("search.controller fail");
                     toaster.pop('error', "Error", "There was an issue with your request.");
                 });
 
-            });
 
+            }, function errorCallback(response){
+                console.log("search.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.");
+            });
 
         };
 

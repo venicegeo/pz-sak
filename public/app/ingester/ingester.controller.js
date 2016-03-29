@@ -17,10 +17,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('IngesterController', ['$scope', '$http', '$log', '$q', 'toaster', IngesterController]);
+        .controller('IngesterController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', IngesterController]);
 
 
-    function IngesterController($scope, $http, $log, $q, toaster) {
+    function IngesterController($scope, $http, $log, $q, toaster, discover) {
         $scope.data = "none";
         $scope.metadata = "{}";
 
@@ -79,7 +79,7 @@
 
             $http({
                 method: "POST",
-                url: "/proxy?url=pz-gateway.stage.geointservices.io/job",
+                url: "/proxy?url=" + discover.gatewayHost + "/job",
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -114,7 +114,7 @@
 
             $http({
                 method: "POST",
-                url: "/proxy?url=pz-gateway.stage.geointservices.io/job",
+                url: "/proxy?url=" + discover.gatewayHost + "/job",
                 data: fd,
                 headers: {
                     "Content-Type": undefined
