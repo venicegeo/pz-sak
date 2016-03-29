@@ -37,25 +37,22 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/eventtypes?id="+eventTypeId,
+                url: "/proxy?url=" + discover.workflowHost + "/v1/eventtypes/"+eventTypeId,
             }).then(function successCallback( html ) {
-                //TODO: When the get eventtypes by ID is fixed in services, change the following to take out the [0] array call.
-                $scope.eventTypeId = html.data[0].id;
-                $scope.eventTypeName = html.data[0].name;
-                $scope.eventTypeItemId = html.data[0].mapping.code;
-                $scope.eventTypeSeverity = html.data[0].mapping.severity;
-                $scope.eventTypeProblem = html.data[0].mapping.filename;
+                $scope.eventTypeId = html.data.id;
+                $scope.eventTypeName = html.data.name;
+                $scope.eventTypeItemId = html.data.mapping.itemId;
+                $scope.eventTypeSeverity = html.data.mapping.severity;
+                $scope.eventTypeProblem = html.data.mapping.problem;
             }, function errorCallback(response){
                 console.log("workflow.controller fail"+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the event types.");
             });
 
-
 };
         $scope.getEvents = function () {
         $scope.events = "";
         $scope.errorMsg = "";
-
 
             $http({
                 method: "GET",
@@ -67,7 +64,6 @@
                 console.log("workflow.controller fail"+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the events.");
             });
-
 
     };
 
@@ -129,7 +125,6 @@
                     problem: $scope.newEventTypeProblem,
                 }
             };
-            
             $http.post(
                 "/proxy?url=" + discover.workflowHost + "/v1/eventtypes",
                 eventDataObj
@@ -195,7 +190,7 @@
         var currentTime = moment().utc().toISOString();
         var alertMessage = $scope.alertMessage;
         var dataObj = {
-            type: $scope.newEventType,
+            eventtype_id: $scope.newEventType,
             date: currentTime,
             data:{
                 itemId: $scope.newEventItemId,
@@ -205,7 +200,7 @@
         };
 
         $http.post(
-            "/proxy?url=" + discover.workflowHost + "/v1/events/",
+            "/proxy?url=" + discover.workflowHost + "/v1/events/" + $scope.newEventType,
             dataObj
         ).then(function successCallback(res) {
             $scope.message = res;
@@ -272,6 +267,7 @@
                 trigger_id: alertTrigger,
                 event_id: alertEvent
             };
+
             $http.post(
                 "/proxy?url=" + discover.workflowHost + "/v1/alerts",
                 dataObj
