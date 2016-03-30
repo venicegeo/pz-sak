@@ -1,0 +1,152 @@
+<!--
+ Copyright 2016, RadiantBlue Technologies, Inc.
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html lang="en" ng-app="SAKapp" ng-strict-di xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Types</title>
+    <link rel="stylesheet" href="../../css/bootstrap.css">
+
+
+</head>
+<body>
+<div ng-controller="EventtypesController" class="container">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" id="myTabs" role="tablist">
+        <li role="presentation" class="active"><a href="#geteventtypes" aria-controls="geteventtypes" role="tab" data-toggle="tab">Get Event Types</a></li>
+        <li role="presentation"><a href="#posteventype" aria-controls="posteventtype" role="tab" data-toggle="tab">Post Event Type</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="geteventtypes">
+
+            <div class="row">
+                <h1 class="alert alert-info">Event Types</h1>
+
+                <form ng-submit="getEventTypes()">
+
+                    <div class="col-md-12" align="right">
+                        <button class="btn btn-primary" type="submit">
+                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <br>
+                <div class="col-md-12">
+                    <div class="form-group" ng-show="eventTypes" ng-init="getEventTypes()">
+
+                        <table id="searchEventTypesResults" ng-model="eventTypes" class="table-striped table-bordered table table-hover" width="100%">
+                            <tr><th >Event Type Id</th>
+                                <th >Event Type Name</th>
+                                <th >Event Type Mapping</th>
+
+                                <th></th>
+
+                            </tr>
+                            <tr ng-repeat="eventType in eventTypes">
+                                <td >{{eventType.id}}</td>
+                                <td >{{eventType.name}}</td>
+                                <td >{{eventType.mapping}}</td>
+
+                                <td align="center"> <button ng-click="deleteEventType(eventType.id)" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div role="tabpanel" class="tab-pane fade" id="posteventtype" ng-init="loadPostEventType()">
+            <div class="row">
+                <h1 class="alert alert-info">Send an Event Type to the Workflow Service</h1>
+                <div class="col-md-3">
+                    <label for="eventType">Select Event Type</label>
+                    <select id="eventType" class="form-control" ng-model="eventType" ng-change="updateTypeTable(eventType.id)" ng-options="eventType.id for eventType in eventTypes">
+                        <option value="">Please select</option>
+                    </select>
+                </div><br>
+                <div class="col-md-1">
+                    <label for="eventType">OR</label>
+                </div>
+                <div class="col-md-3">
+                    <button ng-click="showHideNewEventType()" ng-model="btnCreateEvent" class="btn btn-primary">Create New Event Type</button>
+                </div>
+                <div class="col-md-12">
+                    <table id="spaceHolder"  class="table-striped table-bordered table table-hover" width="100%">
+                    </table>
+                </div>
+            </div>
+
+            <form id="createEventType"  ng-model="createEventTypes"  ng-submit="createEventType()" ng-show="showNewEventTypeForm">
+                <div class="row">
+                    <h1 class="alert alert-info">Create New Event Type</h1>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="name">Event Type Name</label>
+                            <input id="name" type="text" class="form-control" ng-model="newEventTypeName" required>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="parameterName">Parameter Name</label>
+                            <input id="parameterName" type="text" class="form-control" ng-model="newEventTypeParameterName" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="newEventTypeDataType">Parameter DataType</label>
+                            <select id="newEventTypeDataType" class="form-control" ng-model="newEventTypeDataType" required>
+                                <option>string</option>
+                                <option>boolean</option>
+                                <option>integer</option>
+                                <option>double</option>
+                                <option>date</option>
+                                <option>float</option>
+                                <option>short</option>
+                                <option>long</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <button ng-model="btnCreateEventType" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                            <button ng-model="btnCancelCreateEventType" type="reset" ng-click="cancelCreateEventType()" class="btn btn-primary"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+
+    </div>
+
+</div>
+<toaster-container></toaster-container>
+</body>
+</html>
