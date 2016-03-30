@@ -186,7 +186,7 @@
                 if (html.data.status.indexOf("Success") > -1) {
                     $scope.dataId = html.data.result.dataId;
                     getResourceResult($scope.dataId)
-                    $scope.jobStatusResult = html.data;
+                    $scope.jobStatusResult = JSON.stringify(html.data);
                     console.log($scope.serviceId);
                 }
                 else {
@@ -411,7 +411,8 @@
                         $scope.executeInputMap[inputs[i].name] = {
                             "content": inputs[i].content,
                             "type": inputs[i].dataType.type,
-                            "mimeType": inputs[i].dataType.mimeType
+                            //TODO get mimeType from user selected format
+                            "mimeType": "application/json"
                         }
                         break;
 
@@ -437,7 +438,8 @@
             };
 
             var fd = new FormData();
-            fd.append( 'body', angular.toJson(job) );
+            var jobString = JSON.stringify(job);
+            fd.append( 'body', jobString);
             var request = $http({
                 method: "POST",
                 url: '/proxy?url=' + discover.gatewayHost + '/job',
