@@ -22,8 +22,17 @@
 
 
     function SearchController($scope, $http, $log, $q, toaster, discover) {
-        $scope.size = 10;
+        $scope.size = 100;
         $scope.from = 0;
+
+        $scope.pageOptions = [10, 50, 100];
+
+        $scope.$watch("size", function(newValue, oldValue) {
+            $scope.from = 0;
+            if (angular.isDefined($scope.searchTerm)) {
+                $scope.getSearchResults();
+            }
+        });
 
         $scope.getSearchResults = function($event) {
             console.log($event);
@@ -39,20 +48,46 @@
                 size: $scope.size
             };
 
+            var q = "";
+
             if (!angular.isUndefined($scope.searchTerm) && $scope.searchTerm !== "") {
-                // TODO: we probably want to set a specific type to query (eg: q=_type:tweet AND trying
-                angular.extend(params, {
-                    q: $scope.searchTerm,
-                });
+                q = {
+                    "fuzzy_like_this": {
+                        "like_text": $scope.searchTerm
+                    }
+                };
+            } else {
+                q = {
+                    "match_all": {}
+                };
             }
 
+            var data = {
+                "apiKey": "api-key-sakui",
+                "jobType": {
+                    "type": "search-query",
+                    "data": {
+                        "query": q,
+                        "size": $scope.size,
+                        "from": $scope.from
+                    }
+                }
+            };
+
+            var formData = new FormData();
+            formData.append('body', JSON.stringify(data));
+
             $http({
-                method: "GET",
-                url: "/proxy/" + discover.searchHost + "/_search",
-                params: params
+                method: "POST",
+                url: "/proxy/" + discover.gatewayHost + "/job",
+                data: formData,
+                headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
-                $scope.searchResults = html.data.hits.hits;
-                $scope.totalResults = html.data.hits.total;
+                $scope.searchResults = html.data.data;
+                $scope.totalResults = 100;//= html.data.data.length;
+                if (html.data.data.length < 100) {
+                    $scope.totalResults = html.data.data.length;
+                }
                 if ($scope.totalResults == 0) {
                     $scope.errorMsg = "No results to display";
                 }
@@ -66,6 +101,17 @@
         var isUndefinedOrEmpty = function(str) {
             var undefinedOrEmpty = false;
             return angular.isUndefined(str) || str.lengh == 0;
+        };
+
+        $scope.downloadFile = function(accessData, isFromList) {
+            var location;
+            if (isFromList) {
+                location = accessData.dataType.location;
+            } else {
+                location = accessData.data.dataType.location;
+            }
+            var url = "http://" + location.bucketName + "." + location.domainName + "/" + location.fileName;
+            window.location=url;
         };
 
         $scope.addTags = function() {
