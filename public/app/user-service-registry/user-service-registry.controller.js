@@ -151,7 +151,7 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                url: 'https://pz-gateway.stage.geointservices.io/job',
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -178,7 +178,7 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                url: 'https://pz-gateway.stage.geointservices.io/job',
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -220,7 +220,7 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                url: 'https://pz-gateway.stage.geointservices.io/job',
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -331,7 +331,7 @@
             fd.append( 'body', angular.toJson(job) );
             var request = $http({
                 method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                url: 'https://pz-gateway.stage.geointservices.io/job',
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
@@ -378,7 +378,7 @@
 
             var request = $http({
                 method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                url: 'https://pz-gateway.stage.geointservices.io/job',
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
@@ -413,7 +413,7 @@
                             "content": inputs[i].content,
                             "type": inputs[i].dataType.type,
                             //TODO get mimeType from user selected format
-                            "mimeType": "application/json"
+                            "mimeType": inputs[i].formatSelect
                         }
                         break;
 
@@ -443,7 +443,7 @@
             fd.append( 'body', jobString);
             var request = $http({
                 method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                url: 'https://pz-gateway.stage.geointservices.io/job',
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {

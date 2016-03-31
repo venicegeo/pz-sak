@@ -281,6 +281,12 @@
                     <label> {{textInput.name}}</label>
                     <input type="text" ng-model="textInput.content">
                 </p>
+                <p>
+                    <label>Select Format MimeType</label>
+                    <select name="formatSelect" id="textInputFormatSelect" ng-model="textInput.formatSelect">
+                        <option ng-repeat="format in textInput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
+                    </select>
+                </p>
             </div>
             <div ng-repeat="urlInput in urlInputs">
                 <p>
@@ -295,6 +301,12 @@
                     <textarea ng-model="textInput.content" rows="10" cols="80">
                         </textarea>
                 </p>
+                <p>
+                <label>Select Format MimeType</label>
+                <select name="formatSelect" id="bodyInputFormatSelect" ng-model="textInput.formatSelect">
+                    <option ng-repeat="format in textInput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
+                </select>
+                </p>
             </div>
             <div ng-repeat="rasterInput in rasterInputs">
                 <label> {{rasterInput.name}}</label>
@@ -304,23 +316,35 @@
                     <input type="text" ng-model="rasterInput.location">
                 </p>
                 <p>
-                    <label> mimeType</label>
-                    <input type="text" ng-model="rasterInput.mimeType">
+                <p>
+                    <label>Select Format MimeType</label>
+                    <select name="formatSelect" id="rasterInputFormatSelect" ng-model="rasterInput.formatSelect">
+                        <option ng-repeat="format in rasterInput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
+                    </select>
+                </p>
                 </p>
             </div>
             <h1 class="alert alert-info">Outputs</h1>
             <div ng-repeat="textOutput in textOutputs">
                 <label> {{textInput.name}}</label>
                 <p>
-                    <label> mimeType</label>
-                    <input type="text" ng-model="textOutput.mimeType">
+                <p>
+                    <label>Select Format MimeType</label>
+                    <select name="formatSelect" id="textOuputFormatSelect" ng-model="textOutput.mimeTypet">
+                        <option ng-repeat="format in textInput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
+                    </select>
+                </p>
                 </p>
             </div>
             <div ng-repeat="rasterOutput in rasterOutputs">
                 <label> {{rasterOutput.name}}</label>
                 <p>
-                    <label> mimeType</label>
-                    <input type="text" ng-model="rasterOutput.mimeType">
+                <p>
+                    <label>Select Format MimeType</label>
+                    <select name="formatSelect" id="rasterOutputFormatSelect" ng-model="rasterOutput.mimeType">
+                        <option ng-repeat="format in rasterOutput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
+                    </select>
+                </p>
                 </p>
             </div>
 
