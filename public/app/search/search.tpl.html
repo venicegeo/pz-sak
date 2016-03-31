@@ -46,10 +46,10 @@
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane fade in active" id="search">
             <h1 class="alert alert-info">Search Service Info</h1>
-            <p>Perform searches on indexed data</p>
+            <p>Perform searches on indexed data (only displays a max of 100 results for now)</p>
             <form id="searchForm" ng-submit="getSearchResults($event)">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-10">
                         <div class="input-group">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="submit" id="searchBtn">
@@ -59,13 +59,21 @@
                             <input id="searchTerm" type="text" class="form-control" ng-model="searchTerm" placeholder="Search">
                         </div>
                     </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <select id="jobStatuses" ng-options="option for option in pageOptions | orderBy:option" ng-model="size"
+                                    class="form-control" disabled>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div style="margin-top: 10px" ng-show="totalResults == 0">{{errorMsg}}</div>
-                <div style="margin-top: 10px" ng-show="totalResults">Displaying {{from + 1}} to {{getLastIndex()}} of {{totalResults}} results</div><br/>
+                <div style="margin-top: 10px" ng-show="totalResults">Displaying {{from + 1}} to {{getLastIndex()}} of a maximum of {{totalResults}} results</div><br/>
                 <div ng-show="searchResults" ng-repeat="result in searchResults">
+                    <button class="btn btn-primary pull-right" ng-show="result.dataType.location" type="button" ng-click="downloadFile(result, true)" id="download" style="margin-top: 24px" title="Download File">
+                        <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                    </button>
                     <pre>{{result | json}}</pre>
-                    <!--<span ng-show="result._source.name">{{result._source.name}}</span>
-                    <span ng-show="result._source.message">{{result._source.message}}</span>-->
                     <br/>
                 </div>
                 <nav ng-show="totalResults > size">
@@ -105,7 +113,7 @@
                         </div>
                     </div>
                     <div class="col-md-1">
-                        <button class="btn btn-primary" type="submit" id="tagBtn" style="margin-top: 24px">Add Keyword</button>
+                        <button class="btn btn-primary" type="submit" id="tagBtn" style="margin-top: 24px" disabled>Add Keyword</button>
                     </div>
                 </div>
                 <div>
