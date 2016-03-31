@@ -158,6 +158,7 @@
                 }
             }).then(function successCallback(html) {
                 $scope.resourceResult = JSON.stringify(html.data);
+                toaster.pop("success","Success",  "The service was executed successfully.")
             }, function errorCallback(response) {
                 console.log("search.controller fail");
                 toaster.pop('error', "Error", "There was an issue with your request.");
