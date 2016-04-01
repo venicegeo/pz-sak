@@ -46,11 +46,13 @@
         $scope.maxRegisterResultsRetries = 10;
         $scope.maxDescribeServiceRetries = 10;
         $scope.maxSearchResultRetries = 10;
+        $scope.maxListResultRetries = 10;
 
         $scope.ExecuteResultsRetries = 0;
         $scope.RegisterResultsRetries = 0;
         $scope.DescribeServiceRetries = 0;
         $scope.SearchResultRetries = 0;
+        $scope.ListResultRetries = 0;
 
         function resetServiceInputArrays() {
             $scope.bodyInputs = [];
@@ -462,6 +464,8 @@
         };
 
         $scope.getServicesResult = function( jobId ) {
+            $scope.ListResultRetries += 1;
+
             var data = {
                 "apiKey": "my-api-key-sakui",
                 "jobType": {
@@ -481,10 +485,29 @@
                 data: fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
-                $scope.services = angular.fromJson(html.data.result.text);
+
+                if (html.data.status.indexOf("Success") > -1) {
+                    $scope.services = angular.fromJson(html.data.result.text);
+                }
+                else {
+                    if ($scope.ListResultRetries < $scope.maxListResultRetries) {
+                        window.setTimeout($scope.getServicesResult(jobId), 2000);
+                    }
+                    else {
+                        console.log("List Results max tries exceeded");
+                        toaster.pop('error', "Error", "List Results max tries exceeded");
+                    }
+                }
+
             }, function errorCallback(response){
-                console.log("service.controller fail"+response.status);
-                toaster.pop('error', "Error", "There was an issue with retrieving the services.");
+                // If it's a 500 error because the job doesn't exist yet, just try again
+                if (response.data.message == "Job Not Found.") {
+                    console.log("job not registered yet... trying again");
+                    window.setTimeout($scope.getServicesResult(jobId), 2000);
+                } else {
+                    console.log("service.controller fail" + response.status);
+                    toaster.pop('error', "Error", "There was an issue with retrieving the services.");
+                }
             });
 
         };
@@ -509,7 +532,8 @@
                     data: fd,
                     headers: {"Content-Type": undefined}
                 }).then(function successCallback( html ) {
-                    $timeout($scope.getServicesResult(html.data.jobId), 2000);
+                    $scope.ListResultRetries = 0;
+                    $scope.getServicesResult(html.data.jobId);
                 }, function errorCallback(response){
                     console.log("service.controller fail"+response.status);
                     toaster.pop('error', "Error", "There was an issue with retrieving the services.");
