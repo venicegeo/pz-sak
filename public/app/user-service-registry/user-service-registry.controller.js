@@ -153,7 +153,7 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: 'https://pz-gateway.stage.geointservices.io/job',
+                url: '/proxy?url=' + discover.gatewayHost + '/job',
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -180,7 +180,7 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: 'https://pz-gateway.stage.geointservices.io/job',
+                url: '/proxy?url=' + discover.gatewayHost + '/job',
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -222,7 +222,7 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: 'https://pz-gateway.stage.geointservices.io/job',
+                url: '/proxy?url=' + discover.gatewayHost + '/job',
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -333,7 +333,7 @@
             fd.append( 'body', angular.toJson(job) );
             var request = $http({
                 method: "POST",
-                url: 'https://pz-gateway.stage.geointservices.io/job',
+                url: '/proxy?url=' + discover.gatewayHost + '/job',
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
@@ -380,7 +380,7 @@
 
             var request = $http({
                 method: "POST",
-                url: 'https://pz-gateway.stage.geointservices.io/job',
+                url: '/proxy?url=' + discover.gatewayHost + '/job',
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
@@ -445,7 +445,7 @@
             fd.append( 'body', jobString);
             var request = $http({
                 method: "POST",
-                url: 'https://pz-gateway.stage.geointservices.io/job',
+                url: '/proxy?url=' + discover.gatewayHost + '/job',
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
