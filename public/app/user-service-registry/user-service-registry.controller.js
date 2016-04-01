@@ -68,6 +68,7 @@
             resetServiceInputArrays();
             var i;
             for (i=0;i<inputs.length;i++){
+                inputs[i].formatSelect = inputs[i].formats[0].mimeType;
                 switch(inputs[i].dataType.type) {
                     case "body":
                         $scope.bodyInputs.push(inputs[i]);
@@ -89,6 +90,7 @@
             resetServiceOutputArrays();
             var i;
             for (i=0;i<outputs.length;i++) {
+                outputs[i].dataType.mimeType = outputs[i].formats[0].mimeType;
                 switch(outputs[i].dataType.type) {
                     case "raster":
                         $scope.rasterOutputs.push(outputs[i]);

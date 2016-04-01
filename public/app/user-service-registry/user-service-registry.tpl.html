@@ -330,7 +330,7 @@
                 <p>
                 <p>
                     <label>Select Format MimeType</label>
-                    <select name="formatSelect" id="textOuputFormatSelect" ng-model="textOutput.mimeTypet">
+                    <select name="formatSelect" id="textOuputFormatSelect" ng-model="textOutput.dataType.mimeType">
                         <option ng-repeat="format in textInput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
                     </select>
                 </p>
@@ -341,7 +341,7 @@
                 <p>
                 <p>
                     <label>Select Format MimeType</label>
-                    <select name="formatSelect" id="rasterOutputFormatSelect" ng-model="rasterOutput.mimeType">
+                    <select name="formatSelect" id="rasterOutputFormatSelect" ng-model="rasterOutput.dataType.mimeType">
                         <option ng-repeat="format in rasterOutput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
                     </select>
                 </p>
