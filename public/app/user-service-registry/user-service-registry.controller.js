@@ -18,11 +18,11 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('UserServiceController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', UserServiceController]);
+        .controller('UserServiceController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', '$timeout', UserServiceController]);
 
 
 
-    function UserServiceController($scope, $http, $log, $q, toaster, discover) {
+    function UserServiceController($scope, $http, $log, $q, toaster, discover, $timeout) {
         $scope.executeInputMap = {};
         $scope.executeOutputMap = {};
         $scope.method = 'GET';
@@ -461,17 +461,55 @@
 
         };
 
+        $scope.getServicesResult = function( jobId ) {
+            var data = {
+                "apiKey": "my-api-key-sakui",
+                "jobType": {
+                    "type": "get",
+                    "jobId": jobId
+                }
+            };
+
+            var fd = new FormData();
+            fd.append( 'body', JSON.stringify(data) );
+
+            $scope.services = "";
+
+            $http({
+                method: "POST",
+                url: "/proxy?url=" + discover.gatewayHost +  "/job",
+                data: fd,
+                headers: {"Content-Type": undefined}
+            }).then(function successCallback( html ) {
+                $scope.services = angular.fromJson(html.data.result.text);
+            }, function errorCallback(response){
+                console.log("service.controller fail"+response.status);
+                toaster.pop('error', "Error", "There was an issue with retrieving the services.");
+            });
+
+        };
+
         $scope.getServices = function() {
 
-            //TODO: Go through gateway
+            var data = {
+                "apiKey": "my-api-key-sakui",
+                "jobType": {
+                    "type": "list-service"
+                }
+            };
+
+            var fd = new FormData();
+            fd.append( 'body', JSON.stringify(data) );
 
             $scope.services = "";
 
                 $http({
-                    method: "GET",
-                    url: "/proxy?url=" + discover.serviceControllerHost +  "/servicecontroller/listService"
+                    method: "POST",
+                    url: "/proxy?url=" + discover.gatewayHost +  "/job",
+                    data: fd,
+                    headers: {"Content-Type": undefined}
                 }).then(function successCallback( html ) {
-                    $scope.services = html.data;
+                    $timeout($scope.getServicesResult(html.data.jobId), 2000);
                 }, function errorCallback(response){
                     console.log("service.controller fail"+response.status);
                     toaster.pop('error', "Error", "There was an issue with retrieving the services.");
