@@ -32,7 +32,24 @@
             if (angular.isDefined($scope.searchTerm)) {
                 $scope.getSearchResults();
             }
+            $scope.searchTerm = "";
         });
+
+        $scope.getResultsCount = function(query) {
+            $http({
+                method: "POST",
+                url: "/proxy/" + discover.searchHost + "/api/v1/recordcount",
+                data: query,
+            }).then(function successCallback( html ) {
+                $scope.totalResults = html.data;
+                if ($scope.totalResults == 0) {
+                    $scope.errorMsg = "No results to display";
+                }
+            }, function errorCallback(response){
+                console.log("search.controller fail");
+                toaster.pop('error', "Error", "There was an issue with your request.");
+            });
+        };
 
         $scope.getSearchResults = function($event) {
             console.log($event);
@@ -77,6 +94,8 @@
             var formData = new FormData();
             formData.append('body', JSON.stringify(data));
 
+            $scope.getResultsCount(q);
+
             $http({
                 method: "POST",
                 url: "/proxy/" + discover.gatewayHost + "/job",
@@ -84,13 +103,6 @@
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
                 $scope.searchResults = html.data.data;
-                $scope.totalResults = 100;//= html.data.data.length;
-                if (html.data.data.length < 100) {
-                    $scope.totalResults = html.data.data.length;
-                }
-                if ($scope.totalResults == 0) {
-                    $scope.errorMsg = "No results to display";
-                }
             }, function errorCallback(response){
                 console.log("search.controller fail");
                 toaster.pop('error', "Error", "There was an issue with your request.");
