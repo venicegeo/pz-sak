@@ -47,12 +47,14 @@
         $scope.maxDescribeServiceRetries = 10;
         $scope.maxSearchResultRetries = 10;
         $scope.maxListResultRetries = 10;
+        $scope.maxDeleteResultRetries = 10;
 
         $scope.ExecuteResultsRetries = 0;
         $scope.RegisterResultsRetries = 0;
         $scope.DescribeServiceRetries = 0;
         $scope.SearchResultRetries = 0;
         $scope.ListResultRetries = 0;
+        $scope.DeleteResultRetries = 0;
 
         function resetServiceInputArrays() {
             $scope.bodyInputs = [];
@@ -697,26 +699,85 @@
             $scope.updateServiceUrl = "";
         };
 
+        $scope.deleteServiceResult = function( jobId ) {
+            $scope.DeleteResultRetries += 1;
+
+            var data = {
+                "apiKey": "my-api-key-sakui",
+                "jobType": {
+                    "type": "get",
+                    "jobId": jobId
+                }
+            };
+
+            var fd = new FormData();
+            fd.append( 'body', JSON.stringify(data) );
+
+            $http({
+                method: "POST",
+                url: "/proxy?url=" + discover.gatewayHost + "/job",
+                data: fd,
+                headers: {"Content-Type": undefined}
+            }).then(function successCallback(res) {
+                console.log(res);
+
+                if (res.data.status.indexOf("Success") > -1) {
+                    $scope.getServices();
+                    toaster.pop('success', "Success", "The service was successfully deleted.")
+
+                }
+                else {
+                    if ($scope.DeleteResultRetries < $scope.maxDeleteResultRetries) {
+                        window.setTimeout($scope.deleteServiceResult(jobId), 2000);
+                    }
+                    else {
+                        console.log("Delete Service Results max tries exceeded");
+                        toaster.pop('error', "Error", "Delete Service Results max tries exceeded");
+                    }
+                }
+
+            }, function errorCallback(res) {
+                // If it's a 500 error because the job doesn't exist yet, just try again
+                if (res.data.message == "Job Not Found.") {
+                    console.log("job not registered yet... trying again");
+                    window.setTimeout($scope.deleteServiceResult(jobId), 2000);
+                } else {
+                    console.log("User Service.controller fail"+res.status);
+                    toaster.pop('error', "Error", "There was a problem deleting the Service.");
+                }
+            });
+
+        };
 
         $scope.deleteService = function(serviceId){
 
-            //TODO: go through the gateway
+            var data = {
+                "apiKey": "my-api-key-sakui",
+                "jobType": {
+                    "type": "delete-service",
+                    "serviceID": serviceId,
+                    "reason" : "SAK user request"
+                }
+            };
 
-                $http({
-                    method: "GET",
-                    url: "/proxy?url=" + discover.serviceControllerHost + "/servicecontroller/deleteService?resourceId="+serviceId,
-                }).then(function successCallback(res) {
-                    console.log(res);
-                    $scope.getServices();
+            var fd = new FormData();
+            fd.append( 'body', JSON.stringify(data) );
 
-                    toaster.pop('success', "Success", "The service was successfully deleted.")
+            $http({
+                method: "POST",
+                url: "/proxy?url=" + discover.gatewayHost + "/job",
+                data: fd,
+                headers: {"Content-Type": undefined}
+            }).then(function successCallback(res) {
+                console.log(res);
 
-                }, function errorCallback(res) {
-                    console.log("User Service.controller fail"+res.status);
+                $scope.DeleteResultRetries = 0;
+                $scope.deleteServiceResult(res.data.jobId);
+            }, function errorCallback(res) {
+                console.log("User Service.controller fail"+res.status);
 
-                    toaster.pop('error', "Error", "There was a problem deleting the Service.");
-                });
-            //})
+                toaster.pop('error', "Error", "There was a problem deleting the Service.");
+            });
         };
 
     }
