@@ -40,11 +40,11 @@
         <div role="tabpanel" class="tab-pane fade in active" id="register">
             <h1 class="alert alert-info">User Service Registry Info</h1>
 
-            <p><{{serviceId}}</p>
+            <p>{{registerServiceId}}</p>
 
                 <h2>Inputs</h2>
                 <div class="row">
-                    <div ng-repeat="ninput in inputs">
+                    <div ng-repeat="ninput in registerInputs">
                         <p>
                             <label> Name</label>
                         <input type="text" ng-model="ninput.name">
@@ -103,12 +103,9 @@
                         </p>
                         <p>
                             <label> data type </label>
-                            <input type="text" ng-model="nformat.dataType.type">
+                            <input type="text" ng-model="nformat.dataType">
                         </p>
-                        <p>
-                            <label> data mimetype </label>
-                            <input type="text" ng-model="nformat.dataType.mimeType">
-                        </p>
+
 
 
                             </div>
@@ -121,7 +118,7 @@
                 </div>
     <h2>Outputs</h2>
     <div class="row">
-        <div ng-repeat="noutput in outputs">
+        <div ng-repeat="noutput in registerOutputs">
             <p>
                 <label> Name</label>
                 <input type="text" ng-model="noutput.name">
@@ -180,12 +177,9 @@
             </p>
             <p>
                 <label> data type </label>
-                <input type="text" ng-model="nformat.dataType.type">
+                <input type="text" ng-model="nformat.dataType">
             </p>
-            <p>
-                <label> data mimetype </label>
-                <input type="text" ng-model="nformat.dataType.mimeType">
-            </p>
+           
 
         </div>
         <button ng-click="addOutputFormat($index)">New Format</button>
@@ -254,10 +248,10 @@
                     <label id="serviceMsg">{{serviceMsg}}</label>
                 </div>
                 <div>
-                    <label id="serviceID">{{serviceId}}</label>
+                    <label id="serviceID">{{registerServiceId}}</label>
                 </div>
                 <div ng-show="serviceId">
-                    Resource ID: {{serviceId}}
+                    Resource ID: {{registerServiceId}}
                 </div>
 
 
@@ -295,16 +289,16 @@
                     <input type="text" ng-model="urlInput.content">
                 </p>
                 </div>
-            <div ng-repeat="textInput in bodyInputs">
+            <div ng-repeat="bodyInput in bodyInputs">
                 <p>
-                    <label> {{textInput.name}}</label>
-                    <textarea ng-model="textInput.content" rows="10" cols="80">
+                    <label> {{bodyInput.name}}</label>
+                    <textarea ng-model="bodyInput.content" rows="10" cols="80">
                         </textarea>
                 </p>
                 <p>
                 <label>Select Format MimeType</label>
-                <select name="formatSelect" id="bodyInputFormatSelect" ng-model="textInput.formatSelect">
-                    <option ng-repeat="format in textInput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
+                <select name="formatSelect" id="bodyInputFormatSelect" ng-model="bodyInput.formatSelect">
+                    <option ng-repeat="format in bodyInput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
                 </select>
                 </p>
             </div>

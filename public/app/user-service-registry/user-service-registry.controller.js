@@ -28,8 +28,11 @@
         $scope.method = 'GET';
         $scope.responseType = 'application/json';
         $scope.inputs = [];
+        $scope.registerInputs = [];
         $scope.outputs = [];
+        $scope.registerOutputs = [];
         $scope.serviceId = "";
+        $scope.registerServiceId = "";
         $scope.jobId = "";
         $scope.bodyInputs = [];
         $scope.urlInputs = [];
@@ -115,16 +118,17 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                //TODO url: '/proxy?url=' + discover.gatewayHost + '/job',
+                url: "https://pz-gateway.stage.geointservices.io/job",
                 data: fd,
                 headers: {
                     "Content-Type": undefined
                 }
             }).then(function successCallback(html) {
                 if (html.data.status.indexOf("Success") > -1) {
-                    $scope.serviceId = (JSON.parse(html.data.result.text).resourceId);
+                    $scope.registerServiceId = (JSON.parse(html.data.result.text).resourceId);
                     $scope.jobStatusResult = html.data;
-                    console.log($scope.serviceId);
+                    console.log($scope.registerServiceId);
                 }
                 else {
                     if ($scope.RegisterResultsRetries < $scope.maxRegisterResultsRetries) {
@@ -153,7 +157,8 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                //TODO url: '/proxy?url=' + discover.gatewayHost + '/job',
+                url: "https://pz-gateway.stage.geointservices.io/job",
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -180,7 +185,8 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                //TODO url: '/proxy?url=' + discover.gatewayHost + '/job',
+                url: "https://pz-gateway.stage.geointservices.io/job",
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -222,7 +228,8 @@
             fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                //TODO url: '/proxy?url=' + discover.gatewayHost + '/job',
+                url: "https://pz-gateway.stage.geointservices.io/job",
                 data: fd,
                 headers: {
                     "Content-Type": undefined
@@ -273,7 +280,7 @@
                 "formats" : []
             }
 
-            $scope.inputs.push(newInput);
+            $scope.registerInputs.push(newInput);
         };
 
         $scope.addOutput = function() {
@@ -295,7 +302,7 @@
                 "formats" : []
             }
 
-            $scope.outputs.push(newOutput);
+            $scope.registerOutputs.push(newOutput);
         };
 
         $scope.addFormat = function($index) {
@@ -306,7 +313,7 @@
                 "maximumMegabytes" : null,
                 "dataType" : null
             }
-            $scope.inputs[$index].formats.push(newFormat);
+            $scope.registerInputs[$index].formats.push(newFormat);
         };
         $scope.addOutputFormat = function($index) {
             var newFormat = {
@@ -316,7 +323,7 @@
                 "maximumMegabytes" : null,
                 "dataType" : null
             }
-            $scope.outputs[$index].formats.push(newFormat);
+            $scope.registerOutputs[$index].formats.push(newFormat);
         };
 
         $scope.describeService = function() {
@@ -333,7 +340,8 @@
             fd.append( 'body', angular.toJson(job) );
             var request = $http({
                 method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                //TODO url: '/proxy?url=' + discover.gatewayHost + '/job',
+                url: "https://pz-gateway.stage.geointservices.io/job",
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
@@ -361,8 +369,8 @@
 
             var data = {
                 "resourceMetadata" : resourceMetadata,
-                "inputs" : $scope.inputs,
-                "outputs" : $scope.outputs
+                "inputs" : $scope.registerInputs,
+                "outputs" : $scope.registerOutputs
             };
             var job = {
                 "apiKey": "my-api-key-38n987",
@@ -380,7 +388,8 @@
 
             var request = $http({
                 method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                //TODO url: '/proxy?url=' + discover.gatewayHost + '/job',
+                url: "https://pz-gateway.stage.geointservices.io/job",
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
@@ -445,7 +454,8 @@
             fd.append( 'body', jobString);
             var request = $http({
                 method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                //TODO url: '/proxy?url=' + discover.gatewayHost + '/job',
+                url: "https://pz-gateway.stage.geointservices.io/job",
                 data :fd,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
