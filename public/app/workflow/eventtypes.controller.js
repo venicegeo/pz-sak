@@ -100,10 +100,15 @@
 
         $scope.createEventType = function(newEventType) {
 
-            var jsonArray = angular.toJson($scope.eventTypeMappings);
+            var mapping = {};
+            $scope.eventTypeMappings.forEach(function(item) {
+                var keys = Object.keys(item);
+                var key = keys[0];
+                mapping[key] = item[key];
+            });
             var eventDataObj = {
                 "name": $scope.newEventTypeName,
-                "mapping" : jsonArray
+                "mapping" : mapping
             };
             $http.post(
                 "/proxy?url=" + discover.workflowHost + "/v1/eventtypes",
