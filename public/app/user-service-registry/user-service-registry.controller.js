@@ -206,8 +206,14 @@
                     //getgetExecuteResult(jobId);
                 }
             }, function errorCallback(response) {
-                console.log("search.controller fail");
-                toaster.pop('error', "Error", "There was an issue with your request.");
+                if ((response.data.message == "Job Not Found.") &&
+                    ($scope.ExecuteResultsRetries < $scope.maxExecuteResultsRetries)) {
+                    console.log("job not registered yet... trying again");
+                    window.setTimeout(getExecuteResult, 5000, jobId);
+                } else {
+                    console.log("search.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
+                }
             });
         }
 
