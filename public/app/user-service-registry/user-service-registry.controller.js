@@ -28,8 +28,11 @@
         $scope.method = 'GET';
         $scope.responseType = 'application/json';
         $scope.inputs = [];
+        $scope.registerInputs = [];
         $scope.outputs = [];
+        $scope.registerOutputs = [];
         $scope.serviceId = "";
+        $scope.registerServiceId = "";
         $scope.jobId = "";
         $scope.bodyInputs = [];
         $scope.urlInputs = [];
@@ -74,6 +77,7 @@
             resetServiceInputArrays();
             var i;
             for (i=0;i<inputs.length;i++){
+                inputs[i].formatSelect = inputs[i].formats[0].mimeType;
                 switch(inputs[i].dataType.type) {
                     case "body":
                         $scope.bodyInputs.push(inputs[i]);
@@ -95,6 +99,7 @@
             resetServiceOutputArrays();
             var i;
             for (i=0;i<outputs.length;i++) {
+                outputs[i].dataType.mimeType = outputs[i].formats[0].mimeType;
                 switch(outputs[i].dataType.type) {
                     case "raster":
                         $scope.rasterOutputs.push(outputs[i]);
@@ -126,9 +131,9 @@
                 }
             }).then(function successCallback(html) {
                 if (html.data.status.indexOf("Success") > -1) {
-                    $scope.serviceId = (JSON.parse(html.data.result.text).resourceId);
+                    $scope.registerServiceId = (JSON.parse(html.data.result.text).resourceId);
                     $scope.jobStatusResult = html.data;
-                    console.log($scope.serviceId);
+                    console.log($scope.registerServiceId);
                 }
                 else {
                     if ($scope.RegisterResultsRetries < $scope.maxRegisterResultsRetries) {
@@ -207,8 +212,14 @@
                     //getgetExecuteResult(jobId);
                 }
             }, function errorCallback(response) {
-                console.log("search.controller fail");
-                toaster.pop('error', "Error", "There was an issue with your request.");
+                if ((response.data.message == "Job Not Found.") &&
+                    ($scope.ExecuteResultsRetries < $scope.maxExecuteResultsRetries)) {
+                    console.log("job not registered yet... trying again");
+                    window.setTimeout(getExecuteResult, 5000, jobId);
+                } else {
+                    console.log("search.controller fail");
+                    toaster.pop('error', "Error", "There was an issue with your request.");
+                }
             });
         }
 
@@ -277,7 +288,7 @@
                 "formats" : []
             }
 
-            $scope.inputs.push(newInput);
+            $scope.registerInputs.push(newInput);
         };
 
         $scope.addOutput = function() {
@@ -299,7 +310,7 @@
                 "formats" : []
             }
 
-            $scope.outputs.push(newOutput);
+            $scope.registerOutputs.push(newOutput);
         };
 
         $scope.addFormat = function($index) {
@@ -310,7 +321,7 @@
                 "maximumMegabytes" : null,
                 "dataType" : null
             }
-            $scope.inputs[$index].formats.push(newFormat);
+            $scope.registerInputs[$index].formats.push(newFormat);
         };
         $scope.addOutputFormat = function($index) {
             var newFormat = {
@@ -320,7 +331,7 @@
                 "maximumMegabytes" : null,
                 "dataType" : null
             }
-            $scope.outputs[$index].formats.push(newFormat);
+            $scope.registerOutputs[$index].formats.push(newFormat);
         };
 
         $scope.describeService = function() {
@@ -365,8 +376,8 @@
 
             var data = {
                 "resourceMetadata" : resourceMetadata,
-                "inputs" : $scope.inputs,
-                "outputs" : $scope.outputs
+                "inputs" : $scope.registerInputs,
+                "outputs" : $scope.registerOutputs
             };
             var job = {
                 "apiKey": "my-api-key-38n987",
@@ -405,7 +416,6 @@
             var i = 0;
             for (i = 0; i < inputs.length; i++) {
                 switch (inputs[i].dataType.type) {
-                    // TODO: Looks like this can be simplified because body, raster and text all do the same thing
                     case "urlparameter":
                         $scope.executeInputMap[inputs[i].name] = {
                             "content": inputs[i].content,
@@ -418,8 +428,7 @@
                         $scope.executeInputMap[inputs[i].name] = {
                             "content": inputs[i].content,
                             "type": inputs[i].dataType.type,
-                            //TODO get mimeType from user selected format
-                            "mimeType": "application/json"
+                            "mimeType": inputs[i].formatSelect
                         }
                         break;
 
@@ -434,7 +443,6 @@
                "serviceId" : $scope.serviceId,
                "dataInputs" : $scope.executeInputMap,
                "dataOutput" : $scope.outputs[$scope.selectedOutput].dataType
-               //TODO When use latest version of executeServiceData, "dataOutput" : $scope.outputs[$scope.selectedOutput].dataType
            };
             var job = {
                 "apiKey": "my-api-key-38n987",
