@@ -26,7 +26,7 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="myTabs" role="tablist">
         <li role="presentation" class="active"><a href="#geteventtypes" aria-controls="geteventtypes" role="tab" data-toggle="tab">Get Event Types</a></li>
-        <li role="presentation"><a href="#posteventype" aria-controls="posteventtype" role="tab" data-toggle="tab">Post Event Type</a></li>
+        <li role="presentation"><a href="#posteventtype" aria-controls="posteventtype" role="tab" data-toggle="tab">Post Event Type</a></li>
     </ul>
 
     <!-- Tab panes -->
@@ -74,28 +74,9 @@
 
         </div>
 
-        <div role="tabpanel" class="tab-pane fade" id="posteventtype" ng-init="loadPostEventType()">
-            <div class="row">
-                <h1 class="alert alert-info">Send an Event Type to the Workflow Service</h1>
-                <div class="col-md-3">
-                    <label for="eventType">Select Event Type</label>
-                    <select id="eventType" class="form-control" ng-model="eventType" ng-change="updateTypeTable(eventType.id)" ng-options="eventType.id for eventType in eventTypes">
-                        <option value="">Please select</option>
-                    </select>
-                </div><br>
-                <div class="col-md-1">
-                    <label for="eventType">OR</label>
-                </div>
-                <div class="col-md-3">
-                    <button ng-click="showHideNewEventType()" ng-model="btnCreateEvent" class="btn btn-primary">Create New Event Type</button>
-                </div>
-                <div class="col-md-12">
-                    <table id="spaceHolder"  class="table-striped table-bordered table table-hover" width="100%">
-                    </table>
-                </div>
-            </div>
+        <div role="tabpanel" class="tab-pane fade" id="posteventtype">
 
-            <form id="createEventType"  ng-model="createEventTypes"  ng-submit="createEventType()" ng-show="showNewEventTypeForm">
+            <form id="createEventType"  ng-model="createEventTypes" >
                 <div class="row">
                     <h1 class="alert alert-info">Create New Event Type</h1>
                     <div class="col-md-4">
@@ -128,19 +109,52 @@
                             </select>
                         </div>
                     </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-2">
                         <div class="form-group">
-                            <button ng-model="btnCreateEventType" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-                            <button ng-model="btnCancelCreateEventType" type="reset" ng-click="cancelCreateEventType()" class="btn btn-primary"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                            <button ng-model="btnAddMapping" type="submit" ng-click="addMapping()" class="btn btn-primary">Create Mapping</button>
                         </div>
                     </div>
+
                 </div>
+
 
             </form>
 
+            <div class="row">
+                <br>
+                <div class="col-md-12">
+                    <div class="form-group" ng-show="eventTypeMappings">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>{{eventTypeName}}</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <table id="eventTypeMappings" ng-model="eventTypeMappings" class="table-striped table-bordered table table-hover" width="100%">
+                            <tr><th ></th>
+                                <th >Mapping</th>
+                             </tr>
+                            <tr ng-repeat="(key,value) in eventTypeMappings">
+                                <td >{{key}}</td>
+                                <td >{{value}}</td>
+                                <td align="center"> <button ng-click="deleteEventMapping(eventTypeMapping.parameterName)" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <button ng-model="btnCreateEventType" type="submit" ng-click="createEventType()" class="btn btn-primary"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                        <button ng-model="btnCancelCreateEventType" type="reset" ng-click="cancelCreateEventType()" class="btn btn-primary"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                    </div>
+                </div>
+            </div>
         </div>
 
 

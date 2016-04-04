@@ -24,7 +24,19 @@
 
         $scope.showNewEventTypeForm = false;
         $scope.showEventTypeTable = false;
+        $scope.eventTypeMappings = [];
 
+
+        $scope.addMapping = function (){
+            var parameterName = $scope.newEventTypeParameterName;
+            var parameterDatatype = $scope.newEventTypeDataType;
+
+            var newMapping = {};
+            newMapping[parameterName] = parameterDatatype;
+
+            $scope.eventTypeMappings.push(newMapping);
+            $scope.eventTypeName = $scope.newEventTypeName;
+        }
 
         $scope.updateTypeTable = function (eventTypeId) {
 
@@ -66,8 +78,7 @@
 
         $scope.loadPostEventType = function() {
 
-            //Load event Types drop down with values from service
-            $scope.getEventTypes();
+            $scope.showHideEventTypeTable();
 
         };
 
@@ -89,10 +100,10 @@
 
         $scope.createEventType = function(newEventType) {
 
+            var jsonArray = angular.toJson($scope.eventTypeMappings);
             var eventDataObj = {
-                name: $scope.newEventTypeName,
-                mapping: {
-            }
+                "name": $scope.newEventTypeName,
+                "mapping" : jsonArray
             };
             $http.post(
                 "/proxy?url=" + discover.workflowHost + "/v1/eventtypes",
@@ -106,9 +117,6 @@
                 //clear input values
                 $scope.newEventTypeName = null;
                 $scope.newEventTypeMapping = null;
-
-                //hide create new eventtype table:
-                $scope.showHideNewEventType();
 
                 toaster.pop('success', "Success", "The event was successfully posted.")
 

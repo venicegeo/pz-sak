@@ -116,42 +116,7 @@
             $scope.eventTypeLabel = "Event Type Id = "+eventTypeId;
         }
 
-        $scope.createEventType = function(newEventType) {
 
-            var eventDataObj = {
-                name: $scope.newEventTypeName,
-                mapping: {
-                    itemId:$scope.newEventTypeItemId,
-                    severity: $scope.newEventTypeSeverity,
-                    problem: $scope.newEventTypeProblem,
-                }
-            };
-            $http.post(
-                "/proxy?url=" + discover.workflowHost + "/v1/eventtypes",
-                eventDataObj
-            ).then(function successCallback(res) {
-                $scope.message = res;
-
-                //reload events table
-                $scope.getEventTypes();
-
-                //clear input values
-                $scope.newEventTypeName = null;
-                $scope.newEventTypeItemId = null;
-                $scope.newEventTypeSeverity = null;
-                $scope.newEventTypeProblem = null;
-
-                //hide create new eventtype table:
-                $scope.showHideNewEventType();
-
-                toaster.pop('success', "Success", "The event was successfully posted.")
-
-            }, function errorCallback(res) {
-                console.log("workflow.controller fail"+res.status);
-
-                toaster.pop('error', "Error", "There was a problem submitting the event message.");
-            });
-        };
 
         $scope.selectEventType = function(newEventType) {
             //User selected to create an event associated with an event type
