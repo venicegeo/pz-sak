@@ -76,7 +76,7 @@
 
         <div role="tabpanel" class="tab-pane fade" id="posteventtype">
 
-            <form id="createEventType"  ng-model="createEventTypes" >
+            <form id="createEventTypesForm" name="createEventTypesForm" ng-model="createEventTypesForm" >
                 <div class="row">
                     <h1 class="alert alert-info">Create New Event Type</h1>
                     <div class="col-md-4">
@@ -111,7 +111,7 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <button ng-model="btnAddMapping"  ng-click="addMapping()" class="btn btn-primary">Create Mapping</button>
+                            <button ng-model="btnAddMapping" type=submit"  ng-click="addMapping()" class="btn btn-primary">Create Mapping</button>
                         </div>
                     </div>
 
@@ -139,7 +139,7 @@
                             <tr ng-repeat="(key,value) in eventTypeMappings">
                                 <td >{{key}}</td>
                                 <td >{{value}}</td>
-                                <td align="center"> <button ng-click="deleteEventMapping(eventTypeMapping.parameterName)" class="btn btn-primary">
+                                <td align="center"> <button ng-click="deleteEventMapping(key)" class="btn btn-primary">
                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                 </button></td>
                             </tr>
