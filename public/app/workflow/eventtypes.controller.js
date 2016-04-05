@@ -36,6 +36,10 @@
 
             $scope.eventTypeMappings.push(newMapping);
             $scope.eventTypeName = $scope.newEventTypeName;
+
+            $scope.newEventTypeName = "";
+            $scope.newEventTypeParameterName = "";
+            $scope.newEventTypeDataType = "";
         }
 
         $scope.updateTypeTable = function (eventTypeId) {
