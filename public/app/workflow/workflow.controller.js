@@ -48,14 +48,6 @@
             $scope.showNewEventTypeForm = !$scope.showNewEventTypeForm;
         };
 
-        $scope.showHideEventTypeTable = function() {
-            $scope.showEventTypeTable = !$scope.showEventTypeTable;
-        };
-
-        $scope.cancelCreateEventType = function() {
-            $scope.showNewEventTypeForm = !$scope.showNewEventTypeForm;
-        };
-
         $scope.showHideEventTable = function() {
             $scope.showEventTable = !$scope.showEventTable;
         };

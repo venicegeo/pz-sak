@@ -25,9 +25,26 @@
         $scope.showNewEventTypeForm = false;
         $scope.showEventTypeTable = false;
         $scope.eventTypeMappings = [];
+        $scope.disableEventTypeName = false;
 
 
+        $scope.clearForm = function (){
+            $scope.disableEventTypeName = false;
+            $scope.newEventTypeName = null;
+            $scope.newEventTypeParameterName = "";
+            $scope.newEventTypeDataType = "";
+            $scope.eventTypeMappings = [];
+
+        }
         $scope.addMapping = function (){
+
+            if (!$scope.showEventTypeTable){
+                $scope.showNewEventTypeForm = true;
+            }
+            else{
+                $scope.showNewEventTypeForm = false;
+            }
+
             var parameterName = $scope.newEventTypeParameterName;
             var parameterDatatype = $scope.newEventTypeDataType;
 
@@ -38,7 +55,7 @@
             $scope.eventTypeName = $scope.newEventTypeName;
 
 
-            $scope.newEventTypeName = "";
+            $scope.disableEventTypeName = true;
             $scope.newEventTypeParameterName = "";
             $scope.newEventTypeDataType = "";
         }
@@ -82,6 +99,7 @@
 
         $scope.cancelCreateEventType = function() {
             $scope.showNewEventTypeForm = !$scope.showNewEventTypeForm;
+            $scope.clearForm();
         };
 
 
@@ -116,7 +134,7 @@
                 mapping[key] = item[key];
             });
             var eventDataObj = {
-                "name": $scope.newEventTypeName,
+                "name": $scope.eventTypeName,
                 "mapping" : mapping
             };
             $http.post(
@@ -129,8 +147,13 @@
                 $scope.getEventTypes();
 
                 //clear input values
-                $scope.newEventTypeName = null;
+                $scope.eventTypeName = null;
                 $scope.newEventTypeMapping = null;
+                $scope.eventTypeMappings = [];
+                $scope.newEventTypeName = "";
+                $scope.showHideNewEventType();
+                $scope.disableEventTypeName = false;
+
 
                 toaster.pop('success', "Success", "The event was successfully posted.")
 

@@ -74,15 +74,15 @@
 
         </div>
 
-        <div role="tabpanel" class="tab-pane fade" id="posteventtype">
+        <div role="tabpanel" class="tab-pane fade" id="posteventtype" >
 
-            <form id="createEventTypesForm" name="createEventTypesForm" ng-model="createEventTypesForm" >
+            <form id="createEventTypesForm" name="createEventTypesForm" ng-model="createEventTypesForm" ng-submit="addMapping()">
                 <div class="row">
                     <h1 class="alert alert-info">Create New Event Type</h1>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="name">Event Type Name</label>
-                            <input id="name" type="text" class="form-control" ng-model="newEventTypeName" required>
+                            <input id="name" type="text" class="form-control" ng-disabled="disableEventTypeName" ng-model="newEventTypeName" required>
                         </div>
                     </div>
 
@@ -108,22 +108,18 @@
                                 <option>long</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <button ng-model="btnAddMapping" type=submit"  ng-click="addMapping()" class="btn btn-primary">Create Mapping</button>
+                    </div></div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <button ng-model="btnAddMapping" type="submit" class="btn btn-primary">Create Mapping</button>
                         </div>
                     </div>
-
-                </div>
-
-
             </form>
 
-            <div class="row">
+            <div class="row"  ng-show="showNewEventTypeForm">
                 <br>
                 <div class="col-md-12">
-                    <div class="form-group" ng-show="eventTypeMappings">
+                    <div class="form-group">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -146,7 +142,7 @@
                         </table>
                     </div>
                 </div>
-            </div>
+
             <div class="row">
                 <div class="col-md-8">
                     <div class="form-group">
@@ -154,6 +150,7 @@
                         <button ng-model="btnCancelCreateEventType" type="reset" ng-click="cancelCreateEventType()" class="btn btn-primary">Cancel</button>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
 
