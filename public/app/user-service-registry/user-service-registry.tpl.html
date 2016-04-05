@@ -39,16 +39,76 @@
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane fade in active" id="register">
             <h1 class="alert alert-info">User Service Registry Info</h1>
+<div name="serviceMetatdata" ng-model="serviceMetadata" ng-show="showServiceMetadata">
+            <h2>Service Metadata</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="name">Service Name</label>
+                        <input id="name" type="text" class="form-control" ng-model="serviceName" required>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="method">Method</label>
+                        <select id="method" class="form-control" ng-model="method" required>
+                            <option>GET</option>
+                            <option>POST</option>
+                            <option>PUT</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="url">Service URL</label>
+                        <input id="url" type="text" class="form-control" ng-model="serviceUrl" required>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="responseType">Response Type</label>
+                        <input id="responseType" list="mimeTypes" class="form-control" ng-model="responseType" required/>
+                        <datalist id="mimeTypes">
+                            <option>application/json</option>
+                            <option>application/octet-stream</option>
+                            <option>text/plain</option>
+                            <option>text/html</option>
+                            <option>image/bmp</option>
+                            <option>image/jpeg</option>
+                        </datalist>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="description">Service Description</label>
+                        <input id="description" type="text" class="form-control" ng-model="serviceDescription">
+                    </div>
+                </div>
+            </div>
 
-            <p>{{registerServiceId}}</p>
+            <div class="row">
+                <div class="col-md-1">
+                    <button class="btn btn-primary" ng-click="addInput()">Save</button>
+                </div>
+            </div>
+</div>
+            <div class="row">
+                <div class="col-md-1">
+                    <button class="btn btn-primary" ng-click="registerService()">Register Service</button>
+                </div>
+            </div>
 
                 <h2>Inputs</h2>
                 <div class="row">
                     <div ng-repeat="ninput in registerInputs">
-                        <p>
+
                             <label> Name</label>
                         <input type="text" ng-model="ninput.name">
-                            </p>
+
                         <p>
                         <label> MinOccurs</label>
                         <input type="text" ng-model="ninput.minOccurs">
@@ -189,74 +249,11 @@
 </div>
 <button ng-click="addOutput()">New Output</button>
 </div>
-<h2>Service Metadata</h2>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="name">Service Name</label>
-                            <input id="name" type="text" class="form-control" ng-model="serviceName" required>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="method">Method</label>
-                            <select id="method" class="form-control" ng-model="method" required>
-                                <option>GET</option>
-                                <option>POST</option>
-                                <option>PUT</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="url">Service URL</label>
-                            <input id="url" type="text" class="form-control" ng-model="serviceUrl" required>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="responseType">Response Type</label>
-                            <input id="responseType" list="mimeTypes" class="form-control" ng-model="responseType" required/>
-                            <datalist id="mimeTypes">
-                                <option>application/json</option>
-                                <option>application/octet-stream</option>
-                                <option>text/plain</option>
-                                <option>text/html</option>
-                                <option>image/bmp</option>
-                                <option>image/jpeg</option>
-                            </datalist>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="description">Service Description</label>
-                            <input id="description" type="text" class="form-control" ng-model="serviceDescription">
-                        </div>
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-1">
-                        <button class="btn btn-primary" ng-click="registerService()">Register Service</button>
-                    </div>
-                </div>
-                <div>
-                    <label id="serviceMsg">{{serviceMsg}}</label>
-                </div>
-                <div>
-                    <label id="serviceID">{{registerServiceId}}</label>
-                </div>
-                <div ng-show="serviceId">
-                    Resource ID: {{registerServiceId}}
-                </div>
+<!--table for registered service-->
+<
 
 
-
-        </div>
 
 
         <div role="tabpanel" class="tab-pane fade" id="execute">

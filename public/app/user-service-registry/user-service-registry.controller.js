@@ -23,6 +23,12 @@
 
 
     function UserServiceController($scope, $http, $log, $q, toaster, discover, $timeout) {
+        $scope.showNewInputForm = false;
+        $scope.showNewInputFormatForm = false;
+        $scope.showNewOutputForm = false;
+        $scope.showNewOutputFormatForm = false;
+        $scope.showServiceMetadata = true;
+
         $scope.executeInputMap = {};
         $scope.executeOutputMap = {};
         $scope.method = 'GET';
@@ -58,6 +64,26 @@
         $scope.SearchResultRetries = 0;
         $scope.ListResultRetries = 0;
         $scope.DeleteResultRetries = 0;
+
+        $scope.showHideInputTable = function() {
+            $scope.showNewInputForm = !$scope.showNewInputForm;
+        };
+
+        $scope.showHideInputFormatTable = function() {
+            $scope.showNewInputFormatForm = !$scope.showNewInputFormatForm;
+        };
+
+        $scope.showHideOutputTable = function() {
+            $scope.showNewOutputForm = !$scope.showNewOutputForm;
+        };
+
+        $scope.showHideOutputFormatTable = function() {
+            $scope.showNewOutputFormatForm = !$scope.showNewOutputFormatForm;
+        };
+
+        $scope.showHideServiceMetadata = function() {
+            $scope.showServiceMetadata = !$scope.showServiceMetadata;
+        };
 
         function resetServiceInputArrays() {
             $scope.bodyInputs = [];
@@ -270,6 +296,9 @@
 
 
         $scope.addInput = function() {
+
+            $scope.showNewInputForm = true;
+            $scope.showHideServiceMetadata();
 
             var newInput = {
                 "name" : "aString",
