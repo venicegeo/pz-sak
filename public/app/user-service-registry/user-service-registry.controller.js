@@ -29,6 +29,7 @@
         $scope.showNewOutputFormatForm = false;
         $scope.showServiceMetadata = true;
 
+
         $scope.executeInputMap = {};
         $scope.executeOutputMap = {};
         $scope.method = 'GET';
@@ -68,7 +69,7 @@
         $scope.DeleteResultRetries = 0;
         $scope.ShowUpdateResultRetries = 0;
         $scope.UpdateResultRetries = 0;
-
+        
         var QUICK_POLL = 1000;
         var SLOW_POLL = 5000;
 
