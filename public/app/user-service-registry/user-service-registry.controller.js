@@ -141,7 +141,7 @@
                 }
                 else {
                     if ($scope.RegisterResultsRetries < $scope.maxRegisterResultsRetries) {
-                        window.setTimeout(getRegisterResult, 1000, jobId);
+                        $timeout(getRegisterResult, 1000, jobId);
                     }
                     else {
                         console.log("Get Register Results max tries exceeded");
@@ -207,7 +207,7 @@
                 }
                 else {
                     if ($scope.ExecuteResultsRetries < $scope.maxExecuteResultsRetries) {
-                        window.setTimeout(getExecuteResult, 5000, jobId);
+                        $timeout(getExecuteResult, 5000, jobId);
                     }
                     else {
                         console.log("Exceeded Get Execute Results retry limit");
@@ -219,7 +219,7 @@
                 if ((response.data.message == "Job Not Found.") &&
                     ($scope.ExecuteResultsRetries < $scope.maxExecuteResultsRetries)) {
                     console.log("job not registered yet... trying again");
-                    window.setTimeout(getExecuteResult, 5000, jobId);
+                    $timeout(getExecuteResult, 5000, jobId);
                 } else {
                     console.log("search.controller fail");
                     toaster.pop('error', "Error", "There was an issue with your request.");
@@ -258,7 +258,7 @@
                 }
                 else {
                     if ($scope.DescribeServiceRetries < $scope.maxDescribeServiceRetries) {
-                        window.setTimeout(getDescribeServiceResult, 1000, jobId);
+                        $timeout(getDescribeServiceResult, 1000, jobId);
                     }
                     else {
                         console.log("Get Describe Service Retries limit exceeded");
@@ -506,7 +506,7 @@
                 }
                 else {
                     if ($scope.ListResultRetries < $scope.maxListResultRetries) {
-                        window.setTimeout($scope.getServicesResult(jobId), 2000);
+                        $timeout(function(){$scope.getServicesResult(jobId)}, 2000);
                     }
                     else {
                         usSpinnerService.stop("spinner-list");
@@ -519,7 +519,7 @@
                 // If it's a 500 error because the job doesn't exist yet, just try again
                 if (response.data.message == "Job Not Found.") {
                     console.log("job not registered yet... trying again");
-                    window.setTimeout($scope.getServicesResult(jobId), 2000);
+                    $timeout(function(){$scope.getServicesResult(jobId)}, 2000);
                 } else {
                     usSpinnerService.stop("spinner-list");
                     console.log("service.controller fail" + response.status);
@@ -589,7 +589,7 @@
                 }
                 else {
                     if ($scope.SearchResultRetries < $scope.maxSearchResultRetries) {
-                        window.setTimeout($scope.searchServicesResult(jobId), 2000);
+                        $timeout(function(){$scope.searchServicesResult(jobId)}, 2000);
                     }
                     else {
                         console.log("Get Register Results max tries exceeded");
@@ -601,7 +601,7 @@
                 // If it's a 500 error because the job doesn't exist yet, just try again
                 if (response.data.message == "Job Not Found.") {
                     console.log("job not registered yet... trying again");
-                    window.setTimeout($scope.searchServicesResult(jobId), 2000);
+                    $timeout(function(){$scope.searchServicesResult(jobId)}, 2000);
                 } else {
                     console.log("user-service-registry.controller fail on search");
                     toaster.pop('error', "Error", "There was an issue with your request.");
@@ -681,7 +681,7 @@
                 }
                 else {
                     if ($scope.ShowUpdateResultRetries < $scope.maxShowUpdateResultRetries) {
-                        window.setTimeout($scope.showUpdateResult(jobId), 1000);
+                        $timeout(function(){$scope.showUpdateResult(jobId)}, 1000);
                     }
                     else {
                         console.log("Describe Service Results max tries exceeded");
@@ -693,7 +693,7 @@
                 // If it's a 500 error because the job doesn't exist yet, just try again
                 if (res.data.message == "Job Not Found.") {
                     console.log("job not registered yet... trying again");
-                    window.setTimeout($scope.showUpdateResult(jobId), 1000);
+                    $timeout(function(){$scope.showUpdateResult(jobId)}, 1000);
                 } else {
                     console.log("User Service.controller fail"+res.status);
                     toaster.pop('error', "Error", "There was a problem describing the service.");
@@ -763,8 +763,8 @@
             }).then(function successCallback(html) {
                 console.log(html);
 
+                // TODO: fix this! for some reason success isn't returned
                 if (html.data.status.indexOf("Success") > -1) {
-                    usSpinnerService.stop("spinner-update");
                     console.log(res);
                     $scope.getServices();
 
@@ -772,10 +772,9 @@
                 }
                 else {
                     if ($scope.UpdateResultRetries < $scope.maxUpdateResultRetries) {
-                        $timeout($scope.updateServiceResult(jobId), 5000);
+                        $timeout(function() {$scope.updateServiceResult(jobId)}, 5000);
                     }
                     else {
-                        usSpinnerService.stop("spinner-update");
                         console.log("Update Service Results max tries exceeded");
                         toaster.pop('error', "Error", "Update Service Results max tries exceeded");
                     }
@@ -784,9 +783,8 @@
                 // If it's a 500 error because the job doesn't exist yet, just try again
                 if (res.data.message == "Job Not Found.") {
                     console.log("job not registered yet... trying again");
-                    $timeout($scope.updateServiceResult(jobId), 5000);
+                    $timeout(function() {$scope.updateServiceResult(jobId)}, 5000);
                 } else {
-                    usSpinnerService.stop("spinner-update");
                     console.log("User Service.controller fail"+res.status);
                     toaster.pop('error', "Error", "There was a problem updating the service.");
                 }
@@ -799,12 +797,12 @@
             var serviceId = $scope.updateResourceId;
 
 
-            /*if (!$scope.showUpdateService){
+            if (!$scope.showUpdateService){
                 $scope.showUpdateService = true;
             }
             else{
                 $scope.showUpdateService = false;
-            }*/
+            }
 
             var dataObj = {
                 apiKey: "my-api-key-sakui",
@@ -832,12 +830,8 @@
                 headers: {"Content-Type": undefined}
             }).then(function successCallback(res) {
 
-                usSpinnerService.spin("spinner-update");
                 $scope.UpdateResultRetries = 0;
                 $scope.updateServiceResult(res.data.jobId);
-
-
-
 
             }, function errorCallback(res) {
                 console.log("User Service.controller fail"+res.status);
@@ -880,7 +874,7 @@
                 }
                 else {
                     if ($scope.DeleteResultRetries < $scope.maxDeleteResultRetries) {
-                        window.setTimeout($scope.deleteServiceResult(jobId), 2000);
+                        $timeout(function(){$scope.deleteServiceResult(jobId)}, 2000);
                     }
                     else {
                         console.log("Delete Service Results max tries exceeded");
@@ -892,7 +886,7 @@
                 // If it's a 500 error because the job doesn't exist yet, just try again
                 if (res.data.message == "Job Not Found.") {
                     console.log("job not registered yet... trying again");
-                    window.setTimeout($scope.deleteServiceResult(jobId), 2000);
+                    $timeout(function(){$scope.deleteServiceResult(jobId)}, 2000);
                 } else {
                     console.log("User Service.controller fail"+res.status);
                     toaster.pop('error', "Error", "There was a problem deleting the Service.");
