@@ -741,43 +741,110 @@
 
         };
 
+        $scope.updateServiceResult = function( jobId ) {
+            $scope.UpdateResultRetries += 1;
+
+            var data = {
+                "apiKey": "my-api-key-sakui",
+                "jobType": {
+                    "type": "get",
+                    "jobId": jobId
+                }
+            };
+
+            var fd = new FormData();
+            fd.append( 'body', JSON.stringify(data) );
+
+            $http({
+                method: "POST",
+                url: "/proxy?url=" + discover.gatewayHost + "/job",
+                data: fd,
+                headers: {"Content-Type": undefined}
+            }).then(function successCallback(html) {
+                console.log(html);
+
+                if (html.data.status.indexOf("Success") > -1) {
+                    usSpinnerService.stop("spinner-update");
+                    console.log(res);
+                    $scope.getServices();
+
+                    toaster.pop('success', "Success", "The service was successfully updated.")
+                }
+                else {
+                    if ($scope.UpdateResultRetries < $scope.maxUpdateResultRetries) {
+                        $timeout($scope.updateServiceResult(jobId), 5000);
+                    }
+                    else {
+                        usSpinnerService.stop("spinner-update");
+                        console.log("Update Service Results max tries exceeded");
+                        toaster.pop('error', "Error", "Update Service Results max tries exceeded");
+                    }
+                }
+            }, function errorCallback(res) {
+                // If it's a 500 error because the job doesn't exist yet, just try again
+                if (res.data.message == "Job Not Found.") {
+                    console.log("job not registered yet... trying again");
+                    $timeout($scope.updateServiceResult(jobId), 5000);
+                } else {
+                    usSpinnerService.stop("spinner-update");
+                    console.log("User Service.controller fail"+res.status);
+                    toaster.pop('error', "Error", "There was a problem updating the service.");
+                }
+            });
+
+        };
+
         $scope.updateService = function(){
             var jobId = "";
             var serviceId = $scope.updateResourceId;
 
 
-            if (!$scope.showUpdateService){
+            /*if (!$scope.showUpdateService){
                 $scope.showUpdateService = true;
             }
             else{
                 $scope.showUpdateService = false;
-            }
+            }*/
 
             var dataObj = {
-                id: serviceId,
-                name: $scope.updateServiceName,
-                resourceMetadata:{
-                    name: $scope.updateServiceName,
-                    description: $scope.updateServiceDescrip,
-                    url: $scope.updateServiceUrl
+                apiKey: "my-api-key-sakui",
+                jobType: {
+                    type: "update-service",
+                    serviceID: serviceId,
+                    data: {
+                        id: serviceId,
+                        resourceMetadata: {
+                            name: $scope.updateServiceName,
+                            description: $scope.updateServiceDescrip,
+                            url: $scope.updateServiceUrl
+                        }
+                    }
                 }
             };
 
-            //TODO: go through the gateway
-                $http.put(
-                    "/proxy?url=" + discover.serviceControllerHost + "/servicecontroller/updateService",
-                    dataObj
-                ).then(function successCallback(res) {
-                    console.log(res);
-                    $scope.getServices();
+            var fd = new FormData();
+            fd.append('body', JSON.stringify(dataObj));
 
-                    toaster.pop('success', "Success", "The service was successfully updated.")
+            $http({
+                method: "POST",
+                url: "/proxy?url=" + discover.gatewayHost + "/job",
+                data: fd,
+                headers: {"Content-Type": undefined}
+            }).then(function successCallback(res) {
 
-                }, function errorCallback(res) {
-                    console.log("User Service.controller fail"+res.status);
+                usSpinnerService.spin("spinner-update");
+                $scope.UpdateResultRetries = 0;
+                $scope.updateServiceResult(res.data.jobId);
 
-                    toaster.pop('error', "Error", "There was a problem updating the Service.");
-                });
+
+
+
+            }, function errorCallback(res) {
+                console.log("User Service.controller fail"+res.status);
+
+                toaster.pop('error', "Error", "There was a problem updating the Service.");
+            });
+
             $scope.updateResourceId = "";
             $scope.updateServiceName = "";
             $scope.updateServiceDescrip = "";
