@@ -123,16 +123,16 @@
 
 
     $scope.postEvent = function(params){
+        console.log(params);
         var array = $.map(params, function(value, index) {
             return [index];
         });
 
-        var result = [];
+        var result = {};
         for(var i=0;i<array.length;i++){
-            result.push([array[i],$scope.eventTypeValues[i]]);
+            result[array[i]] = $scope.eventTypeValues[i];
         }
-
-        alert(result);
+        console.log(result);
 
         $scope.errorMsg = "";
 
@@ -141,15 +141,13 @@
         var dataObj = {
             eventtype_id: $scope.eventType.id,
             date: currentTime,
-            data:{
-                mapping: result
-            }
+            data: result
         };
 
         console.log(dataObj);
 
         $http.post(
-            "/proxy?url=" + discover.workflowHost + "/v1/events/" + $scope.eventType.id,
+            "/proxy?url=" + discover.workflowHost + "/v1/events/" + $scope.eventTypeName,
             dataObj
         ).then(function successCallback(res) {
             $scope.message = res;
