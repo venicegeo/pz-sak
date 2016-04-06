@@ -62,6 +62,9 @@
         $scope.DeleteResultRetries = 0;
         $scope.ShowUpdateResultRetries = 0;
         $scope.UpdateResultRetries = 0;
+        
+        var QUICK_POLL = 1000;
+        var SLOW_POLL = 5000;
 
         function resetServiceInputArrays() {
             $scope.bodyInputs = [];
@@ -141,7 +144,7 @@
                 }
                 else {
                     if ($scope.RegisterResultsRetries < $scope.maxRegisterResultsRetries) {
-                        $timeout(getRegisterResult, 1000, jobId);
+                        $timeout(getRegisterResult, QUICK_POLL, jobId);
                     }
                     else {
                         console.log("Get Register Results max tries exceeded");
@@ -207,7 +210,7 @@
                 }
                 else {
                     if ($scope.ExecuteResultsRetries < $scope.maxExecuteResultsRetries) {
-                        $timeout(getExecuteResult, 5000, jobId);
+                        $timeout(getExecuteResult, SLOW_POLL, jobId);
                     }
                     else {
                         console.log("Exceeded Get Execute Results retry limit");
@@ -219,7 +222,7 @@
                 if ((response.data.message == "Job Not Found.") &&
                     ($scope.ExecuteResultsRetries < $scope.maxExecuteResultsRetries)) {
                     console.log("job not registered yet... trying again");
-                    $timeout(getExecuteResult, 5000, jobId);
+                    $timeout(getExecuteResult, SLOW_POLL, jobId);
                 } else {
                     console.log("search.controller fail");
                     toaster.pop('error', "Error", "There was an issue with your request.");
@@ -258,7 +261,7 @@
                 }
                 else {
                     if ($scope.DescribeServiceRetries < $scope.maxDescribeServiceRetries) {
-                        $timeout(getDescribeServiceResult, 1000, jobId);
+                        $timeout(getDescribeServiceResult, QUICK_POLL, jobId);
                     }
                     else {
                         console.log("Get Describe Service Retries limit exceeded");
@@ -506,7 +509,7 @@
                 }
                 else {
                     if ($scope.ListResultRetries < $scope.maxListResultRetries) {
-                        $timeout(function(){$scope.getServicesResult(jobId)}, 2000);
+                        $timeout(function(){$scope.getServicesResult(jobId)}, QUICK_POLL);
                     }
                     else {
                         usSpinnerService.stop("spinner-list");
@@ -519,7 +522,7 @@
                 // If it's a 500 error because the job doesn't exist yet, just try again
                 if (response.data.message == "Job Not Found.") {
                     console.log("job not registered yet... trying again");
-                    $timeout(function(){$scope.getServicesResult(jobId)}, 2000);
+                    $timeout(function(){$scope.getServicesResult(jobId)}, QUICK_POLL);
                 } else {
                     usSpinnerService.stop("spinner-list");
                     console.log("service.controller fail" + response.status);
@@ -681,7 +684,7 @@
                 }
                 else {
                     if ($scope.ShowUpdateResultRetries < $scope.maxShowUpdateResultRetries) {
-                        $timeout(function(){$scope.showUpdateResult(jobId)}, 1000);
+                        $timeout(function(){$scope.showUpdateResult(jobId)}, QUICK_POLL);
                     }
                     else {
                         console.log("Describe Service Results max tries exceeded");
@@ -693,7 +696,7 @@
                 // If it's a 500 error because the job doesn't exist yet, just try again
                 if (res.data.message == "Job Not Found.") {
                     console.log("job not registered yet... trying again");
-                    $timeout(function(){$scope.showUpdateResult(jobId)}, 1000);
+                    $timeout(function(){$scope.showUpdateResult(jobId)}, QUICK_POLL);
                 } else {
                     console.log("User Service.controller fail"+res.status);
                     toaster.pop('error', "Error", "There was a problem describing the service.");
@@ -772,7 +775,7 @@
                 }
                 else {
                     if ($scope.UpdateResultRetries < $scope.maxUpdateResultRetries) {
-                        $timeout(function() {$scope.updateServiceResult(jobId)}, 5000);
+                        $timeout(function() {$scope.updateServiceResult(jobId)}, SLOW_POLL);
                     }
                     else {
                         console.log("Update Service Results max tries exceeded");
@@ -783,7 +786,7 @@
                 // If it's a 500 error because the job doesn't exist yet, just try again
                 if (res.data.message == "Job Not Found.") {
                     console.log("job not registered yet... trying again");
-                    $timeout(function() {$scope.updateServiceResult(jobId)}, 5000);
+                    $timeout(function() {$scope.updateServiceResult(jobId)}, SLOW_POLL);
                 } else {
                     console.log("User Service.controller fail"+res.status);
                     toaster.pop('error', "Error", "There was a problem updating the service.");
@@ -874,7 +877,7 @@
                 }
                 else {
                     if ($scope.DeleteResultRetries < $scope.maxDeleteResultRetries) {
-                        $timeout(function(){$scope.deleteServiceResult(jobId)}, 2000);
+                        $timeout(function(){$scope.deleteServiceResult(jobId)}, QUICK_POLL);
                     }
                     else {
                         console.log("Delete Service Results max tries exceeded");
@@ -886,7 +889,7 @@
                 // If it's a 500 error because the job doesn't exist yet, just try again
                 if (res.data.message == "Job Not Found.") {
                     console.log("job not registered yet... trying again");
-                    $timeout(function(){$scope.deleteServiceResult(jobId)}, 2000);
+                    $timeout(function(){$scope.deleteServiceResult(jobId)}, QUICK_POLL);
                 } else {
                     console.log("User Service.controller fail"+res.status);
                     toaster.pop('error', "Error", "There was a problem deleting the Service.");
