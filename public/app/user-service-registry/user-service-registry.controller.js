@@ -501,6 +501,7 @@
             }).then(function successCallback( html ) {
 
                 if (html.data.status.indexOf("Success") > -1) {
+                    usSpinnerService.stop("spinner-list");
                     $scope.services = angular.fromJson(html.data.result.text);
                 }
                 else {
@@ -508,6 +509,7 @@
                         window.setTimeout($scope.getServicesResult(jobId), 2000);
                     }
                     else {
+                        usSpinnerService.stop("spinner-list");
                         console.log("List Results max tries exceeded");
                         toaster.pop('error', "Error", "List Results max tries exceeded");
                     }
@@ -519,6 +521,7 @@
                     console.log("job not registered yet... trying again");
                     window.setTimeout($scope.getServicesResult(jobId), 2000);
                 } else {
+                    usSpinnerService.stop("spinner-list");
                     console.log("service.controller fail" + response.status);
                     toaster.pop('error', "Error", "There was an issue with retrieving the services.");
                 }
@@ -546,6 +549,7 @@
                     data: fd,
                     headers: {"Content-Type": undefined}
                 }).then(function successCallback( html ) {
+                    usSpinnerService.spin("spinner-list");
                     $scope.ListResultRetries = 0;
                     $scope.getServicesResult(html.data.jobId);
                 }, function errorCallback(response){
