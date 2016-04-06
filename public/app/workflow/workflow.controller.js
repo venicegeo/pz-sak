@@ -167,10 +167,10 @@
         });
     };
 
-        $scope.deleteEvent = function(eventId) {
+        $scope.deleteEvent = function(eventtypeId, eventId) {
             $http({
                 method: "DELETE",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/events/"+eventId,
+                url: "/proxy?url=" + discover.workflowHost + "/v1/events/"+eventtypeId+"/"+eventId,
             }).then(function successCallback( html ) {
                 $scope.message = html;
                 console.log("success");
