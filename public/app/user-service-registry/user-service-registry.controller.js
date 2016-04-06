@@ -18,11 +18,11 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('UserServiceController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', '$timeout', UserServiceController]);
+        .controller('UserServiceController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', '$timeout', 'usSpinnerService', UserServiceController]);
 
 
 
-    function UserServiceController($scope, $http, $log, $q, toaster, discover, $timeout) {
+    function UserServiceController($scope, $http, $log, $q, toaster, discover, $timeout, usSpinnerService) {
         $scope.executeInputMap = {};
         $scope.executeOutputMap = {};
         $scope.method = 'GET';
@@ -51,6 +51,8 @@
         $scope.maxSearchResultRetries = 10;
         $scope.maxListResultRetries = 10;
         $scope.maxDeleteResultRetries = 10;
+        $scope.maxShowUpdateResultRetries = 10;
+        $scope.maxUpdateResultRetries = 10;
 
         $scope.ExecuteResultsRetries = 0;
         $scope.RegisterResultsRetries = 0;
@@ -58,6 +60,11 @@
         $scope.SearchResultRetries = 0;
         $scope.ListResultRetries = 0;
         $scope.DeleteResultRetries = 0;
+        $scope.ShowUpdateResultRetries = 0;
+        $scope.UpdateResultRetries = 0;
+        
+        var QUICK_POLL = 1000;
+        var SLOW_POLL = 5000;
 
         function resetServiceInputArrays() {
             $scope.bodyInputs = [];
@@ -137,7 +144,7 @@
                 }
                 else {
                     if ($scope.RegisterResultsRetries < $scope.maxRegisterResultsRetries) {
-                        window.setTimeout(getRegisterResult, 1000, jobId);
+                        $timeout(getRegisterResult, QUICK_POLL, jobId);
                     }
                     else {
                         console.log("Get Register Results max tries exceeded");
@@ -203,7 +210,7 @@
                 }
                 else {
                     if ($scope.ExecuteResultsRetries < $scope.maxExecuteResultsRetries) {
-                        window.setTimeout(getExecuteResult, 5000, jobId);
+                        $timeout(getExecuteResult, SLOW_POLL, jobId);
                     }
                     else {
                         console.log("Exceeded Get Execute Results retry limit");
@@ -215,7 +222,7 @@
                 if ((response.data.message == "Job Not Found.") &&
                     ($scope.ExecuteResultsRetries < $scope.maxExecuteResultsRetries)) {
                     console.log("job not registered yet... trying again");
-                    window.setTimeout(getExecuteResult, 5000, jobId);
+                    $timeout(getExecuteResult, SLOW_POLL, jobId);
                 } else {
                     console.log("search.controller fail");
                     toaster.pop('error', "Error", "There was an issue with your request.");
@@ -254,7 +261,7 @@
                 }
                 else {
                     if ($scope.DescribeServiceRetries < $scope.maxDescribeServiceRetries) {
-                        window.setTimeout(getDescribeServiceResult, 1000, jobId);
+                        $timeout(getDescribeServiceResult, QUICK_POLL, jobId);
                     }
                     else {
                         console.log("Get Describe Service Retries limit exceeded");
@@ -497,13 +504,15 @@
             }).then(function successCallback( html ) {
 
                 if (html.data.status.indexOf("Success") > -1) {
+                    usSpinnerService.stop("spinner-list");
                     $scope.services = angular.fromJson(html.data.result.text);
                 }
                 else {
                     if ($scope.ListResultRetries < $scope.maxListResultRetries) {
-                        window.setTimeout($scope.getServicesResult(jobId), 2000);
+                        $timeout(function(){$scope.getServicesResult(jobId)}, QUICK_POLL);
                     }
                     else {
+                        usSpinnerService.stop("spinner-list");
                         console.log("List Results max tries exceeded");
                         toaster.pop('error', "Error", "List Results max tries exceeded");
                     }
@@ -513,8 +522,9 @@
                 // If it's a 500 error because the job doesn't exist yet, just try again
                 if (response.data.message == "Job Not Found.") {
                     console.log("job not registered yet... trying again");
-                    window.setTimeout($scope.getServicesResult(jobId), 2000);
+                    $timeout(function(){$scope.getServicesResult(jobId)}, QUICK_POLL);
                 } else {
+                    usSpinnerService.stop("spinner-list");
                     console.log("service.controller fail" + response.status);
                     toaster.pop('error', "Error", "There was an issue with retrieving the services.");
                 }
@@ -542,6 +552,7 @@
                     data: fd,
                     headers: {"Content-Type": undefined}
                 }).then(function successCallback( html ) {
+                    usSpinnerService.spin("spinner-list");
                     $scope.ListResultRetries = 0;
                     $scope.getServicesResult(html.data.jobId);
                 }, function errorCallback(response){
@@ -581,7 +592,7 @@
                 }
                 else {
                     if ($scope.SearchResultRetries < $scope.maxSearchResultRetries) {
-                        window.setTimeout($scope.searchServicesResult(jobId), 2000);
+                        $timeout(function(){$scope.searchServicesResult(jobId)}, 2000);
                     }
                     else {
                         console.log("Get Register Results max tries exceeded");
@@ -593,7 +604,7 @@
                 // If it's a 500 error because the job doesn't exist yet, just try again
                 if (response.data.message == "Job Not Found.") {
                     console.log("job not registered yet... trying again");
-                    window.setTimeout($scope.searchServicesResult(jobId), 2000);
+                    $timeout(function(){$scope.searchServicesResult(jobId)}, 2000);
                 } else {
                     console.log("user-service-registry.controller fail on search");
                     toaster.pop('error', "Error", "There was an issue with your request.");
@@ -640,7 +651,64 @@
             $scope.showUpdateService = !$scope.showUpdateService;
         };
 
+
+        $scope.showUpdateResult = function( jobId ) {
+            $scope.ShowUpdateResultRetries += 1;
+
+            var data = {
+                "apiKey": "my-api-key-sakui",
+                "jobType": {
+                    "type": "get",
+                    "jobId": jobId
+                }
+            };
+
+            var fd = new FormData();
+            fd.append( 'body', JSON.stringify(data) );
+
+            $http({
+                method: "POST",
+                url: "/proxy?url=" + discover.gatewayHost + "/job",
+                data: fd,
+                headers: {"Content-Type": undefined}
+            }).then(function successCallback(html) {
+                console.log(html);
+
+                if (html.data.status.indexOf("Success") > -1) {
+                    usSpinnerService.stop('spinner-update');
+                    var results = angular.fromJson(html.data.result.text);
+                    $scope.updateResourceId = results.id;
+                    $scope.updateServiceName = results.resourceMetadata.name;
+                    $scope.updateServiceDescrip = results.resourceMetadata.description;
+                    $scope.updateServiceUrl = results.resourceMetadata.url;
+                }
+                else {
+                    if ($scope.ShowUpdateResultRetries < $scope.maxShowUpdateResultRetries) {
+                        $timeout(function(){$scope.showUpdateResult(jobId)}, QUICK_POLL);
+                    }
+                    else {
+                        console.log("Describe Service Results max tries exceeded");
+                        toaster.pop('error', "Error", "Describe Service Results max tries exceeded");
+                        usSpinnerService.stop('spinner-update');
+                    }
+                }
+            }, function errorCallback(res) {
+                // If it's a 500 error because the job doesn't exist yet, just try again
+                if (res.data.message == "Job Not Found.") {
+                    console.log("job not registered yet... trying again");
+                    $timeout(function(){$scope.showUpdateResult(jobId)}, QUICK_POLL);
+                } else {
+                    console.log("User Service.controller fail"+res.status);
+                    toaster.pop('error', "Error", "There was a problem describing the service.");
+                    usSpinnerService.stop('spinner-update');
+                }
+            });
+
+
+        };
+
         $scope.showUpdateServiceForm = function(serviceId){
+            usSpinnerService.spin('spinner-update');
             var jobId = "";
             if (!$scope.showUpdateService){
                 $scope.showUpdateService = true;
@@ -649,19 +717,83 @@
                 $scope.showUpdateService = false;
             }
 
-                $http({
-                    method: "GET",
-                    url: "/proxy?url=" + discover.serviceControllerHost + "/servicecontroller/describeService?resourceId="+serviceId,
-                }).then(function successCallback( html ) {
-                    $scope.updateResourceId = html.data.id;
-                    $scope.updateServiceName = html.data.resourceMetadata.name;
-                    $scope.updateServiceDescrip = html.data.resourceMetadata.description;
-                    $scope.updateServiceUrl = html.data.resourceMetadata.url;
-                }, function errorCallback(response){
-                    console.log("service.controller fail"+response.status);
-                    toaster.pop('error', "Error", "There was an issue with retrieving the services.");
-                });
-            //});
+            var data = {
+                "apiKey": "my-api-key-sakui",
+                "jobType" : {
+                    "type": "read-service",
+                    "serviceID" : serviceId
+                }
+            };
+
+            var fd = new FormData();
+            fd.append( 'body', JSON.stringify(data) );
+
+            $http({
+                method: "POST",
+                url: '/proxy?url=' + discover.gatewayHost + '/job',
+                data :fd,
+                headers: {"Content-Type": undefined}
+            }).then(function successCallback( html ) {
+                $scope.ShowUpdateResultRetries = 0;
+                $scope.showUpdateResult(html.data.jobId)
+            }, function errorCallback(response){
+                usSpinnerService.stop("spinner-update");
+                console.log("service.controller fail"+response.status);
+                toaster.pop('error', "Error", "There was an issue with retrieving the services.");
+            });
+
+        };
+
+        $scope.updateServiceResult = function( jobId ) {
+            $scope.UpdateResultRetries += 1;
+
+            var data = {
+                "apiKey": "my-api-key-sakui",
+                "jobType": {
+                    "type": "get",
+                    "jobId": jobId
+                }
+            };
+
+            var fd = new FormData();
+            fd.append( 'body', JSON.stringify(data) );
+
+            $http({
+                method: "POST",
+                url: "/proxy?url=" + discover.gatewayHost + "/job",
+                data: fd,
+                headers: {"Content-Type": undefined}
+            }).then(function successCallback(html) {
+                console.log(html);
+
+                // If it's no longer submitted, it's probably done, assume that a status of
+                // "[null, "whateverServiceIdItWas"]" is the equivalent of success here
+                if (html.data.status !== "Submitted") {
+                    console.log(html);
+                    $scope.getServices();
+
+                    toaster.pop('success', "Success", "The service was successfully updated.")
+                }
+                else {
+                    if ($scope.UpdateResultRetries < $scope.maxUpdateResultRetries) {
+                        $timeout(function() {$scope.updateServiceResult(jobId)}, QUICK_POLL);
+                    }
+                    else {
+                        console.log("Update Service Results max tries exceeded");
+                        toaster.pop('error', "Error", "Update Service Results max tries exceeded");
+                    }
+                }
+            }, function errorCallback(res) {
+                // If it's a 500 error because the job doesn't exist yet, just try again
+                if (res.data.message == "Job Not Found.") {
+                    console.log("job not registered yet... trying again");
+                    $timeout(function() {$scope.updateServiceResult(jobId)}, QUICK_POLL);
+                } else {
+                    console.log("User Service.controller fail"+res.status);
+                    toaster.pop('error', "Error", "There was a problem updating the service.");
+                }
+            });
+
         };
 
         $scope.updateService = function(){
@@ -677,30 +809,40 @@
             }
 
             var dataObj = {
-                id: serviceId,
-                name: $scope.updateServiceName,
-                resourceMetadata:{
-                    name: $scope.updateServiceName,
-                    description: $scope.updateServiceDescrip,
-                    url: $scope.updateServiceUrl
+                apiKey: "my-api-key-sakui",
+                jobType: {
+                    type: "update-service",
+                    serviceID: serviceId,
+                    data: {
+                        id: serviceId,
+                        resourceMetadata: {
+                            name: $scope.updateServiceName,
+                            description: $scope.updateServiceDescrip,
+                            url: $scope.updateServiceUrl
+                        }
+                    }
                 }
             };
 
-            //TODO: go through the gateway
-                $http.put(
-                    "/proxy?url=" + discover.serviceControllerHost + "/servicecontroller/updateService",
-                    dataObj
-                ).then(function successCallback(res) {
-                    console.log(res);
-                    $scope.getServices();
+            var fd = new FormData();
+            fd.append('body', JSON.stringify(dataObj));
 
-                    toaster.pop('success', "Success", "The service was successfully updated.")
+            $http({
+                method: "POST",
+                url: "/proxy?url=" + discover.gatewayHost + "/job",
+                data: fd,
+                headers: {"Content-Type": undefined}
+            }).then(function successCallback(res) {
 
-                }, function errorCallback(res) {
-                    console.log("User Service.controller fail"+res.status);
+                $scope.UpdateResultRetries = 0;
+                $scope.updateServiceResult(res.data.jobId);
 
-                    toaster.pop('error', "Error", "There was a problem updating the Service.");
-                });
+            }, function errorCallback(res) {
+                console.log("User Service.controller fail"+res.status);
+
+                toaster.pop('error', "Error", "There was a problem updating the Service.");
+            });
+
             $scope.updateResourceId = "";
             $scope.updateServiceName = "";
             $scope.updateServiceDescrip = "";
@@ -736,7 +878,7 @@
                 }
                 else {
                     if ($scope.DeleteResultRetries < $scope.maxDeleteResultRetries) {
-                        window.setTimeout($scope.deleteServiceResult(jobId), 2000);
+                        $timeout(function(){$scope.deleteServiceResult(jobId)}, QUICK_POLL);
                     }
                     else {
                         console.log("Delete Service Results max tries exceeded");
@@ -748,7 +890,7 @@
                 // If it's a 500 error because the job doesn't exist yet, just try again
                 if (res.data.message == "Job Not Found.") {
                     console.log("job not registered yet... trying again");
-                    window.setTimeout($scope.deleteServiceResult(jobId), 2000);
+                    $timeout(function(){$scope.deleteServiceResult(jobId)}, QUICK_POLL);
                 } else {
                     console.log("User Service.controller fail"+res.status);
                     toaster.pop('error', "Error", "There was a problem deleting the Service.");
