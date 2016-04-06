@@ -22,9 +22,11 @@
 
     function WorkflowController ($scope, $http, $log, $q, toaster, discover) {
 
+        $scope.eventTypeValues = [];
         $scope.showNewEventTypeForm = false;
         $scope.showEventTypeTable = false;
         $scope.showEventTable = false;
+        $scope.showEventForm = false;
 
 
         $scope.getEvents = function () {
@@ -83,20 +85,21 @@
         };
         $scope.updateTypeTable = function (eventTypeId) {
 
-            if (!$scope.showEventTable){
-                $scope.showEventTypeTable = true;
+            if (!$scope.showEventForm){
+                $scope.showNewEventForm = true;
             }
             else{
-                $scope.showeventTypeTable = false;
+                $scope.showNewEventForm = false;
             }
 
             $http({
                 method: "GET",
                 url: "/proxy?url=" + discover.workflowHost + "/v1/eventtypes/"+eventTypeId,
             }).then(function successCallback( html ) {
+                $scope.eventTypeLabel = html.data.name;
                 $scope.eventTypeId = html.data.id;
                 $scope.eventTypeName = html.data.name;
-                $scope.eventTypeMapping = html.data.mapping;
+                $scope.parameters = html.data.mapping;
 
             }, function errorCallback(response){
                 console.log("workflow.controller fail"+response.status);
@@ -104,11 +107,6 @@
             });
 
         };
-        $scope.updateTypeLabel = function (eventTypeId) {
-            $scope.eventTypeLabel = "Event Type Id = "+eventTypeId;
-        }
-
-
 
         $scope.selectEventType = function(newEventType) {
             //User selected to create an event associated with an event type
@@ -122,23 +120,36 @@
 
 
 
-    $scope.postEvent = function(){
+
+
+    $scope.postEvent = function(params){
+        var array = $.map(params, function(value, index) {
+            return [index];
+        });
+
+        var result = [];
+        for(var i=0;i<array.length;i++){
+            result.push([array[i],$scope.eventTypeValues[i]]);
+        }
+
+        alert(result);
+
         $scope.errorMsg = "";
 
         var currentTime = moment().utc().toISOString();
         var alertMessage = $scope.alertMessage;
         var dataObj = {
-            eventtype_id: $scope.newEventType,
+            eventtype_id: $scope.eventType.id,
             date: currentTime,
             data:{
-                itemId: $scope.newEventItemId,
-                severity: $scope.newEventSeverity,
-                problem: $scope.newEventProblem
-                 }
+                mapping: result
+            }
         };
 
+        console.log(dataObj);
+
         $http.post(
-            "/proxy?url=" + discover.workflowHost + "/v1/events/" + $scope.newEventType,
+            "/proxy?url=" + discover.workflowHost + "/v1/events/" + $scope.eventType.id,
             dataObj
         ).then(function successCallback(res) {
             $scope.message = res;
