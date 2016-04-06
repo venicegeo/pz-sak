@@ -766,16 +766,17 @@
             }).then(function successCallback(html) {
                 console.log(html);
 
-                // TODO: fix this! for some reason success isn't returned
-                if (html.data.status.indexOf("Success") > -1) {
-                    console.log(res);
+                // If it's no longer submitted, it's probably done, assume that a status of
+                // "[null, "whateverServiceIdItWas"]" is the equivalent of success here
+                if (html.data.status !== "Submitted") {
+                    console.log(html);
                     $scope.getServices();
 
                     toaster.pop('success', "Success", "The service was successfully updated.")
                 }
                 else {
                     if ($scope.UpdateResultRetries < $scope.maxUpdateResultRetries) {
-                        $timeout(function() {$scope.updateServiceResult(jobId)}, SLOW_POLL);
+                        $timeout(function() {$scope.updateServiceResult(jobId)}, QUICK_POLL);
                     }
                     else {
                         console.log("Update Service Results max tries exceeded");
@@ -786,7 +787,7 @@
                 // If it's a 500 error because the job doesn't exist yet, just try again
                 if (res.data.message == "Job Not Found.") {
                     console.log("job not registered yet... trying again");
-                    $timeout(function() {$scope.updateServiceResult(jobId)}, SLOW_POLL);
+                    $timeout(function() {$scope.updateServiceResult(jobId)}, QUICK_POLL);
                 } else {
                     console.log("User Service.controller fail"+res.status);
                     toaster.pop('error', "Error", "There was a problem updating the service.");
