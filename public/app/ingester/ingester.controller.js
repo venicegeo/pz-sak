@@ -63,7 +63,7 @@
                 };
             }
             var ingestObj = {
-                "apiKey": "my-api-key-sakui",
+                "userName": "my-api-key-sakui",
                 "jobType": {
                     "type": "ingest",
                     "host": "true",
@@ -102,7 +102,7 @@
                 return;
             }
             var data = {
-                "apiKey": "my-api-key-sakui",
+                "userName": "my-api-key-sakui",
                 "jobType": {
                     "type": "get",
                     "jobId": $scope.jobId

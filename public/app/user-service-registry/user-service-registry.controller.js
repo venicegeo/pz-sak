@@ -120,7 +120,7 @@
         function getRegisterResult(jobId) {
             $scope.RegisterResultsRetries += 1;
             var data = {
-                "apiKey": "my-api-key-kidkeid",
+                "userName": "my-api-key-kidkeid",
                 "jobType": {
                     "type": "get",
                     "jobId": $scope.jobId
@@ -159,7 +159,7 @@
         }
         function getResourceResult(resourceId){
             var data = {
-                "apiKey": "my-api-key-kidkeid",
+                "userName": "my-api-key-kidkeid",
                 "jobType": {
                     "type": "get-resource",
                     "resourceId": resourceId
@@ -185,7 +185,7 @@
         function getExecuteResult(jobId) {
             $scope.ExecuteResultsRetries += 1;
             var data = {
-                "apiKey": "my-api-key-kidkeid",
+                "userName": "my-api-key-kidkeid",
                 "jobType": {
                     "type": "get",
                     "jobId": $scope.jobId
@@ -233,7 +233,7 @@
         function getDescribeServiceResult(jobId) {
             $scope.DescribeServiceRetries += 1;
             var data = {
-                "apiKey": "my-api-key-kidkeid",
+                "userName": "my-api-key-kidkeid",
                 "jobType": {
                     "type": "get",
                     "jobId": $scope.jobId
@@ -345,7 +345,7 @@
 
             $scope.errorMsg = "";
             var job = {
-                "apiKey": "my-api-key-38n987",
+                "userName": "my-api-key-38n987",
                 "jobType" : {
                     "type": "read-service",
                     "serviceID" : $scope.serviceId
@@ -387,7 +387,7 @@
                 "outputs" : $scope.registerOutputs
             };
             var job = {
-                "apiKey": "my-api-key-38n987",
+                "userName": "my-api-key-38n987",
                 "jobType" : {
                     "type": "register-service",
                     "data" : data
@@ -452,7 +452,7 @@
                "dataOutput" : $scope.outputs[$scope.selectedOutput].dataType
            };
             var job = {
-                "apiKey": "my-api-key-38n987",
+                "userName": "my-api-key-38n987",
                 "jobType" : {
                     "type": "execute-service",
                     "data" : executeServiceData
@@ -484,7 +484,7 @@
             $scope.ListResultRetries += 1;
 
             var data = {
-                "apiKey": "my-api-key-sakui",
+                "userName": "my-api-key-sakui",
                 "jobType": {
                     "type": "get",
                     "jobId": jobId
@@ -535,7 +535,7 @@
         $scope.getServices = function() {
 
             var data = {
-                "apiKey": "my-api-key-sakui",
+                "userName": "my-api-key-sakui",
                 "jobType": {
                     "type": "list-service"
                 }
@@ -567,7 +567,7 @@
             $scope.SearchResultRetries += 1;
 
             var data = {
-                "apiKey": "my-api-key-kidkeid",
+                "userName": "my-api-key-kidkeid",
                 "jobType": {
                     "type": "get",
                     "jobId": jobId
@@ -616,7 +616,7 @@
         $scope.searchServices = function() {
 
             var data = {
-                "apiKey": "my-api-key-kidkeid",
+                "userName": "my-api-key-kidkeid",
                 "jobType": {
                     "type": "search-service",
                     "data": {
@@ -656,7 +656,7 @@
             $scope.ShowUpdateResultRetries += 1;
 
             var data = {
-                "apiKey": "my-api-key-sakui",
+                "userName": "my-api-key-sakui",
                 "jobType": {
                     "type": "get",
                     "jobId": jobId
@@ -718,7 +718,7 @@
             }
 
             var data = {
-                "apiKey": "my-api-key-sakui",
+                "userName": "my-api-key-sakui",
                 "jobType" : {
                     "type": "read-service",
                     "serviceID" : serviceId
@@ -748,7 +748,7 @@
             $scope.UpdateResultRetries += 1;
 
             var data = {
-                "apiKey": "my-api-key-sakui",
+                "userName": "my-api-key-sakui",
                 "jobType": {
                     "type": "get",
                     "jobId": jobId
@@ -809,7 +809,7 @@
             }
 
             var dataObj = {
-                apiKey: "my-api-key-sakui",
+                userName: "my-api-key-sakui",
                 jobType: {
                     type: "update-service",
                     serviceID: serviceId,
@@ -853,7 +853,7 @@
             $scope.DeleteResultRetries += 1;
 
             var data = {
-                "apiKey": "my-api-key-sakui",
+                "userName": "my-api-key-sakui",
                 "jobType": {
                     "type": "get",
                     "jobId": jobId
@@ -902,7 +902,7 @@
         $scope.deleteService = function(serviceId){
 
             var data = {
-                "apiKey": "my-api-key-sakui",
+                "userName": "my-api-key-sakui",
                 "jobType": {
                     "type": "delete-service",
                     "serviceID": serviceId,
