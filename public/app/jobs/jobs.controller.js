@@ -57,7 +57,6 @@
             $scope.getJobStatus = function() {
 
                 var data = {
-                    "apiKey": "my-api-key-kidkeid",
                     "jobType": {
                         "type": "get",
                         "jobId": $scope.jobId
@@ -69,7 +68,7 @@
 
                 $http({
                     method: "POST",
-                    url: "/proxy?url=pz-gateway.stage.geointservices.io/job",
+                    url: "https://pz-gateway.stage.geointservices.io/job",
                     data: fd,
                     headers: {
                         "Content-Type": undefined
@@ -85,7 +84,6 @@
             $scope.getResourceData = function() {
 
                 var data = {
-                    "apiKey": "my-api-key-kidkeid",
                     "jobType": {
                         "type": "get-resource",
                         "resourceId": $scope.resourceId
@@ -97,7 +95,7 @@
 
                 $http({
                     method: "POST",
-                    url: "/proxy?url=pz-gateway.stage.geointservices.io/job",
+                    url: "https://pz-gateway.stage.geointservices.io/job",
                     data: fd,
                     headers: {
                         "Content-Type": undefined
