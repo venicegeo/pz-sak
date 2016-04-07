@@ -80,7 +80,7 @@
             }
 
             var data = {
-                "apiKey": "api-key-sakui",
+                "userName": "api-key-sakui",
                 "jobType": {
                     "type": "search-query",
                     "data": {

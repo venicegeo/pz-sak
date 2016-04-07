@@ -57,7 +57,7 @@
             $scope.getJobStatus = function() {
 
                 var data = {
-                    "apiKey": "my-api-key-kidkeid",
+                    "userName": "my-api-key-kidkeid",
                     "jobType": {
                         "type": "get",
                         "jobId": $scope.jobId
@@ -85,7 +85,7 @@
             $scope.getResourceData = function() {
 
                 var data = {
-                    "apiKey": "my-api-key-kidkeid",
+                    "userName": "my-api-key-kidkeid",
                     "jobType": {
                         "type": "get-resource",
                         "resourceId": $scope.resourceId

@@ -85,36 +85,6 @@
             return moment.utc(dateString).fromNow();
         };
 
-        $scope.reset = function() {
-
-            // TODO: What?!
-            $http({
-                method: "GET",
-                url: "/proxy?url=pz-discover.cf.piazzageo.io/api/v1/resources/pz-logger"
-            }).then(function(result) {
-
-                var data = {
-                    reason: $scope.shutdownReason
-                };
-                $http({
-                    method: "POST",
-                    url: "/proxy?url=" + result.data.host + "/admin/shutdown",
-                    data: data
-                }).then(function successCallback( html ) {
-                    $scope.shutdownResponse = html.data;
-                }, function errorCallback(response) {
-                    // 502 means the service was killed
-                    if (response.status == "502") {
-                        toaster.pop('success', "Success", "Service successfully shutdown");
-                    }
-
-                    //$scope.errorMsg = "There was an issue with your request.  Please make sure ..."
-                });
-
-            });
-
-        };
-
     }
 
 })();
