@@ -17,10 +17,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('JobsController', ['$scope', '$log', '$q', '$http', 'toaster',  JobsController]);
+        .controller('JobsController', ['$scope', '$log', '$q', '$http', 'toaster', 'discover', JobsController]);
 
-        function JobsController ($scope, $log, $q, $http, toaster) {
-            $scope.pageSizeOptions = [10, 50, 100];
+        function JobsController ($scope, $log, $q, $http, toaster, discover) {
+            $scope.pageSizeOptions = [10, 50, 100, 500];
             $scope.pageSize = 10;
             $scope.page = 0;
             $scope.jobStatusQuery = "All";
@@ -116,7 +116,7 @@
 
                     $http({
                         method: "GET",
-                        url: "/proxy?url=pz-jobmanager.cf.piazzageo.io/job/status",
+                        url: "/proxy?url=" + discover.jobsHost + "/job/status",
                     }).then(function successCallback( html ) {
                         $scope.jobStatuses = [];
                         $scope.jobStatuses.push.apply($scope.jobStatuses, html.data);
@@ -144,7 +144,7 @@
                 };
                 $http({
                     method: "GET",
-                    url: "/proxy/pz-jobmanager.stage.geointservices.io/job" + query,
+                    url: "/proxy/" + discover.jobsHost + "/job" + query,
                     params: params
                 }).then(function successCallback(html) {
                     $scope.jobsList = html.data;
@@ -156,7 +156,7 @@
                 if (getCount) {
                     $http({
                         method: "GET",
-                        url: "/proxy/pz-jobmanager.stage.geointservices.io/job" + query + "/count"
+                        url: "/proxy/" + discover.jobsHost + "/job" + query + "/count"
                     }).then(function successCallback(html) {
                         $scope.total = html.data;
                         $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
@@ -212,7 +212,7 @@
                 }
                 $http({
                     method: "GET",
-                    url: "/proxy/pz-jobmanager.stage.geointservices.io/job/apikey/" + $scope.userId,
+                    url: "/proxy/" + discover.jobsHost + "/job/apikey/" + $scope.userId,
                     params: params
                 }).then(function successCallback(html) {
                     $scope.jobsList = html.data;
