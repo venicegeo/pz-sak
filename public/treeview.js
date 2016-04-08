@@ -230,6 +230,13 @@
     };
   });
 
+  app.filter('utc', function() {
+      return function(input) {
+          // Multiply the result by 1000 because a unix timestamp is SECONDS since epoch
+          return (!!input) ? moment.utc(input * 1000).toISOString() : '';
+      };
+  });
+
   app.factory('discover', [function() {
     var hostname;
     if (window.location.hostname == "localhost") {

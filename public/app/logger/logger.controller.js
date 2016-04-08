@@ -49,12 +49,12 @@
         $scope.postLog = function(){
             $scope.errorMsg = "";
 
-            var currentTime = moment().utc().toISOString();
+            var currentTime = moment().unix();
             var logMessage = $scope.logMessage;
             var dataObj = {
-                service: "log-tester",
+                service: "sakui-log-tester",
                 address: "128.1.2.3",
-                time: currentTime,
+                stamp: currentTime,
                 severity: "Info",
                 message: logMessage
             };
