@@ -212,7 +212,7 @@
                 }
                 $http({
                     method: "GET",
-                    url: "/proxy/" + discover.jobsHost + "/job/apikey/" + $scope.userId,
+                    url: "/proxy/" + discover.jobsHost + "/job/userName/" + $scope.userId,
                     params: params
                 }).then(function successCallback(html) {
                     $scope.jobsList = html.data;
