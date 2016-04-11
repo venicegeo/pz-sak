@@ -138,12 +138,26 @@
             </form>
 
             <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="jobStatuses">Job Status</label>
+                        <select id="jobStatuses" ng-options="jobStatus for jobStatus in jobStatuses | orderBy:jobStatus" ng-model="jobStatusQuery"
+                                class="form-control">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-3"></div>
+            </div>
+
+            <div class="row">
                 <br>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group" ng-show="logs" ng-init="getLogs()">
 
                             <label>Filter: <input ng-model="searchText"></label>
+                            <p ng-init="getLogCount()">Displaying {{from + 1}} to {{getLastIndex()}} of {{logCount}} total logs</p>
                             <table id="searchTextResults" class="table table-striped" width="100%">
                                 <tr><th >Time</th>
                                     <th >Service</th>
