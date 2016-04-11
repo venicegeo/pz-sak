@@ -23,7 +23,11 @@
         $scope.pageOptions = [10, 50, 100, 500];
         $scope.size=100;
         $scope.from=0;
-        $scope.logCount=0;
+
+        $scope.$watch("size", function(newValue, oldValue) {
+            $scope.from=0;
+            $scope.getLogs();
+        });
 
         $scope.showHideSearchForm = function() {
             $scope.showSearchLogs = !$scope.showSearchLogs;
@@ -35,14 +39,9 @@
         };
 
         $scope.getLogCount = function() {
-            var params = {
-                size : $scope.size,
-                from : $scope.from
-            };
             $http({
                 method: "GET",
                 url: "/proxy/" + discover.loggerHost + "/v1/messages?from=0&size=10000",
-                params: params
             }).then(function successCallback( html ) {
                 $scope.logCount = html.data.length;
             }, function errorCallback(response){
@@ -52,12 +51,18 @@
         };
 
         $scope.getLogs = function () {
+            $scope.getLogCount();
+            var params = {
+                size : $scope.size,
+                from : $scope.from
+            };
             $scope.logs = "";
             $scope.errorMsg = "";
 
             $http({
                 method: "GET",
                 url: "/proxy/" + discover.loggerHost + "/v1/messages",
+                params: params
             }).then(function successCallback( html ) {
                 $scope.logs = html.data;
             }, function errorCallback(response){
