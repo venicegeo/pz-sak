@@ -167,6 +167,12 @@
           },
 
         children: [
+            {
+                label: 'Event Types',
+                onSelect: function(branch) {
+                    return $scope.bodyDiv = "app/workflow/eventtypes.tpl.html";
+                }
+            },
           {
             label: 'Events',
             onSelect: function(branch) {

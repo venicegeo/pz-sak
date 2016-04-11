@@ -22,34 +22,13 @@
 
     function WorkflowController ($scope, $http, $log, $q, toaster, discover) {
 
+        $scope.eventTypeValues = [];
         $scope.showNewEventTypeForm = false;
         $scope.showEventTypeTable = false;
         $scope.showEventTable = false;
+        $scope.showEventForm = false;
 
-        $scope.updateTypeTable = function (eventTypeId) {
 
-            if (!$scope.showEventTypeTable){
-                $scope.showEventTypeTable = true;
-            }
-            else{
-                $scope.showeventTypeTable = false;
-            }
-
-            $http({
-                method: "GET",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/eventtypes/"+eventTypeId,
-            }).then(function successCallback( html ) {
-                $scope.eventTypeId = html.data.id;
-                $scope.eventTypeName = html.data.name;
-                $scope.eventTypeItemId = html.data.mapping.itemId;
-                $scope.eventTypeSeverity = html.data.mapping.severity;
-                $scope.eventTypeProblem = html.data.mapping.problem;
-            }, function errorCallback(response){
-                console.log("workflow.controller fail"+response.status);
-                toaster.pop('error', "Error", "There was an issue with retrieving the event types.");
-            });
-
-};
         $scope.getEvents = function () {
         $scope.events = "";
         $scope.errorMsg = "";
@@ -59,7 +38,11 @@
                 url: "/proxy?url=" + discover.workflowHost + "/v1/events",
             }).then(function successCallback( html ) {
                 // Only return non-null values in the array
-                $scope.events = html.data.filter(function(n) { return n != undefined });
+                if(html.data != null) {
+                    $scope.events = html.data.filter(function (n) {
+                        return n != undefined
+                    });
+                }
             }, function errorCallback(response){
                 console.log("workflow.controller fail"+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the events.");
@@ -68,14 +51,6 @@
     };
 
         $scope.showHideNewEventType = function() {
-            $scope.showNewEventTypeForm = !$scope.showNewEventTypeForm;
-        };
-
-        $scope.showHideEventTypeTable = function() {
-            $scope.showEventTypeTable = !$scope.showEventTypeTable;
-        };
-
-        $scope.cancelCreateEventType = function() {
             $scope.showNewEventTypeForm = !$scope.showNewEventTypeForm;
         };
 
@@ -95,8 +70,6 @@
 
             //Load event Types drop down with values from service
             $scope.getEventTypes();
-
-
         };
 
         $scope.getEventTypes = function () {
@@ -114,42 +87,29 @@
             });
 
         };
+        $scope.updateTypeTable = function (eventTypeId) {
 
-        $scope.createEventType = function(newEventType) {
+            if (!$scope.showEventForm){
+                $scope.showNewEventForm = true;
+            }
+            else{
+                $scope.showNewEventForm = false;
+            }
 
-            var eventDataObj = {
-                name: $scope.newEventTypeName,
-                mapping: {
-                    itemId:$scope.newEventTypeItemId,
-                    severity: $scope.newEventTypeSeverity,
-                    problem: $scope.newEventTypeProblem,
-                }
-            };
-            $http.post(
-                "/proxy?url=" + discover.workflowHost + "/v1/eventtypes",
-                eventDataObj
-            ).then(function successCallback(res) {
-                $scope.message = res;
+            $http({
+                method: "GET",
+                url: "/proxy?url=" + discover.workflowHost + "/v1/eventtypes/"+eventTypeId,
+            }).then(function successCallback( html ) {
+                $scope.eventTypeLabel = html.data.name;
+                $scope.eventTypeId = html.data.id;
+                $scope.eventTypeName = html.data.name;
+                $scope.parameters = html.data.mapping;
 
-                //reload events table
-                $scope.getEventTypes();
-
-                //clear input values
-                $scope.newEventTypeName = null;
-                $scope.newEventTypeItemId = null;
-                $scope.newEventTypeSeverity = null;
-                $scope.newEventTypeProblem = null;
-
-                //hide create new eventtype table:
-                $scope.showHideNewEventType();
-
-                toaster.pop('success', "Success", "The event was successfully posted.")
-
-            }, function errorCallback(res) {
-                console.log("workflow.controller fail"+res.status);
-
-                toaster.pop('error', "Error", "There was a problem submitting the event message.");
+            }, function errorCallback(response){
+                console.log("workflow.controller fail"+response.status);
+                toaster.pop('error', "Error", "There was an issue with retrieving the event types.");
             });
+
         };
 
         $scope.selectEventType = function(newEventType) {
@@ -162,45 +122,36 @@
             //TODO: On submit, hide the event type table and have toaster pop open showing success.
         };
 
-        $scope.deleteEventType = function(eventTypeId) {
-            $http({
-                method: "DELETE",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/eventtypes/"+eventTypeId,
-            }).then(function successCallback( html ) {
-                $scope.message = html;
-                console.log("success");
 
-                $scope.eventTypeId = "";
-                $scope.eventTypeName = "";
-                $scope.eventTypeItemId = "";
-                $scope.eventTypeSeverity = "";
-                $scope.eventTypeProblem = "";
-                $scope.getEventTypes();
 
-                toaster.pop('success', "Success", "The eventtype was successfully deleted.");
-            }, function errorCallback(response) {
-                console.log("workflow.controller fail"+response.status);
-                toaster.pop('error', "Error", "There was a problem deleting the eventtype.");
-            });
-        };
 
-    $scope.postEvent = function(){
+
+    $scope.postEvent = function(params){
+        console.log(params);
+        var array = $.map(params, function(value, index) {
+            return [index];
+        });
+
+        var result = {};
+        for(var i=0;i<array.length;i++){
+            result[array[i]] = $scope.eventTypeValues[i];
+        }
+        console.log(result);
+
         $scope.errorMsg = "";
 
         var currentTime = moment().utc().toISOString();
         var alertMessage = $scope.alertMessage;
         var dataObj = {
-            eventtype_id: $scope.newEventType,
+            eventtype_id: $scope.eventType.id,
             date: currentTime,
-            data:{
-                itemId: $scope.newEventItemId,
-                severity: $scope.newEventSeverity,
-                problem: $scope.newEventProblem
-                 }
+            data: result
         };
 
+        console.log(dataObj);
+
         $http.post(
-            "/proxy?url=" + discover.workflowHost + "/v1/events/" + $scope.newEventType,
+            "/proxy?url=" + discover.workflowHost + "/v1/events/" + $scope.eventTypeName,
             dataObj
         ).then(function successCallback(res) {
             $scope.message = res;
@@ -220,27 +171,42 @@
         });
     };
 
-        $scope.deleteEvent = function(eventId) {
+        $scope.deleteEvent = function(eventtypeId, eventId) {
+            //delete endpoint deletes based on event type NAME and eventID.
+            //first call the get on eventtypes by ID to store the eventTypeName, then pass that eventTypeName into
+            //the delele endpoint along with the eventId
+
+            var url = "";
+            var deleteEvent = "";
+            url = "/proxy?url=" + discover.workflowHost + "/v1/eventtypes/"+eventtypeId;
             $http({
-                method: "DELETE",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/events/"+eventId,
+                method: "GET",
+                url: url
             }).then(function successCallback( html ) {
-                $scope.message = html;
-                console.log("success");
+                deleteEvent = html.data.name;
 
-                //reload events table
-                $scope.getEvents();
+                $http({
+                    method: "DELETE",
+                    url: "/proxy?url=" + discover.workflowHost + "/v1/events/" + deleteEvent + "/" + eventId,
+                }).then(function successCallback(html) {
+                    $scope.message = html;
+                    console.log("success");
 
-                //clear input values
-                $scope.alertMessage = null;
-                $scope.eventType = null;
+                    //reload events table
+                    $scope.getEvents();
 
-                toaster.pop('success', "Success", "The event was successfully deleted.");
-            }, function errorCallback(response) {
-                console.log("workflow.controller fail"+response.status);
-                toaster.pop('error', "Error", "There was a problem deleting the event.");
+                    //clear input values
+                    $scope.alertMessage = null;
+                    $scope.eventType = null;
+
+                    toaster.pop('success', "Success", "The event was successfully deleted.");
+                }, function errorCallback(response) {
+                    console.log("workflow.controller fail" + response.status);
+                    toaster.pop('error', "Error", "There was a problem deleting the event.");
+                });
             });
-        };
+            };
+
 
         $scope.getAlerts = function () {
             $scope.alerts = "";
@@ -251,7 +217,12 @@
                 url: "/proxy?url=" + discover.workflowHost + "/v1/alerts",
             }).then(function successCallback( html ) {
                 // Only return non-null values in the array
-                $scope.alerts = html.data.filter(function(n) { return n != undefined });
+                if(html.data!= null) {
+                    $scope.alerts = html.data.filter(function (n) {
+                        return n != undefined
+                    });
+                }
+
             }, function errorCallback(response){
                 console.log("workflow.controller fail"+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the alerts.");
