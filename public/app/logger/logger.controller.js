@@ -20,6 +20,14 @@
         .controller('LoggerController', ['$scope', '$http', '$log', '$q',  'toaster', 'discover', LoggerController]);
 
     function LoggerController ($scope, $http, $log, $q, toaster, discover) {
+        $scope.pageOptions = [10, 50, 100, 500];
+        $scope.size=100;
+        $scope.from=0;
+
+        $scope.$watch("size", function(newValue, oldValue) {
+            $scope.from=0;
+            $scope.getLogs();
+        });
 
         $scope.showHideSearchForm = function() {
             $scope.showSearchLogs = !$scope.showSearchLogs;
@@ -30,13 +38,31 @@
             //TODO:Once Logger Search API is updated, we need to update this call to pass search params and show only what is returned.
         };
 
+        $scope.getLogCount = function() {
+            $http({
+                method: "GET",
+                url: "/proxy/" + discover.loggerHost + "/v1/messages?from=0&size=10000",
+            }).then(function successCallback( html ) {
+                $scope.logCount = html.data.length;
+            }, function errorCallback(response){
+                console.log("logger.controller fail"+response.status);
+                toaster.pop('error', "Error", "There was an issue with retrieving the logs.");
+            });
+        };
+
         $scope.getLogs = function () {
+            $scope.getLogCount();
+            var params = {
+                size : $scope.size,
+                from : $scope.from
+            };
             $scope.logs = "";
             $scope.errorMsg = "";
 
             $http({
                 method: "GET",
-                url: "/proxy?url=" + discover.loggerHost + "/v1/messages",
+                url: "/proxy/" + discover.loggerHost + "/v1/messages",
+                params: params
             }).then(function successCallback( html ) {
                 $scope.logs = html.data;
             }, function errorCallback(response){
@@ -71,7 +97,30 @@
                 console.log("logger.controller fail"+res.status);
                 toaster.pop('error', "Error", "There was a problem submitting the log message.");
             });
-        }
+        };
+
+        $scope.nextPage = function() {
+            if ($scope.from < $scope.logCount-$scope.size) {
+                $scope.from += $scope.size;
+                $scope.getLogs();
+            }
+        };
+
+        $scope.prevPage = function() {
+            if ($scope.from > 0) {
+                $scope.from -= $scope.size;
+                $scope.getLogs();
+            }
+        };
+
+        $scope.getLastIndex = function() {
+            var endingPoint = $scope.from + $scope.size;
+            if (endingPoint > $scope.logCount) {
+                endingPoint = $scope.logCount;
+            }
+            return endingPoint;
+        };
+
     }
 
 })();

@@ -20,7 +20,15 @@
     <title>Logger Service Info</title>
     <link rel="stylesheet" href="../../css/bootstrap.css">
 
-
+    <style>
+        .navbutton {
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
 </head>
 <body>
 <toaster-container toaster-options="{'time-out': 3000}"></toaster-container>
@@ -138,12 +146,36 @@
             </form>
 
             <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="filter">Filter</label>
+                        <input id="filter" type="text" class="form-control" ng-model="searchText">
+                    </div>
+                </div>
+                <div class="col-md-6 text-center" style="margin-top: 20px;">
+                    <p></p>
+                    <div class="form-group">
+                        <label ng-show="logCount > 0">Displaying {{from + 1}} - {{getLastIndex()}} of {{logCount}} logs</label>
+                        <label ng-show="logCount == 0">No results to display</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="pageSize">Per page</label>
+                        <select id="pageSize" ng-options="option for option in pageOptions" ng-model="size"
+                                class="form-control">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
                 <br>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group" ng-show="logs" ng-init="getLogs()">
 
-                            <label>Filter: <input ng-model="searchText"></label>
+
                             <table id="searchTextResults" class="table table-striped" width="100%">
                                 <tr><th >Time</th>
                                     <th >Service</th>
@@ -160,11 +192,14 @@
                                 </tr>
                             </table>
 
-                            <!--<div id="logs" ng-repeat="log in logs | filter:searchText">
-                                 {{log.time}} - {{log.service}} - {{log.address}} - {{log.severity}}: {{log.message}}
-                            </div>-->
-
                         </div>
+
+                        <nav ng-show="logs && logCount > size">
+                            <ul class="pager">
+                                <li><a ng-click="prevPage()" class="navbutton">Newer</a></li>
+                                <li><a ng-click="nextPage()" class="navbutton">Older</a></li>
+                            </ul>
+                        </nav>
 
                     </div>
                 </div>
