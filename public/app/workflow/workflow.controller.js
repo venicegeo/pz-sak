@@ -168,26 +168,41 @@
     };
 
         $scope.deleteEvent = function(eventtypeId, eventId) {
+            //delete endpoint deletes based on event type NAME and eventID.
+            //first call the get on eventtypes by ID to store the eventTypeName, then pass that eventTypeName into
+            //the delele endpoint along with the eventId
+
+            var url = "";
+            var deleteEvent = "";
+            url = "/proxy?url=" + discover.workflowHost + "/v1/eventtypes/"+eventtypeId;
             $http({
-                method: "DELETE",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/events/"+eventtypeId+"/"+eventId,
+                method: "GET",
+                url: url
             }).then(function successCallback( html ) {
-                $scope.message = html;
-                console.log("success");
+                deleteEvent = html.data.name;
 
-                //reload events table
-                $scope.getEvents();
+                $http({
+                    method: "DELETE",
+                    url: "/proxy?url=" + discover.workflowHost + "/v1/events/" + deleteEvent + "/" + eventId,
+                }).then(function successCallback(html) {
+                    $scope.message = html;
+                    console.log("success");
 
-                //clear input values
-                $scope.alertMessage = null;
-                $scope.eventType = null;
+                    //reload events table
+                    $scope.getEvents();
 
-                toaster.pop('success', "Success", "The event was successfully deleted.");
-            }, function errorCallback(response) {
-                console.log("workflow.controller fail"+response.status);
-                toaster.pop('error', "Error", "There was a problem deleting the event.");
+                    //clear input values
+                    $scope.alertMessage = null;
+                    $scope.eventType = null;
+
+                    toaster.pop('success', "Success", "The event was successfully deleted.");
+                }, function errorCallback(response) {
+                    console.log("workflow.controller fail" + response.status);
+                    toaster.pop('error', "Error", "There was a problem deleting the event.");
+                });
             });
-        };
+            };
+
 
         $scope.getAlerts = function () {
             $scope.alerts = "";
