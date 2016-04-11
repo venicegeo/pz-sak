@@ -38,7 +38,11 @@
                 url: "/proxy?url=" + discover.workflowHost + "/v1/events",
             }).then(function successCallback( html ) {
                 // Only return non-null values in the array
-                $scope.events = html.data.filter(function(n) { return n != undefined });
+                if(html.data != null) {
+                    $scope.events = html.data.filter(function (n) {
+                        return n != undefined
+                    });
+                }
             }, function errorCallback(response){
                 console.log("workflow.controller fail"+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the events.");
@@ -213,7 +217,12 @@
                 url: "/proxy?url=" + discover.workflowHost + "/v1/alerts",
             }).then(function successCallback( html ) {
                 // Only return non-null values in the array
-                $scope.alerts = html.data.filter(function(n) { return n != undefined });
+                if(html.data!= null) {
+                    $scope.alerts = html.data.filter(function (n) {
+                        return n != undefined
+                    });
+                }
+
             }, function errorCallback(response){
                 console.log("workflow.controller fail"+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the alerts.");
