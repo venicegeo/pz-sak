@@ -308,7 +308,6 @@
         $scope.postTrigger = function(){
             $scope.errorMsg = "";
             var eventTriggerType = [];
-            //eventTriggerType = $scope.selectedEventTypes;
 
             for(var i=0;i<$scope.selectedEventTypes.length;i++){
                 eventTriggerType[i] = $scope.selectedEventTypes[i].id;
@@ -316,7 +315,6 @@
             console.log(eventTriggerType);
 
             var currentTime = moment().utc().toISOString();
-            //var triggerMessage = $scope.triggerMessage;
             var dataObj = {
                 title: $scope.triggerTitle,
                 condition:{
@@ -341,8 +339,8 @@
                 //$scope.triggerMessage = null;
                 $scope.triggerTitle = null;
                 $scope.triggerQuery = null;
-                $scope.triggerType = null;
-                $scope.triggerTask = null;
+                $scope.selectedEventTypes = null;
+                $scope.triggerJob = null;
                 toaster.pop('success', "Success", "The trigger was successfully posted.")
 
             }, function errorCallback(res) {
