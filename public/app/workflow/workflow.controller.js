@@ -318,12 +318,11 @@
             var dataObj = {
                 title: $scope.triggerTitle,
                 condition:{
-                    query: $scope.triggerQuery,
-                    eventtype_id: eventTriggerType,
+                    query: angular.fromJson($scope.triggerQuery),
+                    eventtype_ids: eventTriggerType,
                 },
-                job: {
-                    task:$scope.triggerJob
-                }
+                job: JSON.parse($scope.triggerJob)
+
             };
 
             $http.post(
