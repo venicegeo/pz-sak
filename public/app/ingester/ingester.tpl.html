@@ -17,7 +17,7 @@
 <html lang="en" ng-app="SAKapp" ng-strict-di>
 <head>
     <meta charset="UTF-8">
-    <title>Ingester Service Info</title>
+    <title>Loaderer Service Info</title>
     <link rel="stylesheet" href="../../css/bootstrap.css">
 
 
@@ -35,13 +35,13 @@
     <!-- Tab panes -->
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane fade in active" id="ingest">
-            <h1 class="alert alert-info">Ingester Service Info</h1>
-            <p>Use the following input to ingest a file into the system.</p>
+            <h1 class="alert alert-info">Loader Service Info</h1>
+            <p>Use the following input to load a file into the system.</p>
             <form ng-submit="ingest()">
                 <div class="row" ng-init="ingestType = 'Text'">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="type">Ingest Type</label>
+                            <label for="type">Load Type</label>
                             <select id="type" ng-model="ingestType" class="form-control">
                                 <option>Text</option>
                                 <option>File</option>
@@ -88,7 +88,7 @@
                 <div class="row">
                     <div class="col-md-1">
                         <br>
-                        <button type="submit" class="btn btn-primary">Ingest Content</button>
+                        <button type="submit" class="btn btn-primary">Load Content</button>
                     </div>
                 </div>
                 <label id="errorMsg">{{errorMsg}}</label>

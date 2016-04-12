@@ -55,19 +55,7 @@
         ]
 
         },
-      {
-        label: 'Ingester',
-        onSelect: function(branch) {
-          return $scope.bodyDiv = "app/ingester/ingester.tpl.html";
-        },
 
-        children: [
-          {
-            label: 'Admin'
-          }
-        ]
-
-      },
       {
         label: 'Jobs',
         onSelect: function(branch) {
@@ -84,6 +72,19 @@
         ]
 
       },
+        {
+            label: 'Loader',
+            onSelect: function(branch) {
+                return $scope.bodyDiv = "app/ingester/ingester.tpl.html";
+            },
+
+            children: [
+                {
+                    label: 'Admin'
+                }
+            ]
+
+        },
       {
         label: 'Logger',
         onSelect: function(branch) {

@@ -39,7 +39,7 @@
             var data = {};
             if (angular.isDefined($scope.ingestType) && $scope.ingestType == "Text") {
                 if (angular.isUndefined($scope.message) || $scope.message == "") {
-                    toaster.pop('warning', "Missing Required Field", "Must include Text to ingest.");
+                    toaster.pop('warning', "Missing Required Field", "Must include Text to load.");
                     return;
                 }
                 data = {
@@ -86,7 +86,7 @@
                 }
             }).then(function successCallback( html ) {
                 $scope.jobIdResult = html.data.jobId;
-                toaster.pop('success', "Success", "The data was successfully sent to the ingester.")
+                toaster.pop('success', "Success", "The data was successfully sent to the loader.")
             }, function errorCallback(response){
                 if (response.data.message) {
                     $scope.errorMsg = response.data.message;
