@@ -56,20 +56,20 @@
 
                             <label>Filter: <input ng-model="searchText"></label>
                             <table id="searchTriggerResults" class="table-striped table-bordered table table-hover" width="100%">
-                                <tr><th >Id</th>
+                                <tr><th >TriggerId</th>
                                     <th >Title</th>
-                                    <th >Type</th>
+                                    <th >EventTypeId</th>
                                     <th >Query</th>
-                                    <th >Task
+                                    <th >Task</th>
                                     <th></th>
 
                                 </tr>
                                 <tr ng-repeat="trigger in triggers | filter:searchText">
                                     <td >{{trigger.id}}</td>
                                     <td >{{trigger.title}}</td>
-                                    <td >{{trigger.condition.type}}</td>
+                                    <td >{{trigger.condition.eventtype_ids}}</td>
                                     <td >{{trigger.condition.query}}</td>
-                                    <td >{{trigger.job.task}}</td>
+                                    <td >{{trigger.job.Task}}</td>
                                     <td align="center"> <button ng-click="deleteTrigger(trigger.id)" class="btn btn-primary">
                                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                     </button></td>

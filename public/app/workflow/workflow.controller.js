@@ -316,13 +316,16 @@
 
             var currentTime = moment().utc().toISOString();
             var dataObj = {
+                id: "",
                 title: $scope.triggerTitle,
                 condition:{
                     query: angular.fromJson($scope.triggerQuery),
                     eventtype_ids: eventTriggerType,
                 },
-                job: JSON.parse($scope.triggerJob)
-
+                job: {
+                    task: JSON.parse($scope.triggerJob)
+                },
+                percolation_id: "",
             };
 
             $http.post(
