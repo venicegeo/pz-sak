@@ -56,20 +56,20 @@
 
                             <label>Filter: <input ng-model="searchText"></label>
                             <table id="searchTriggerResults" class="table-striped table-bordered table table-hover" width="100%">
-                                <tr><th >Id</th>
+                                <tr><th >TriggerId</th>
                                     <th >Title</th>
-                                    <th >Type</th>
+                                    <th >EventTypeId</th>
                                     <th >Query</th>
-                                    <th >Task
+                                    <th >Task</th>
                                     <th></th>
 
                                 </tr>
                                 <tr ng-repeat="trigger in triggers | filter:searchText">
                                     <td >{{trigger.id}}</td>
                                     <td >{{trigger.title}}</td>
-                                    <td >{{trigger.condition.type}}</td>
+                                    <td >{{trigger.condition.eventtype_ids}}</td>
                                     <td >{{trigger.condition.query}}</td>
-                                    <td >{{trigger.job.task}}</td>
+                                    <td >{{trigger.job.Task}}</td>
                                     <td align="center"> <button ng-click="deleteTrigger(trigger.id)" class="btn btn-primary">
                                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                     </button></td>
@@ -89,40 +89,54 @@
 
         </div>
 
-        <div role="tabpanel" class="tab-pane fade" id="posttrigger">
+        <div role="tabpanel" class="tab-pane fade" id="posttrigger" ng-init="getEventTypes()">
 
-            <div class="row">
+
                 <h1 class="alert alert-info">Send a Trigger to the Workflow Service</h1>
-                <form ng-submit="postTrigger()">
-                    <div class="col-md-12">
-                        <label for="triggerTitle">Trigger title:</label>
-                        <input id="triggerTitle" ng-model="triggerTitle" type="text" class="form-control" placeholder="Enter a trigger title" required>
-                        <br>
+                <form class="form-horizontal" ng-submit="postTrigger()">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Trigger title:</label>
+                                <input id="triggerTitle" ng-model="triggerTitle" type="text" class="form-control" placeholder="Enter a trigger title" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label >Trigger type:</label>
+                                <select size="10" class="form-control" id="triggerType" multiple ng-multiple="true"  ng-model="selectedEventTypes" ng-options="type.name+' ('+type.id+')' for type in eventTypes"></select>
+                            </div>
+                        </div>
                     </div>
-                    <br>
-                    <div class="col-md-6">
-                        <label for="triggerType">Trigger type:</label>
-                        <input id="triggerType" ng-model="triggerType" type="text" class="form-control" placeholder="Enter a trigger type" required>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Trigger query:</label>
+                                <textarea id="triggerQuery" ng-model="triggerQuery" type="text" class="form-control" placeholder="Enter a trigger query (raw JSON)" required></textarea>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Trigger job:</label>
+                                <textarea id="triggerJob" ng-model="triggerJob" type="text" class="form-control" placeholder="Enter a trigger job (raw JSON)" required></textarea>
+
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="col-md-6">
-                        <label for="triggerQuery">Trigger query:</label>
-                        <input id="triggerQuery" ng-model="triggerQuery" type="text" class="form-control" placeholder="Enter a trigger query" required>
-                        <br>
+
+
+                    <div class="form-group">
+                        <button type="submit"  class="btn btn-primary">Create Trigger</button>
+                        <button ng-model="btnCancelCreateTrigger" type="reset" ng-click="cancelCreateTrigger()" class="btn btn-primary">Cancel</button>
                     </div>
-                    <br>
-                    <div class="col-md-6">
-                        <label for="triggerTask">Trigger task:</label>
-                        <input id="triggerTask" ng-model="triggerTask" type="text" class="form-control" placeholder="Enter a trigger task" required>
-                        <br>
-                    </div>
-                    <br>
-                    <div class="col-md-12">
-                        <button type="submit"  class="btn btn-primary"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-                    </div>
-                    <br>
+
+
+
                     <br>
                 </form>
-            </div>
+
 
         </div>
 

@@ -22,6 +22,8 @@
 
     function WorkflowController ($scope, $http, $log, $q, toaster, discover) {
 
+        $scope.selectedTypes = [];
+        $scope.addedTypes = [];
         $scope.eventTypeValues = [];
         $scope.showNewEventTypeForm = false;
         $scope.showEventTypeTable = false;
@@ -80,7 +82,10 @@
                 method: "GET",
                 url: "/proxy?url=" + discover.workflowHost + "/v1/eventtypes",
             }).then(function successCallback( html ) {
-                $scope.eventTypes = html.data;
+                if(html.data != null) {
+                    $scope.eventTypes = html.data;
+                    $scope.selectedEventTypes = html.data;
+                }
             }, function errorCallback(response){
                 console.log("workflow.controller fail"+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the event types.");
@@ -302,18 +307,25 @@
 
         $scope.postTrigger = function(){
             $scope.errorMsg = "";
+            var eventTriggerType = [];
+
+            for(var i=0;i<$scope.selectedEventTypes.length;i++){
+                eventTriggerType[i] = $scope.selectedEventTypes[i].id;
+            }
+            console.log(eventTriggerType);
 
             var currentTime = moment().utc().toISOString();
-            //var triggerMessage = $scope.triggerMessage;
             var dataObj = {
+                id: "",
                 title: $scope.triggerTitle,
                 condition:{
-                    query: $scope.triggerQuery,
-                    type: $scope.triggerType,
+                    query: angular.fromJson($scope.triggerQuery),
+                    eventtype_ids: eventTriggerType,
                 },
                 job: {
-                    task: $scope.triggerTask
-                }
+                    task: JSON.parse($scope.triggerJob)
+                },
+                percolation_id: "",
             };
 
             $http.post(
@@ -329,8 +341,8 @@
                 //$scope.triggerMessage = null;
                 $scope.triggerTitle = null;
                 $scope.triggerQuery = null;
-                $scope.triggerType = null;
-                $scope.triggerTask = null;
+                $scope.selectedEventTypes = null;
+                $scope.triggerJob = null;
                 toaster.pop('success', "Success", "The trigger was successfully posted.")
 
             }, function errorCallback(res) {
