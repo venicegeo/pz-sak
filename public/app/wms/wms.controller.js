@@ -21,6 +21,42 @@
         .controller('WmsController', ['$scope', '$log', '$q', 'olData', 'toaster',  WmsController]);
 
         function WmsController ($scope, $log, $q, olData, toaster) {
+
+			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+				var target = $(e.target).attr("href");
+				if (target == "#explorer") {
+					$scope.layers.active = false;
+					$scope.layers.active = true;
+				} else {
+					newmap.updateSize();
+				}
+			});
+
+			$scope.overlay =new ol.layer.Image({
+				source: new ol.source.ImageWMS({
+					url: "http://pz-sak.stage.geointservices.io/geoserver/geoserver/ows",
+					params: {
+						LAYERS: "topp:states"
+					},
+					serverType: 'geoserver'
+				})
+			});
+
+			var newmap = new ol.Map({
+				target: 'newmap',
+				layers: [
+					new ol.layer.Tile({
+						source: new ol.source.MapQuest({layer: 'sat'})
+					}),
+					$scope.overlay
+				],
+				view: new ol.View({
+					center: ol.proj.fromLonLat([-98, 39]),
+					zoom: 4
+				})
+			});
+
+
 			$scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
             $scope.version = '1.3.0';
             $scope.outputFormat = 'JSON';
@@ -153,27 +189,44 @@
             };
 
 
-	    		/*var layers = [
-	    	              new ol.layer.Tile({
-	    	                source: new ol.source.MapQuest({layer: 'sat'})
-	    	              }),
-	    	              new ol.layer.Image({
-	    	                extent: [-13884991, 2870341, -7455066, 6338219],
-	    	                source: new ol.source.ImageWMS({
-	    	                  url: 'http://demo.boundlessgeo.com/geoserver/wms',
-	    	                  params: {'LAYERS': 'topp:states'},
-	    	                  serverType: 'geoserver'
-	    	                })
-	    	              })
-	    	            ];
-	    	    var map = new ol.Map({
-	    	              layers: layers,
-	    	              target: 'map',
-	    	              view: new ol.View({
-	    	                center: [-10997148, 4569099],
-	    	                zoom: 4
-	    	              })
-	    	            });*/
+			$scope.parseUrlAndGetLayer = function() {
+				var parser = document.createElement('a'),
+					searchObject = {},
+					queries, split, i;
+				// Let the browser do the work
+				parser.href = decodeURIComponent($scope.fullUrl);
+				// Convert query string to object
+				queries = parser.search.replace(/^\?/, '').split('&');
+				for( i = 0; i < queries.length; i++ ) {
+					split = queries[i].split('=');
+					searchObject[split[0]] = split[1];
+				}
+
+				console.log(searchObject);
+				console.log(parser.origin);
+				console.log(parser.pathname);
+				var bbox = searchObject.BBOX.split(",");
+				var bboxAsFloat = [];
+				bbox.forEach(function(value, index) {
+					bboxAsFloat[index] = parseFloat(value);
+				});
+
+				newmap.removeLayer($scope.overlay);
+				var source = new ol.source.ImageWMS({
+					url: parser.origin + parser.pathname,
+					params: {
+						LAYERS: searchObject.LAYERS
+					},
+					serverType: 'geoserver'
+				});
+				$scope.overlay =new ol.layer.Image({
+					extent: bboxAsFloat,
+					source: source
+				});
+				newmap.addLayer($scope.overlay);
+
+				newmap.getView().fit($scope.overlay.getExtent(), newmap.getSize());
+			};
         }
 
 })();
