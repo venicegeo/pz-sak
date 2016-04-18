@@ -356,7 +356,7 @@
                 "encoding" : null,
                 "schema" : null,
                 "maximumMegabytes" : null,
-                "dataType" : null
+                "dataType" : "text"
             }
             $scope.registerInputs[$index].formats.push(newFormat);
         };

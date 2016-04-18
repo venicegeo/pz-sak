@@ -39,7 +39,7 @@
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane fade in active" id="register">
             <h1 class="alert alert-info">User Service Registry Info</h1>
-<div name="serviceMetatdata" ng-model="serviceMetadata" ng-show="showServiceMetadata">
+        <div name="serviceMetatdata" ng-model="serviceMetadata" ng-show="showServiceMetadata">
             <h2>Service Metadata</h2>
             <div class="row">
                 <div class="col-md-4">
@@ -95,12 +95,141 @@
                     <button class="btn btn-primary" ng-click="addInput()">Save</button>
                 </div>
             </div>
-</div>
+        </div>
             <div class="row">
-                <div class="col-md-1">
-                    <button class="btn btn-primary" ng-click="registerService()">Register Service</button>
+
+                <div class="col-md-12">
+                    <div class="form-group" ng-show="serviceMetadata" >
+                        <table id="serviceMetadata" ng-model="serviceMetadata" class="table table-striped" width="100%">
+                            <tr><th >Name</th>
+                                <th >Method</th>
+                                <th >URL</th>
+                                <th >Description</th>
+                            </tr>
+                            <tr>
+                                <td >{{serviceMetatdataName}}</td>
+                                <td >{{serviceMetadataMethod}}</td>
+                                <td >{{serviceMetadataUrl}}</td>
+                                <td >{{serviceMetadataDescription}}</td>
+                                <td align="center"> <button ng-click="showAddInputForm()" class="btn btn-primary">Add Input</button></td>
+                                <td align="center"> <button ng-click="showAddOutputForm()" class="btn btn-primary">Add Output</button></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group" ng-show="serviceInputData" >
+                        <table id="serviceInputs" ng-model="serviceInputs" class="table table-striped" width="100%">
+                            <tr><th >Name</th>
+                                <th >Min Occurs</th>
+                                <th >Max Occurs</th>
+                                <th >Datatype</th>
+                                <th >Mimetype</th>
+                                <th >Metadata About</th>
+                                <th >Metadata Href</th>
+                                <th >Metadata Role</th>
+                                <th >Metadata Title</th>
+
+                            </tr>
+                            <tr>
+                                <td >{{serviceInputName}}</td>
+                                <td >{{serviceInputMin}}</td>
+                                <td >{{serviceInputMax}}</td>
+                                <td >{{serviceInputType}}</td>
+                                <td >{{serviceInputMime}}</td>
+                                <td >{{serviceInputAbout}}</td>
+                                <td >{{serviceInputRole}}</td>
+                                <td >{{serviceInputTitle}}</td>
+                                <td align="center"> <button ng-click="showAddFormatForm()" class="btn btn-primary">Add Format</button></td>
+
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+            <div class="col-md-12">
+                <div class="form-group" ng-show="serviceOutputData" >
+                    <table id="serviceOutputs" ng-model="serviceOutputs" class="table table-striped" width="100%">
+                        <tr><th >Name</th>
+                            <th >Min Occurs</th>
+                            <th >Max Occurs</th>
+                            <th >Datatype</th>
+                            <th >Mimetype</th>
+                            <th >Metadata About</th>
+                            <th >Metadata Href</th>
+                            <th >Metadata Role</th>
+                            <th >Metadata Title</th>
+
+                        </tr>
+                        <tr>
+                            <td >{{serviceOutputName}}</td>
+                            <td >{{serviceOutputMin}}</td>
+                            <td >{{serviceOutputMax}}</td>
+                            <td >{{serviceOutputType}}</td>
+                            <td >{{serviceOutputMime}}</td>
+                            <td >{{serviceOutputAbout}}</td>
+                            <td >{{serviceOutputRole}}</td>
+                            <td >{{serviceOutputTitle}}</td>
+                            <td align="center"> <button ng-click="showAddFormatForm()" class="btn btn-primary">Add Format</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group" ng-show="serviceOutputData" >
+                        <table id="serviceInputFormat" ng-model="serviceInputFormat" class="table table-striped" width="100%">
+                            <tr><th >Mimetype</th>
+                                <th >Encoding</th>
+                                <th >Schema</th>
+                                <th >Max MB</th>
+                                <th >Datatype</th>
+                               <th></th>
+                            </tr>
+                            <tr>
+                                <td >{{inputFormatMimetype}}</td>
+                                <td >{{inputFormatEncoding}}</td>
+                                <td >{{inputFormatSchema}}</td>
+                                <td >{{inputFormatMaxmb}}</td>
+                                <td >{{inputFormatDatatype}}</td>
+                                <td align="center"> <button ng-click="showAddFormatForm()" class="btn btn-primary">Add Format</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group" ng-show="serviceOutputData" >
+                        <table id="serviceOutputFormat" ng-model="serviceOutputFormat" class="table table-striped" width="100%">
+                            <tr><th >Mimetype</th>
+                                <th >Encoding</th>
+                                <th >Schema</th>
+                                <th >Max MB</th>
+                                <th >Datatype</th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <td >{{outputFormatMimetype}}</td>
+                                <td >{{outputFormatEncoding}}</td>
+                                <td >{{outputFormatSchema}}</td>
+                                <td >{{outputFormatMaxmb}}</td>
+                                <td >{{outputFormatDatatype}}</td>
+                                <td align="center"> <button ng-click="showAddFormatForm()" class="btn btn-primary">Add Format</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
 
                 <h2>Inputs</h2>
                 <div class="row">
@@ -173,11 +302,11 @@
 
                            </div>
                         </p>
-                    </div>
+
                     <button ng-click="addInput()">New Input</button>
-                </div>
-    <h2>Outputs</h2>
-    <div class="row">
+
+        <h2>Outputs</h2>
+        <div class="row">
         <div ng-repeat="noutput in registerOutputs">
             <p>
                 <label> Name</label>
@@ -242,16 +371,26 @@
 
 
         </div>
+            <div class="row">
         <button ng-click="addOutputFormat($index)">New Format</button>
+                </div>
+
+        </div>
+
+
+
+
+
+
+<div class="row">
+    <div class="col-md-1"><button ng-click="addOutput()">New Output</button>
+        <button class="btn btn-primary" ng-click="registerService()">Register Service</button>
+    </div>
+</div>
 
     </div>
-    </p>
-</div>
-<button ng-click="addOutput()">New Output</button>
-</div>
-
 <!--table for registered service-->
-<
+
 
 
 
