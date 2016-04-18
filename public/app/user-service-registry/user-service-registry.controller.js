@@ -28,6 +28,9 @@
         $scope.showNewOutputForm = false;
         $scope.showNewOutputFormatForm = false;
         $scope.showServiceMetadata = true;
+        $scope.showServiceMetadataTable = false;
+        $scope.showServiceInputForm = false;
+        $scope.showServiceInputTable = false;
 
 
         $scope.executeInputMap = {};
@@ -91,6 +94,16 @@
 
         $scope.showHideServiceMetadata = function() {
             $scope.showServiceMetadata = !$scope.showServiceMetadata;
+        };
+        $scope.showHideServiceMetadataTable = function() {
+            $scope.showServiceMetadataTable = !$scope.showServiceMetadataTable;
+        };
+        $scope.showHideServiceInputForm = function() {
+            $scope.showServiceInputForm = !$scope.showServiceInputForm;
+        };
+
+        $scope.showHideServiceInputTable = function() {
+            $scope.showServiceInputTable = !$scope.showServiceInputTable;
         };
 
         function resetServiceInputArrays() {
@@ -303,24 +316,48 @@
         }
 
 
-        $scope.addInput = function() {
+        $scope.showAddInputForm = function() {
+            $scope.showHideServiceInputForm();
+            //$scope.addInput();
+        };
+
+        $scope.showServiceTable = function() {
 
             $scope.showNewInputForm = true;
+            $scope.showHideServiceMetadataTable();
             $scope.showHideServiceMetadata();
+        };
+
+        $scope.saveInput = function() {
+            //TODO: Hide input form
+            //TODO: insert values into input table
+            $scope.addInput();
+            //TODO: push input value into input array
+            $scope.serviceInputs = $scope.registerInputs;
+            //TODO: Clear values from the input form
+
+        };
+
+        $scope.cancelInput = function(){
+            //TODO: Clear values from the input form
+            //TODO: Make input form not visible
+        };
+
+        $scope.addInput = function() {
 
             var newInput = {
-                "name" : "aString",
-                "minOccurs" : 1,
-                "maxOccurs" : 1,
+                "name" : $scope.inputName,
+                "minOccurs" : $scope.inputMinOccurs,
+                "maxOccurs" : $scope.inputMaxOccurs,
                 "dataType" : {
-                    "type" : "body",
-                    "mimeType" : "application/json"
+                    "type" : $scope.inputDatatype,
+                    "mimeType" : $scope.inputMimetype,
                 },
                 "metadata" : {
-                    "about" : "",
-                    "href" : "",
-                    "role" : "",
-                    "title" : ""
+                    "about" : $scope.inputMetadataAbout,
+                    "href" : $scope.inputMetadataHref,
+                    "role" : $scope.inputMetadataRole,
+                    "title" : $scope.inputMetadataTitle,
                 },
                 "formats" : []
             }

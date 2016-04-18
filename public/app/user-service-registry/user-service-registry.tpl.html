@@ -45,13 +45,13 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="name">Service Name</label>
-                        <input id="name" type="text" class="form-control" ng-model="serviceName" required>
+                        <input id="name" type="text" class="form-control" ng-model="serviceMetatdataName" required>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="method">Method</label>
-                        <select id="method" class="form-control" ng-model="method" required>
+                        <select id="method" class="form-control" ng-model="serviceMetadataMethod" required>
                             <option>GET</option>
                             <option>POST</option>
                             <option>PUT</option>
@@ -63,13 +63,13 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="url">Service URL</label>
-                        <input id="url" type="text" class="form-control" ng-model="serviceUrl" required>
+                        <input id="url" type="text" class="form-control" ng-model="serviceMetadataUrl" required>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="responseType">Response Type</label>
-                        <input id="responseType" list="mimeTypes" class="form-control" ng-model="responseType" required/>
+                        <input id="responseType" list="mimeTypes" class="form-control" ng-model="serviceMetadataResponse" required/>
                         <datalist id="mimeTypes">
                             <option>application/json</option>
                             <option>application/octet-stream</option>
@@ -85,31 +85,33 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="description">Service Description</label>
-                        <input id="description" type="text" class="form-control" ng-model="serviceDescription">
+                        <input id="description" type="text" class="form-control" ng-model="serviceMetadataDescription">
                     </div>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-1">
-                    <button class="btn btn-primary" ng-click="addInput()">Save</button>
+                    <button class="btn btn-primary" ng-click="showServiceTable()">Save</button>
                 </div>
             </div>
         </div>
             <div class="row">
 
                 <div class="col-md-12">
-                    <div class="form-group" ng-show="serviceMetadata" >
+                    <div class="form-group" ng-show="showServiceMetadataTable" >
                         <table id="serviceMetadata" ng-model="serviceMetadata" class="table table-striped" width="100%">
                             <tr><th >Name</th>
                                 <th >Method</th>
                                 <th >URL</th>
+                                <th >Response Type</th>
                                 <th >Description</th>
                             </tr>
                             <tr>
                                 <td >{{serviceMetatdataName}}</td>
                                 <td >{{serviceMetadataMethod}}</td>
                                 <td >{{serviceMetadataUrl}}</td>
+                                <td >{{serviceMetadataResponse}}</td>
                                 <td >{{serviceMetadataDescription}}</td>
                                 <td align="center"> <button ng-click="showAddInputForm()" class="btn btn-primary">Add Input</button></td>
                                 <td align="center"> <button ng-click="showAddOutputForm()" class="btn btn-primary">Add Output</button></td>
@@ -121,7 +123,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="form-group" ng-show="serviceInputData" >
+                    <div class="form-group" ng-show="showServiceInputTable" ><h2>Inputs</h2>
                         <table id="serviceInputs" ng-model="serviceInputs" class="table table-striped" width="100%">
                             <tr><th >Name</th>
                                 <th >Min Occurs</th>
@@ -231,47 +233,66 @@
             </div>
 
 
-                <h2>Inputs</h2>
+
                 <div class="row">
-                    <div ng-repeat="ninput in registerInputs">
+                    <div class="col-md-12">
+                    <div class="form-group" ng-show="showServiceInputForm"><h2>Inputs</h2>
+                        <div class="row">
+                            <div class="col-md-2">
+                        <label for="inputName">Name</label>
+                        <input type="text" id="inputName" ng-model="inputName">
 
-                            <label> Name</label>
-                        <input type="text" ng-model="ninput.name">
+                                </div>
+                            <div class="col-md-2">
+                        <label for="inputMinOccurs"> MinOccurs</label>
+                        <input type="number" id="inputMinOccurs" ng-model="inputMinOccurs">
+</div>
+                            <div class="col-md-2">
+                        <label for="inputMaxOccurs"> MaxOccurs</label>
+                        <input type="number" id="inputMaxOccurs" ng-model="inputMaxOccurs">
+</div>
+                            <div class="col-md-2">
+                        <label for="inputDatatype"> Datatype </label>
+                        <input type="text" id="inputDatatype" ng-model="inputDatatype">
+                        </div>
+                            </div>
+<br>
+                        <div class="row">
+                            <div class="col-md-2">
 
-                        <p>
-                        <label> MinOccurs</label>
-                        <input type="text" ng-model="ninput.minOccurs">
-                        </p>
-                        <p>
-                            <label> MaxOccurs</label>
-                            <input type="text" ng-model="ninput.maxOccurs">
-                        </p>
-                        <p>
-                            <label> data type </label>
-                            <input type="text" ng-model="ninput.dataType.type">
-                        </p>
-                        <p>
-                            <label> data mimetype </label>
-                            <input type="text" ng-model="ninput.dataType.mimeType">
-                        </p>
-                        <p>
-                            <label> metadata about </label>
-                            <input type="text" ng-model="ninput.metadata.about">
-                        </p>
-                        <p>
-                            <label> metadata href </label>
-                            <input type="text" ng-model="ninput.metadata.href">
-                        </p>
-                        <p>
-                            <label> metadata role </label>
-                            <input type="text" ng-model="ninput.metadata.role">
-                        </p>
-                        <p>
-                            <label> metadata title </label>
-                            <input type="text" ng-model="ninput.metadata.title">
-                        </p>
-                        <p>
-                            <label> Format </label>
+                        <label for="inputMimetype">Mimetype </label>
+                        <input type="text" id="inputMimetype" ng-model="inputMimetype">
+</div>
+                            <div class="col-md-2">
+                        <label for="inputMetadataAbout"> Metadata About </label>
+                        <input type="text" id="inputMetadataAbout" ng-model="inputMetadataAbout">
+</div>
+                            <div class="col-md-2">
+                        <label for="inputMetadataHref" > metadata Href </label>
+                        <input type="text" id="inputMetadataHref" ng-model="inputMetadataHref">
+</div>
+                            <div class="col-md-2">
+                        <label for="inputMetadataRole"> metadata Role </label>
+                        <input type="text" id="inputMetadataRole" ng-model="inputMetadataRole">
+                                </div><div class="col-md-2">
+                        <label for="inputMetadataTitle"> metadata Title </label>
+                        <input type="text" id="inputMetadataTitle" ng-model="inputMetadataTitle">
+                            </div>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <button ng-click="saveInput()" class="btn btn-primary">Save Input</button>
+                                </div>
+                            <div class="col-md-2">
+                                <button ng-click="cancelInput()" class="btn btn-primary">Cancel</button>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+
+
                            <div class="row">
                         <div ng-repeat="nformat in ninput.formats">
                         <p>
@@ -298,6 +319,7 @@
 
 
                             </div>
+                    </div>
                            <button ng-click="addFormat($index)">New Format</button>
 
                            </div>
