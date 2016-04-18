@@ -20,11 +20,27 @@
     <title>WMS Service Info</title>
     <link rel="stylesheet" href="../../css/bootstrap.css">
 
-
+    <style>
+        .newmap {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
 
 <div ng-controller="WmsController" class="container">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#explorer" aria-controls="explorer" role="tab" data-toggle="tab">Explorer</a></li>
+        <li role="presentation"><a href="#manual" aria-controls="manual" role="tab" data-toggle="tab">Manual</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="explorer">
+
     <div class="row">
         <h1 class="alert alert-info">WMS Service Info</h1>
         <p>Use the following input to query a WMS Service. A successful query will return a list of WMS Layers.</p>
@@ -110,6 +126,29 @@
             <pre>{{selectedLayer | json}}</pre>-->
 			<!-- <div id="map" class="map" style="height:800px;width:1200px;"></div> -->
 		</div>
+    </div>
+            </div>
+        <div role="tabpanel" class="tab-pane fade in" id="manual" ng-init="updateMap()">
+            <h1 class="alert alert-info">Manually View Layers</h1>
+            <p>Use the following input to view a layer from a WMS Service. A successful query will show the layer on the map.</p>
+            <p>Example WMS URL: <code>http://demo.boundlessgeo.com/geoserver/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image%2Fpng&TRANSPARENT=true&LAYERS=topp%3Astates&CRS=EPSG%3A3857&
+                STYLES=&WIDTH=1725&HEIGHT=1125&BBOX=-14888710.117499772%2C1709743.4486828228%2C-6450062.194816314%2C7213209.485215513</code></p>
+            <form ng-submit="parseUrlAndGetLayer()">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <label for="fullUrl">WMS URL</label>
+                            <input id="fullUrl" type="text" class="form-control" ng-model="fullUrl" placeholder="Enter a valid WMS">
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <br>
+                        <button type="submit" class="btn btn-primary">Get Layer</button>
+                    </div>
+                </div>
+            </form>
+            <div id="newmap" class="newmap"></div>
+        </div>
     </div>
 </div>
 <toaster-container></toaster-container>
