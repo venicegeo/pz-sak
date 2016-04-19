@@ -142,6 +142,74 @@
 
                     });
                 };
+
+                $scope.manualWfs = function() {
+                    var url = $scope.wfsFullUrl;
+                    if (url.startsWith("http://")) {
+                        url = url.substr(7);
+                    }
+                    $scope.showManualFeatureTypeTable = false;
+                    $scope.showManualGetFeatureTable = false;
+
+                    if (url.indexOf("DescribeFeatureType") > 0) {
+                        $scope.manualHeader = "Describe Feature List";
+                        var formatter = new OpenLayers.Format.WFSDescribeFeatureType();
+
+                        OpenLayers.Request.GET( {
+                            url: "/proxy/" + url,
+                            async: false,
+                            success: function ( request )
+                            {
+                                var doc = request.responseXML;
+                                if ( !doc || !doc.documentElement )
+                                {
+                                    doc = request.responseText;
+                                }
+
+                                // use the tool to parse the data
+                                var response = (formatter.read( doc ));
+
+                                //console.log( 'response', response );
+                                $scope.describeResults = response.featureTypes[0].properties;
+                                $scope.showManualFeatureTypeTable = true;
+                            },
+                            error: function ( error )
+                            {
+                                console.log( 'error', error );
+                            }
+                        } );
+                    } else {
+                        $scope.manualHeader = "Get Feature(s)";
+                        var format = new OpenLayers.Format.JSON();
+
+                        OpenLayers.Request.GET({
+                            url: "/proxy/" + url,
+                            async: false,
+                            success: function (request){
+                                var response = request;
+
+                                var doc = request.responseXML;
+
+                                if (!doc || !doc.documentElement ){
+                                    doc = request.responseText;
+                                }
+
+                                // use the formatter to parse the data
+                                var response = (format.read(doc));
+
+                                //console.log(response.features);
+
+                                $scope.featureResults = response.features;
+                                $scope.columnNames = Object.keys(response.features[0].properties);
+                                $scope.showManualGetFeatureTable = true;
+                            },
+                            failure: function (error){
+                                alert(error);
+                            }
+                        } );
+
+                    }
+                };
         }
 
 })();

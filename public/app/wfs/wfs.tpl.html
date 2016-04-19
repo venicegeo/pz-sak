@@ -33,12 +33,28 @@
 		    overflow: auto;
 		    height: 250px;
 		}
+		.the-container-large {
+			overflow: auto;
+			height: 435px;
+		}
 	</style>
 	
 </head>
 <body>
 	<div ng-controller="WfsController" class="container">
-		<div class="row">
+
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs" role="tablist">
+			<li role="presentation" class="active"><a href="#explorer" aria-controls="explorer" role="tab" data-toggle="tab">Explorer</a></li>
+			<li role="presentation"><a href="#manual" aria-controls="manual" role="tab" data-toggle="tab">Manual</a></li>
+		</ul>
+
+		<!-- Tab panes -->
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane fade in active" id="explorer">
+
+
+			<div class="row">
 			<h1 class="alert alert-info">WFS Service Info</h1>
 			<p>Use the following input to query a WFS end point.  &nbsp;A successful query will return a list of Feature
 			Types.  &nbsp;Toggle through the feature types list to view sample data from the Feature Type.  Note: the
@@ -182,6 +198,73 @@
 					</table>
                     <br>
 				</div>
+			</div>
+		</div>
+
+
+			</div>
+			<div role="tabpanel" class="tab-pane fade in" id="manual">
+				<h1 class="alert alert-info">Manually View WFS</h1>
+				<p>Enter a full WFS url</p>
+				<form ng-submit="manualWfs()">
+					<div class="row">
+						<div class="col-md-10">
+							<div class="form-group">
+								<label for="wfsFullUrl">WFS URL</label>
+								<input id="wfsFullUrl" type="text" class="form-control" ng-model="wfsFullUrl" placeholder="Enter a valid WFS URL">
+							</div>
+						</div>
+						<div class="col-md-1">
+							<br>
+							<button type="submit" class="btn btn-primary">Get WFS</button>
+						</div>
+					</div>
+				</form>
+
+				<div class="row">
+					<div class="col-md-4" ng-show="showManualFeatureTypeTable">
+						<div class="alert alert-info" role="alert">{{manualHeader}}</div>
+					</div>
+					<div class="col-md-12" ng-show="showManualGetFeatureTable">
+						<div class="alert alert-info" role="alert">{{manualHeader}}</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4" ng-show="showManualFeatureTypeTable">
+						<div class="the-container-large">
+							<table id="manualDescribeFeatureList" class="table table-striped the-table">
+								<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+								</tr>
+								</thead>
+								<tr ng-repeat="column in describeResults">
+									<td>{{column.name}}</td><td>{{column.type}}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="col-md-12" ng-show="showManualGetFeatureTable">
+						<div class="the-container-large">
+							<span us-spinner spinner-key="spinner"></span>
+							<table class="table table-striped the-table">
+								<thead>
+								<tr>
+									<th ng-repeat="column in columnNames" >{{column}}</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="feature in featureResults">
+									<td ng-repeat="column in columnNames">{{feature.properties[column]}}</td>
+								</tr>
+								</tbody>
+							</table>
+							<br>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</div>
