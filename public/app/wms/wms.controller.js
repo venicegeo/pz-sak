@@ -16,6 +16,15 @@
 
 (function(){
     'use strict';
+
+    var hostname;
+    if (window.location.hostname == "localhost") {
+        hostname = ".stage.geointservices.io"
+    } else {
+        var firstDotIndex = window.location.hostname.indexOf(".");
+        hostname = window.location.hostname.substring(firstDotIndex);
+    }
+
     angular
         .module('SAKapp')
         .controller('WmsController', ['$scope', '$log', '$q', 'olData', 'toaster',  WmsController]);
@@ -34,7 +43,7 @@
 
 			$scope.overlay =new ol.layer.Image({
 				source: new ol.source.ImageWMS({
-					url: "http://pz-sak.stage.geointservices.io/geoserver/geoserver/ows",
+					url: "http://pz-sak" + hostname + "/geoserver/geoserver/ows",
 					params: {
 						LAYERS: "topp:states"
 					},
