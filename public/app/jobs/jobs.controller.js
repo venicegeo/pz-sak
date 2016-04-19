@@ -69,7 +69,7 @@
 
                 $http({
                     method: "POST",
-                    url: "/proxy?url=pz-gateway.stage.geointservices.io/job",
+                    url: "/proxy?url=" + discover.gatewayHost + "/job",
                     data: fd,
                     headers: {
                         "Content-Type": undefined
@@ -97,7 +97,7 @@
 
                 $http({
                     method: "POST",
-                    url: "/proxy?url=pz-gateway.stage.geointservices.io/job",
+                    url: "/proxy?url=" + discover.gatewayHost + "/job",
                     data: fd,
                     headers: {
                         "Content-Type": undefined
