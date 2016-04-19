@@ -16,15 +16,6 @@
 
 (function(){
     'use strict';
-
-    var hostname;
-    if (window.location.hostname == "localhost") {
-        hostname = ".stage.geointservices.io"
-    } else {
-        var firstDotIndex = window.location.hostname.indexOf(".");
-        hostname = window.location.hostname.substring(firstDotIndex);
-    }
-
     angular
         .module('SAKapp')
         .controller('WmsController', ['$scope', '$log', '$q', 'olData', 'toaster',  WmsController]);
@@ -41,27 +32,17 @@
 				}
 			});
 
-			$scope.overlay =new ol.layer.Image({
-				source: new ol.source.ImageWMS({
-					url: "http://pz-sak" + hostname + "/geoserver/geoserver/ows",
-					params: {
-						LAYERS: "topp:states"
-					},
-					serverType: 'geoserver'
-				})
-			});
-
 			var newmap = new ol.Map({
 				target: 'newmap',
 				layers: [
 					new ol.layer.Tile({
 						source: new ol.source.MapQuest({layer: 'sat'})
-					}),
-					$scope.overlay
+					})
 				],
 				view: new ol.View({
-					center: ol.proj.fromLonLat([-98, 39]),
-					zoom: 4
+					//center: ol.proj.fromLonLat([-98, 39]),
+					center: ol.proj.fromLonLat([0, 0]),
+					zoom: 2
 				})
 			});
 

@@ -15,15 +15,6 @@
  */
 (function(){
     'use strict';
-
-    var hostname;
-    if (window.location.hostname == "localhost") {
-        hostname = ".stage.geointservices.io"
-    } else {
-        var firstDotIndex = window.location.hostname.indexOf(".");
-        hostname = window.location.hostname.substring(firstDotIndex);
-    }
-
     angular
         .module('SAKapp')
         .controller('JobsController', ['$scope', '$log', '$q', '$http', 'toaster', 'discover', JobsController]);
@@ -78,7 +69,7 @@
 
                 $http({
                     method: "POST",
-                    url: "/proxy?url=pz-gateway" + hostname + "/job",
+                    url: "/proxy?url=" + discover.gatewayHost + "/job",
                     data: fd,
                     headers: {
                         "Content-Type": undefined
@@ -106,7 +97,7 @@
 
                 $http({
                     method: "POST",
-                    url: "/proxy?url=pz-gateway" + hostname + "/job",
+                    url: "/proxy?url=" + discover.gatewayHost + "/job",
                     data: fd,
                     headers: {
                         "Content-Type": undefined
