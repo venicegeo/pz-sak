@@ -40,155 +40,7 @@
         <div role="tabpanel" class="tab-pane fade in active" id="register">
             <h1 class="alert alert-info">User Service Registry Info</h1>
 
-            <p>{{registerServiceId}}</p>
 
-                <h2>Inputs</h2>
-                <div class="row">
-                    <div ng-repeat="ninput in registerInputs">
-                        <p>
-                            <label> Name</label>
-                        <input type="text" ng-model="ninput.name">
-                            </p>
-                        <p>
-                        <label> MinOccurs</label>
-                        <input type="text" ng-model="ninput.minOccurs">
-                        </p>
-                        <p>
-                            <label> MaxOccurs</label>
-                            <input type="text" ng-model="ninput.maxOccurs">
-                        </p>
-                        <p>
-                            <label> data type </label>
-                            <input type="text" ng-model="ninput.dataType.type">
-                        </p>
-                        <p>
-                            <label> data mimetype </label>
-                            <input type="text" ng-model="ninput.dataType.mimeType">
-                        </p>
-                        <p>
-                            <label> metadata about </label>
-                            <input type="text" ng-model="ninput.metadata.about">
-                        </p>
-                        <p>
-                            <label> metadata href </label>
-                            <input type="text" ng-model="ninput.metadata.href">
-                        </p>
-                        <p>
-                            <label> metadata role </label>
-                            <input type="text" ng-model="ninput.metadata.role">
-                        </p>
-                        <p>
-                            <label> metadata title </label>
-                            <input type="text" ng-model="ninput.metadata.title">
-                        </p>
-                        <p>
-                            <label> Format </label>
-                           <div class="row">
-                        <div ng-repeat="nformat in ninput.formats">
-                        <p>
-                            <label> mimeType </label>
-                            <input type="text" ng-model="nformat.mimeType">
-                        </p>
-                        <p>
-                            <label> encoding </label>
-                            <input type="text" ng-model="nformat.encoding">
-                        </p>
-                        <p>
-                            <label> schema </label>
-                            <input type="text" ng-model="nformat.schema">
-                        </p>
-                        <p>
-                            <label> maximum Megabytes </label>
-                            <input type="text" ng-model="nformat.maximumMegabytes">
-                        </p>
-                        <p>
-                            <label> data type </label>
-                            <input type="text" ng-model="nformat.dataType">
-                        </p>
-
-
-
-                            </div>
-                           <button ng-click="addFormat($index)">New Format</button>
-
-                           </div>
-                        </p>
-                    </div>
-                    <button ng-click="addInput()">New Input</button>
-                </div>
-    <h2>Outputs</h2>
-    <div class="row">
-        <div ng-repeat="noutput in registerOutputs">
-            <p>
-                <label> Name</label>
-                <input type="text" ng-model="noutput.name">
-            </p>
-            <p>
-                <label> MinOccurs</label>
-                <input type="text" ng-model="noutputt.minOccurs">
-            </p>
-            <p>
-                <label> MaxOccurs</label>
-                <input type="text" ng-model="noutput.maxOccurs">
-            </p>
-            <p>
-                <label> data type </label>
-                <input type="text" ng-model="noutput.dataType.type">
-            </p>
-            <p>
-                <label> data mimetype </label>
-                <input type="text" ng-model="noutput.dataType.mimeType">
-            </p>
-            <p>
-                <label> metadata about </label>
-                <input type="text" ng-model="noutput.metadata.about">
-            </p>
-            <p>
-                <label> metadata href </label>
-                <input type="text" ng-model="noutput.metadata.href">
-            </p>
-            <p>
-                <label> metadata role </label>
-                <input type="text" ng-model="noutput.metadata.role">
-            </p>
-            <p>
-                <label> metadata title </label>
-                <input type="text" ng-model="noutput.metadata.title">
-            </p>
-            <p>
-                <label> Format </label>
-                <div class="row">
-                    <div ng-repeat="nformat in noutput.formats">
-            <p>
-                <label> mimeType </label>
-                <input type="text" ng-model="nformat.mimeType">
-            </p>
-            <p>
-                <label> encoding </label>
-                <input type="text" ng-model="nformat.encoding">
-            </p>
-            <p>
-                <label> schema </label>
-                <input type="text" ng-model="nformat.schema">
-            </p>
-            <p>
-                <label> maximum Megabytes </label>
-                <input type="text" ng-model="nformat.maximumMegabytes">
-            </p>
-            <p>
-                <label> data type </label>
-                <input type="text" ng-model="nformat.dataType">
-            </p>
-
-
-        </div>
-        <button ng-click="addOutputFormat($index)">New Format</button>
-
-    </div>
-    </p>
-</div>
-<button ng-click="addOutput()">New Output</button>
-</div>
 <h2>Service Metadata</h2>
                 <div class="row">
                     <div class="col-md-4">
@@ -244,15 +96,16 @@
                         <button class="btn btn-primary" ng-click="registerService()">Register Service</button>
                     </div>
                 </div>
-                <div>
-                    <label id="serviceMsg">{{serviceMsg}}</label>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label id="registrationSuccess" ng-show="showRegistrationSuccess" ng-model="registrationSuccess">
+                        <h3>
+                        <span class="label label-success">The Registered Service Id: {{registrationSuccess}}</span></h3></label>
+                    </div>
                 </div>
-                <div>
-                    <label id="serviceID">{{registerServiceId}}</label>
-                </div>
-                <div ng-show="serviceId">
-                    Resource ID: {{registerServiceId}}
-                </div>
+            </div>
 
 
 
