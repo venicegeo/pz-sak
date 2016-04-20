@@ -62,6 +62,8 @@
         $scope.DeleteResultRetries = 0;
         $scope.ShowUpdateResultRetries = 0;
         $scope.UpdateResultRetries = 0;
+
+        $scope.showRegistrationSuccess = false;
         
         var QUICK_POLL = 1000;
         var SLOW_POLL = 5000;
@@ -141,6 +143,14 @@
                     $scope.registerServiceId = (JSON.parse(html.data.result.text).resourceId);
                     $scope.jobStatusResult = html.data;
                     console.log($scope.registerServiceId);
+                    $scope.showRegistrationSuccess = true;
+                    $scope.registrationSuccess = $scope.registerServiceId;
+                    $scope.serviceName = "";
+                    $scope.serviceDescription = "";
+                    $scope.serviceUrl = "";
+                    $scope.method = "";
+
+                    toaster.pop("success","Success",  "The service was registered successfully.")
                 }
                 else {
                     if ($scope.RegisterResultsRetries < $scope.maxRegisterResultsRetries) {
@@ -383,8 +393,8 @@
 
             var data = {
                 "resourceMetadata" : resourceMetadata,
-                "inputs" : $scope.registerInputs,
-                "outputs" : $scope.registerOutputs
+                //"inputs" : $scope.registerInputs,
+                //"outputs" : $scope.registerOutputs
             };
             var job = {
                 "userName": "my-api-key-38n987",
