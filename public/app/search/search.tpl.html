@@ -37,14 +37,14 @@
 <div ng-controller="SearchController" class="container">
 
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
+    <!--<ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#search" aria-controls="search" role="tab" data-toggle="tab">Search</a></li>
         <li role="presentation"><a href="#keywords" aria-controls="keywords" role="tab" data-toggle="tab">Keywords</a></li>
-    </ul>
+    </ul>-->
 
     <!-- Tab panes -->
-    <div class="tab-content">
-        <div role="tabpanel" class="tab-pane fade in active" id="search">
+    <!--<div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="search">-->
             <h1 class="alert alert-info">Search Service Info</h1>
             <p>Perform searches on indexed data (only displays a max of 100 results for now)</p>
             <form id="searchForm" ng-submit="getSearchResults($event)">
@@ -83,7 +83,7 @@
                     </ul>
                 </nav>
             </form>
-        </div>
+        <!--</div>
         <div role="tabpanel" class="tab-pane fade" id="keywords">
             <h1 class="alert alert-info">Add Keywords</h1>
             <form id="tagForm" ng-submit="addTags()">
@@ -120,7 +120,7 @@
                     <label id="tagMsg">{{tagMsg}}</label>
                 </div>
             </form>
-        </div>
+        </div>-->
     </div>
 
 
