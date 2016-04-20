@@ -49,17 +49,15 @@
                 <form ng-submit="getLogs()">
                     <div class="row">
                         <div class="col-md-6"  align="left">
-                            <button ng-click="showHideSearchForm()" class="btn btn-primary">Search Logs</button>
+                            <!--button ng-click="showHideSearchForm()" class="btn btn-primary">Search Logs</button-->
                         </div>
-                        <div class="col-md-6"  align="right">
-                            <button type="submit" class="btn btn-primary">Refresh Table</button>
-                        </div>
+
                     </div>
                 </form>
             </div>
 
             <br>
-            <form id="searchLogs"  ng-model="searchLogs"  ng-submit="searchLogs()" ng-show="showSearchLogs">
+            <!--form-- id="searchLogs"  ng-model="searchLogs"  ng-submit="searchLogs()" ng-show="showSearchLogs">
                 <div class="row">
                     <div class="col-md-3">
                     <div class="form-group">
@@ -143,10 +141,10 @@
                     </div>
                 </div>
 
-            </form>
+            </form-->
 
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label for="filter">Filter</label>
                         <input id="filter" type="text" class="form-control" ng-model="searchText">
@@ -159,12 +157,22 @@
                         <label ng-show="logCount == 0">No results to display</label>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="pageSize">Per page</label>
-                        <select id="pageSize" ng-options="option for option in pageOptions" ng-model="size"
-                                class="form-control">
-                        </select>
+                <div class="col-md-2">
+                <div class="form-group">
+                    <label for="pageSize">Per page</label>
+                    <select id="pageSize" ng-options="option for option in pageOptions" ng-model="size"
+                            class="form-control">
+                    </select>
+                </div>
+            </div>
+                <div class="col-md-1">
+                    <div class="form-group" align="right" style="margin-top: 25px;">
+
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group" align="right" style="margin-top: 25px;">
+                        <button ng-click="getLogs()" class="btn btn-primary form-control"> <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
                     </div>
                 </div>
             </div>
