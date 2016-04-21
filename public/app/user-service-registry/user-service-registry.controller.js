@@ -456,22 +456,17 @@
         $scope.executeService = function() {
             createExecuteInputMap($scope.inputs);
             $scope.executeMsg = "";
-           var executeServiceData = {
-               "serviceId" : $scope.serviceId,
-               "dataInputs" : $scope.executeInputMap,
-               "dataOutput" : $scope.outputs[$scope.selectedOutput].dataType
-           };
-            var job = {
-                "userName": "my-api-key-38n987",
-                "jobType" : {
-                    "type": "execute-service",
-                    "data" : executeServiceData
-                }
-            };
+           //var executeServiceData = {
+            //   "serviceId" : $scope.serviceId,
+            //   "dataInputs" : $scope.executeInputMap,
+            //   "dataOutput" : $scope.outputs[$scope.selectedOutput].dataType
+           //};
+            var job = $scope.resourceResult;
 
             var fd = new FormData();
             var jobString = JSON.stringify(job);
             fd.append( 'body', jobString);
+            console.log(fd);
             var request = $http({
                 method: "POST",
                 url: '/proxy?url=' + discover.gatewayHost + '/job',
