@@ -28,7 +28,7 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=" + discover.elasticSearchHost + "/_cluster/health",
+                url: "/proxy?url=" + discover.searchHost + "/metrics",
             }).then(function successCallback( html ) {
                 $scope.adminData = html.data;
             }, function errorCallback(response){

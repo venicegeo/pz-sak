@@ -19,24 +19,6 @@
     <meta charset="UTF-8">
     <title>Search Admin Info</title>
     <link rel="stylesheet" href="../../css/bootstrap.css">
-
-    <style type="text/css">
-        .statusIndicator {
-            width:1%;
-            padding:9px 10px;
-            border:1px solid #a1a1a1;
-            border-radius:25px;
-        }
-        .green {
-            background-color:green;
-        }
-        .yellow {
-            background-color:yellow;
-        }
-        .red {
-            background-color:red;
-        }
-    </style>
 </head>
 <body>
 
@@ -46,17 +28,7 @@
         <p>Display cluster health for Elasticsearch Service</p>
         <div>
             <table>
-                <tr><td style="width:210px">Cluster Name:</td><td style="width:250px">{{adminData.cluster_name}}</td></tr>
-                <tr><td>Status:</td> <td><div class="statusIndicator {{adminData.status}}"></div></td></tr>
-                <tr><td>Timed Out:</td> <td>{{adminData.timed_out}}</td></tr>
-                <tr><td>Number of Nodes:</td> <td>{{adminData.number_of_nodes}}</td></tr>
-                <tr><td>Number of Data Nodes:</td> <td>{{adminData.number_of_data_nodes}}</td></tr>
-                <tr><td>Active Primary Shards:</td> <td>{{adminData.active_primary_shards}}</td></tr>
-                <tr><td>Active Shards:</td> <td>{{adminData.active_shards}}</td></tr>
-                <tr><td>Relocating Shards:</td> <td>{{adminData.relocating_shards}}</td></tr>
-                <tr><td>Initializing Shards:</td> <td>{{adminData.initializing_shards}}</td></tr>
-                <tr><td>Unassigned Shards:</td> <td>{{adminData.unassigned_shards}}</td></tr>
-                <tr><td>Pending Tasks:</td> <td>{{adminData.number_of_pending_tasks}}</td></tr>
+                <tr ng-repeat="(key, value) in adminData"><td style="width:260px">{{key | capitalize}}:</td><td style="width:250px">{{value}}</td></tr>
             </table>
         </div>
     </div>
