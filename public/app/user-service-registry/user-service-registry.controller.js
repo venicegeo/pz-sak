@@ -64,6 +64,7 @@
         $scope.UpdateResultRetries = 0;
 
         $scope.showRegistrationSuccess = false;
+        $scope.showExecuteSuccess = false;
         
         var QUICK_POLL = 1000;
         var SLOW_POLL = 5000;
@@ -185,7 +186,9 @@
                     "Content-Type": undefined
                 }
             }).then(function successCallback(html) {
-                $scope.resourceResult = JSON.stringify(html.data);
+                $scope.resourceResult = "";
+                $scope.executeSuccess = JSON.stringify(html.data.data.dataId);
+                $scope.showExecuteSuccess = true;
                 toaster.pop("success","Success",  "The service was executed successfully.")
             }, function errorCallback(response) {
                 console.log("search.controller fail");
@@ -280,7 +283,7 @@
                     //getDescribeServiceResult(jobId);
                 }
             }, function errorCallback(response) {
-                console.log("search.controller fail");
+                console.log("describe service.controller fail");
                 toaster.pop('error', "Error", "There was an issue with your request.");
             });
         }
@@ -464,8 +467,8 @@
             var job = $scope.resourceResult;
 
             var fd = new FormData();
-            var jobString = JSON.stringify(job);
-            fd.append( 'body', jobString);
+            //var jobString = JSON.stringify(job);
+            fd.append( 'body', job);
             console.log(fd);
             var request = $http({
                 method: "POST",

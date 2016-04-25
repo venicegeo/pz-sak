@@ -127,11 +127,14 @@
                  <textarea ng-model="resourceResult" rows="10" cols="80">
                             </textarea>
                 </div>
-            <div>
-                <label id="executeMsg">{{executeMsg}}</label>
-            </div>
-            <div ng-show="serviceResponse">
-                <pre>{{serviceResponse | json}}</pre>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label id="executeSuccess" ng-show="showExecuteSuccess" ng-model="executeSuccess">
+                            <h3>
+                                <span class="label label-success">The Execute was successful for Data Id: {{executeSuccess}}</span></h3></label>
+                    </div>
+                </div>
             </div>
         </div>
 
