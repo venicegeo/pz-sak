@@ -113,88 +113,8 @@
 
 
         <div role="tabpanel" class="tab-pane fade" id="execute">
-            <form id="describeService" ng-submit="describeService()">
-                <label>ServiceId</label>
-                <input id="service" type="text" class="form-control" ng-model="serviceId" required>
-                <button class="btn btn-primary" type="submit" id="describeBtn" style="margin-top: 24px">Get Service Info</button>
-            </form>
+
             <h1 class="alert alert-info">Executing a service</h1>
-
-
-            <h1 class="alert alert-info">Inputs</h1>
-            <div ng-repeat="textInput in textInputs">
-                <p>
-                    <label> {{textInput.metadata.about}}</label>
-                    <label> {{textInput.name}}</label>
-                    <input type="text" ng-model="textInput.content">
-                </p>
-                <p>
-                    <label>Select Format MimeType</label>
-                    <select name="formatSelect" id="textInputFormatSelect" ng-model="textInput.formatSelect">
-                        <option ng-repeat="format in textInput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
-                    </select>
-                </p>
-            </div>
-            <div ng-repeat="urlInput in urlInputs">
-                <p>
-                    <label> {{urlInput.metadata.about}}</label>
-                    <label> {{urlInput.name}}</label>
-                    <input type="text" ng-model="urlInput.content">
-                </p>
-                </div>
-            <div ng-repeat="bodyInput in bodyInputs">
-                <p>
-                    <label> {{bodyInput.name}}</label>
-                    <textarea ng-model="bodyInput.content" rows="10" cols="80">
-                        </textarea>
-                </p>
-                <p>
-                <label>Select Format MimeType</label>
-                <select name="formatSelect" id="bodyInputFormatSelect" ng-model="bodyInput.formatSelect">
-                    <option ng-repeat="format in bodyInput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
-                </select>
-                </p>
-            </div>
-            <div ng-repeat="rasterInput in rasterInputs">
-                <label> {{rasterInput.name}}</label>
-                <p>
-                <p>
-                    <label> location</label>
-                    <input type="text" ng-model="rasterInput.location">
-                </p>
-                <p>
-                <p>
-                    <label>Select Format MimeType</label>
-                    <select name="formatSelect" id="rasterInputFormatSelect" ng-model="rasterInput.formatSelect">
-                        <option ng-repeat="format in rasterInput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
-                    </select>
-                </p>
-                </p>
-            </div>
-            <h1 class="alert alert-info">Outputs</h1>
-            <div ng-repeat="textOutput in textOutputs">
-                <label> {{textInput.name}}</label>
-                <p>
-                <p>
-                    <label>Select Format MimeType</label>
-                    <select name="formatSelect" id="textOuputFormatSelect" ng-model="textOutput.dataType.mimeType">
-                        <option ng-repeat="format in textInput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
-                    </select>
-                </p>
-                </p>
-            </div>
-            <div ng-repeat="rasterOutput in rasterOutputs">
-                <label> {{rasterOutput.name}}</label>
-                <p>
-                <p>
-                    <label>Select Format MimeType</label>
-                    <select name="formatSelect" id="rasterOutputFormatSelect" ng-model="rasterOutput.dataType.mimeType">
-                        <option ng-repeat="format in rasterOutput.formats" value="{{format.mimeType}}">{{format.mimeType}}</option>
-                    </select>
-                </p>
-                </p>
-            </div>
-
 
             <div class="row">
                 <div class="col-md-1">
@@ -207,11 +127,14 @@
                  <textarea ng-model="resourceResult" rows="10" cols="80">
                             </textarea>
                 </div>
-            <div>
-                <label id="executeMsg">{{executeMsg}}</label>
-            </div>
-            <div ng-show="serviceResponse">
-                <pre>{{serviceResponse | json}}</pre>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label id="executeSuccess" ng-show="showExecuteSuccess" ng-model="executeSuccess">
+                            <h3>
+                                <span class="label label-success">The Execute was successful for Data Id: {{executeSuccess}}</span></h3></label>
+                    </div>
+                </div>
             </div>
         </div>
 
