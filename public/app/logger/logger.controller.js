@@ -56,8 +56,8 @@
             var params = {
                 size : $scope.size,
                 from : $scope.from,
-                after: moment($scope.afterDate).unix(),
-                before: moment($scope.afterDate).unix(),
+                after: moment($scope.afterDate).unix()* 1000,
+                before: moment($scope.beforeDate).unix() * 1000,
                 //before: moment().format($scope.beforeDate).unix(),
                 service: $scope.service,
                 contains: $scope.contains
