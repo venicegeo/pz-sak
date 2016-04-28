@@ -36,6 +36,7 @@
 
         $scope.searchLogs = function() {
             //TODO:Once Logger Search API is updated, we need to update this call to pass search params and show only what is returned.
+            $scope.getLogs();
         };
 
         $scope.getLogCount = function() {
@@ -54,7 +55,12 @@
             $scope.getLogCount();
             var params = {
                 size : $scope.size,
-                from : $scope.from
+                from : $scope.from,
+                after: moment($scope.afterDate),
+                before: moment($scope.afterDate),
+                //before: moment().format($scope.beforeDate).unix(),
+                service: $scope.service,
+                contains: $scope.contains
             };
             $scope.logs = "";
             $scope.errorMsg = "";
