@@ -36,12 +36,38 @@
 
         $scope.searchLogs = function() {
             //TODO:Once Logger Search API is updated, we need to update this call to pass search params and show only what is returned.
+            $scope.getLogs();
         };
 
         $scope.getLogCount = function() {
+            var params = {
+                size : 10000,
+                from : 0,
+            };
+            if ($scope.afterDate) {
+                angular.extend(params, {
+                    after: moment($scope.afterDate).unix()
+                });
+            }
+            if ($scope.beforeDate) {
+                angular.extend(params, {
+                    before: moment($scope.beforeDate).unix()
+                });
+            }
+            if ($scope.service) {
+                angular.extend(params, {
+                    service: $scope.service,
+                });
+            }
+            if ($scope.contains) {
+                angular.extend(params, {
+                    contains: $scope.contains
+                });
+            }
             $http({
                 method: "GET",
-                url: "/proxy/" + discover.loggerHost + "/v1/messages?from=0&size=10000",
+                url: "/proxy/" + discover.loggerHost + "/v1/messages",
+                params: params
             }).then(function successCallback( html ) {
                 $scope.logCount = html.data.length;
             }, function errorCallback(response){
@@ -54,8 +80,28 @@
             $scope.getLogCount();
             var params = {
                 size : $scope.size,
-                from : $scope.from
+                from : $scope.from,
             };
+            if ($scope.afterDate) {
+                angular.extend(params, {
+                    after: moment($scope.afterDate).unix()
+                });
+            }
+            if ($scope.beforeDate) {
+                angular.extend(params, {
+                    before: moment($scope.beforeDate).unix()
+                });
+            }
+            if ($scope.service) {
+                angular.extend(params, {
+                    service: $scope.service,
+                });
+            }
+            if ($scope.contains) {
+                angular.extend(params, {
+                    contains: $scope.contains
+                });
+            }
             $scope.logs = "";
             $scope.errorMsg = "";
 
