@@ -58,7 +58,7 @@
 				if ($scope.endPoint.startsWith("http://")) {
 					endPointUrl = $scope.endPoint.substring(7);
 				}
-				return "/proxy/" + endPointUrl;
+				return "/uproxy/" + endPointUrl;
 			};
 
 			angular.extend($scope, {
