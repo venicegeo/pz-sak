@@ -25,6 +25,7 @@
     <!-- Angular 1.1.5 or 1.2.12 ?-->
     <!---->
     <script type="text/javascript" src="js/lib/angular.js"></script>
+    <script type="text/javascript" src="js/lib/angular-ui-router.js"></script>
     <script type="application/javascript" src="js/lib/moment.min.js"></script>
     <!-- Font Awesome (optional)-->
     <!-- Live Reload ( for development )-->
@@ -34,6 +35,7 @@
     <script type="text/javascript" src="js/lib/abn_tree_directive.js"></script>
     <link rel="stylesheet" type="text/css" href="css/abn_tree.css">
     <script type="text/javascript" src="treeview.js"></script>
+    <script type="text/javascript" src="login.controller.js"></script>
     <script type="text/javascript" src="js/lib/angular-animate.js"></script>
     <script type="text/javascript" src="js/toaster.js"></script>
     <script type="text/javascript" src= "app/wfs/wfs.controller.js"></script>
@@ -84,8 +86,9 @@
 <h2 style="margin-top: 10px;font-weight: bold">PZ-Client Swiss Army Knife Utility <img src="images/pz-client-logo.png" width="150" height="66"></h2>
 
 
+<div ui-view="" ng-hide="auth.isLoggedIn"></div>
 
-<table border="0">
+<table border="0" ng-show="auth.isLoggedIn">
     <tr>
 
         <td style="padding:20px;vertical-align:top">
@@ -97,6 +100,7 @@
         <td style="padding:20px;vertical-align:top;">
 
             <div data-ng-include src="bodyDiv" id="body" style="width:1200px; height:100%; min-height: 800px" class="alert alert-warning"></div>
+
         </td>
     </tr>
 </table>
