@@ -17,7 +17,7 @@
 (function() {
   var app, deps;
 
-  deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive', 'toaster'];
+  deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive', 'toaster', 'ui.router', 'ngCookies'];
 
   if (angular.version.full.indexOf("1.2") >= 0) {
     deps.push('ngAnimate');
@@ -25,8 +25,17 @@
 
   app = angular.module('SAKapp', deps );
 
-  app.controller('SAKappController', function($scope, $timeout, $http) {
+  app.factory('Auth',function($cookies) {
+      var loggedIn = false;
+      if ((angular.isDefined($cookies.getObject("auth")) &&
+          $cookies.getObject("auth").isLoggedIn)) {
+          loggedIn = true;
+      }
+      return { isLoggedIn : loggedIn};
+  });
 
+  app.controller('SAKappController', function($scope, $timeout, $http, Auth) {
+    $scope.auth = Auth;
     $scope.year = (new Date()).getFullYear();
     var tree, treedata_avm;
     $scope.my_tree_handler = function(branch) {
@@ -248,6 +257,70 @@
       };
   });
 
+  app.config(function($stateProvider, $urlRouterProvider)
+  {
+      $stateProvider
+      // available for anybody
+          .state('login',{
+              url : '/login',
+              templateUrl : '/login.html',
+              controller: 'LoginController'
+          })
+          // just for authenticated
+          .state('index',{
+              url : '/',
+              templateUrl : '/index.html',
+              data : {requireLogin : true },
+          });
+
+      $urlRouterProvider.otherwise("/login");
+  });
+
+
+    app.run(function ($rootScope, $state, $location, Auth) {
+
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState) {
+
+            var shouldLogin = toState.data !== undefined
+                && toState.data.requireLogin
+                && !Auth.isLoggedIn;
+
+            // NOT authenticated - wants any private stuff
+            if (shouldLogin) {
+                $state.go('login');
+                event.preventDefault();
+                return;
+            }
+
+
+            // authenticated previously
+            if (Auth.isLoggedIn) {
+                var shouldGoToIndex = fromState.name === ""
+                    && toState.name !== "index";
+
+                if (shouldGoToIndex) {
+                    $state.go('index');
+                    event.preventDefault();
+                }
+                return;
+            }
+
+            // Unauthenticated previously
+            var shouldGoToLogin = fromState.name === ""
+                && toState.name !== "login";
+
+            if (shouldGoToLogin) {
+                $state.go('login');
+                console.log('redirected to login')
+                event.preventDefault();
+            }
+
+            // unmanaged
+        });
+    });
+
+
+
   app.factory('discover', [function() {
     var hostname;
     if (window.location.hostname == "localhost") {
@@ -258,7 +331,6 @@
     }
 
     var CORE_SERVICE = "core-service";
-    var INFRASTRUCTURE = "infrastructure";
     var discover = {
           loggerHost : "pz-logger" + hostname,
           loggerType : CORE_SERVICE,
@@ -286,6 +358,10 @@
           accessPort : "",
           jobsHost : "pz-jobmanager" + hostname,
           jobsType : CORE_SERVICE,
+          jobsPort : "",
+          securityHost : "pz-security" + hostname,
+          securityType : CORE_SERVICE,
+          securityPort : "",
           swaggerUI : "pz-swagger" + hostname,
           docs : "pz-docs" + hostname
     };
