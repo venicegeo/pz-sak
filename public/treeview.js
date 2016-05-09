@@ -26,6 +26,7 @@
   app = angular.module('SAKapp', deps );
 
   app.controller('SAKappController', function($scope, $timeout, $http) {
+
     $scope.year = (new Date()).getFullYear();
     var tree, treedata_avm;
     $scope.my_tree_handler = function(branch) {
@@ -35,10 +36,13 @@
 
 
     treedata_avm = [
+        {
+            label: 'Home',
+            onSelect: function(branch) {
+                return $scope.bodyDiv = "app/home/home.tpl.html";
+            },
 
-
-
-
+        },
         {
         label: 'Access',
         onSelect: function(branch) {
