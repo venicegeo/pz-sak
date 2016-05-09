@@ -251,7 +251,7 @@
   app.factory('discover', [function() {
     var hostname;
     if (window.location.hostname == "localhost") {
-        hostname = ".stage.geointservices.io"
+        hostname = ".int.geointservices.io"
     } else {
         var firstDotIndex = window.location.hostname.indexOf(".");
         hostname = window.location.hostname.substring(firstDotIndex);
@@ -286,7 +286,8 @@
           accessPort : "",
           jobsHost : "pz-jobmanager" + hostname,
           jobsType : CORE_SERVICE,
-          jobsPort : "",
+          swaggerUI : "pz-swagger" + hostname,
+          docs : "pz-docs" + hostname
     };
     return discover;
 
