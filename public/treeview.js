@@ -26,6 +26,7 @@
   app = angular.module('SAKapp', deps );
 
   app.controller('SAKappController', function($scope, $timeout, $http) {
+
     $scope.year = (new Date()).getFullYear();
     var tree, treedata_avm;
     $scope.my_tree_handler = function(branch) {
@@ -35,10 +36,13 @@
 
 
     treedata_avm = [
+        {
+            label: 'Home',
+            onSelect: function(branch) {
+                return $scope.bodyDiv = "app/home/home.tpl.html";
+            },
 
-
-
-
+        },
         {
         label: 'Access',
         onSelect: function(branch) {
@@ -247,7 +251,7 @@
   app.factory('discover', [function() {
     var hostname;
     if (window.location.hostname == "localhost") {
-        hostname = ".stage.geointservices.io"
+        hostname = ".int.geointservices.io"
     } else {
         var firstDotIndex = window.location.hostname.indexOf(".");
         hostname = window.location.hostname.substring(firstDotIndex);
@@ -282,7 +286,8 @@
           accessPort : "",
           jobsHost : "pz-jobmanager" + hostname,
           jobsType : CORE_SERVICE,
-          jobsPort : "",
+          swaggerUI : "pz-swagger" + hostname,
+          docs : "pz-docs" + hostname
     };
     return discover;
 
