@@ -17,7 +17,7 @@
 (function() {
   var app, deps;
 
-  deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive', 'toaster', 'ui.router'];
+  deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive', 'toaster', 'ui.router', 'ngStorage'];
 
   if (angular.version.full.indexOf("1.2") >= 0) {
     deps.push('ngAnimate');
@@ -25,7 +25,14 @@
 
   app = angular.module('SAKapp', deps );
 
-    app.factory('Auth',function() { return { isLoggedIn : false}; });
+  app.factory('Auth',function($sessionStorage) {
+      var loggedIn = false;
+      if ((angular.isDefined($sessionStorage.auth) &&
+          $sessionStorage.auth.isLoggedIn)) {
+          loggedIn = true;
+      }
+      return { isLoggedIn : loggedIn};
+  });
 
   app.controller('SAKappController', function($scope, $timeout, $http, Auth) {
     $scope.auth = Auth;
@@ -283,19 +290,19 @@
             }
 
 
-            // authenticated (previously) comming not to root main
+            // authenticated previously
             if (Auth.isLoggedIn) {
-                var shouldGoToMain = fromState.name === ""
+                var shouldGoToIndex = fromState.name === ""
                     && toState.name !== "index";
 
-                if (shouldGoToMain) {
+                if (shouldGoToIndex) {
                     $state.go('index');
                     event.preventDefault();
                 }
                 return;
             }
 
-            // UNauthenticated (previously) comming not to root public
+            // Unauthenticated previously
             var shouldGoToLogin = fromState.name === ""
                 && toState.name !== "login";
 
@@ -311,7 +318,7 @@
 
 
 
-        app.factory('discover', [function() {
+  app.factory('discover', [function() {
     var hostname;
     if (window.location.hostname == "localhost") {
         hostname = ".stage.geointservices.io"

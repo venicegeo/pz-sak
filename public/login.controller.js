@@ -17,10 +17,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('LoginController', ['$scope', '$location', '$rootScope', "$http", "discover", "toaster", "Auth", LoginController]);
+        .controller('LoginController', ['$scope', '$location', '$sessionStorage', "$http", "discover", "toaster", "Auth", LoginController]);
 
-    function LoginController ($scope, $location, $rootScope, $http, discover, toaster, Auth) {
-        $scope.auth = Auth;
+    function LoginController ($scope, $location, $sessionStorage, $http, discover, toaster, Auth) {
+        $sessionStorage.auth = Auth;
         $scope.login = function() {
             var data = {
                 username: $scope.username,
@@ -32,13 +32,11 @@
                 data: data
             }).then(function successCallback( html ) {
                 if (html.data) {
-                    $rootScope.loggedInUser = true;
-                    $scope.auth.isLoggedIn = true;
+                    $sessionStorage.auth.isLoggedIn = true;
                     $location.path("/index.html");
                     toaster.pop('success', "Success", "You have logged in successfully.");
                 } else {
-                    $rootScope.loggedInUser = false;
-                    $scope.auth.isLoggedIn = false;
+                    $sessionStorage.auth.isLoggedIn = false;
                     $location.path("/login.html");
                     console.log("login.controller fail: "+html.status);
                     toaster.pop('warning', "Invalid Credentials", "You have entered the wrong username or password.");
