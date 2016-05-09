@@ -80,7 +80,7 @@
             $http({
                 method: "POST",
                 url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: fd,
+                data: ingestObj,
                 headers: {
                     "Content-Type": undefined
                 }

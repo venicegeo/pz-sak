@@ -65,7 +65,7 @@
                     if ($scope.endPoint.startsWith("http://")) {
                         endPoint = $scope.endPoint.substring(7);
                     }
-                    $scope.proxiedEndPoint = "/proxy/" + endPoint;
+                    $scope.proxiedEndPoint = "/uproxy/" + endPoint;
                     // $scope.proxiedEndPoint = "/geoserver/geoserver/ows";
                     wfsClient = new OGC.WFS.Client($scope.proxiedEndPoint);
 
@@ -156,7 +156,7 @@
                         var formatter = new OpenLayers.Format.WFSDescribeFeatureType();
 
                         OpenLayers.Request.GET( {
-                            url: "/proxy/" + url,
+                            url: "/uproxy/" + url,
                             async: false,
                             success: function ( request )
                             {
@@ -183,7 +183,7 @@
                         var format = new OpenLayers.Format.JSON();
 
                         OpenLayers.Request.GET({
-                            url: "/proxy/" + url,
+                            url: "/uproxy/" + url,
                             async: false,
                             success: function (request){
                                 var response = request;

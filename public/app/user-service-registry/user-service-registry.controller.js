@@ -130,12 +130,12 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
+            //var fd = new FormData();
+            //fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
                 url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data: fd,
+                data: data,
                 headers: {
                     "Content-Type": undefined
                 }
@@ -176,12 +176,12 @@
                     "resourceId": resourceId
                 }
             };
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
+            //var fd = new FormData();
+            //fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
                 url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data: fd,
+                data: data,
                 headers: {
                     "Content-Type": undefined
                 }
@@ -205,12 +205,12 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
+            //var fd = new FormData();
+            //fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
                 url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data: fd,
+                data: data,
                 headers: {
                     "Content-Type": undefined
                 }
@@ -253,12 +253,12 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
+            //var fd = new FormData();
+            //fd.append( 'body', JSON.stringify(data) );
             $http({
                 method: "POST",
                 url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data: fd,
+                data: data,
                 headers: {
                     "Content-Type": undefined
                 }
@@ -364,12 +364,12 @@
                     "serviceID" : $scope.serviceId
                 }
             };
-            var fd = new FormData();
-            fd.append( 'body', angular.toJson(job) );
+            //var fd = new FormData();
+            //fd.append( 'body', angular.toJson(job) );
             var request = $http({
                 method: "POST",
                 url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data :fd,
+                data :job,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
                 $scope.jobId = html.data.jobId;
@@ -407,16 +407,13 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append( 'body', angular.toJson(job) );
-
-
-
+            //var fd = new FormData();
+            //fd.append( 'body', angular.toJson(job) );
 
             var request = $http({
                 method: "POST",
                 url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data :fd,
+                data :job,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
                $scope.jobId = html.data.jobId;
@@ -466,14 +463,14 @@
            //};
             var job = $scope.resourceResult;
 
-            var fd = new FormData();
+            //var fd = new FormData();
             //var jobString = JSON.stringify(job);
-            fd.append( 'body', job);
+            //fd.append( 'body', job);
             console.log(fd);
             var request = $http({
                 method: "POST",
                 url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data :fd,
+                data :job,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
                 $scope.jobId = html.data.jobId;
@@ -499,15 +496,15 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
+            //var fd = new FormData();
+            //fd.append( 'body', JSON.stringify(data) );
 
             $scope.services = "";
 
             $http({
                 method: "POST",
                 url: "/proxy?url=" + discover.gatewayHost +  "/job",
-                data: fd,
+                data: data,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
 
@@ -549,16 +546,16 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
+            //var fd = new FormData();
+            //fd.append( 'body', JSON.stringify(data) );
 
             $scope.services = "";
 
                 $http({
                     method: "POST",
-                    url: "/proxy?url=" + discover.gatewayHost +  "/job",
-                    data: fd,
-                    headers: {"Content-Type": undefined}
+                    url: "/proxy?url=" + discover.gatewayHost +  "/v2/job",
+                    data: data,
+                    headers: {"Content-Type": application/json}
                 }).then(function successCallback( html ) {
                     usSpinnerService.spin("spinner-list");
                     $scope.ListResultRetries = 0;
@@ -582,13 +579,13 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
+            //var fd = new FormData();
+            //fd.append( 'body', JSON.stringify(data) );
 
             $http({
                 method: "POST",
                 url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: fd,
+                data: data,
                 headers: {
                     "Content-Type": undefined
                 }
@@ -634,13 +631,13 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
+            //var fd = new FormData();
+            //fd.append( 'body', JSON.stringify(data) );
 
             $http({
                 method: "POST",
                 url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: fd,
+                data: data,
                 headers: {
                     "Content-Type": undefined
                 }
@@ -671,13 +668,13 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
+            //var fd = new FormData();
+            //fd.append( 'body', JSON.stringify(data) );
 
             $http({
                 method: "POST",
                 url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: fd,
+                data: data,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback(html) {
                 console.log(html);
@@ -733,13 +730,13 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
+            //var fd = new FormData();
+            //fd.append( 'body', JSON.stringify(data) );
 
             $http({
                 method: "POST",
                 url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data :fd,
+                data :data,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback( html ) {
                 $scope.ShowUpdateResultRetries = 0;
@@ -763,13 +760,13 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
+            //var fd = new FormData();
+            //fd.append( 'body', JSON.stringify(data) );
 
             $http({
                 method: "POST",
                 url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: fd,
+                data: data,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback(html) {
                 console.log(html);
@@ -832,13 +829,13 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append('body', JSON.stringify(dataObj));
+            //var fd = new FormData();
+            //fd.append('body', JSON.stringify(dataObj));
 
             $http({
                 method: "POST",
                 url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: fd,
+                data: dataObj,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback(res) {
 
@@ -868,13 +865,13 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
+            //var fd = new FormData();
+            //fd.append( 'body', JSON.stringify(data) );
 
             $http({
                 method: "POST",
                 url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: fd,
+                data: data,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback(res) {
                 console.log(res);
@@ -918,13 +915,13 @@
                 }
             };
 
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
+            //var fd = new FormData();
+            //fd.append( 'body', JSON.stringify(data) );
 
             $http({
                 method: "POST",
                 url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: fd,
+                data: data,
                 headers: {"Content-Type": undefined}
             }).then(function successCallback(res) {
                 console.log(res);

@@ -45,10 +45,13 @@
 
 
     treedata_avm = [
+        {
+            label: 'Home',
+            onSelect: function(branch) {
+                return $scope.bodyDiv = "app/home/home.tpl.html";
+            },
 
-
-
-
+        },
         {
         label: 'Access',
         onSelect: function(branch) {
@@ -321,7 +324,7 @@
   app.factory('discover', [function() {
     var hostname;
     if (window.location.hostname == "localhost") {
-        hostname = ".stage.geointservices.io"
+        hostname = ".int.geointservices.io"
     } else {
         var firstDotIndex = window.location.hostname.indexOf(".");
         hostname = window.location.hostname.substring(firstDotIndex);
@@ -359,6 +362,8 @@
           securityHost : "pz-security" + hostname,
           securityType : CORE_SERVICE,
           securityPort : "",
+          swaggerUI : "pz-swagger" + hostname,
+          docs : "pz-docs" + hostname
     };
     return discover;
 

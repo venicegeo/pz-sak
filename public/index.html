@@ -58,6 +58,7 @@
     <script type="text/javascript" src= "app/search/search.admin.controller.js"></script>
     <script type="text/javascript" src= "app/user-service-registry/user-service-registry.controller.js"></script>
     <script type="text/javascript" src= "app/user-service-registry/user-service-registry.admin.controller.js"></script>
+    <script type="text/javascript" src= "app/home/home.controller.js"></script>
 
 
     <!-- Vendors -->
@@ -95,13 +96,14 @@
         <td style="padding:20px;vertical-align:top">
             <div style="width:250px;background:whitesmoke;border:1px solid lightgray;border-radius:5px;">
                 <span ng-if="doing_async">...loading...</span>
-                <abn-tree tree-data="my_data" tree-control="my_tree" on-select="my_tree_handler(branch)" expand-level="1"></abn-tree>
+                <abn-tree tree-data="my_data" tree-control="my_tree" initial-selection="Home" on-select="my_tree_handler(branch)" expand-level="1"></abn-tree>
             </div>
         </td>
         <td style="padding:20px;vertical-align:top;">
 
-            <div data-ng-include src="bodyDiv" id="body" style="width:1200px; height:100%; min-height: 800px" class="alert alert-warning"></div>
+            <div data-ng-include src="bodyDiv" id="body" style="width:1200px; height:100%; min-height: 800px" class="alert alert-warning">
 
+            </div>
         </td>
     </tr>
 </table>

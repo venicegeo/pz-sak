@@ -1,0 +1,87 @@
+<!--
+ Copyright 2016, RadiantBlue Technologies, Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!DOCTYPE html>
+<html lang="en" ng-app="SAKapp" ng-strict-di>
+<head>
+    <meta charset="UTF-8">
+    <title>SAK Home</title>
+    <link rel="stylesheet" href="../../css/bootstrap.css">
+
+
+</head>
+<body>
+
+<div ng-controller="HomeController" class="container" ng-init="getRunningServices()">
+    <div class="row">
+        <div class="col-md-6">
+        <h3 class="alert alert-info">Links</h3>
+            <div class="row">
+                <div ng-show="services">
+                    <dl class="dl-horizontal two-column">
+                        <dt>&nbsp;</dt>
+                        <dd>&nbsp;</dd>
+                        <dt>Swagger UI: <img height="20px" src="/images/swaggerUI.png"></dt>
+                        <dd><a ng-href="https://{{services.swaggerUI}}">https://{{services.swaggerUI}}</a></dd>
+                        <dt>Jenkins: <img height="20px" src="/images/Jenkins.png"></dt>
+                        <dd><a href="https://jenkins.devops.geointservices.io/" target="_blank">https://jenkins.devops.geointservices.io/</a></dd>
+                        <dt>PCF: <img height="20px" src="/images/PCFlogo.png"></dt>
+                        <dd><a href="https://login.devops.geointservices.io/login" target="_blank">https://login.devops.geointservices.io/</a></dd>
+                        <dt>VeniceGeo GitHub: <img height="20px" src="/images/githubLogo.png"></dt>
+                        <dd><a href="https://github.com/venicegeo/" target="_blank">https://github.com/venicegeo</a></dd>
+                        <dt>VeniceGeo Docs: </dt>
+                        <dd><a ng-href="https://{{services.docs}}">https://{{services.docs}}</a></dd>
+                        <dt>&nbsp;</dt>
+                        <dd>&nbsp;</dd>
+
+                    </dl>
+
+                    <hr class="separator">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h3 class="alert alert-info">Running Services</h3>
+            <div class="row">
+                <div ng-show="services">
+                    <dl class="dl-horizontal two-column">
+                        <dt>Logger: </dt>
+                        <dd><a ng-href="https://{{services.loggerHost}}">https://{{services.loggerHost}}</a></dd>
+                        <dt>UUID: </dt>
+                        <dd><a ng-href="https://{{services.uuidHost}}">https://{{services.uuidHost}}</a></dd>
+                        <dt>Workflow: </dt>
+                        <dd><a ng-href="https://{{services.workflowHost}}">https://{{services.workflowHost}}</a></dd>
+                        <dt>Search: </dt>
+                        <dd><a ng-href="https://{{services.searchHost}}">https://{{services.searchHost}}</a></dd>
+                        <dt>Service Controller: </dt>
+                        <dd><a ng-href="https://{{services.serviceControllerHost}}">https://{{services.serviceControllerHost}}</a></dd>
+                        <dt>Dispatcher Controller: </dt>
+                        <dd><a ng-href="https://{{services.dispatcherHost}}">https://{{services.dispatcherHost}}</a></dd>
+                        <dt>Gateway: </dt>
+                        <dd><a ng-href="https://{{services.gatewayHost}}">https://{{services.gatewayHost}}</a></dd>
+                    </dl>
+
+                    <hr class="separator">
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+<toaster-container></toaster-container>
+
+</body>
+</html>
