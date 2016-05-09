@@ -17,7 +17,7 @@
 (function() {
   var app, deps;
 
-  deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive', 'toaster', 'ui.router', 'ngStorage'];
+  deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive', 'toaster', 'ui.router', 'ngCookies'];
 
   if (angular.version.full.indexOf("1.2") >= 0) {
     deps.push('ngAnimate');
@@ -25,10 +25,10 @@
 
   app = angular.module('SAKapp', deps );
 
-  app.factory('Auth',function($sessionStorage) {
+  app.factory('Auth',function($cookies) {
       var loggedIn = false;
-      if ((angular.isDefined($sessionStorage.auth) &&
-          $sessionStorage.auth.isLoggedIn)) {
+      if ((angular.isDefined($cookies.getObject("auth")) &&
+          $cookies.getObject("auth").isLoggedIn)) {
           loggedIn = true;
       }
       return { isLoggedIn : loggedIn};
