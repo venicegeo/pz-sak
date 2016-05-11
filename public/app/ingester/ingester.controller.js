@@ -17,10 +17,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('IngesterController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', IngesterController]);
+        .controller('IngesterController', ['$scope', '$http', 'toaster', 'discover', 'gateway', IngesterController]);
 
 
-    function IngesterController($scope, $http, $log, $q, toaster, discover) {
+    function IngesterController($scope, $http, toaster, discover, gateway) {
         $scope.data = "none";
         $scope.metadata = "{}";
 
@@ -101,25 +101,11 @@
                 toaster.pop('warning', "Missing Required Field", "Must include Job ID.");
                 return;
             }
-            var data = {
-                "userName": "my-api-key-sakui",
-                "jobType": {
-                    "type": "get",
-                    "jobId": $scope.jobId
-                }
-            };
 
-            var fd = new FormData();
-            fd.append( 'body', JSON.stringify(data) );
-
-            $http({
-                method: "POST",
-                url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: fd,
-                headers: {
-                    "Content-Type": undefined
-                }
-            }).then(function successCallback( html ) {
+            gateway.async(
+                "GET",
+                "/job/" + $scope.jobId
+            ).then(function successCallback( html ) {
                 $scope.jobStatus = html.data;
             }, function errorCallback(response){
                 console.log("search.controller fail");

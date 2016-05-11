@@ -388,9 +388,9 @@
               }
               var promise = $http(httpObject).then(function successCallback( html ) {
                   return html;
-              }, function errorCallback( response) {
+              }, function errorCallback( response ) {
                   console.log("gateway call failed");
-                  return "";
+                  return response;
               });
               return promise;
           }
