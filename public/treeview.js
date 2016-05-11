@@ -369,4 +369,33 @@
 
   }]);
 
+  app.factory('gateway', ['$http', 'discover', function($http, discover) {
+      var gateway = {
+          async: function(method, endPoint, body, params) {
+              var httpObject = {
+                  method: method,
+                  url: "/proxy/" + discover.gatewayHost + endPoint
+              };
+              if (angular.isDefined(body)) {
+                  angular.extend(httpObject, {
+                      data: body
+                  });
+              }
+              if (angular.isDefined(params)) {
+                  angular.extend(httpObject, {
+                      params: params
+                  });
+              }
+              var promise = $http(httpObject).then(function successCallback( html ) {
+                  return html;
+              }, function errorCallback( response) {
+                  console.log("gateway call failed");
+                  return "";
+              });
+              return promise;
+          }
+      };
+      return gateway;
+  }]);
+
 }).call(this);
