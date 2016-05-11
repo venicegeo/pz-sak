@@ -17,9 +17,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('JobsController', ['$scope', '$log', '$q', '$http', 'toaster', 'discover', JobsController]);
+        .controller('JobsController', ['$scope', '$http', 'toaster', 'discover', 'gateway', JobsController]);
 
-        function JobsController ($scope, $log, $q, $http, toaster, discover) {
+        function JobsController ($scope, $http, toaster, discover, gateway) {
             $scope.pageSizeOptions = [10, 50, 100, 500];
             $scope.pageSize = 10;
             $scope.page = 0;
@@ -56,56 +56,26 @@
 
             $scope.getJobStatus = function() {
 
-                var data = {
-                    "userName": "my-api-key-kidkeid",
-                    "jobType": {
-                        "type": "get",
-                        "jobId": $scope.jobId
-                    }
-                };
-
-                var fd = new FormData();
-                fd.append( 'body', JSON.stringify(data) );
-
-                $http({
-                    method: "POST",
-                    url: "/proxy?url=" + discover.gatewayHost + "/job",
-                    data: fd,
-                    headers: {
-                        "Content-Type": undefined
-                    }
-                }).then(function successCallback( html ) {
+                gateway.async(
+                    "GET",
+                    "/job/" + $scope.jobId
+                ).then(function successCallback( html ) {
                     $scope.jobStatusResult = html.data;
                 }, function errorCallback(response){
-                    console.log("search.controller fail");
+                    console.log("jobs.controller fail on getJobStatus");
                     toaster.pop('error', "Error", "There was an issue with your request.");
                 });
             };
 
             $scope.getResourceData = function() {
 
-                var data = {
-                    "userName": "my-api-key-kidkeid",
-                    "jobType": {
-                        "type": "get-resource",
-                        "resourceId": $scope.resourceId
-                    }
-                };
-
-                var fd = new FormData();
-                fd.append( 'body', JSON.stringify(data) );
-
-                $http({
-                    method: "POST",
-                    url: "/proxy?url=" + discover.gatewayHost + "/job",
-                    data: fd,
-                    headers: {
-                        "Content-Type": undefined
-                    }
-                }).then(function successCallback( html ) {
+                gateway.async(
+                    "GET",
+                    "/data/" + $scope.resourceId
+                ).then(function successCallback( html ) {
                     $scope.resourceData = html.data;
                 }, function errorCallback(response){
-                    console.log("search.controller fail");
+                    console.log("jobs.controller fail on GetResourceData");
                     toaster.pop('error', "Error", "There was an issue with your request.");
                 });
 
