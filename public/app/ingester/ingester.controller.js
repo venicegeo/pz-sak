@@ -37,6 +37,7 @@
                 return;
             }
             var data = {};
+            var endpoint = "";
             if (angular.isDefined($scope.ingestType) && $scope.ingestType == "Text") {
                 if (angular.isUndefined($scope.message) || $scope.message == "") {
                     toaster.pop('warning', "Missing Required Field", "Must include Text to load.");
@@ -50,6 +51,7 @@
                     },
                     "metadata": metadata
                 };
+                endpoint = "/data";
             } else if (angular.isDefined($scope.ingestType) && $scope.ingestType == "File") {
                 if (angular.isUndefined($scope.file) || $scope.file == "") {
                     toaster.pop('warning', "Missing Required Field", "Must include one file to upload.");
@@ -61,30 +63,37 @@
                     },
                     "metadata": metadata
                 };
+                endpoint = "/data/file";
             }
             var ingestObj = {
-                "userName": "my-api-key-sakui",
-                "jobType": {
-                    "type": "ingest",
-                    "host": "true",
-                    "data": data
-                }
+                "type": "ingest",
+                "host": "true",
+                "data": data
             };
 
-            var fd = new FormData();
-            fd.append( 'body',  JSON.stringify(ingestObj) );
+            var httpObject = {
+                method: "POST",
+                url: "/proxy?url=" + discover.gatewayHost + endpoint
+            };
+
             if ($scope.ingestType == 'File') {
-                fd.append('file', document.getElementById('file').files[0]);
+                var fd = new FormData();
+                fd.append( 'data', JSON.stringify(ingestObj) );
+                fd.append( 'file', document.getElementById('file').files[0]);
+
+                angular.extend(httpObject, {
+                    data: fd,
+                    headers: {
+                        "Content-Type": undefined
+                    }
+                });
+            } else {
+                angular.extend(httpObject, {
+                    data: ingestObj
+                });
             }
 
-            $http({
-                method: "POST",
-                url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: ingestObj,
-                headers: {
-                    "Content-Type": undefined
-                }
-            }).then(function successCallback( html ) {
+            $http(httpObject).then(function successCallback( html ) {
                 $scope.jobIdResult = html.data.jobId;
                 toaster.pop('success', "Success", "The data was successfully sent to the loader.")
             }, function errorCallback(response){
