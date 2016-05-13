@@ -268,12 +268,12 @@
           })
           // just for authenticated
           .state('index',{
-              url : '/',
+              url : '/index',
               templateUrl : '/index.html',
-              data : {requireLogin : true },
+              data : {requireLogin : true }
           });
 
-      $urlRouterProvider.otherwise("/login");
+      $urlRouterProvider.otherwise("login");
   });
 
 
@@ -296,10 +296,12 @@
             // authenticated previously
             if (Auth.isLoggedIn) {
                 var shouldGoToIndex = fromState.name === ""
-                    && toState.name !== "index";
+                    && toState.name !== "login";
+                    // Used to be index, but that caused problems with tabs && toState.name !== "index";
 
                 if (shouldGoToIndex) {
-                    $state.go('index');
+                    // Used to be index, but that caused problems with tabs $state.go('index');
+                    $state.go('login');
                     event.preventDefault();
                 }
                 return;
