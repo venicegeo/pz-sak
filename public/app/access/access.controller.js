@@ -17,38 +17,26 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('AccessController', ['$scope', '$log', '$q', '$http', 'toaster', 'discover', AccessController]);
+        .controller('AccessController', ['$scope', '$log', '$q', '$http', 'toaster', 'discover', 'gateway', AccessController]);
 
-    function AccessController($scope, $log, $q, $http, toaster, discover) {
+    function AccessController($scope, $log, $q, $http, toaster, discover, gateway) {
         $scope.pageSize = 10;
         $scope.page = 0;
 
-        var getCount = function() {
-            $http({
-                method: "GET",
-                url: "/proxy/" + discover.accessHost + "/data/count",
-            }).then(function successCallback(html) {
-                $scope.total = html.data;
-                $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
-            }, function errorCallback(response) {
-                console.log("access.controller fail");
-                toaster.pop('error', "Error", "There was an issue with your request.");
-            });
-
-        };
-
         $scope.getData = function($event) {
-            getCount();
             var params = {
                 page: $scope.page,
-                pageSize: $scope.pageSize
+                per_page: $scope.pageSize
             };
-            $http({
-                method: "GET",
-                url: "/proxy/" + discover.accessHost + "/data",
-                params: params
-            }).then(function successCallback(html) {
-                $scope.accessDataList = html.data;
+            gateway.async(
+                "GET",
+                "/data",
+                undefined,
+                params
+            ).then(function successCallback(html) {
+                $scope.accessDataList = html.data.data;
+                $scope.total = html.data.pagination.count;
+                $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
             }, function errorCallback(response) {
                 console.log("access.controller fail");
                 toaster.pop('error', "Error", "There was an issue with your request.");
@@ -60,10 +48,10 @@
             if (angular.isUndefined($scope.dataId) || $scope.dataId == "") {
                 return;
             }
-            $http({
-                method: "GET",
-                url: "/proxy/" + discover.accessHost + "/data/" + $scope.dataId
-            }).then(function successCallback(html) {
+            gateway.async(
+                "GET",
+                "/data/" + $scope.dataId
+            ).then(function successCallback(html) {
                 $scope.accessData = html.data;
             }, function errorCallback(response) {
                 console.log("access.controller fail");
