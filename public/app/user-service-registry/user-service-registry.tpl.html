@@ -186,28 +186,53 @@
 
             <div class="row">
                 <span us-spinner spinner-key="spinner-list"></span>
-                    <div class="col-md-12">
-                        <div class="form-group" ng-show="services" ng-init="getServices()">
-
-                            <label>Filter: <input ng-model="searchText"></label>
-                            <table id="searchTextResults" ng-model="searchTextResults" class="table table-striped" width="100%">
-                                <tr><th >ResourceId</th>
-                                    <th >Name</th>
-                                    <th >Description</th>
-                                    <th >URL</th>
-                                </tr>
-                                <tr ng-repeat="service in services | filter:searchText">
-                                    <td >{{service.id}}</td>
-                                    <td >{{service.resourceMetadata.name}}</td>
-                                    <td >{{service.resourceMetadata.description}}</td>
-                                    <td >{{service.resourceMetadata.url}}</td>
-                                    <td align="center"> <button ng-click="showUpdateServiceForm(service.id)" class="btn btn-primary">Update</button></td>
-                                    <td align="center"> <button ng-click="deleteService(service.id)" class="btn btn-primary">Delete</button></td>
-                                </tr>
-                            </table>
+                <div class="row">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-8 text-center">
+                        <div class="range-label" ng-show="totalServices > 0" style="margin-top: 15px;">
+                            <label>Displaying {{ getListStart() }} - {{ getListEnd() }} of {{ totalServices }}</label>
+                        </div>
+                        <label ng-show="totalServices == 0">No results to display</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="pageSize">Per page</label>
+                            <select id="pageSize" ng-options="option for option in pageOptions" ng-model="listPerPage"
+                                    class="form-control">
+                            </select>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                <div class="form-group" ng-show="services" ng-init="getServices()">
+
+                    <table id="searchTextResults" ng-model="searchTextResults" class="table table-striped" style="table-layout: fixed" width="100%">
+                        <tr><th >ResourceId</th>
+                            <th >Name</th>
+                            <th >Description</th>
+                            <th >Method</th>
+                            <th >URL</th>
+                            <th ></th>
+                            <th ></th>
+                        </tr>
+                        <tr dir-paginate="service in services | itemsPerPage: listPerPage" total-items="totalServices" currentPage="pagination.current" pagination-id="serviceslist">
+                            <td >{{service.serviceId}}</td>
+                            <td >{{service.resourceMetadata.name}}</td>
+                            <td >{{service.resourceMetadata.description}}</td>
+                            <td >{{service.resourceMetadata.method}}</td>
+                            <td >{{service.url}}</td>
+                            <td align="center"> <button ng-click="showUpdateServiceForm(service.serviceId)" class="btn btn-primary">Update</button></td>
+                            <td align="center"> <button ng-click="deleteService(service.serviceId)" class="btn btn-primary">Delete</button></td>
+                        </tr>
+                    </table>
+                    <div align="center">
+                        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" pagination-id="serviceslist"></dir-pagination-controls>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 
@@ -218,16 +243,16 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="searchField">Field</label>
+                                <label for="searchField">Search</label>
                                 <input id="searchField" type="text" class="form-control" ng-model="searchField">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <!--<div class="col-md-3">
                             <div class="form-group">
                                 <label for="searchPattern">Contains</label>
                                 <input id="searchPattern" type="text" class="form-control" ng-model="searchPattern">
                             </div>
-                        </div>
+                        </div>-->
                     </div>
 
                     <div class="row">
@@ -241,25 +266,50 @@
                     </form>
                 <div class="row">
                     <br>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
                     </div>
+                    <div class="col-md-8 text-center">
+                        <div class="range-label" ng-show="totalSearchResults > 0" style="margin-top: 15px;">
+                            <label>Displaying {{ getSearchStart() }} - {{ getSearchEnd() }} of {{ totalSearchResults }}</label>
+                        </div>
+                        <label ng-show="totalSearchResults == 0">No results to display</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="searchPageSize">Per page</label>
+                            <select id="searchPageSize" ng-options="option for option in pageOptions" ng-model="searchPerPage"
+                                    class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label>Filter: <input ng-model="searchResultsInput"></label>
                             <table id="searchServicesResults" class="table table-striped" width="100%">
                                 <tr><th >ResourceId</th>
                                     <th >Name</th>
-                                    <th >Availability</th>
+                                    <th >Description</th>
+                                    <th >Method</th>
+                                    <th >URL</th>
 
                                 </tr>
-                                <tr ng-repeat="result in results | filter:searchResultsInput">
-                                    <td >{{result.id}}</td>
-                                    <td >{{result.name}}</td>
-                                    <td >{{result.resourceMetadata.availability}}</td>
+                                <tr dir-paginate="result in results | itemsPerPage: searchPerPage" total-items="totalSearchResults" currentPage="searchPagination.current" pagination-id="servicessearch">
+                                    <td >{{result.serviceId}}</td>
+                                    <td >{{result.resourceMetadata.name}}</td>
+                                    <td >{{result.resourceMetadata.description}}</td>
+                                    <td >{{result.resourceMetadata.method}}</td>
+                                    <td >{{result.url}}</td>
 
                                 </tr>
                             </table>
+                            <div align="center">
+                                <dir-pagination-controls on-page-change="searchPageChanged(newPageNumber)" pagination-id="servicessearch"></dir-pagination-controls>
+                            </div>
                         </div>
                     </div>
                 </div>
