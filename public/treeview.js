@@ -377,11 +377,7 @@
           async: function(method, endPoint, body, params) {
               var httpObject = {
                   method: method,
-                  //url: "https://pz-sak.int.geointservices.io/proxy/" + discover.gatewayHost + endPoint,
                   url: "/proxy/" + discover.gatewayHost + endPoint,
-                  /*headers: {
-                      "Authorization": "Basic bWNtYWhvam06bWNtYWhvam0="
-                  }*/
               };
               if (angular.isDefined(body)) {
                   angular.extend(httpObject, {
