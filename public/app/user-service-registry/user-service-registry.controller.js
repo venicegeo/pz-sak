@@ -18,11 +18,11 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('UserServiceController', ['$scope', '$http', 'toaster', 'discover', '$timeout', 'usSpinnerService', 'gateway', UserServiceController]);
+        .controller('UserServiceController', ['$scope', 'toaster', '$timeout', 'usSpinnerService', 'gateway', UserServiceController]);
 
 
 
-    function UserServiceController($scope, $http, toaster, discover, $timeout, usSpinnerService, gateway) {
+    function UserServiceController($scope, toaster, $timeout, usSpinnerService, gateway) {
         $scope.executeInputMap = {};
         $scope.executeOutputMap = {};
         $scope.method = 'GET';
@@ -79,7 +79,6 @@
             $scope.searchServices(newPage)
         };
 
-        var QUICK_POLL = 1000;
         var SLOW_POLL = 5000;
 
         /*function resetServiceInputArrays() {
@@ -338,12 +337,12 @@
             //   "dataInputs" : $scope.executeInputMap,
             //   "dataOutput" : $scope.outputs[$scope.selectedOutput].dataType
            //};
-            var job = $scope.resourceResult;
+            var data = $scope.resourceResult;
 
             gateway.async(
                 "POST",
                 '/v2/job',
-                job
+                data
             ).then(function successCallback( html ) {
                 $scope.jobId = html.data.jobId;
                 $scope.ExecuteResultsRetries = 0;
