@@ -18,11 +18,11 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('UserServiceController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', '$timeout', 'usSpinnerService', UserServiceController]);
+        .controller('UserServiceController', ['$scope', 'toaster', '$timeout', 'usSpinnerService', 'gateway', UserServiceController]);
 
 
 
-    function UserServiceController($scope, $http, $log, $q, toaster, discover, $timeout, usSpinnerService) {
+    function UserServiceController($scope, toaster, $timeout, usSpinnerService, gateway) {
         $scope.executeInputMap = {};
         $scope.executeOutputMap = {};
         $scope.method = 'GET';
@@ -46,30 +46,42 @@
 
         //Request Limits
         $scope.maxExecuteResultsRetries = 50;
-        $scope.maxRegisterResultsRetries = 10;
-        $scope.maxDescribeServiceRetries = 10;
-        $scope.maxSearchResultRetries = 10;
-        $scope.maxListResultRetries = 10;
-        $scope.maxDeleteResultRetries = 10;
-        $scope.maxShowUpdateResultRetries = 10;
-        $scope.maxUpdateResultRetries = 10;
-
         $scope.ExecuteResultsRetries = 0;
-        $scope.RegisterResultsRetries = 0;
-        $scope.DescribeServiceRetries = 0;
-        $scope.SearchResultRetries = 0;
-        $scope.ListResultRetries = 0;
-        $scope.DeleteResultRetries = 0;
-        $scope.ShowUpdateResultRetries = 0;
-        $scope.UpdateResultRetries = 0;
 
         $scope.showRegistrationSuccess = false;
         $scope.showExecuteSuccess = false;
-        
-        var QUICK_POLL = 1000;
+
+        // Pagination for List
+        $scope.services = [];
+        $scope.totalServices = 0;
+        $scope.listPerPage = 25;
+
+        $scope.pagination = {
+            current: 0
+        };
+
+        // Pagination for Search
+        $scope.results = [];
+        $scope.totalSearchResults = 0;
+        $scope.searchPerPage = 25;
+
+        $scope.searchPagination = {
+            current: 0
+        };
+
+        $scope.pageOptions = [10, 25, 50, 100, 500];
+
+        $scope.pageChanged = function(newPage) {
+            $scope.getServices(newPage);
+        };
+
+        $scope.searchPageChanged = function(newPage) {
+            $scope.searchServices(newPage)
+        };
+
         var SLOW_POLL = 5000;
 
-        function resetServiceInputArrays() {
+        /*function resetServiceInputArrays() {
             $scope.bodyInputs = [];
             $scope.urlInputs = [];
             $scope.rasterInputs = [];
@@ -81,9 +93,9 @@
             $scope.rasterOutputs = [];
             $scope.textOutputs = [];
 
-        }
+        }*/
 
-        function processServiceInputs(inputs) {
+        /*function processServiceInputs(inputs) {
             resetServiceInputArrays();
             var i;
             for (i=0;i<inputs.length;i++){
@@ -119,73 +131,13 @@
                         break;
                 }
             }
-        }
-        function getRegisterResult(jobId) {
-            $scope.RegisterResultsRetries += 1;
-            var data = {
-                "userName": "my-api-key-kidkeid",
-                "jobType": {
-                    "type": "get",
-                    "jobId": $scope.jobId
-                }
-            };
-
-            //var fd = new FormData();
-            //fd.append( 'body', JSON.stringify(data) );
-            $http({
-                method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data: data,
-                headers: {
-                    "Content-Type": undefined
-                }
-            }).then(function successCallback(html) {
-                if (html.data.status.indexOf("Success") > -1) {
-                    $scope.registerServiceId = (JSON.parse(html.data.result.text).resourceId);
-                    $scope.jobStatusResult = html.data;
-                    console.log($scope.registerServiceId);
-                    $scope.showRegistrationSuccess = true;
-                    $scope.registrationSuccess = $scope.registerServiceId;
-                    $scope.serviceName = "";
-                    $scope.serviceDescription = "";
-                    $scope.serviceUrl = "";
-                    $scope.method = "";
-
-                    toaster.pop("success","Success",  "The service was registered successfully.")
-                }
-                else {
-                    if ($scope.RegisterResultsRetries < $scope.maxRegisterResultsRetries) {
-                        $timeout(getRegisterResult, QUICK_POLL, jobId);
-                    }
-                    else {
-                        console.log("Get Register Results max tries exceeded");
-                        toaster.pop('error', "Error", "Get Register Results max tries exceeded");
-                    }
-                    //getRegisterResult(jobId);
-                }
-            }, function errorCallback(response) {
-                console.log("search.controller fail");
-                toaster.pop('error', "Error", "There was an issue with your request.");
-            });
-        }
+        }*/
         function getResourceResult(resourceId){
-            var data = {
-                "userName": "my-api-key-kidkeid",
-                "jobType": {
-                    "type": "get-resource",
-                    "resourceId": resourceId
-                }
-            };
-            //var fd = new FormData();
-            //fd.append( 'body', JSON.stringify(data) );
-            $http({
-                method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data: data,
-                headers: {
-                    "Content-Type": undefined
-                }
-            }).then(function successCallback(html) {
+
+            gateway.async(
+                "GET",
+                '/data/' + resourceId
+            ).then(function successCallback(html) {
                 $scope.resourceResult = "";
                 $scope.executeSuccess = JSON.stringify(html.data.data.dataId);
                 $scope.showExecuteSuccess = true;
@@ -197,27 +149,14 @@
         }
         function getExecuteResult(jobId) {
             $scope.ExecuteResultsRetries += 1;
-            var data = {
-                "userName": "my-api-key-kidkeid",
-                "jobType": {
-                    "type": "get",
-                    "jobId": $scope.jobId
-                }
-            };
 
-            //var fd = new FormData();
-            //fd.append( 'body', JSON.stringify(data) );
-            $http({
-                method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data: data,
-                headers: {
-                    "Content-Type": undefined
-                }
-            }).then(function successCallback(html) {
+            gateway.async(
+                "GET",
+                '/job/' + $scope.jobId
+            ).then(function successCallback(html) {
                 if (html.data.status.indexOf("Success") > -1) {
                     $scope.dataId = html.data.result.dataId;
-                    getResourceResult($scope.dataId)
+                    getResourceResult($scope.dataId);
                     $scope.jobStatusResult = JSON.stringify(html.data);
                     console.log($scope.serviceId);
                 }
@@ -229,7 +168,6 @@
                         console.log("Exceeded Get Execute Results retry limit");
                         toaster.pop('error', "Error", "Exceeded Get Execute Results retry limit")
                     }
-                    //getgetExecuteResult(jobId);
                 }
             }, function errorCallback(response) {
                 if ((response.data.message == "Job Not Found.") &&
@@ -243,45 +181,20 @@
             });
         }
 
-        function getDescribeServiceResult(jobId) {
-            $scope.DescribeServiceRetries += 1;
-            var data = {
-                "userName": "my-api-key-kidkeid",
-                "jobType": {
-                    "type": "get",
-                    "jobId": $scope.jobId
-                }
-            };
-
-            //var fd = new FormData();
-            //fd.append( 'body', JSON.stringify(data) );
-            $http({
-                method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data: data,
-                headers: {
-                    "Content-Type": undefined
-                }
-            }).then(function successCallback(html) {
-                if (html.data.status.indexOf("Success") > -1) {
-                    var serviceMetadata = JSON.parse(html.data.result.text);
-                    $scope.serviceId = serviceMetadata.id;
-                    $scope.inputs = serviceMetadata.inputs;
-                    $scope.outputs = serviceMetadata.outputs;
-                    processServiceInputs($scope.inputs);
-                    processServiceOutputs($scope.outputs);
-                    console.log($scope.serviceId);
-                }
-                else {
-                    if ($scope.DescribeServiceRetries < $scope.maxDescribeServiceRetries) {
-                        $timeout(getDescribeServiceResult, QUICK_POLL, jobId);
-                    }
-                    else {
-                        console.log("Get Describe Service Retries limit exceeded");
-                        toaster.pop('error', "Error", "Get Describe Service Retries limit exceeded.");
-                    }
-                    //getDescribeServiceResult(jobId);
-                }
+        $scope.describeService = function() {
+            gateway.async(
+                "GET",
+                '/service/' + $scope.serviceId
+            ).then(function successCallback(html) {
+                var serviceMetadata = JSON.parse(html.data.service);
+                $scope.serviceId = serviceMetadata.serviceId;
+                $scope.describeUrl = serviceMetadata.url;
+                $scope.describeMetadata = serviceMetadata.resourceMetadata;
+                // $scope.inputs = serviceMetadata.inputs;
+                // $scope.outputs = serviceMetadata.outputs;
+                // processServiceInputs($scope.inputs);
+                // processServiceOutputs($scope.outputs);
+                console.log($scope.serviceId);
             }, function errorCallback(response) {
                 console.log("describe service.controller fail");
                 toaster.pop('error', "Error", "There was an issue with your request.");
@@ -354,72 +267,35 @@
             $scope.registerOutputs[$index].formats.push(newFormat);
         };
 
-        $scope.describeService = function() {
-
-            $scope.errorMsg = "";
-            var job = {
-                "userName": "my-api-key-38n987",
-                "jobType" : {
-                    "type": "read-service",
-                    "serviceID" : $scope.serviceId
-                }
-            };
-            //var fd = new FormData();
-            //fd.append( 'body', angular.toJson(job) );
-            var request = $http({
-                method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data :job,
-                headers: {"Content-Type": undefined}
-            }).then(function successCallback( html ) {
-                $scope.jobId = html.data.jobId;
-                $scope.DescribeServiceRetries = 0;
-                getDescribeServiceResult($scope.jobId)
-
-
-            }, function errorCallback(response){
-                console.log("user-service-registry.controller fail");
-                toaster.pop('error', "Error", "There was an issue with your request.");
-            });
-
-        }
         $scope.registerService = function() {
             $scope.errorMsg = "";
 
-
-            var resourceMetadata = {
-                "name":$scope.serviceName,
-                "description":$scope.serviceDescription,
-                "url":$scope.serviceUrl,
-                "method":$scope.method
-            };
-
             var data = {
-                "resourceMetadata" : resourceMetadata,
-                //"inputs" : $scope.registerInputs,
-                //"outputs" : $scope.registerOutputs
-            };
-            var job = {
-                "userName": "my-api-key-38n987",
-                "jobType" : {
-                    "type": "register-service",
-                    "data" : data
+                "url":$scope.serviceUrl,
+                "contractUrl":$scope.serviceUrl,
+                "resourceMetadata" : {
+                    "name":$scope.serviceName,
+                    "description":$scope.serviceDescription,
+                    "method":$scope.method
                 }
             };
 
-            //var fd = new FormData();
-            //fd.append( 'body', angular.toJson(job) );
+            gateway.async(
+                "POST",
+                '/service',
+                data
+            ).then(function successCallback( html ) {
 
-            var request = $http({
-                method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data :job,
-                headers: {"Content-Type": undefined}
-            }).then(function successCallback( html ) {
-               $scope.jobId = html.data.jobId;
-                $scope.RegisterResultsRetries = 0;
-                getRegisterResult($scope.jobId)
+                $scope.registerServiceId = html.data.serviceId;
+                console.log($scope.registerServiceId);
+                $scope.showRegistrationSuccess = true;
+                $scope.registrationSuccess = $scope.registerServiceId;
+                $scope.serviceName = "";
+                $scope.serviceDescription = "";
+                $scope.serviceUrl = "";
+                $scope.method = "";
 
+                toaster.pop("success","Success",  "The service was registered successfully.")
 
             }, function errorCallback(response){
                 console.log("user-service-registry.controller fail");
@@ -461,18 +337,13 @@
             //   "dataInputs" : $scope.executeInputMap,
             //   "dataOutput" : $scope.outputs[$scope.selectedOutput].dataType
            //};
-            var job = $scope.resourceResult;
+            var data = $scope.resourceResult;
 
-            //var fd = new FormData();
-            //var jobString = JSON.stringify(job);
-            //fd.append( 'body', job);
-            console.log(fd);
-            var request = $http({
-                method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data :job,
-                headers: {"Content-Type": undefined}
-            }).then(function successCallback( html ) {
+            gateway.async(
+                "POST",
+                '/v2/job',
+                data
+            ).then(function successCallback( html ) {
                 $scope.jobId = html.data.jobId;
                 $scope.ExecuteResultsRetries = 0;
                 getExecuteResult($scope.jobId)
@@ -485,170 +356,86 @@
 
         };
 
-        $scope.getServicesResult = function( jobId ) {
-            $scope.ListResultRetries += 1;
+        $scope.getServices = function(pageNumber) {
+            usSpinnerService.spin("spinner-list");
 
-            var data = {
-                "userName": "my-api-key-sakui",
-                "jobType": {
-                    "type": "get",
-                    "jobId": jobId
-                }
+            $scope.services = [];
+            if (pageNumber) {
+                $scope.pagination.current = pageNumber - 1;
+            }
+
+            var params = {
+                page: $scope.pagination.current,
+                per_page: $scope.listPerPage
             };
 
-            //var fd = new FormData();
-            //fd.append( 'body', JSON.stringify(data) );
-
-            $scope.services = "";
-
-            $http({
-                method: "POST",
-                url: "/proxy?url=" + discover.gatewayHost +  "/job",
-                data: data,
-                headers: {"Content-Type": undefined}
-            }).then(function successCallback( html ) {
-
-                if (html.data.status.indexOf("Success") > -1) {
-                    usSpinnerService.stop("spinner-list");
-                    $scope.services = angular.fromJson(html.data.result.text);
-                }
-                else {
-                    if ($scope.ListResultRetries < $scope.maxListResultRetries) {
-                        $timeout(function(){$scope.getServicesResult(jobId)}, QUICK_POLL);
-                    }
-                    else {
-                        usSpinnerService.stop("spinner-list");
-                        console.log("List Results max tries exceeded");
-                        toaster.pop('error', "Error", "List Results max tries exceeded");
-                    }
-                }
-
+            gateway.async(
+                "GET",
+                "/service",
+                undefined,
+                params
+            ).then(function successCallback( html ) {
+                usSpinnerService.stop("spinner-list");
+                $scope.services = angular.fromJson(html.data.data);
+                $scope.totalServices = html.data.pagination.count;
             }, function errorCallback(response){
-                // If it's a 500 error because the job doesn't exist yet, just try again
-                if (response.data.message == "Job Not Found.") {
-                    console.log("job not registered yet... trying again");
-                    $timeout(function(){$scope.getServicesResult(jobId)}, QUICK_POLL);
-                } else {
-                    usSpinnerService.stop("spinner-list");
-                    console.log("service.controller fail" + response.status);
-                    toaster.pop('error', "Error", "There was an issue with retrieving the services.");
-                }
+                usSpinnerService.stop("spinner-list");
+                console.log("service.controller fail" + response.status);
+                toaster.pop('error', "Error", "There was an issue with retrieving the services.");
             });
 
         };
 
-        $scope.getServices = function() {
-
-            var data = {
-                "userName": "my-api-key-sakui",
-                "jobType": {
-                    "type": "list-service"
-                }
-            };
-
-            //var fd = new FormData();
-            //fd.append( 'body', JSON.stringify(data) );
-
-            $scope.services = "";
-
-                $http({
-                    method: "POST",
-                    url: "/proxy?url=" + discover.gatewayHost +  "/v2/job",
-                    data: data,
-                    headers: {"Content-Type": application/json}
-                }).then(function successCallback( html ) {
-                    usSpinnerService.spin("spinner-list");
-                    $scope.ListResultRetries = 0;
-                    $scope.getServicesResult(html.data.jobId);
-                }, function errorCallback(response){
-                    console.log("service.controller fail"+response.status);
-                    toaster.pop('error', "Error", "There was an issue with retrieving the services.");
-                });
-
+        $scope.getListStart = function () {
+            return ($scope.pagination.current * $scope.listPerPage) + 1;
         };
 
-        $scope.searchServicesResult = function( jobId ) {
-
-            $scope.SearchResultRetries += 1;
-
-            var data = {
-                "userName": "my-api-key-kidkeid",
-                "jobType": {
-                    "type": "get",
-                    "jobId": jobId
-                }
-            };
-
-            //var fd = new FormData();
-            //fd.append( 'body', JSON.stringify(data) );
-
-            $http({
-                method: "POST",
-                url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: data,
-                headers: {
-                    "Content-Type": undefined
-                }
-            }).then(function successCallback( html ) {
-
-
-                if (html.data.status.indexOf("Success") > -1) {
-                    $scope.results = angular.fromJson(html.data.result.text);
-                }
-                else {
-                    if ($scope.SearchResultRetries < $scope.maxSearchResultRetries) {
-                        $timeout(function(){$scope.searchServicesResult(jobId)}, 2000);
-                    }
-                    else {
-                        console.log("Get Register Results max tries exceeded");
-                        toaster.pop('error', "Error", "Get Register Results max tries exceeded");
-                    }
-                }
-
-            }, function errorCallback(response){
-                // If it's a 500 error because the job doesn't exist yet, just try again
-                if (response.data.message == "Job Not Found.") {
-                    console.log("job not registered yet... trying again");
-                    $timeout(function(){$scope.searchServicesResult(jobId)}, 2000);
-                } else {
-                    console.log("user-service-registry.controller fail on search");
-                    toaster.pop('error', "Error", "There was an issue with your request.");
-                }
-            });
-
+        $scope.getListEnd = function () {
+            var end = ($scope.pagination.current * $scope.listPerPage) + $scope.listPerPage;
+            if (end > $scope.totalServices) {
+                return $scope.totalServices;
+            }
+            return end;
         };
 
-        $scope.searchServices = function() {
+        $scope.searchServices = function( pageNumber ) {
 
-            var data = {
-                "userName": "my-api-key-kidkeid",
-                "jobType": {
-                    "type": "search-service",
-                    "data": {
-                        field: $scope.searchField,
-                        pattern: $scope.searchPattern
-                    }
-                }
+            $scope.services = [];
+            if (pageNumber) {
+                $scope.searchPagination.current = pageNumber - 1;
+            }
+
+            var params = {
+                keyword: $scope.searchField,
+                page: $scope.searchPagination.current,
+                per_page: $scope.searchPerPage
             };
 
-            //var fd = new FormData();
-            //fd.append( 'body', JSON.stringify(data) );
-
-            $http({
-                method: "POST",
-                url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: data,
-                headers: {
-                    "Content-Type": undefined
-                }
-            }).then(function successCallback( html ) {
-                $scope.SearchResultRetries = 0;
-                $scope.searchServicesResult(html.data.jobId);
+            gateway.async(
+                "GET",
+                "/service",
+                undefined,
+                params
+            ).then(function successCallback( html ) {
+                $scope.results = angular.fromJson(html.data.data);
+                $scope.totalSearchResults = html.data.pagination.count;
             }, function errorCallback(response){
                 console.log("user-service-registry.controller fail on search");
                 toaster.pop('error', "Error", "There was an issue with your request.");
             });
 
+        };
+
+        $scope.getSearchStart = function () {
+            return ($scope.searchPagination.current * $scope.searchPerPage) + 1;
+        };
+
+        $scope.getSearchEnd = function () {
+            var end = ($scope.searchPagination.current * $scope.searchPerPage) + $scope.searchPerPage;
+            if (end > $scope.totalSearchResults) {
+                return $scope.totalSearchResults;
+            }
+            return end;
         };
 
 
@@ -657,64 +444,9 @@
         };
 
 
-        $scope.showUpdateResult = function( jobId ) {
-            $scope.ShowUpdateResultRetries += 1;
-
-            var data = {
-                "userName": "my-api-key-sakui",
-                "jobType": {
-                    "type": "get",
-                    "jobId": jobId
-                }
-            };
-
-            //var fd = new FormData();
-            //fd.append( 'body', JSON.stringify(data) );
-
-            $http({
-                method: "POST",
-                url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: data,
-                headers: {"Content-Type": undefined}
-            }).then(function successCallback(html) {
-                console.log(html);
-
-                if (html.data.status.indexOf("Success") > -1) {
-                    usSpinnerService.stop('spinner-update');
-                    var results = angular.fromJson(html.data.result.text);
-                    $scope.updateResourceId = results.id;
-                    $scope.updateServiceName = results.resourceMetadata.name;
-                    $scope.updateServiceDescrip = results.resourceMetadata.description;
-                    $scope.updateServiceUrl = results.resourceMetadata.url;
-                }
-                else {
-                    if ($scope.ShowUpdateResultRetries < $scope.maxShowUpdateResultRetries) {
-                        $timeout(function(){$scope.showUpdateResult(jobId)}, QUICK_POLL);
-                    }
-                    else {
-                        console.log("Describe Service Results max tries exceeded");
-                        toaster.pop('error', "Error", "Describe Service Results max tries exceeded");
-                        usSpinnerService.stop('spinner-update');
-                    }
-                }
-            }, function errorCallback(res) {
-                // If it's a 500 error because the job doesn't exist yet, just try again
-                if (res.data.message == "Job Not Found.") {
-                    console.log("job not registered yet... trying again");
-                    $timeout(function(){$scope.showUpdateResult(jobId)}, QUICK_POLL);
-                } else {
-                    console.log("User Service.controller fail"+res.status);
-                    toaster.pop('error', "Error", "There was a problem describing the service.");
-                    usSpinnerService.stop('spinner-update');
-                }
-            });
-
-
-        };
-
         $scope.showUpdateServiceForm = function(serviceId){
             usSpinnerService.spin('spinner-update');
-            var jobId = "";
+
             if (!$scope.showUpdateService){
                 $scope.showUpdateService = true;
             }
@@ -722,25 +454,19 @@
                 $scope.showUpdateService = false;
             }
 
-            var data = {
-                "userName": "my-api-key-sakui",
-                "jobType" : {
-                    "type": "read-service",
-                    "serviceID" : serviceId
-                }
-            };
+            gateway.async(
+                "GET",
+                '/service/' + serviceId
+            ).then(function successCallback( html ) {
+                usSpinnerService.stop('spinner-update');
+                console.log(html);
 
-            //var fd = new FormData();
-            //fd.append( 'body', JSON.stringify(data) );
-
-            $http({
-                method: "POST",
-                url: '/proxy?url=' + discover.gatewayHost + '/job',
-                data :data,
-                headers: {"Content-Type": undefined}
-            }).then(function successCallback( html ) {
-                $scope.ShowUpdateResultRetries = 0;
-                $scope.showUpdateResult(html.data.jobId)
+                var results = angular.fromJson(html.data.service);
+                $scope.updateResourceId = results.serviceId;
+                $scope.updateServiceName = results.resourceMetadata.name;
+                $scope.updateServiceDescrip = results.resourceMetadata.description;
+                $scope.updateServiceUrl = results.url;
+                $scope.updateServiceMethod = results.resourceMetadata.method;
             }, function errorCallback(response){
                 usSpinnerService.stop("spinner-update");
                 console.log("service.controller fail"+response.status);
@@ -749,60 +475,7 @@
 
         };
 
-        $scope.updateServiceResult = function( jobId ) {
-            $scope.UpdateResultRetries += 1;
-
-            var data = {
-                "userName": "my-api-key-sakui",
-                "jobType": {
-                    "type": "get",
-                    "jobId": jobId
-                }
-            };
-
-            //var fd = new FormData();
-            //fd.append( 'body', JSON.stringify(data) );
-
-            $http({
-                method: "POST",
-                url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: data,
-                headers: {"Content-Type": undefined}
-            }).then(function successCallback(html) {
-                console.log(html);
-
-                // If it's no longer submitted, it's probably done, assume that a status of
-                // "[null, "whateverServiceIdItWas"]" is the equivalent of success here
-                if (html.data.status !== "Submitted") {
-                    console.log(html);
-                    $scope.getServices();
-
-                    toaster.pop('success', "Success", "The service was successfully updated.")
-                }
-                else {
-                    if ($scope.UpdateResultRetries < $scope.maxUpdateResultRetries) {
-                        $timeout(function() {$scope.updateServiceResult(jobId)}, QUICK_POLL);
-                    }
-                    else {
-                        console.log("Update Service Results max tries exceeded");
-                        toaster.pop('error', "Error", "Update Service Results max tries exceeded");
-                    }
-                }
-            }, function errorCallback(res) {
-                // If it's a 500 error because the job doesn't exist yet, just try again
-                if (res.data.message == "Job Not Found.") {
-                    console.log("job not registered yet... trying again");
-                    $timeout(function() {$scope.updateServiceResult(jobId)}, QUICK_POLL);
-                } else {
-                    console.log("User Service.controller fail"+res.status);
-                    toaster.pop('error', "Error", "There was a problem updating the service.");
-                }
-            });
-
-        };
-
         $scope.updateService = function(){
-            var jobId = "";
             var serviceId = $scope.updateResourceId;
 
 
@@ -814,34 +487,24 @@
             }
 
             var dataObj = {
-                userName: "my-api-key-sakui",
-                jobType: {
-                    type: "update-service",
-                    serviceID: serviceId,
-                    data: {
-                        id: serviceId,
-                        resourceMetadata: {
-                            name: $scope.updateServiceName,
-                            description: $scope.updateServiceDescrip,
-                            url: $scope.updateServiceUrl
-                        }
-                    }
+                url: $scope.updateServiceUrl,
+                contractUrl: $scope.updateServiceUrl,
+                resourceMetadata: {
+                    name: $scope.updateServiceName,
+                    description: $scope.updateServiceDescrip,
+                    method: $scope.updateServiceMethod
                 }
             };
 
-            //var fd = new FormData();
-            //fd.append('body', JSON.stringify(dataObj));
+            gateway.async(
+                "PUT",
+                "/service/" + serviceId,
+                dataObj
+            ).then(function successCallback(res) {
+                console.log(res);
+                $scope.getServices();
 
-            $http({
-                method: "POST",
-                url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: dataObj,
-                headers: {"Content-Type": undefined}
-            }).then(function successCallback(res) {
-
-                $scope.UpdateResultRetries = 0;
-                $scope.updateServiceResult(res.data.jobId);
-
+                toaster.pop('success', "Success", "The service was successfully updated.")
             }, function errorCallback(res) {
                 console.log("User Service.controller fail"+res.status);
 
@@ -854,80 +517,16 @@
             $scope.updateServiceUrl = "";
         };
 
-        $scope.deleteServiceResult = function( jobId ) {
-            $scope.DeleteResultRetries += 1;
-
-            var data = {
-                "userName": "my-api-key-sakui",
-                "jobType": {
-                    "type": "get",
-                    "jobId": jobId
-                }
-            };
-
-            //var fd = new FormData();
-            //fd.append( 'body', JSON.stringify(data) );
-
-            $http({
-                method: "POST",
-                url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: data,
-                headers: {"Content-Type": undefined}
-            }).then(function successCallback(res) {
-                console.log(res);
-
-                if (res.data.status.indexOf("Success") > -1) {
-                    $scope.getServices();
-                    toaster.pop('success', "Success", "The service was successfully deleted.")
-
-                }
-                else {
-                    if ($scope.DeleteResultRetries < $scope.maxDeleteResultRetries) {
-                        $timeout(function(){$scope.deleteServiceResult(jobId)}, QUICK_POLL);
-                    }
-                    else {
-                        console.log("Delete Service Results max tries exceeded");
-                        toaster.pop('error', "Error", "Delete Service Results max tries exceeded");
-                    }
-                }
-
-            }, function errorCallback(res) {
-                // If it's a 500 error because the job doesn't exist yet, just try again
-                if (res.data.message == "Job Not Found.") {
-                    console.log("job not registered yet... trying again");
-                    $timeout(function(){$scope.deleteServiceResult(jobId)}, QUICK_POLL);
-                } else {
-                    console.log("User Service.controller fail"+res.status);
-                    toaster.pop('error', "Error", "There was a problem deleting the Service.");
-                }
-            });
-
-        };
-
         $scope.deleteService = function(serviceId){
 
-            var data = {
-                "userName": "my-api-key-sakui",
-                "jobType": {
-                    "type": "delete-service",
-                    "serviceID": serviceId,
-                    "reason" : "SAK user request"
-                }
-            };
-
-            //var fd = new FormData();
-            //fd.append( 'body', JSON.stringify(data) );
-
-            $http({
-                method: "POST",
-                url: "/proxy?url=" + discover.gatewayHost + "/job",
-                data: data,
-                headers: {"Content-Type": undefined}
-            }).then(function successCallback(res) {
+            gateway.async(
+                "DELETE",
+                "/service/" + serviceId
+            ).then(function successCallback(res) {
                 console.log(res);
 
-                $scope.DeleteResultRetries = 0;
-                $scope.deleteServiceResult(res.data.jobId);
+                $scope.getServices();
+                toaster.pop('success', "Success", "The service was successfully deleted.")
             }, function errorCallback(res) {
                 console.log("User Service.controller fail"+res.status);
 

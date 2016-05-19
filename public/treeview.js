@@ -17,7 +17,8 @@
 (function() {
   var app, deps;
 
-  deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive', 'toaster', 'ui.router', 'ngCookies'];
+  deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive',
+      'toaster', 'ui.router', 'ngCookies', 'angularUtils.directives.dirPagination'];
 
   if (angular.version.full.indexOf("1.2") >= 0) {
     deps.push('ngAnimate');
@@ -376,7 +377,7 @@
           async: function(method, endPoint, body, params) {
               var httpObject = {
                   method: method,
-                  url: "/proxy/" + discover.gatewayHost + endPoint
+                  url: "/proxy/" + discover.gatewayHost + endPoint,
               };
               if (angular.isDefined(body)) {
                   angular.extend(httpObject, {
