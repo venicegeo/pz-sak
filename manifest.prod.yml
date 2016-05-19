@@ -1,0 +1,9 @@
+applications:
+- name: pz-sak
+  host: pz-sak
+  buildpack: staticfile_buildpack
+  memory: 256M
+  instances: 1
+  timeout: 180
+  env:
+    USE_AUTH: false

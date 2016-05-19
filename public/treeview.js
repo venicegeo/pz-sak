@@ -26,13 +26,27 @@
 
   app = angular.module('SAKapp', deps );
 
-  app.factory('Auth',function($cookies) {
-      var loggedIn = false;
-      if ((angular.isDefined($cookies.getObject("auth")) &&
-          $cookies.getObject("auth").isLoggedIn)) {
-          loggedIn = true;
-      }
-      return { isLoggedIn : loggedIn};
+  app.factory('Auth',function($cookies, $http) {
+
+      var returnVal = { isLoggedIn : true };
+      jQuery.ajax({
+          method: "GET",
+          url: "/auth",
+          success: function(result) {
+              var jsonResult = JSON.parse(result);
+              if (jsonResult.useAuth) {
+                  var loggedIn = false;
+                  if ((angular.isDefined($cookies.getObject("auth")) &&
+                      $cookies.getObject("auth").isLoggedIn)) {
+                      loggedIn = true;
+                  }
+                returnVal = {isLoggedIn: loggedIn};
+              }
+          },
+          async: false
+      });
+
+      return returnVal;
   });
 
   app.controller('SAKappController', function($scope, $timeout, $http, Auth) {
