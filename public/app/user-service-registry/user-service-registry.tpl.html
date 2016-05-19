@@ -152,16 +152,26 @@
                 </div>
                 <div class="row">
                     <span us-spinner spinner-key="spinner-update"></span>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="updateServiceName">Name</label>
                             <input id="updateServiceName" type="text" class="form-control" ng-model="updateServiceName">
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="updateServiceDescrip">Description</label>
                             <input id="updateServiceDescrip" type="text" class="form-control" ng-model="updateServiceDescrip">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="updateMethod">Method</label>
+                            <select id="updateMethod" class="form-control" ng-model="updateServiceMethod" required>
+                                <option>GET</option>
+                                <option>POST</option>
+                                <option>PUT</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -223,8 +233,8 @@
                             <td >{{service.resourceMetadata.description}}</td>
                             <td >{{service.resourceMetadata.method}}</td>
                             <td >{{service.url}}</td>
-                            <td align="center"> <button ng-click="showUpdateServiceForm(service.serviceId)" class="btn btn-primary">Update</button></td>
-                            <td align="center"> <button ng-click="deleteService(service.serviceId)" class="btn btn-primary">Delete</button></td>
+                            <td align="right"> <button ng-click="showUpdateServiceForm(service.serviceId)" class="btn btn-primary">Update</button></td>
+                            <td align="right"> <button ng-click="deleteService(service.serviceId)" class="btn btn-primary">Delete</button></td>
                         </tr>
                     </table>
                     <div align="center">
