@@ -26,6 +26,10 @@
   "devDependencies": {
     "body-parser": "^1.14.2",
     "express": "^4.13.3",
+    "jasmine": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-jasmine": "^1.0.2",
     "morgan": "^1.6.1"
   }
 }
