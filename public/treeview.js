@@ -231,7 +231,14 @@
 
 
 
-      }
+      },
+        {
+            label: 'About',
+            onSelect: function(branch) {
+                return $scope.bodyDiv = "app/about/about.tpl.html";
+            },
+
+        }
     ];
 
     $scope.my_data = treedata_avm;
