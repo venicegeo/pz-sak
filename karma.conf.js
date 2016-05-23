@@ -17,7 +17,7 @@ module.exports = function(config) {
     files: [
         'public/js/lib/jquery.min.js',
         'public/js/lib/angular.js',
-        'node_modules/angular-mocks/angular-mocks.js',
+        'public/js/lib/angular-mocks-1.5.5.js',
         'public/treeview.js',
         'public/js/lib/*.js',
         'public/**/*.js',
