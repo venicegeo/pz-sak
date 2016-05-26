@@ -147,10 +147,10 @@
         </div>
         <div role="tabpanel" class="tab-pane fade" id="joblist">
             <h1 class="alert alert-info">Jobs List</h1>
-            <form id="jobsList" ng-init="getAllStatuses()">
+            <form id="jobsList" ng-init="getAllStatuses()" ng-submit="getJobsByUserId(true)">
                 <div class="row">
 
-                    <div class="col-md-3" ng-init="searchType = 'byJobStatus'">
+                    <div class="col-md-2" ng-init="searchType = 'byJobStatus'">
                         <div class="form-group" ng-show="searchType == 'byJobStatus'" style="margin-bottom: 1px;">
                             <label for="jobStatuses">Job Status</label>
                             <select id="jobStatuses" ng-options="jobStatus for jobStatus in jobStatuses | orderBy:jobStatus" ng-model="jobStatusQuery"
@@ -160,7 +160,7 @@
 
                         <div class="input-group" ng-show="searchType == 'byUserId'" style="margin-top: 25px; margin-bottom: 1px;">
                             <span class="input-group-btn">
-                                <button class="btn btn-default" type="button" ng-click="getJobsByUserId(true)" id="searchBtn">
+                                <button class="btn btn-default" type="submit" id="searchBtn">
                                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                 </button>
                             </span>
@@ -182,7 +182,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3 pull-right" ng-init="displayJson=false">
+                    <div class="col-md-2 pull-right" ng-init="displayJson=false">
                         <div class="form-group">
                             <label for="pageSize">Per page</label>
                             <select id="pageSize" ng-options="option for option in pageSizeOptions" ng-model="pageSize"
@@ -190,6 +190,14 @@
                             </select>
                             <input id="displayJson" type="checkbox" ng-model="displayJson">
                             <label for="displayJson">Display JSON</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 pull-right">
+                        <div class="form-group">
+                            <label for="order">Order</label>
+                            <select id="order" ng-options="option for option in orderOptions" ng-model="order"
+                                    class="form-control">
+                            </select>
                         </div>
                     </div>
 
