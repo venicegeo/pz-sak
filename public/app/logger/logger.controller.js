@@ -42,7 +42,7 @@
         $scope.getLogCount = function() {
             var params = {
                 size : 10000,
-                from : 0,
+                from : 0
             };
             if ($scope.afterDate) {
                 angular.extend(params, {

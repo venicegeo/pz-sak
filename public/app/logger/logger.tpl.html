@@ -46,14 +46,6 @@
         <div role="tabpanel" class="tab-pane fade in active" id="getlogs">
             <div class="row">
                 <h1 class="alert alert-info">Logger Service Info</h1>
-                <form ng-submit="getLogs()">
-                    <div class="row">
-                        <div class="col-md-6"  align="left">
-                            <button ng-click="showHideSearchForm()" class="btn btn-primary">Search Logs</button>
-                        </div>
-
-                    </div>
-                </form>
             </div>
 
             <br>
@@ -110,7 +102,7 @@
                     <div class="col-md-8">
                         <div class="form-group">
                             <button ng-model="btnSearchLogs" type="submit" class="btn btn-primary">Search</button>
-                            <button ng-model="btnCancelSearchLogs" type="reset" ng-click="showHideSearchForm()" class="btn btn-primary">Cancel</button>
+                            <button ng-model="btnCancelSearchLogs" ng-click="showHideSearchForm()" class="btn btn-primary">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -120,8 +112,9 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label for="filter">Filter</label>
-                        <input id="filter" type="text" class="form-control" ng-model="searchText">
+                        <form ng-submit="getLogs()">
+                           <button ng-click="showHideSearchForm()" class="btn btn-primary" style="margin-top: 20px;">Search Logs</button>
+                        </form>
                     </div>
                 </div>
                 <div class="col-md-6 text-center" style="margin-top: 20px;">
@@ -165,7 +158,7 @@
                                     <th >Severity</th>
                                     <th >Message</th>
                                 </tr>
-                                <tr ng-repeat="log in logs | filter:searchText">
+                                <tr ng-repeat="log in logs">
                                     <td >{{log.stamp | utc }}</td>
                                     <td >{{log.service}}</td>
                                     <td >{{log.address}}</td>
