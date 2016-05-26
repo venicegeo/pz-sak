@@ -133,8 +133,13 @@
                 var key = keys[0];
                 mapping[key] = item[key];
             });
+
+            var typeName = $scope.eventTypeName;
+            if (angular.isUndefined(typeName) || typeName === "") {
+                typeName = $scope.newEventTypeName;
+            }
             var eventDataObj = {
-                "name": $scope.eventTypeName,
+                "name": typeName,
                 "mapping" : mapping
             };
             $http.post(
