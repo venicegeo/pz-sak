@@ -91,13 +91,13 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="parameterName">Parameter Name</label>
-                            <input id="parameterName" type="text" class="form-control" ng-model="newEventTypeParameterName" required>
+                            <input id="parameterName" type="text" class="form-control" ng-model="newEventTypeParameterName">
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="newEventTypeDataType">Parameter DataType</label>
-                            <select id="newEventTypeDataType" class="form-control" ng-model="newEventTypeDataType" required>
+                            <select id="newEventTypeDataType" class="form-control" ng-model="newEventTypeDataType">
                                 <option>string</option>
                                 <option>boolean</option>
                                 <option>integer</option>
@@ -111,12 +111,12 @@
                     </div></div>
                     <div class="row">
                         <div class="col-md-2">
-                            <button ng-model="btnAddMapping" type="submit" class="btn btn-primary">Create Mapping</button>
+                            <button ng-model="btnAddMapping" type="submit" class="btn btn-primary">Add Mapping</button>
                         </div>
                     </div>
             </form>
 
-            <div class="row"  ng-show="showNewEventTypeForm">
+            <div class="row">
                 <br>
                 <div class="col-md-12">
                     <div class="form-group">

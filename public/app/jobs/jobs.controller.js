@@ -21,6 +21,8 @@
 
         function JobsController ($scope, $http, toaster, discover, gateway) {
             $scope.pageSizeOptions = [10, 50, 100, 500];
+            $scope.orderOptions = ['descending', 'ascending'];
+            $scope.order = 'descending';
             $scope.pageSize = 10;
             $scope.page = 0;
             $scope.jobStatusQuery = "All";
@@ -28,13 +30,13 @@
             var BY_USER_ID = "byUserId";
 
             // If pageSize or Job Status change, move back to the first page
-            $scope.$watch("pageSize", function(newValue, oldValue) {
+            $scope.$watchGroup(["pageSize", "order"], function(newValue, oldValue) {
                 $scope.page = 0;
                 if ($scope.jobStatusQuery) {
                     if ($scope.searchType == BY_JOB_STATUS) {
-                        $scope.updateFilter(false);
+                        $scope.updateFilter(true);
                     } else if ($scope.searchType == BY_USER_ID) {
-                        $scope.getJobsByUserId(false);
+                        $scope.getJobsByUserId(true);
                     }
                 }
             });
@@ -110,7 +112,8 @@
 
                 var params = {
                     page: $scope.page,
-                    pageSize: $scope.pageSize
+                    per_page: $scope.pageSize,
+                    order: $scope.order
                 };
                 $http({
                     method: "GET",
@@ -175,7 +178,8 @@
             $scope.getJobsByUserId = function(getCount) {
                 var params = {
                     page: $scope.page,
-                    pageSize: $scope.pageSize
+                    pageSize: $scope.pageSize,
+                    order: $scope.order
                 };
                 if (angular.isUndefined($scope.userId) || $scope.userId == "") {
                     return;
