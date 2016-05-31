@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('EventtypesController', ['$scope', '$http', '$log', '$q',  'toaster', 'discover', EventtypesController]);
+        .controller('EventtypesController', ['$scope', '$http', 'toaster', 'discover', EventtypesController]);
 
-    function EventtypesController ($scope, $http, $log, $q, toaster, discover) {
+    function EventtypesController ($scope, $http, toaster, discover) {
 
         $scope.showNewEventTypeForm = false;
         $scope.showEventTypeTable = false;
@@ -82,7 +82,7 @@
                 $scope.eventTypeMapping = html.data.mapping;
 
             }, function errorCallback(response){
-                console.log("workflow.controller fail"+response.status);
+                console.log("eventtypes.controller update type fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the event types.");
             });
 
@@ -119,7 +119,7 @@
             }).then(function successCallback( html ) {
                 $scope.eventTypes = html.data;
             }, function errorCallback(response){
-                console.log("workflow.controller fail"+response.status);
+                console.log("eventtypes.controller get eventtypes fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the event types.");
             });
 
@@ -163,9 +163,9 @@
                 toaster.pop('success', "Success", "The event was successfully posted.")
 
             }, function errorCallback(res) {
-                console.log("workflow.controller fail"+res.status);
+                console.log("eventtypes.controller create type fail: "+res.status);
 
-                toaster.pop('error', "Error", "There was a problem submitting the event message.");
+                toaster.pop('error', "Error", "There was a problem submitting the event type message.");
             });
         };
 
@@ -195,7 +195,7 @@
 
                 toaster.pop('success', "Success", "The eventtype was successfully deleted.");
             }, function errorCallback(response) {
-                console.log("workflow.controller fail"+response.status);
+                console.log("eventtypes.controller delete eventtype fail: "+response.status);
                 toaster.pop('error', "Error", "There was a problem deleting the eventtype.");
             });
         };

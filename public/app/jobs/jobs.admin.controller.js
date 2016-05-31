@@ -30,7 +30,7 @@
             }).then(function successCallback( html ) {
                 $scope.adminData = html.data;
             }, function errorCallback(response){
-                console.log("fail");
+                console.log("jobs admin stats fail: " + response.status);
                 toaster.pop('error', "Error", "There was an error retrieving the admin data");
             });
 

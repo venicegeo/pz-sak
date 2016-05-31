@@ -100,8 +100,8 @@
                 if (response.data.message) {
                     $scope.errorMsg = response.data.message;
                 }
-                console.log("search.controller fail");
-                toaster.pop('error', "Error", "There was an issue with your request.");
+                console.log("ingester.controller load fail: " + response.status);
+                toaster.pop('error', "Error", "There was an issue with your load request.");
             });
         };
 
@@ -117,7 +117,7 @@
             ).then(function successCallback( html ) {
                 $scope.jobStatus = html.data;
             }, function errorCallback(response){
-                console.log("search.controller fail");
+                console.log("ingester.controller job status fail: " + response.status);
                 toaster.pop('error', "Error", "There was an issue with your request.");
             });
         }

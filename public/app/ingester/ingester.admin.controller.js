@@ -40,9 +40,8 @@
                      console.log(item);
                      })*/
                 }, function errorCallback(response){
-                    console.log("ingester.admin.controller fail");
-                    toaster.pop('error', "Error", "There was an issue with your request.")
-                    //$scope.errorMsg = "There was an issue with your request.  Please make sure ..."
+                    console.log("ingester.admin.controller status fail: " + response.status);
+                    toaster.pop('error', "Error", "There was an issue with your status request.")
                 });
 
             });
@@ -69,8 +68,8 @@
                      console.log(item);
                      })*/
                 }, function errorCallback(response){
-                    console.log("ingester.admin.controller fail");
-                    toaster.pop('error', "Error", "There was an issue with your request.");
+                    console.log("ingester.admin.controller reset fail: " + response.status);
+                    toaster.pop('error', "Error", "There was an issue with your reset request.");
                 });
 
             });

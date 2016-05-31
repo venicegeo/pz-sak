@@ -18,14 +18,12 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('NameServerController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', NameServerController]);
+        .controller('NameServerController', ['$scope', 'discover', NameServerController]);
 
-    function NameServerController ($scope, $http, $log, $q, toaster, discover) {
+    function NameServerController ($scope, discover) {
 
         $scope.getServices = function (){
-
-        $scope.data = discover;
-
+            $scope.data = discover;
         };
     }
 

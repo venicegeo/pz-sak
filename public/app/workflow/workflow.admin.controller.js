@@ -30,9 +30,8 @@
                 $scope.adminData = html.data;
 
             }, function errorCallback(response){
-                console.log("fail");
+                console.log("workflow admin status fail");
                 toaster.pop('error', "Error", "There was an error retrieving the admin workflow data");
-                //$scope.errorMsg = "There was an issue with your request.  Please make sure ..."
             });
 
         };
@@ -46,7 +45,7 @@
             }).then(function successCallback( html ) {
                 $scope.settingsData = html.data;
             }, function errorCallback(response){
-                console.log("fail");
+                console.log("workflow admin settings fail");
                 toaster.pop('error', "Error", "There was an error retrieving the admin settings data");
 
             });
@@ -70,7 +69,7 @@
                 toaster.pop('success', "Success", "The admin settings was successfully posted.")
 
             }, function errorCallback(res) {
-                console.log("workflow.controller fail"+res.status);
+                console.log("workflow admin post settings fail: "+res.status);
                 toaster.pop('error', "Error", "There was a problem submitting the admin settings.");
             });
         };

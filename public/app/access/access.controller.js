@@ -17,9 +17,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('AccessController', ['$scope', '$log', '$q', '$http', 'toaster', 'discover', 'gateway', AccessController]);
+        .controller('AccessController', ['$scope', 'toaster', 'gateway', AccessController]);
 
-    function AccessController($scope, $log, $q, $http, toaster, discover, gateway) {
+    function AccessController($scope, toaster, gateway) {
         $scope.pageSize = 10;
         $scope.page = 0;
 
@@ -38,7 +38,7 @@
                 $scope.total = html.data.pagination.count;
                 $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
             }, function errorCallback(response) {
-                console.log("access.controller fail");
+                console.log("access.controller get data fail: " + response.status);
                 toaster.pop('error', "Error", "There was an issue with your request.");
             });
 
@@ -54,7 +54,7 @@
             ).then(function successCallback(html) {
                 $scope.accessData = html.data;
             }, function errorCallback(response) {
-                console.log("access.controller fail");
+                console.log("access.controller get access fail: " + response.status);
                 toaster.pop('error', "Error", "There was an issue with your request.");
             });
 

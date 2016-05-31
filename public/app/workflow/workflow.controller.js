@@ -46,7 +46,7 @@
                     });
                 }
             }, function errorCallback(response){
-                console.log("workflow.controller fail"+response.status);
+                console.log("workflow.controller get events fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the events.");
             });
 
@@ -87,7 +87,7 @@
                     $scope.selectedEventTypes = html.data;
                 }
             }, function errorCallback(response){
-                console.log("workflow.controller fail"+response.status);
+                console.log("workflow.controller get eventtypes fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the event types.");
             });
 
@@ -111,8 +111,8 @@
                 $scope.parameters = html.data.mapping;
 
             }, function errorCallback(response){
-                console.log("workflow.controller fail"+response.status);
-                toaster.pop('error', "Error", "There was an issue with retrieving the event types.");
+                console.log("workflow.controller update type fail: "+response.status);
+                toaster.pop('error', "Error", "There was an issue with retrieving the event type.");
             });
 
         };
@@ -167,10 +167,10 @@
             //clear input values
             $scope.alertMessage = null;
             $scope.eventType = null;
-            toaster.pop('success', "Success", "The event was successfully posted.")
+            toaster.pop('success', "Success", "The event was successfully sent.")
 
         }, function errorCallback(res) {
-            console.log("workflow.controller fail"+res.status);
+            console.log("workflow.controller post event fail: "+res.status);
 
             toaster.pop('error', "Error", "There was a problem submitting the event message.");
         });
@@ -206,7 +206,7 @@
 
                     toaster.pop('success', "Success", "The event was successfully deleted.");
                 }, function errorCallback(response) {
-                    console.log("workflow.controller fail" + response.status);
+                    console.log("workflow.controller delete event fail: " + response.status);
                     toaster.pop('error', "Error", "There was a problem deleting the event.");
                 });
             });
@@ -229,7 +229,7 @@
                 }
 
             }, function errorCallback(response){
-                console.log("workflow.controller fail"+response.status);
+                console.log("workflow.controller get alerts fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the alerts.");
             });
 
@@ -256,10 +256,10 @@
                 //set inputs to null to clear
                 $scope.alertTrigger = null;
                 $scope.alertEvent = null;
-                toaster.pop('success', "Success", "The alert was successfully posted.")
+                toaster.pop('success', "Success", "The alert was successfully sent.")
 
             }, function errorCallback(res) {
-                console.log("workflow.controller fail"+res.status);
+                console.log("workflow.controller post alert fail: "+res.status);
 
                 toaster.pop('error', "Error", "There was a problem submitting the alert message.");
             });
@@ -282,7 +282,7 @@
 
                 toaster.pop('success', "Success", "The alert was successfully deleted.");
             }, function errorCallback(response) {
-                console.log("workflow.controller fail"+response.status);
+                console.log("workflow.controller delete alert fail: "+response.status);
                 toaster.pop('error', "Error", "There was a problem deleting the alert message.");
             });
         };
@@ -299,7 +299,7 @@
             }).then(function successCallback( html ) {
                 $scope.triggers = html.data;
             }, function errorCallback(response){
-                console.log("workflow.controller fail"+response.status);
+                console.log("workflow.controller get triggers fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the triggers.");
             });
 
@@ -345,7 +345,7 @@
                 toaster.pop('success', "Success", "The trigger was successfully posted.")
 
             }, function errorCallback(res) {
-                console.log("workflow.controller fail"+res.status);
+                console.log("workflow.controller post trigger fail: "+res.status);
 
                 toaster.pop('error', "Error", "There was a problem submitting the trigger message.");
             });
@@ -362,7 +362,7 @@
             }).then(function successCallback( html ) {
                 $scope.trigger = html.data;
             }, function errorCallback(response){
-                console.log("workflow.controller fail"+response.status);
+                console.log("workflow.controller get trigger by id fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the trigger.");
             });
 
@@ -381,7 +381,7 @@
                 toaster.pop('success', "Success", "The trigger was successfully deleted.")
 
             }, function errorCallback(res) {
-                console.log("workflow.controller fail"+res.status);
+                console.log("workflow.controller delete trigger fail: "+res.status);
 
                 toaster.pop('error', "Error", "There was a problem deleting the trigger.");
             });

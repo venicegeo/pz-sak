@@ -28,18 +28,13 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=" + discover.uuidHost + "/v1/admin/stats",
+                url: "/proxy?url=" + discover.uuidHost + "/v1/admin/stats"
             }).then(function successCallback( html ) {
                 $scope.adminData = html.data;
                 console.log($scope.adminData);
-                //toaster.pop('success', "Success", "logs successfully retrieved.")
-                /*angular.forEach($scope.logs, function(item){
-                 console.log(item);
-                 })*/
             }, function errorCallback(response){
-                console.log("fail");
+                console.log("uuid.admin.controller status fail: "+response.status);
                 toaster.pop('error', "Error", "There was a problem retrieving the admin data.")
-
             });
 
 

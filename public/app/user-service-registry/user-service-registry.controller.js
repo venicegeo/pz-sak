@@ -143,7 +143,7 @@
                 $scope.showExecuteSuccess = true;
                 toaster.pop("success","Success",  "The service was executed successfully.")
             }, function errorCallback(response) {
-                console.log("search.controller fail");
+                console.log("service.controller Resource Result fail");
                 toaster.pop('error', "Error", "There was an issue with your request.");
             });
         }
@@ -175,7 +175,7 @@
                     console.log("job not registered yet... trying again");
                     $timeout(getExecuteResult, SLOW_POLL, jobId);
                 } else {
-                    console.log("search.controller fail");
+                    console.log("service.controller Execute Result fail");
                     toaster.pop('error', "Error", "There was an issue with your request.");
                 }
             });
@@ -196,7 +196,7 @@
                 // processServiceOutputs($scope.outputs);
                 console.log($scope.serviceId);
             }, function errorCallback(response) {
-                console.log("describe service.controller fail");
+                console.log("service.controller describe fail");
                 toaster.pop('error', "Error", "There was an issue with your request.");
             });
         }
@@ -298,8 +298,8 @@
                 toaster.pop("success","Success",  "The service was registered successfully.")
 
             }, function errorCallback(response){
-                console.log("user-service-registry.controller fail");
-                toaster.pop('error', "Error", "There was an issue with your request.");
+                console.log("service.controller Registration fail");
+                toaster.pop('error', "Error", "There was an issue with your registration request.");
             });
 
         };
@@ -350,8 +350,8 @@
 
 
             }, function errorCallback(response){
-                console.log("user-service-registry.controller fail");
-                toaster.pop('error', "Error", "There was an issue with your request.");
+                console.log("service.controller execution fail");
+                toaster.pop('error', "Error", "There was an issue with your execution request.");
             });
 
         };
@@ -380,7 +380,7 @@
                 $scope.totalServices = html.data.pagination.count;
             }, function errorCallback(response){
                 usSpinnerService.stop("spinner-list");
-                console.log("service.controller fail" + response.status);
+                console.log("service.controller list services fail: " + response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the services.");
             });
 
@@ -420,8 +420,8 @@
                 $scope.results = angular.fromJson(html.data.data);
                 $scope.totalSearchResults = html.data.pagination.count;
             }, function errorCallback(response){
-                console.log("user-service-registry.controller fail on search");
-                toaster.pop('error', "Error", "There was an issue with your request.");
+                console.log("service.controller fail on search");
+                toaster.pop('error', "Error", "There was an issue with your search request.");
             });
 
         };
@@ -469,8 +469,8 @@
                 $scope.updateServiceMethod = results.resourceMetadata.method;
             }, function errorCallback(response){
                 usSpinnerService.stop("spinner-update");
-                console.log("service.controller fail"+response.status);
-                toaster.pop('error', "Error", "There was an issue with retrieving the services.");
+                console.log("service.controller describe service fail: "+response.status);
+                toaster.pop('error', "Error", "There was an issue with retrieving the service.");
             });
 
         };
@@ -506,9 +506,9 @@
 
                 toaster.pop('success', "Success", "The service was successfully updated.")
             }, function errorCallback(res) {
-                console.log("User Service.controller fail"+res.status);
+                console.log("service.controller update fail: "+res.status);
 
-                toaster.pop('error', "Error", "There was a problem updating the Service.");
+                toaster.pop('error', "Error", "There was a problem updating the service.");
             });
 
             $scope.updateResourceId = "";
@@ -528,7 +528,7 @@
                 $scope.getServices();
                 toaster.pop('success', "Success", "The service was successfully deleted.")
             }, function errorCallback(res) {
-                console.log("User Service.controller fail"+res.status);
+                console.log("service.controller delete fail: "+res.status);
 
                 toaster.pop('error', "Error", "There was a problem deleting the Service.");
             });

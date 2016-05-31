@@ -18,10 +18,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('SearchController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', SearchController]);
+        .controller('SearchController', ['$scope', '$http', 'toaster', 'discover', SearchController]);
 
 
-    function SearchController($scope, $http, $log, $q, toaster, discover) {
+    function SearchController($scope, $http, toaster, discover) {
         $scope.size = 100;
         $scope.from = 0;
 
@@ -39,14 +39,14 @@
             $http({
                 method: "POST",
                 url: "/proxy/" + discover.searchHost + "/api/v1/recordcount",
-                data: query,
+                data: query
             }).then(function successCallback( html ) {
                 $scope.totalResults = html.data;
                 if ($scope.totalResults == 0) {
                     $scope.errorMsg = "No results to display";
                 }
             }, function errorCallback(response){
-                console.log("search.controller fail");
+                console.log("search.controller results count fail: " + response.status);
                 toaster.pop('error', "Error", "There was an issue with your request.");
             });
         };
@@ -104,14 +104,13 @@
             }).then(function successCallback( html ) {
                 $scope.searchResults = html.data.data;
             }, function errorCallback(response){
-                console.log("search.controller fail");
-                toaster.pop('error', "Error", "There was an issue with your request.");
+                console.log("search.controller get search results fail: " + response.status);
+                toaster.pop('error', "Error", "There was an issue with your search request.");
             });
 
         };
 
         var isUndefinedOrEmpty = function(str) {
-            var undefinedOrEmpty = false;
             return angular.isUndefined(str) || str.lengh == 0;
         };
 
@@ -175,14 +174,14 @@
                     $scope.tagMsg = "Keyword added successfully";
                     console.log("Success!");
                 }, function errorCallback(res) {
-                    console.log("search.controller fail");
-                    toaster.pop('error', "Error", "There was an issue with your request.");
+                    console.log("search.controller tag fail: " + res.status);
+                    toaster.pop('error', "Error", "There was an issue with your tag request.");
                 });
 
 
             }, function errorCallback(response){
-                console.log("search.controller fail");
-                toaster.pop('error', "Error", "There was an issue with your request.");
+                console.log("search.controller search fail");
+                toaster.pop('error', "Error", "There was an issue with your search request.");
             });
 
         };
@@ -194,7 +193,7 @@
                 $('html, body').scrollTop(0);
                 // $('html, body').animate({ scrollTop: 0 }, 'fast');
             }
-        }
+        };
 
         $scope.prevPage = function() {
             if ($scope.from > 0) {
@@ -203,7 +202,7 @@
                 $('html, body').scrollTop(0);
                 // $('html, body').animate({ scrollTop: 0 }, 'fast');
             }
-        }
+        };
 
         $scope.getLastIndex = function() {
             var endingPoint = $scope.from + $scope.size;
@@ -211,6 +210,6 @@
                 endingPoint = $scope.totalResults;
             }
             return endingPoint;
-        }
+        };
     }
 })();
