@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('UuidController', ['$scope', '$http', '$log', '$q',  'toaster', 'discover', UuidController]);
+        .controller('UuidController', ['$scope', '$http', 'toaster', 'discover', UuidController]);
 
-        function UuidController ($scope, $http, $log, $q, toaster, discover) {
+        function UuidController ($scope, $http, toaster, discover) {
 
                 $scope.getUUIDs = function () {
                     $scope.uuids = "";
@@ -37,11 +37,11 @@
                         console.log(posturl);
                         $http({
                             method: "POST",
-                            url: posturl,
+                            url: posturl
                         }).then(function successCallback( html ) {
                             $scope.uuids = html.data.data;
                         }, function errorCallback(response){
-                            console.log("fail");
+                            console.log("uuid.contoller get uuids fail: " + response.status);
                             toaster.pop('error', "Error", "There was an issue retrieving UUID(s)");
                         });
 

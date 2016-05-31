@@ -71,8 +71,8 @@
             }).then(function successCallback( html ) {
                 $scope.logCount = html.data.length;
             }, function errorCallback(response){
-                console.log("logger.controller fail"+response.status);
-                toaster.pop('error', "Error", "There was an issue with retrieving the logs.");
+                console.log("logger.controller log count fail: "+response.status);
+                toaster.pop('error', "Error", "There was an issue with retrieving the log count.");
             });
         };
 
@@ -112,7 +112,7 @@
             }).then(function successCallback( html ) {
                 $scope.logs = html.data;
             }, function errorCallback(response){
-                console.log("logger.controller fail"+response.status);
+                console.log("logger.controller get logs fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the logs.");
             });
 
@@ -140,7 +140,7 @@
                 $scope.logMessage = null;
                 toaster.pop('success', "Success", "The log was successfully posted.")
             }, function errorCallback(res) {
-                console.log("logger.controller fail"+res.status);
+                console.log("logger.controller post log fail: "+res.status);
                 toaster.pop('error', "Error", "There was a problem submitting the log message.");
             });
         };

@@ -95,7 +95,7 @@
                         $scope.jobStatuses.push("All");
                     }, function errorCallback(response){
                         console.log("search.controller fail all statuses");
-                        toaster.pop('error', "Error", "There was an issue with your request.");
+                        toaster.pop('error', "Error", "There was an issue with retrieving all possible statuses.");
                     });
 
 
@@ -134,7 +134,7 @@
                         $scope.total = html.data;
                         $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
                     }, function errorCallback(response) {
-                        console.log("search.controller fail  updateFilter count " + response.status);
+                        console.log("search.controller fail  updateFilter count: " + response.status);
                         toaster.pop('error', "Error", "There was an issue with your request.");
                     });
                 }
@@ -195,8 +195,8 @@
                         $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
                     }
                 }, function errorCallback(response) {
-                    console.log("search.controller fail");
-                    toaster.pop('error', "Error", "There was an issue with your request.");
+                    console.log("jobs.controller job by ID fail: " + response.status);
+                    toaster.pop('error', "Error", "There was an issue with your job request.");
                 });
             };
         }

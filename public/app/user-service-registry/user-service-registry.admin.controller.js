@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('UserServiceRegistryAdminController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', UserServiceRegistryAdminController]);
+        .controller('UserServiceRegistryAdminController', ['$scope', '$http', 'toaster', 'discover', UserServiceRegistryAdminController]);
 
-    function UserServiceRegistryAdminController ($scope, $http, $log, $q, toaster, discover) {
+    function UserServiceRegistryAdminController ($scope, $http, toaster, discover) {
 
         $scope.getStatus = function () {
             $scope.adminData = "";
@@ -70,12 +70,9 @@
                 $scope.threadsTotalStarted = html.data["threads.totalStarted"];
                 $scope.uptime = html.data["uptime"];
 
-
-
             }, function errorCallback(response){
-                console.log("fail");
+                console.log("admin status failure");
                 toaster.pop('error', "Error", "There was an error retrieving the admin data");
-                //$scope.errorMsg = "There was an issue with your request.  Please make sure ..."
             });
 
 

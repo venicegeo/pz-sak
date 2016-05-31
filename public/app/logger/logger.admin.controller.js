@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('LoggerAdminController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', LoggerAdminController]);
+        .controller('LoggerAdminController', ['$scope', '$http', 'toaster', 'discover', LoggerAdminController]);
 
-    function LoggerAdminController ($scope, $http, $log, $q, toaster, discover) {
+    function LoggerAdminController ($scope, $http, toaster, discover) {
 
         $scope.getStatus = function () {
             $scope.adminData = "";
@@ -28,11 +28,11 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=" + discover.loggerHost + "/v1/admin/stats",
+                url: "/proxy?url=" + discover.loggerHost + "/v1/admin/stats"
             }).then(function successCallback( html ) {
                 $scope.adminData = html.data;
             }, function errorCallback(response){
-                console.log("fail");
+                console.log("logger.admin.controller status fail: " + response.status);
                 toaster.pop('error', "Error", "There was an error retrieving the admin data");
             });
 
