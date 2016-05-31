@@ -79,7 +79,7 @@
             if ($scope.ingestType == 'File') {
                 var fd = new FormData();
                 fd.append( 'data', JSON.stringify(ingestObj) );
-                fd.append( 'file', document.getElementById('file').files[0]);
+                fd.append( 'file', $scope.file);
 
                 angular.extend(httpObject, {
                     data: fd,

@@ -32,8 +32,8 @@
 
 
         $scope.getEvents = function () {
-        $scope.events = "";
-        $scope.errorMsg = "";
+            $scope.events = "";
+            $scope.errorMsg = "";
 
             $http({
                 method: "GET",
@@ -50,7 +50,7 @@
                 toaster.pop('error', "Error", "There was an issue with retrieving the events.");
             });
 
-    };
+        };
 
         $scope.showHideNewEventType = function() {
             $scope.showNewEventTypeForm = !$scope.showNewEventTypeForm;

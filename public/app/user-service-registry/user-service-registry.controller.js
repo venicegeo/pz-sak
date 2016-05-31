@@ -186,7 +186,7 @@
                 "GET",
                 '/service/' + $scope.serviceId
             ).then(function successCallback(html) {
-                var serviceMetadata = JSON.parse(html.data.service);
+                var serviceMetadata = html.data.service;
                 $scope.serviceId = serviceMetadata.serviceId;
                 $scope.describeUrl = serviceMetadata.url;
                 $scope.describeMetadata = serviceMetadata.resourceMetadata;
