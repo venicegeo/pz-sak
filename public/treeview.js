@@ -27,11 +27,9 @@
   app = angular.module('SAKapp', deps );
 
   app.factory('Auth',function($cookies) {
-      var id = "";
-      var userStore = "";
       var auth = {
-          id : id,
-          userStore : userStore,
+          id : "",
+          userStore : "",
           isLoggedIn : false,
           encode : undefined
       };
