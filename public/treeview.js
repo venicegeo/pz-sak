@@ -27,12 +27,34 @@
   app = angular.module('SAKapp', deps );
 
   app.factory('Auth',function($cookies) {
-      var loggedIn = false;
+      var id = "";
+      var userStore = "";
+      var auth = {
+          id : id,
+          userStore : userStore,
+          isLoggedIn : false,
+          encode : undefined
+      };
+
+      var encode = function(user, pass) {
+          auth.userStore = user;
+          var decodedString = user + ":" + pass;
+          auth.id = b64EncodeUnicode(decodedString);
+          return auth;
+      };
+      auth.encode = encode;
+      function b64EncodeUnicode(str) {
+          return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+              return String.fromCharCode('0x' + p1);
+          }));
+      }
       if ((angular.isDefined($cookies.getObject("auth")) &&
           $cookies.getObject("auth").isLoggedIn)) {
-          loggedIn = true;
+          auth.id = $cookies.getObject("auth").id;
+          auth.userStore = $cookies.getObject("auth").user;
+          auth.isLoggedIn = true;
       }
-      return { isLoggedIn : loggedIn};
+      return auth;
   });
 
   app.controller('SAKappController', function($scope, $timeout, $http, Auth) {
@@ -265,8 +287,10 @@
       };
   });
 
-  app.config(function($stateProvider, $urlRouterProvider)
+  app.config(function($stateProvider, $urlRouterProvider, $cookiesProvider)
   {
+      $cookiesProvider.defaults.secure = true;
+
       $stateProvider
       // available for anybody
           .state('login',{
@@ -379,12 +403,15 @@
 
   }]);
 
-  app.factory('gateway', ['$http', 'discover', function($http, discover) {
+  app.factory('gateway', ['$http', 'discover', 'Auth',  function($http, discover, Auth) {
       var gateway = {
           async: function(method, endPoint, body, params) {
               var httpObject = {
                   method: method,
                   url: "/proxy/" + discover.gatewayHost + endPoint,
+                  headers: {
+                      "Authorization": "Basic " + Auth.id
+                  }
               };
               if (angular.isDefined(body)) {
                   angular.extend(httpObject, {

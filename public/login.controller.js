@@ -33,11 +33,13 @@
             }).then(function successCallback( html ) {
                 if (html.data) {
                     Auth.isLoggedIn = true;
+                    Auth.encode($scope.username, $scope.password);
                     $cookies.putObject("auth", Auth);
                     $location.path("/index.html");
                     toaster.pop('success', "Success", "You have logged in successfully.");
                 } else {
                     Auth.isLoggedIn = false;
+                    Auth.encode("null", "null");
                     $cookies.putObject("auth", Auth);
                     $location.path("/login.html");
                     console.log("login.controller fail: "+html.status);
