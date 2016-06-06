@@ -29,7 +29,8 @@
   app.factory('CONST', function() {
       var CONSTANTS = {
           isLoggedIn: "aiDfl3sFi0af9lkI4KL0D",
-          loggedIn: "idoIk.de4lE39EaseuKL2"
+          loggedIn: "idoIk.de4lE39EaseuKL2",
+          auth: "eJwoK3bw9C*1GickqW0pnQ1"
       };
       return CONSTANTS;
   });
@@ -54,10 +55,10 @@
               return String.fromCharCode('0x' + p1);
           }));
       }
-      if ((angular.isDefined($cookies.getObject("auth")) &&
-          $cookies.getObject("auth")[CONST.isLoggedIn] === CONST.loggedIn)) {
-          auth.id = $cookies.getObject("auth").id;
-          auth.userStore = $cookies.getObject("auth").user;
+      if ((angular.isDefined($cookies.getObject(CONST.auth)) &&
+          $cookies.getObject(CONST.auth)[CONST.isLoggedIn] === CONST.loggedIn)) {
+          auth.id = $cookies.getObject(CONST.auth).id;
+          auth.userStore = $cookies.getObject(CONST.auth).user;
           auth[CONST.isLoggedIn] = CONST.loggedIn;
       }
       return auth;

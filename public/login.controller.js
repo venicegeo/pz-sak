@@ -20,7 +20,7 @@
         .controller('LoginController', ['$scope', '$location', '$cookies', "$http", "discover", "toaster", "Auth", "CONST", LoginController]);
 
     function LoginController ($scope, $location, $cookies, $http, discover, toaster, Auth, CONST) {
-        $cookies.putObject("auth", Auth);
+        $cookies.putObject(CONST.auth, Auth);
         $scope.login = function() {
             var data = {
                 username: $scope.username,
@@ -34,13 +34,13 @@
                 if (html.data) {
                     Auth[CONST.isLoggedIn] = CONST.loggedIn;
                     Auth.encode($scope.username, $scope.password);
-                    $cookies.putObject("auth", Auth);
+                    $cookies.putObject(CONST.auth, Auth);
                     $location.path("/index.html");
                     toaster.pop('success', "Success", "You have logged in successfully.");
                 } else {
                     Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
                     Auth.encode("null", "null");
-                    $cookies.putObject("auth", Auth);
+                    $cookies.putObject(CONST.auth, Auth);
                     $location.path("/login.html");
                     console.log("login.controller fail: "+html.status);
                     toaster.pop('warning', "Invalid Credentials", "You have entered the wrong username or password.");
