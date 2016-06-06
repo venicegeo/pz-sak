@@ -26,13 +26,21 @@
 
   app = angular.module('SAKapp', deps );
 
-  app.factory('Auth',function($cookies) {
+  app.factory('CONST', function() {
+      var CONSTANTS = {
+          isLoggedIn: "aiDfl3sFi0af9lkI4KL0D",
+          loggedIn: "idoIk.de4lE39EaseuKL2"
+      };
+      return CONSTANTS;
+  });
+
+  app.factory('Auth',function($cookies, CONST) {
       var auth = {
           id : "",
           userStore : "",
-          isLoggedIn : false,
           encode : undefined
       };
+      auth[CONST.isloggedIn] = "aoifjakslfia(KDlaiLS";
 
       var encode = function(user, pass) {
           auth.userStore = user;
@@ -47,16 +55,17 @@
           }));
       }
       if ((angular.isDefined($cookies.getObject("auth")) &&
-          $cookies.getObject("auth").isLoggedIn)) {
+          $cookies.getObject("auth")[CONST.isLoggedIn] === CONST.loggedIn)) {
           auth.id = $cookies.getObject("auth").id;
           auth.userStore = $cookies.getObject("auth").user;
-          auth.isLoggedIn = true;
+          auth[CONST.isLoggedIn] = CONST.loggedIn;
       }
       return auth;
   });
 
-  app.controller('SAKappController', function($scope, $timeout, $http, Auth) {
+  app.controller('SAKappController', function($scope, $timeout, $http, Auth, CONST) {
     $scope.auth = Auth;
+    $scope.util = CONST;
     $scope.year = (new Date()).getFullYear();
     var tree, treedata_avm;
     $scope.my_tree_handler = function(branch) {
@@ -307,13 +316,13 @@
   });
 
 
-    app.run(function ($rootScope, $state, $location, Auth) {
+    app.run(function ($rootScope, $state, $location, Auth, CONST) {
 
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState) {
 
             var shouldLogin = toState.data !== undefined
                 && toState.data.requireLogin
-                && !Auth.isLoggedIn;
+                && Auth[CONST.isLoggedIn] !== CONST.loggedIn;
 
             // NOT authenticated - wants any private stuff
             if (shouldLogin) {
@@ -324,7 +333,7 @@
 
 
             // authenticated previously
-            if (Auth.isLoggedIn) {
+            if (Auth[CONST.isLoggedIn] === CONST.loggedIn) {
                 var shouldGoToIndex = fromState.name === ""
                     && toState.name !== "login";
                     // Used to be index, but that caused problems with tabs && toState.name !== "index";

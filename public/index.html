@@ -90,9 +90,9 @@
 <h2 style="margin-top: 10px;font-weight: bold">PZ-Client Swiss Army Knife Utility <img src="images/pz-client-logo.png" width="150" height="66"></h2>
 
 
-<div ui-view="" ng-hide="auth.isLoggedIn"></div>
+<div ui-view="" ng-hide="auth[util.isLoggedIn] == util.loggedIn"></div>
 
-<table border="0" ng-show="auth.isLoggedIn">
+<table border="0" ng-show="auth[util.isLoggedIn] == util.loggedIn">
     <tr>
 
         <td style="padding:20px;vertical-align:top">

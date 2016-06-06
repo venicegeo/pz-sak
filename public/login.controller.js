@@ -17,9 +17,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('LoginController', ['$scope', '$location', '$cookies', "$http", "discover", "toaster", "Auth", LoginController]);
+        .controller('LoginController', ['$scope', '$location', '$cookies', "$http", "discover", "toaster", "Auth", "CONST", LoginController]);
 
-    function LoginController ($scope, $location, $cookies, $http, discover, toaster, Auth) {
+    function LoginController ($scope, $location, $cookies, $http, discover, toaster, Auth, CONST) {
         $cookies.putObject("auth", Auth);
         $scope.login = function() {
             var data = {
@@ -32,13 +32,13 @@
                 data: data
             }).then(function successCallback( html ) {
                 if (html.data) {
-                    Auth.isLoggedIn = true;
+                    Auth[CONST.isLoggedIn] = CONST.loggedIn;
                     Auth.encode($scope.username, $scope.password);
                     $cookies.putObject("auth", Auth);
                     $location.path("/index.html");
                     toaster.pop('success', "Success", "You have logged in successfully.");
                 } else {
-                    Auth.isLoggedIn = false;
+                    Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
                     Auth.encode("null", "null");
                     $cookies.putObject("auth", Auth);
                     $location.path("/login.html");
