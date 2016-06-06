@@ -18,10 +18,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('SearchController', ['$scope', '$http', 'toaster', 'discover', SearchController]);
+        .controller('SearchController', ['$scope', '$http', 'toaster', 'discover', 'Auth', SearchController]);
 
 
-    function SearchController($scope, $http, toaster, discover) {
+    function SearchController($scope, $http, toaster, discover, Auth) {
         $scope.size = 100;
         $scope.from = 0;
 
@@ -100,7 +100,10 @@
                 method: "POST",
                 url: "/proxy/" + discover.gatewayHost + "/job",
                 data: formData,
-                headers: {"Content-Type": undefined}
+                headers: {
+                    "Content-Type": undefined,
+                    "Authorization": "Basic " + Auth.id
+                }
             }).then(function successCallback( html ) {
                 $scope.searchResults = html.data.data;
             }, function errorCallback(response){

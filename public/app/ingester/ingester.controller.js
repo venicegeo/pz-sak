@@ -17,10 +17,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('IngesterController', ['$scope', '$http', 'toaster', 'discover', 'gateway', IngesterController]);
+        .controller('IngesterController', ['$scope', '$http', 'toaster', 'discover', 'gateway', 'Auth', IngesterController]);
 
 
-    function IngesterController($scope, $http, toaster, discover, gateway) {
+    function IngesterController($scope, $http, toaster, discover, gateway, Auth) {
         $scope.data = "none";
         $scope.metadata = "{}";
 
@@ -73,7 +73,10 @@
 
             var httpObject = {
                 method: "POST",
-                url: "/proxy?url=" + discover.gatewayHost + endpoint
+                url: "/proxy?url=" + discover.gatewayHost + endpoint,
+                headers: {
+                    "Authorization": "Basic " + Auth.id
+                }
             };
 
             if ($scope.ingestType == 'File') {
@@ -84,7 +87,8 @@
                 angular.extend(httpObject, {
                     data: fd,
                     headers: {
-                        "Content-Type": undefined
+                        "Content-Type": undefined,
+                        "Authorization": "Basic " + Auth.id
                     }
                 });
             } else {

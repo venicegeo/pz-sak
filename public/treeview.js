@@ -26,17 +26,47 @@
 
   app = angular.module('SAKapp', deps );
 
-  app.factory('Auth',function($cookies) {
-      var loggedIn = false;
-      if ((angular.isDefined($cookies.getObject("auth")) &&
-          $cookies.getObject("auth").isLoggedIn)) {
-          loggedIn = true;
-      }
-      return { isLoggedIn : loggedIn};
+  app.factory('CONST', function() {
+      var CONSTANTS = {
+          isLoggedIn: "aiDfl3sFi0af9lkI4KL0D",
+          loggedIn: "idoIk.de4lE39EaseuKL2",
+          auth: "eJwoK3bw9C*1GickqW0pnQ1"
+      };
+      return CONSTANTS;
   });
 
-  app.controller('SAKappController', function($scope, $timeout, $http, Auth) {
+  app.factory('Auth',function($cookies, CONST) {
+      var auth = {
+          id : "",
+          userStore : "",
+          encode : undefined
+      };
+      auth[CONST.isloggedIn] = "aoifjakslfia(KDlaiLS";
+
+      var encode = function(user, pass) {
+          auth.userStore = user;
+          var decodedString = user + ":" + pass;
+          auth.id = b64EncodeUnicode(decodedString);
+          return auth;
+      };
+      auth.encode = encode;
+      function b64EncodeUnicode(str) {
+          return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+              return String.fromCharCode('0x' + p1);
+          }));
+      }
+      if ((angular.isDefined($cookies.getObject(CONST.auth)) &&
+          $cookies.getObject(CONST.auth)[CONST.isLoggedIn] === CONST.loggedIn)) {
+          auth.id = $cookies.getObject(CONST.auth).id;
+          auth.userStore = $cookies.getObject(CONST.auth).user;
+          auth[CONST.isLoggedIn] = CONST.loggedIn;
+      }
+      return auth;
+  });
+
+  app.controller('SAKappController', function($scope, $timeout, $http, Auth, CONST) {
     $scope.auth = Auth;
+    $scope.util = CONST;
     $scope.year = (new Date()).getFullYear();
     var tree, treedata_avm;
     $scope.my_tree_handler = function(branch) {
@@ -265,8 +295,10 @@
       };
   });
 
-  app.config(function($stateProvider, $urlRouterProvider)
+  app.config(function($stateProvider, $urlRouterProvider, $cookiesProvider)
   {
+      $cookiesProvider.defaults.secure = true;
+
       $stateProvider
       // available for anybody
           .state('login',{
@@ -285,13 +317,13 @@
   });
 
 
-    app.run(function ($rootScope, $state, $location, Auth) {
+    app.run(function ($rootScope, $state, $location, Auth, CONST) {
 
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState) {
 
             var shouldLogin = toState.data !== undefined
                 && toState.data.requireLogin
-                && !Auth.isLoggedIn;
+                && Auth[CONST.isLoggedIn] !== CONST.loggedIn;
 
             // NOT authenticated - wants any private stuff
             if (shouldLogin) {
@@ -302,7 +334,7 @@
 
 
             // authenticated previously
-            if (Auth.isLoggedIn) {
+            if (Auth[CONST.isLoggedIn] === CONST.loggedIn) {
                 var shouldGoToIndex = fromState.name === ""
                     && toState.name !== "login";
                     // Used to be index, but that caused problems with tabs && toState.name !== "index";
@@ -379,12 +411,15 @@
 
   }]);
 
-  app.factory('gateway', ['$http', 'discover', function($http, discover) {
+  app.factory('gateway', ['$http', 'discover', 'Auth',  function($http, discover, Auth) {
       var gateway = {
           async: function(method, endPoint, body, params) {
               var httpObject = {
                   method: method,
                   url: "/proxy/" + discover.gatewayHost + endPoint,
+                  headers: {
+                      "Authorization": "Basic " + Auth.id
+                  }
               };
               if (angular.isDefined(body)) {
                   angular.extend(httpObject, {
