@@ -28,6 +28,20 @@
             -moz-user-select: none;
             -ms-user-select: none;
         }
+
+        .url-break {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+
+            -ms-word-break: break-all;
+            word-break: break-all;
+
+            -ms-hyphens: auto;
+            -moz-hyphens: auto;
+            -webkit-hyphens: auto;
+            hyphens: auto;
+        }
+
     </style>
 </head>
 <body>
@@ -163,7 +177,7 @@
                                     <td >{{log.service}}</td>
                                     <td >{{log.address}}</td>
                                     <td >{{log.severity}}</td>
-                                    <td >{{log.message}}</td>
+                                    <td class="url-break">{{log.message}}</td>
                                 </tr>
                             </table>
 
