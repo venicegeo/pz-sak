@@ -18,10 +18,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('SearchController', ['$scope', '$http', 'toaster', 'discover', 'Auth', SearchController]);
+        .controller('SearchController', ['$scope', '$http', 'toaster', 'discover', 'gateway', SearchController]);
 
 
-    function SearchController($scope, $http, toaster, discover, Auth) {
+    function SearchController($scope, $http, toaster, discover, gateway) {
         $scope.size = 100;
         $scope.from = 0;
 
@@ -60,17 +60,12 @@
                 $scope.from = 0;
             }
 
-            var params = {
-                from: $scope.from,
-                size: $scope.size
-            };
-
             var q = "";
 
             if (!angular.isUndefined($scope.searchTerm) && $scope.searchTerm !== "") {
                 q = {
-                    "fuzzy_like_this": {
-                        "like_text": $scope.searchTerm
+                    "match": {
+                        "_all": $scope.searchTerm
                     }
                 };
             } else {
@@ -80,31 +75,18 @@
             }
 
             var data = {
-                "userName": "api-key-sakui",
-                "jobType": {
-                    "type": "search-query",
-                    "data": {
-                        "query": q,
-                        "size": $scope.size,
-                        "from": $scope.from
-                    }
-                }
+                "query": q,
+                "size": $scope.size,
+                "from": $scope.from
             };
-
-            var formData = new FormData();
-            formData.append('body', JSON.stringify(data));
 
             $scope.getResultsCount(q);
 
-            $http({
-                method: "POST",
-                url: "/proxy/" + discover.gatewayHost + "/job",
-                data: formData,
-                headers: {
-                    "Content-Type": undefined,
-                    "Authorization": "Basic " + Auth.id
-                }
-            }).then(function successCallback( html ) {
+            gateway.async(
+                "POST",
+                "/data/query",
+                data
+            ).then(function successCallback( html ) {
                 $scope.searchResults = html.data.data;
             }, function errorCallback(response){
                 console.log("search.controller get search results fail: " + response.status);
