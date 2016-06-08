@@ -27,7 +27,7 @@
                     $scope.errorMsg = "";
                         var url = discover.uuidHost;
                         var posturl = '';
-                        if ($scope.uuidCount === undefined){
+                        if (($scope.uuidCount === undefined) || ($scope.uuidCount === null)){
                             posturl = "/proxy?url="+ url +"/v1/uuids"
                         }
                         else {
