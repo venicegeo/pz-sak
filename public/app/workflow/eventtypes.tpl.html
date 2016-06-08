@@ -61,7 +61,7 @@
                             <tr ng-repeat="eventType in eventTypes">
                                 <td >{{eventType.id}}</td>
                                 <td >{{eventType.name}}</td>
-                                <td >{{eventType.mapping}}</td>
+                                <td class="nice-wrapping">{{eventType.mapping}}</td>
 
                                 <td align="center"> <button ng-click="deleteEventType(eventType.id)" class="btn btn-primary">
                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -79,7 +79,7 @@
             <form id="createEventTypesForm" name="createEventTypesForm" ng-model="createEventTypesForm" ng-submit="addMapping()">
                 <div class="row">
                     <h1 class="alert alert-info">Create New Event Type</h1>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="name">Event Type Name</label>
                             <input id="name" type="text" class="form-control" ng-disabled="disableEventTypeName" ng-model="newEventTypeName" required>
@@ -88,13 +88,13 @@
 
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="parameterName">Parameter Name</label>
                             <input id="parameterName" type="text" class="form-control" ng-model="newEventTypeParameterName">
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="newEventTypeDataType">Parameter DataType</label>
                             <select id="newEventTypeDataType" class="form-control" ng-model="newEventTypeDataType">

@@ -43,13 +43,13 @@
 
 <h2>Service Metadata</h2>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-8">
                         <div class="form-group">
                             <label for="name">Service Name</label>
                             <input id="name" type="text" class="form-control" ng-model="serviceName" required>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="method">Method</label>
                             <select id="method" class="form-control" ng-model="method" required>
@@ -61,13 +61,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-8">
                         <div class="form-group">
                             <label for="url">Service URL</label>
                             <input id="url" type="text" class="form-control" ng-model="serviceUrl" required>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="responseType">Response Type</label>
                             <input id="responseType" list="mimeTypes" class="form-control" ng-model="responseType" required/>
@@ -83,7 +83,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="description">Service Description</label>
                             <input id="description" type="text" class="form-control" ng-model="serviceDescription">
@@ -218,7 +218,7 @@
             <div class="row">
                 <div class="form-group" ng-show="services" ng-init="getServices()">
 
-                    <table id="searchTextResults" ng-model="searchTextResults" class="table table-striped" style="table-layout: fixed" width="100%">
+                    <table id="searchTextResults" ng-model="searchTextResults" class="table table-striped nicer-wrapping" style="table-layout: fixed" width="100%">
                         <tr><th >ResourceId</th>
                             <th >Name</th>
                             <th >Description</th>
@@ -310,10 +310,10 @@
                                 </tr>
                                 <tr dir-paginate="result in results | itemsPerPage: searchPerPage" total-items="totalSearchResults" currentPage="searchPagination.current" pagination-id="servicessearch">
                                     <td >{{result.serviceId}}</td>
-                                    <td >{{result.resourceMetadata.name}}</td>
-                                    <td >{{result.resourceMetadata.description}}</td>
+                                    <td class="nicer-wrapping">{{result.resourceMetadata.name}}</td>
+                                    <td class="nice-wrapping">{{result.resourceMetadata.description}}</td>
                                     <td >{{result.resourceMetadata.method}}</td>
-                                    <td >{{result.url}}</td>
+                                    <td class="nice-wrapping">{{result.url}}</td>
 
                                 </tr>
                             </table>

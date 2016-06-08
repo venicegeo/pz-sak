@@ -21,13 +21,6 @@
     <link rel="stylesheet" href="../../css/bootstrap.css">
 
     <style>
-        .navbutton {
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
 
         .two-column {
             -webkit-column-count: 2; /* Chrome, Safari, Opera */
@@ -124,7 +117,7 @@
                 </div>
                 <div class="row">
                     <div ng-show="resourceData">
-                        <dl class="dl-horizontal two-column" ng-hide="resourceData.message">
+                        <dl class="dl-horizontal two-column nice-wrapping" ng-hide="resourceData.message">
                             <dt>Resource ID</dt>
                             <dd>{{resourceData.data.dataId}}</dd>
                             <dt>Data Type</dt>
@@ -204,7 +197,7 @@
                 </div>
                 <div class="row">
                     <div ng-show="jobsList" ng-repeat="job in jobsList">
-                        <dl class="dl-horizontal two-column" ng-hide="displayJson">
+                        <dl class="dl-horizontal two-column nice-wrapping" ng-hide="displayJson">
                             <dt>Job ID</dt>
                             <dd>{{job.jobId}}</dd>
                             <dt>Submitted</dt>

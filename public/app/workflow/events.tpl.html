@@ -64,7 +64,7 @@
                                 <td >{{event.id}}</td>
                                 <td >{{event.eventtype_id}}</td>
                                 <td >{{event.date}}</td>
-                                <td >{{event.data}}</td>
+                                <td class="nice-wrapping">{{event.data}}</td>
                                 <td align="center"> <button ng-click="deleteEvent(event.eventtype_id,event.id)" class="btn btn-primary">
                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                 </button></td>
@@ -81,7 +81,7 @@
             <div class="row">
                 <h1 class="alert alert-info">Send an event to the Workflow Service</h1>
 
-                   <div class="col-md-3">
+                   <div class="col-md-6">
                         <label for="eventType">Select Event Type</label>
                         <select id="eventType" class="form-control" ng-model="eventType" ng-change="updateTypeTable(eventType.id)" ng-options="eventType.id for eventType in eventTypes">
                             <option value="">Please select</option>
@@ -102,7 +102,7 @@
                 </div>
                 <div class="row" ng-repeat="(key,value) in parameters" >
 
-                    <div class="col-md-4">
+                    <div class="col-md-8">
                         <div class="form-group">
                             <label for="newEventValue">Key: "{{key}}" of type: {{value}}</label>
 
