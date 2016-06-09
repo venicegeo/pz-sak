@@ -114,13 +114,28 @@
                 <div class="col-md-6" ng-show="jobStatus.message">
                     <label>{{jobStatus.message}}</label>
                 </div>
-                <div ng-show="jobStatus.progress">
-                    <div ng-show="jobStatus.progress.timeRemaining">Time Remaining: {{jobStatus.progress.timeRemaining}}</div>
-                    <div ng-show="jobStatus.progress.timeSpent">Time Spent: {{jobStatus.progress.timeSpent}}</div>
-                    <div ng-show="jobStatus.progress.percentComplete">Percent Complete:
-                        <progress style="margin-top:10px;" ng-title="jobStatus.progress.percentComplete" max="100" ng-value="jobStatus.progress.percentComplete"></progress>
-                        ({{jobStatus.progress.percentComplete}}%)
-                    </div>
+                <div ng-show="jobStatus">
+                    <dl class="dl-horizontal" ng-hide="jobStatus.message">
+                        <dt>Job ID</dt>
+                        <dd>{{jobStatus.jobId}}</dd>
+                        <dt>Status</dt>
+                        <dd>{{jobStatus.status}}</dd>
+                        <dt ng-show="jobStatus.progress.timeRemaining">TimeRemaining</dt>
+                        <dd ng-show="jobStatus.progress.timeRemaining">{{jobStatus.progress.timeRemaining}}</dd>
+                        <dt ng-show="jobStatus.progress.timeSpent">Time Spent</dt>
+                        <dd ng-show="jobStatus.progress.timeSpent">{{jobStatus.progress.timeSpent}}</dd>
+                        <dt ng-show="jobStatus.progress.percentComplete">Progress</dt>
+                        <dd ng-show="jobStatus.progress.percentComplete">
+                            <progress style="margin-top:10px;" ng-title="jobStatus.progress.percentComplete" max="100" ng-value="jobStatus.progress.percentComplete"></progress>
+                            ({{jobStatus.progress.percentComplete}}%)
+                        </dd>
+                        <dt ng-show="jobStatus.result.type">Result Type</dt>
+                        <dd ng-show="jobStatus.result.type">{{jobStatus.result.type}}</dd>
+                        <dt ng-show="jobStatus.result.text">Result Text</dt>
+                        <dd ng-show="jobStatus.result.text">{{jobStatus.result.text}}</dd>
+                        <dt ng-show="jobStatus.result.dataId">Resource ID</dt>
+                        <dd ng-show="jobStatus.result.dataId">{{jobStatus.result.dataId}}</dd>
+                    </dl>
                 </div>
             </form>
         </div>
