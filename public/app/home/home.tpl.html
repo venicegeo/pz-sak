@@ -20,7 +20,19 @@
     <title>SAK Home</title>
     <link rel="stylesheet" href="../../css/bootstrap.css">
 
-
+    <style type="text/css">
+        .statusIndicator {
+            width:1%;
+            padding:0px 8px;
+            border-radius:25px;
+        }
+        .green {
+            background-color:limegreen;
+        }
+        .red {
+            background-color:crimson;
+        }
+    </style>
 </head>
 <body>
 
@@ -56,22 +68,22 @@
         <div class="col-md-6">
             <h3 class="alert alert-info">Running Services</h3>
             <div class="row">
-                <div ng-show="services">
+                <div ng-show="services" ng-init="auth ? getStatuses() : '' ">
                     <dl class="dl-horizontal two-column">
-                        <dt>Logger: </dt>
-                        <dd><a ng-href="https://{{services.loggerHost}}">https://{{services.loggerHost}}</a></dd>
-                        <dt>UUID: </dt>
-                        <dd><a ng-href="https://{{services.uuidHost}}">https://{{services.uuidHost}}</a></dd>
-                        <dt>Workflow: </dt>
-                        <dd><a ng-href="https://{{services.workflowHost}}">https://{{services.workflowHost}}</a></dd>
-                        <dt>Search: </dt>
-                        <dd><a ng-href="https://{{services.searchHost}}">https://{{services.searchHost}}</a></dd>
-                        <dt>Service Controller: </dt>
-                        <dd><a ng-href="https://{{services.serviceControllerHost}}">https://{{services.serviceControllerHost}}</a></dd>
-                        <dt>Dispatcher Controller: </dt>
-                        <dd><a ng-href="https://{{services.dispatcherHost}}">https://{{services.dispatcherHost}}</a></dd>
-                        <dt>Gateway: </dt>
-                        <dd><a ng-href="https://{{services.gatewayHost}}">https://{{services.gatewayHost}}</a></dd>
+                        <dt>Logger:&nbsp;<span class="statusIndicator {{loggerStatus}}"></span></dt>
+                        <dd><a ng-href="#" ng-click="openPage(services.loggerHost)">https://{{services.loggerHost}}</a></dd>
+                        <dt>UUID:&nbsp;<span class="statusIndicator {{uuidStatus}}"></span></dt>
+                        <dd><a ng-href="#" ng-click="openPage(services.uuidHost)">https://{{services.uuidHost}}</a></dd>
+                        <dt>Workflow:&nbsp;<span class="statusIndicator {{workflowStatus}}"></span></dt>
+                        <dd><a ng-href="#" ng-click="openPage(services.workflowHost)">https://{{services.workflowHost}}</a></dd>
+                        <dt>Search:&nbsp;<span class="statusIndicator {{searchStatus}}"></span></dt>
+                        <dd><a ng-href="#" ng-click="openPage(services.searchHost)">https://{{services.searchHost}}</a></dd>
+                        <dt>Service Controller:&nbsp;<span class="statusIndicator {{serviceControllerStatus}}"></span></dt>
+                        <dd><a ng-href="#" ng-click="openPage(services.serviceControllerHost)">https://{{services.serviceControllerHost}}</a></dd>
+                        <dt>Dispatcher:&nbsp;<span class="statusIndicator {{dispatcherStatus}}"></span></dt>
+                        <dd><a ng-href="#" ng-click="openPage(services.dispatcherHost)">https://{{services.dispatcherHost}}</a></dd>
+                        <dt>Gateway:&nbsp;<span class="statusIndicator {{gatewayStatus}}"></span></dt>
+                        <dd><a ng-href="#" ng-click="openPage(services.gatewayHost)">https://{{services.gatewayHost}}</a></dd>
                     </dl>
 
                     <hr class="separator">

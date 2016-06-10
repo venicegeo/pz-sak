@@ -413,7 +413,7 @@
 
   app.factory('gateway', ['$http', 'discover', 'Auth',  function($http, discover, Auth) {
       var gateway = {
-          async: function(method, endPoint, body, params) {
+          async: function(method, endPoint, body, params, fixTransform) {
               var httpObject = {
                   method: method,
                   url: "/proxy/" + discover.gatewayHost + endPoint,
@@ -429,6 +429,13 @@
               if (angular.isDefined(params)) {
                   angular.extend(httpObject, {
                       params: params
+                  });
+              }
+              if (fixTransform) {
+                  angular.extend(httpObject, {
+                      transformResponse: function(value){
+                          return value;
+                      }
                   });
               }
               var promise = $http(httpObject).then(function successCallback( html ) {
