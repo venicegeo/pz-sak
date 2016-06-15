@@ -53,6 +53,26 @@
             return end;
         };
 
+        // Alerts Pagination
+        $scope.totalAlerts = 0;
+        $scope.alertsPerPage = 10;
+        $scope.alertsPagination = {
+            current: 0
+        };
+        $scope.alertsPageChanged = function(newPage) {
+            $scope.getAlerts(newPage);
+        };
+        $scope.getAlertStart = function () {
+            return ($scope.alertsPagination.current * $scope.alertsPerPage) + 1;
+        };
+        $scope.getAlertEnd = function () {
+            var end = ($scope.alertsPagination.current * $scope.alertsPerPage) + $scope.alertsPerPage;
+            if (end > $scope.totalAlerts) {
+                return $scope.totalAlerts;
+            }
+            return end;
+        };
+
 
         $scope.getEvents = function (pageNumber) {
             $scope.events = "";
@@ -232,19 +252,31 @@
         };
 
 
-        $scope.getAlerts = function () {
+        $scope.getAlerts = function (pageNumber) {
             $scope.alerts = "";
             $scope.errorMsg = "";
 
+            if (pageNumber) {
+                $scope.alertsPagination.current = pageNumber - 1;
+            }
+
+            var params = {
+                page: $scope.alertsPagination.current,
+                per_page: $scope.alertsPerPage
+            };
+
             gateway.async(
                 "GET",
-                "/alert"
+                "/alert",
+                null,
+                params
             ).then(function successCallback( html ) {
                 // Only return non-null values in the array
                 if((html.data!= null) && (html.data.data != null)) {
                     $scope.alerts = html.data.data.filter(function (n) {
                         return n != undefined
                     });
+                    $scope.totalAlerts = html.data.pagination.count;
                 }
 
             }, function errorCallback(response){
