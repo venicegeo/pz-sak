@@ -103,7 +103,7 @@
             }
 
             var params = {
-                page: $scope.eventsPagination.current,
+                page: $scope.eventsPagination.current * $scope.eventsPerPage,
                 per_page: $scope.eventsPerPage
             };
 
@@ -284,7 +284,7 @@
             }
 
             var params = {
-                page: $scope.alertsPagination.current,
+                page: $scope.alertsPagination.current * $scope.alertsPerPage,
                 per_page: $scope.alertsPerPage
             };
 
@@ -365,7 +365,7 @@
             }
 
             var params = {
-                page: $scope.triggersPagination.current,
+                page: $scope.triggersPagination.current * $scope.triggersPerPage,
                 per_page: $scope.triggersPerPage
             };
             gateway.async(
