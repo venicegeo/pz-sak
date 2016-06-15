@@ -40,7 +40,21 @@
 
                 <form ng-submit="getTriggers()">
 
-                    <div class="col-md-12" align="right">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="pageSize">Per page</label>
+                            <select id="pageSize" ng-options="option for option in pageOptions" ng-model="triggersPerPage"
+                                    class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-8 text-center" style="margin-top: 25px;">
+                        <div class="range-label" ng-show="totalTriggers > 0">
+                            <label>Displaying {{ getTriggerStart() }} - {{ getTriggerEnd() }} of {{ totalTriggers }}</label>
+                        </div>
+                        <label ng-show="totalTriggers == 0">No results to display</label>
+                    </div>
+                    <div class="col-md-2" align="right" style="margin-top: 15px;">
                         <button type="submit" class="btn btn-primary">
                             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                         </button>
@@ -54,7 +68,6 @@
                     <div class="col-md-12">
                         <div class="form-group" ng-show="triggers" ng-init="getTriggers()">
 
-                            <label>Filter: <input ng-model="searchText"></label>
                             <table id="searchTriggerResults" class="table-striped table-bordered table table-hover" width="100%">
                                 <tr><th >TriggerId</th>
                                     <th >Title</th>
@@ -64,7 +77,10 @@
                                     <th></th>
 
                                 </tr>
-                                <tr ng-repeat="trigger in triggers | filter:searchText">
+                                <tr dir-paginate="trigger in triggers | itemsPerPage: triggersPerPage"
+                                    total-items="totalTriggers"
+                                    currentPage="triggerPagination.current"
+                                    pagination-id="triggersList">
                                     <td >{{trigger.id}}</td>
                                     <td >{{trigger.title}}</td>
                                     <td >{{trigger.condition.eventtype_ids}}</td>
@@ -75,7 +91,9 @@
                                     </button></td>
                                 </tr>
                             </table>
-
+                            <div align="center">
+                                <dir-pagination-controls on-page-change="triggersPageChanged(newPageNumber)" pagination-id="triggersList"></dir-pagination-controls>
+                            </div>
 
                         </div>
 

@@ -73,6 +73,26 @@
             return end;
         };
 
+        // Triggers Pagination
+        $scope.totalTriggers = 0;
+        $scope.triggersPerPage = 10;
+        $scope.triggersPagination = {
+            current: 0
+        };
+        $scope.triggersPageChanged = function(newPage) {
+            $scope.getTriggers(newPage);
+        };
+        $scope.getTriggerStart = function () {
+            return ($scope.triggersPagination.current * $scope.triggersPerPage) + 1;
+        };
+        $scope.getTriggerEnd = function () {
+            var end = ($scope.triggersPagination.current * $scope.triggersPerPage) + $scope.triggersPerPage;
+            if (end > $scope.totalTriggers) {
+                return $scope.totalTriggers;
+            }
+            return end;
+        };
+
 
         $scope.getEvents = function (pageNumber) {
             $scope.events = "";
@@ -337,15 +357,26 @@
 
 
 
-        $scope.getTriggers = function () {
+        $scope.getTriggers = function (pageNumber) {
             $scope.triggers = "";
             $scope.errorMsg = "";
 
+            if (pageNumber) {
+                $scope.triggersPagination.current = pageNumber - 1;
+            }
+
+            var params = {
+                page: $scope.triggersPagination.current,
+                per_page: $scope.triggersPerPage
+            };
             gateway.async(
                 "GET",
-                "/trigger"
+                "/trigger",
+                null,
+                params
             ).then(function successCallback( html ) {
                 $scope.triggers = html.data.data;
+                $scope.totalTriggers = html.data.pagination.count;
             }, function errorCallback(response){
                 console.log("workflow.controller get triggers fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the triggers.");
