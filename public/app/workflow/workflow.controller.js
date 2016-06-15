@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('WorkflowController', ['$scope', '$http', '$log', '$q',  'toaster', 'discover', WorkflowController]);
+        .controller('WorkflowController', ['$scope', '$http', '$log', '$q',  'toaster', 'discover', 'gateway', WorkflowController]);
 
-    function WorkflowController ($scope, $http, $log, $q, toaster, discover) {
+    function WorkflowController ($scope, $http, $log, $q, toaster, discover, gateway) {
 
         $scope.selectedTypes = [];
         $scope.addedTypes = [];
@@ -35,13 +35,13 @@
             $scope.events = "";
             $scope.errorMsg = "";
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/events",
-            }).then(function successCallback( html ) {
+            gateway.async(
+                "GET",
+                "/event"
+            ).then(function successCallback( html ) {
                 // Only return non-null values in the array
-                if(html.data != null) {
-                    $scope.events = html.data.filter(function (n) {
+                if ((html.data != null && html.data.data != null)) {
+                    $scope.events = html.data.data.filter(function (n) {
                         return n != undefined
                     });
                 }
@@ -78,13 +78,13 @@
             $scope.eventType = "";
             $scope.eventTypes = [];
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/eventtypes",
-            }).then(function successCallback( html ) {
+            gateway.async(
+                "GET",
+                "/eventType"
+            ).then(function successCallback( html ) {
                 if(html.data != null) {
-                    $scope.eventTypes = html.data;
-                    $scope.selectedEventTypes = html.data;
+                    $scope.eventTypes = html.data.data;
+                    $scope.selectedEventTypes = html.data.data;
                 }
             }, function errorCallback(response){
                 console.log("workflow.controller get eventtypes fail: "+response.status);
@@ -101,10 +101,10 @@
                 $scope.showNewEventForm = false;
             }
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/eventtypes/"+eventTypeId,
-            }).then(function successCallback( html ) {
+            gateway.async(
+                "GET",
+                "/eventType/"+eventTypeId
+            ).then(function successCallback( html ) {
                 $scope.eventTypeLabel = html.data.name;
                 $scope.eventTypeId = html.data.id;
                 $scope.eventTypeName = html.data.name;
@@ -155,8 +155,9 @@
 
         console.log(dataObj);
 
-        $http.post(
-            "/proxy?url=" + discover.workflowHost + "/v1/events/" + $scope.eventTypeName,
+        gateway.async(
+            "POST",
+            "/event/" + $scope.eventTypeName,
             dataObj
         ).then(function successCallback(res) {
             $scope.message = res;
@@ -176,54 +177,37 @@
         });
     };
 
-        $scope.deleteEvent = function(eventtypeId, eventId) {
-            //delete endpoint deletes based on event type NAME and eventID.
-            //first call the get on eventtypes by ID to store the eventTypeName, then pass that eventTypeName into
-            //the delele endpoint along with the eventId
+        $scope.deleteEvent = function(eventId) {
 
-            var url = "";
-            var deleteEvent = "";
-            url = "/proxy?url=" + discover.workflowHost + "/v1/eventtypes/"+eventtypeId;
-            $http({
-                method: "GET",
-                url: url
-            }).then(function successCallback( html ) {
-                deleteEvent = html.data.name;
+            gateway.async(
+                "DELETE",
+                "/event/" + eventId
+            ).then(function successCallback(html) {
+                $scope.message = html;
+                console.log("success");
 
-                $http({
-                    method: "DELETE",
-                    url: "/proxy?url=" + discover.workflowHost + "/v1/events/" + deleteEvent + "/" + eventId,
-                }).then(function successCallback(html) {
-                    $scope.message = html;
-                    console.log("success");
+                //reload events table
+                $scope.getEvents();
 
-                    //reload events table
-                    $scope.getEvents();
-
-                    //clear input values
-                    $scope.alertMessage = null;
-                    $scope.eventType = null;
-
-                    toaster.pop('success', "Success", "The event was successfully deleted.");
-                }, function errorCallback(response) {
-                    console.log("workflow.controller delete event fail: " + response.status);
-                    toaster.pop('error', "Error", "There was a problem deleting the event.");
-                });
+                toaster.pop('success', "Success", "The event was successfully deleted.");
+            }, function errorCallback(response) {
+                console.log("workflow.controller delete event fail: " + response.status);
+                toaster.pop('error', "Error", "There was a problem deleting the event.");
             });
-            };
+        };
 
 
         $scope.getAlerts = function () {
             $scope.alerts = "";
             $scope.errorMsg = "";
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/alerts",
-            }).then(function successCallback( html ) {
+            gateway.async(
+                "GET",
+                "/alert"
+            ).then(function successCallback( html ) {
                 // Only return non-null values in the array
-                if(html.data!= null) {
-                    $scope.alerts = html.data.filter(function (n) {
+                if((html.data!= null) && (html.data.data != null)) {
+                    $scope.alerts = html.data.data.filter(function (n) {
                         return n != undefined
                     });
                 }
@@ -244,8 +228,9 @@
                 event_id: alertEvent
             };
 
-            $http.post(
-                "/proxy?url=" + discover.workflowHost + "/v1/alerts",
+            gateway.async(
+                "POST",
+                "/alert",
                 dataObj
             ).then(function successCallback(res) {
                 $scope.message = res;
@@ -266,19 +251,15 @@
         };
 
         $scope.deleteAlert = function(alertId) {
-            $http({
-                method: "DELETE",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/alerts/"+alertId,
-            }).then(function successCallback( html ) {
+            gateway.async(
+                "DELETE",
+                "/alert/"+alertId
+            ).then(function successCallback( html ) {
                 $scope.message = html;
                 console.log("success");
 
                 //getAlerts again to reload table
                 $scope.getAlerts();
-
-                //Set input to null to clear
-                $scope.alertTrigger = null;
-                $scope.alertEvent = null;
 
                 toaster.pop('success', "Success", "The alert was successfully deleted.");
             }, function errorCallback(response) {
@@ -293,11 +274,11 @@
             $scope.triggers = "";
             $scope.errorMsg = "";
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/triggers",
-            }).then(function successCallback( html ) {
-                $scope.triggers = html.data;
+            gateway.async(
+                "GET",
+                "/trigger"
+            ).then(function successCallback( html ) {
+                $scope.triggers = html.data.data;
             }, function errorCallback(response){
                 console.log("workflow.controller get triggers fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the triggers.");
@@ -327,8 +308,9 @@
                 },
             };
 
-            $http.post(
-                "/proxy?url=" + discover.workflowHost + "/v1/triggers",
+            gateway.async(
+                "POST",
+                "/trigger",
                 dataObj
             ).then(function successCallback(res) {
                 $scope.message = res;
@@ -356,10 +338,10 @@
             $scope.triggerId = "";
             $scope.errorMsg = "";
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/triggers/"+triggerId,
-            }).then(function successCallback( html ) {
+            gateway.async(
+                "GET",
+                "/trigger/"+triggerId
+            ).then(function successCallback( html ) {
                 $scope.trigger = html.data;
             }, function errorCallback(response){
                 console.log("workflow.controller get trigger by id fail: "+response.status);
@@ -370,11 +352,11 @@
 
         $scope.deleteTrigger = function(triggerId){
             $scope.errorMsg = "";
-            var workflowMessage = $scope.workflowMessage;
 
-            $http.delete(
-                "/proxy?url=" + discover.workflowHost + "/v1/triggers/"+triggerId
-                ).then(function successCallback(res) {
+            gateway.async(
+                "DELETE",
+                "/trigger/"+triggerId
+            ).then(function successCallback(res) {
                 $scope.message = res;
                 $scope.getTriggers();
                 $scope.workflowMessage = null;

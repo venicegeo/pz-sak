@@ -41,7 +41,9 @@
                 <form ng-submit="getAlerts()">
 
                     <div class="col-md-12" align="right">
-                        <button type="submit" class="btn btn-primary">Refresh Table</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                        </button>
                     </div>
 
 
@@ -63,7 +65,9 @@
                                 <td >{{alert.id}}</td>
                                 <td >{{alert.trigger_id}}</td>
                                 <td >{{alert.event_id}}</td>
-                                <td align="center"> <button ng-click="deleteAlert(alert.id)" class="btn btn-primary">Delete Alert</button></td>
+                                <td align="center"> <button ng-click="deleteAlert(alert.id)" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button></td>
                             </tr>
                         </table>
                     </div>
