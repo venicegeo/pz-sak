@@ -38,7 +38,21 @@
 
                 <form ng-submit="getEvents()">
 
-                    <div class="col-md-12" align="right">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="eventPageSize">Per page</label>
+                            <select id="eventPageSize" ng-options="option for option in pageOptions" ng-model="eventsPerPage"
+                                    class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-8 text-center">
+                        <div class="range-label" ng-show="totalEvents > 0" style="margin-top: 25px;">
+                            <label>Displaying {{ getEventStart() }} - {{ getEventEnd() }} of {{ totalEvents }}</label>
+                        </div>
+                        <label ng-show="totalEvents == 0">No results to display</label>
+                    </div>
+                    <div class="col-md-2" align="right" style="margin-top: 15px;">
                         <button type="submit" class="btn btn-primary">
                             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                         </button>
@@ -60,7 +74,10 @@
                                 <th></th>
 
                             </tr>
-                            <tr ng-repeat="event in events">
+                            <tr dir-paginate="event in events | itemsPerPage: eventsPerPage"
+                                total-items="totalEvents"
+                                currentPage="eventPagination.current"
+                                pagination-id="eventsList">
                                 <td >{{event.id}}</td>
                                 <td >{{event.eventtype_id}}</td>
                                 <td >{{event.date}}</td>
@@ -70,6 +87,9 @@
                                 </button></td>
                             </tr>
                         </table>
+                        <div align="center">
+                            <dir-pagination-controls on-page-change="eventsPageChanged(newPageNumber)" pagination-id="eventsList"></dir-pagination-controls>
+                        </div>
                     </div>
                 </div>
             </div>

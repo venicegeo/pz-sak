@@ -30,20 +30,55 @@
         $scope.showEventTable = false;
         $scope.showEventForm = false;
 
+        // Pagination
+        $scope.pageOptions = [10, 25, 50, 100, 500];
 
-        $scope.getEvents = function () {
+        // Events Pagination
+        $scope.totalEvents = 0;
+        $scope.eventsPerPage = 10;
+        $scope.eventsPagination = {
+            current: 0
+        };
+        $scope.eventsPageChanged = function(newPage) {
+            $scope.getEvents(newPage);
+        };
+        $scope.getEventStart = function () {
+            return ($scope.eventsPagination.current * $scope.eventsPerPage) + 1;
+        };
+        $scope.getEventEnd = function () {
+            var end = ($scope.eventsPagination.current * $scope.eventsPerPage) + $scope.eventsPerPage;
+            if (end > $scope.totalEvents) {
+                return $scope.totalEvents;
+            }
+            return end;
+        };
+
+
+        $scope.getEvents = function (pageNumber) {
             $scope.events = "";
             $scope.errorMsg = "";
 
+            if (pageNumber) {
+                $scope.eventsPagination.current = pageNumber - 1;
+            }
+
+            var params = {
+                page: $scope.eventsPagination.current,
+                per_page: $scope.eventsPerPage
+            };
+
             gateway.async(
                 "GET",
-                "/event"
+                "/event",
+                null,
+                params
             ).then(function successCallback( html ) {
                 // Only return non-null values in the array
                 if ((html.data != null && html.data.data != null)) {
                     $scope.events = html.data.data.filter(function (n) {
                         return n != undefined
                     });
+                    $scope.totalEvents = html.data.pagination.count;
                 }
             }, function errorCallback(response){
                 console.log("workflow.controller get events fail: "+response.status);
