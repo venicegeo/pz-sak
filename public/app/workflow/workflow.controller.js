@@ -150,9 +150,15 @@
             $scope.eventType = "";
             $scope.eventTypes = [];
 
+            var params = {
+                page: 0,
+                per_page: 10000
+            };
             gateway.async(
                 "GET",
-                "/eventType"
+                "/eventType",
+                null,
+                params
             ).then(function successCallback( html ) {
                 if(html.data != null) {
                     $scope.eventTypes = html.data.data;

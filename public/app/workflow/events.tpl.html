@@ -103,7 +103,7 @@
 
                    <div class="col-md-6">
                         <label for="eventType">Select Event Type</label>
-                        <select id="eventType" class="form-control" ng-model="eventType" ng-change="updateTypeTable(eventType.id)" ng-options="eventType.id for eventType in eventTypes">
+                        <select id="eventType" class="form-control" ng-model="eventType" ng-change="updateTypeTable(eventType.id)" ng-options="eventType.name+' ('+eventType.id+')' for eventType in eventTypes">
                             <option value="">Please select</option>
                         </select>
                     </div><br>
