@@ -113,11 +113,8 @@
                 null,
                 params
             ).then(function successCallback( html ) {
-                // Only return non-null values in the array
-                if ((html.data != null && html.data.data != null)) {
-                    $scope.events = html.data.data.filter(function (n) {
-                        return n != undefined
-                    });
+                if (html.data != null) {
+                    $scope.events = html.data.data
                     $scope.totalEvents = html.data.pagination.count;
                 }
             }, function errorCallback(response){
@@ -291,14 +288,10 @@
                 null,
                 params
             ).then(function successCallback( html ) {
-                // Only return non-null values in the array
-                if((html.data!= null) && (html.data.data != null)) {
-                    $scope.alerts = html.data.data.filter(function (n) {
-                        return n != undefined
-                    });
+                if(html.data != null) {
+                    $scope.alerts = html.data.data;
                     $scope.totalAlerts = html.data.pagination.count;
                 }
-
             }, function errorCallback(response){
                 console.log("workflow.controller get alerts fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the alerts.");
@@ -375,8 +368,10 @@
                 null,
                 params
             ).then(function successCallback( html ) {
-                $scope.triggers = html.data.data;
-                $scope.totalTriggers = html.data.pagination.count;
+                if(html.data != null) {
+                    $scope.triggers = html.data.data;
+                    $scope.totalTriggers = html.data.pagination.count;
+                }
             }, function errorCallback(response){
                 console.log("workflow.controller get triggers fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the triggers.");
