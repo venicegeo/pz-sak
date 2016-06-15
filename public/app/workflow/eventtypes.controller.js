@@ -18,14 +18,36 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('EventtypesController', ['$scope', '$http', 'toaster', 'discover', EventtypesController]);
+        .controller('EventtypesController', ['$scope', 'toaster', 'gateway', EventtypesController]);
 
-    function EventtypesController ($scope, $http, toaster, discover) {
+    function EventtypesController ($scope, toaster, gateway) {
 
         $scope.showNewEventTypeForm = false;
         $scope.showEventTypeTable = false;
         $scope.eventTypeMappings = [];
         $scope.disableEventTypeName = false;
+
+        // Pagination
+        $scope.totalTypes = 0;
+        $scope.typesPerPage = 10;
+        $scope.pagination = {
+            current: 0
+        };
+        $scope.pageOptions = [10, 25, 50, 100, 500];
+        $scope.pageChanged = function(newPage) {
+            $scope.getEventTypes(newPage);
+        };
+        $scope.getStart = function () {
+            return ($scope.pagination.current * $scope.typesPerPage) + 1;
+        };
+        $scope.getEnd = function () {
+            var end = ($scope.pagination.current * $scope.typesPerPage) + $scope.typesPerPage;
+            if (end > $scope.totalTypes) {
+                return $scope.totalTypes;
+            }
+            return end;
+        };
+
 
 
         $scope.clearForm = function (){
@@ -73,10 +95,10 @@
                 $scope.showeventTypeTable = false;
             }
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/eventtypes/"+eventTypeId,
-            }).then(function successCallback( html ) {
+            gateway.async(
+                "GET",
+                "/eventType/"+eventTypeId
+            ).then(function successCallback( html ) {
                 $scope.eventTypeId = html.data.id;
                 $scope.eventTypeName = html.data.name;
                 $scope.eventTypeMapping = html.data.mapping;
@@ -109,15 +131,27 @@
 
         };
 
-        $scope.getEventTypes = function () {
+        $scope.getEventTypes = function (pageNumber) {
             $scope.eventType = "";
             $scope.eventTypes = [];
 
-            $http({
-                method: "GET",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/eventtypes",
-            }).then(function successCallback( html ) {
-                $scope.eventTypes = html.data;
+            if (pageNumber) {
+                $scope.pagination.current = pageNumber - 1;
+            }
+
+            var params = {
+                page: $scope.pagination.current,
+                per_page: $scope.typesPerPage
+            };
+
+            gateway.async(
+                "GET",
+                "/eventType",
+                null,
+                params
+            ).then(function successCallback( html ) {
+                $scope.eventTypes = html.data.data;
+                $scope.totalTypes = html.data.pagination.count;
             }, function errorCallback(response){
                 console.log("eventtypes.controller get eventtypes fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the event types.");
@@ -142,8 +176,9 @@
                 "name": typeName,
                 "mapping" : mapping
             };
-            $http.post(
-                "/proxy?url=" + discover.workflowHost + "/v1/eventtypes",
+            gateway.async(
+                "POST",
+                "/eventType",
                 eventDataObj
             ).then(function successCallback(res) {
                 $scope.message = res;
@@ -180,10 +215,10 @@
         };
 
         $scope.deleteEventType = function(eventTypeId) {
-            $http({
-                method: "DELETE",
-                url: "/proxy?url=" + discover.workflowHost + "/v1/eventtypes/"+eventTypeId,
-            }).then(function successCallback( html ) {
+            gateway.async(
+                "DELETE",
+                "/eventType/"+eventTypeId
+            ).then(function successCallback( html ) {
                 $scope.message = html;
                 console.log("success");
 

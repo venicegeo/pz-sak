@@ -38,7 +38,21 @@
 
                 <form ng-submit="getEventTypes()">
 
-                    <div class="col-md-12" align="right">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="pageSize">Per page</label>
+                            <select id="pageSize" ng-options="option for option in pageOptions" ng-model="typesPerPage"
+                                    class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-8 text-center" style="margin-top: 25px;">
+                        <div class="range-label" ng-show="totalTypes > 0">
+                            <label>Displaying {{ getStart() }} - {{ getEnd() }} of {{ totalTypes }}</label>
+                        </div>
+                        <label ng-show="totalTypes == 0">No results to display</label>
+                    </div>
+                    <div class="col-md-2" align="right" style="margin-top: 15px;">
                         <button class="btn btn-primary" type="submit">
                             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                         </button>
@@ -58,7 +72,9 @@
                                 <th></th>
 
                             </tr>
-                            <tr ng-repeat="eventType in eventTypes">
+                            <tr dir-paginate="eventType in eventTypes | itemsPerPage: typesPerPage"
+                                total-items="totalTypes"
+                                currentPage="pagination.current">
                                 <td >{{eventType.id}}</td>
                                 <td >{{eventType.name}}</td>
                                 <td class="nice-wrapping">{{eventType.mapping}}</td>
@@ -68,6 +84,9 @@
                                 </button></td>
                             </tr>
                         </table>
+                        <div align="center">
+                            <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+                        </div>
                     </div>
                 </div>
             </div>

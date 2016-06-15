@@ -40,8 +40,24 @@
 
                 <form ng-submit="getAlerts()">
 
-                    <div class="col-md-12" align="right">
-                        <button type="submit" class="btn btn-primary">Refresh Table</button>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="pageSize">Per page</label>
+                            <select id="pageSize" ng-options="option for option in pageOptions" ng-model="alertsPerPage"
+                                    class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-8 text-center" style="margin-top: 25px;">
+                        <div class="range-label" ng-show="totalAlerts > 0">
+                            <label>Displaying {{ getAlertStart() }} - {{ getAlertEnd() }} of {{ totalAlerts }}</label>
+                        </div>
+                        <label ng-show="totalAlerts == 0">No results to display</label>
+                    </div>
+                    <div class="col-md-2" align="right" style="margin-top: 15px;">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                        </button>
                     </div>
 
 
@@ -59,13 +75,21 @@
                                 <th></th>
 
                             </tr>
-                            <tr ng-repeat="alert in alerts">
+                            <tr dir-paginate="alert in alerts | itemsPerPage: alertsPerPage"
+                                total-items="totalAlerts"
+                                currentPage="alertPagination.current"
+                                pagination-id="alertsList">
                                 <td >{{alert.id}}</td>
                                 <td >{{alert.trigger_id}}</td>
                                 <td >{{alert.event_id}}</td>
-                                <td align="center"> <button ng-click="deleteAlert(alert.id)" class="btn btn-primary">Delete Alert</button></td>
+                                <td align="center"> <button ng-click="deleteAlert(alert.id)" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button></td>
                             </tr>
                         </table>
+                        <div align="center">
+                            <dir-pagination-controls on-page-change="alertsPageChanged(newPageNumber)" pagination-id="alertsList"></dir-pagination-controls>
+                        </div>
                     </div>
                 </div>
             </div>
