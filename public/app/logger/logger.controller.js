@@ -22,6 +22,7 @@
     function LoggerController ($scope, $http, toaster, discover, usSpinnerService) {
         $scope.pageOptions = [10, 50, 100, 500];
         $scope.size=100;
+        $scope.elasticSearchLimit = 10000;
 
         $scope.pagination = {
             current: 0
@@ -78,7 +79,8 @@
             }).then(function successCallback( html ) {
                 usSpinnerService.stop('spinner');
                 $scope.logs = html.data.data;
-                $scope.logCount = html.data.pagination.count;
+                $scope.actualLogCount = html.data.pagination.count;
+                $scope.logCount = ($scope.actualLogCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualLogCount;
             }, function errorCallback(response){
                 usSpinnerService.stop('spinner');
                 console.log("logger.controller get logs fail: "+response.status);
