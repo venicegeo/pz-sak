@@ -177,7 +177,7 @@
                 }
                 var params = {
                     page: $scope.pagination.current,
-                    pageSize: $scope.pageSize,
+                    per_page: $scope.pageSize,
                     order: $scope.order
                 };
                 if (angular.isUndefined($scope.userId) || $scope.userId == "") {
@@ -197,9 +197,14 @@
                 if (getCount) {
                     $http({
                         method: "GET",
-                        url: "/proxy/" + discover.jobsHost + "/job/userName/" + $scope.userId + "/count"
+                        url: "/proxy/" + discover.jobsHost + "/job/userName/" + $scope.userId,
+                        params: {
+                            page: 0,
+                            per_page: 10000,
+                            order: $scope.order
+                        }
                     }).then(function successCallback(html) {
-                        $scope.total = html.data;
+                        $scope.total = html.data.length;
                     }, function errorCallback(response) {
                         console.log("search.controller fail  updateFilter count: " + response.status);
                         toaster.pop('error', "Error", "There was an issue with your request.");
