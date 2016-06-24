@@ -39,8 +39,8 @@
     <!--<div class="tab-content">
         <div role="tabpanel" class="tab-pane fade in active" id="search">-->
             <h1 class="alert alert-info">Search Service Info</h1>
-            <p>Perform searches on indexed data (only displays a max of 100 results for now)</p>
-            <form id="searchForm" ng-submit="getSearchResults($event)">
+            <p>Perform searches on indexed data</p>
+            <form id="searchForm" ng-submit="getSearchResults()">
                 <div class="row">
                     <div class="col-md-10">
                         <div class="input-group">
@@ -61,20 +61,25 @@
                     </div>
                 </div>
                 <div style="margin-top: 10px" ng-show="totalResults == 0">{{errorMsg}}</div>
-                <div style="margin-top: 10px" ng-show="totalResults">Displaying {{from + 1}} to {{getLastIndex()}} of {{totalResults}} results</div><br/>
-                <div ng-show="searchResults" ng-repeat="result in searchResults">
-                    <button class="btn btn-primary pull-right" ng-show="result.dataType.location" type="button" ng-click="downloadFile(result, true)" id="download" style="margin-top: 24px" title="Download File">
-                        <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-                    </button>
-                    <pre>{{result | json}}</pre>
-                    <br/>
+                <div style="margin-top: 10px" ng-show="totalResults">Displaying {{getFirstIndex()}} to {{getLastIndex()}} of {{totalResults}} results</div><br/>
+                <table>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr dir-paginate="result in searchResults | itemsPerPage: size"
+                        total-items="totalResults"
+                        currentPage="pagination.current">
+                        <td><pre>{{result | json}}</pre></td>
+                        <td valign="top"><button class="btn btn-primary pull-right" ng-show="result.dataType.location" type="button" ng-click="downloadFile(result, true)" id="download" style="margin-top: 24px" title="Download File">
+                            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                        </button></td>
+
+                    </tr>
+                </table>
+                <div align="center">
+                    <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
                 </div>
-                <nav ng-show="totalResults > size">
-                    <ul class="pager">
-                        <li><a ng-click="prevPage()" class="navbutton">Previous</a></li>
-                        <li><a ng-click="nextPage()" class="navbutton">Next</a></li>
-                    </ul>
-                </nav>
             </form>
         <!--</div>
         <div role="tabpanel" class="tab-pane fade" id="keywords">
