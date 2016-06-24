@@ -140,7 +140,7 @@
             }
 
             var params = {
-                page: $scope.pagination.current * $scope.typesPerPage,
+                page: $scope.pagination.current,
                 per_page: $scope.typesPerPage
             };
 
