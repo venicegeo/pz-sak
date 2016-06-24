@@ -39,48 +39,10 @@
             $scope.getLogs();
         };
 
-        $scope.getLogCount = function() {
-            var params = {
-                size : 10000,
-                from : 0
-            };
-            if ($scope.afterDate) {
-                angular.extend(params, {
-                    after: moment($scope.afterDate).unix()
-                });
-            }
-            if ($scope.beforeDate) {
-                angular.extend(params, {
-                    before: moment($scope.beforeDate).unix()
-                });
-            }
-            if ($scope.service) {
-                angular.extend(params, {
-                    service: $scope.service,
-                });
-            }
-            if ($scope.contains) {
-                angular.extend(params, {
-                    contains: $scope.contains
-                });
-            }
-            $http({
-                method: "GET",
-                url: "/proxy/" + discover.loggerHost + "/v1/messages",
-                params: params
-            }).then(function successCallback( html ) {
-                $scope.logCount = html.data.length;
-            }, function errorCallback(response){
-                console.log("logger.controller log count fail: "+response.status);
-                toaster.pop('error', "Error", "There was an issue with retrieving the log count.");
-            });
-        };
-
         $scope.getLogs = function () {
-            $scope.getLogCount();
             var params = {
-                size : $scope.size,
-                from : $scope.from,
+                per_page : $scope.size,
+                page : $scope.from
             };
             if ($scope.afterDate) {
                 angular.extend(params, {
@@ -94,7 +56,7 @@
             }
             if ($scope.service) {
                 angular.extend(params, {
-                    service: $scope.service,
+                    service: $scope.service
                 });
             }
             if ($scope.contains) {
@@ -107,10 +69,12 @@
 
             $http({
                 method: "GET",
-                url: "/proxy/" + discover.loggerHost + "/v1/messages",
+                url: "/proxy/" + discover.loggerHost + "/v2/message",
                 params: params
             }).then(function successCallback( html ) {
-                $scope.logs = html.data;
+                $scope.logs = html.data.data;
+                $scope.logCount = html.data.pagination.count;
+
             }, function errorCallback(response){
                 console.log("logger.controller get logs fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the logs.");
@@ -132,7 +96,7 @@
             };
 
             $http.post(
-                "/proxy?url=" + discover.loggerHost + "/v1/messages",
+                "/proxy?url=" + discover.loggerHost + "/v2/message",
                 dataObj
             ).then(function successCallback(res) {
                 $scope.message = res;
