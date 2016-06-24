@@ -23,17 +23,14 @@
 
     function SearchController($scope, $http, toaster, discover, gateway) {
         $scope.size = 100;
-        $scope.from = 0;
 
-        $scope.pageOptions = [10, 50, 100];
-
-        $scope.$watch("size", function(newValue, oldValue) {
-            $scope.from = 0;
-            if (angular.isDefined($scope.searchTerm)) {
-                $scope.getSearchResults();
-            }
-            $scope.searchTerm = "";
-        });
+        $scope.pageOptions = [10, 25, 50, 100, 500];
+        $scope.pagination = {
+            current: 0
+        };
+        $scope.pageChanged = function(newPage) {
+            $scope.getSearchResults(newPage);
+        };
 
         $scope.getResultsCount = function(query) {
             $http({
@@ -51,13 +48,11 @@
             });
         };
 
-        $scope.getSearchResults = function($event) {
-            console.log($event);
+        $scope.getSearchResults = function(pageNumber) {
             $scope.errorMsg = "";
             $scope.tagMsg = "";
-            if (!angular.isUndefined($event)) {
-                // Reset to first page if new search
-                $scope.from = 0;
+            if (pageNumber) {
+                $scope.pagination.current = pageNumber - 1;
             }
 
             var q = "";
@@ -77,7 +72,7 @@
             var data = {
                 "query": q,
                 "size": $scope.size,
-                "from": $scope.from
+                "from": $scope.pagination.current * $scope.size
             };
 
             $scope.getResultsCount(q);
@@ -96,7 +91,7 @@
         };
 
         var isUndefinedOrEmpty = function(str) {
-            return angular.isUndefined(str) || str.lengh == 0;
+            return angular.isUndefined(str) || str.length == 0;
         };
 
         $scope.downloadFile = function(accessData, isFromList) {
@@ -171,26 +166,12 @@
 
         };
 
-        $scope.nextPage = function() {
-            if ($scope.from < $scope.totalResults-$scope.size) {
-                $scope.from += $scope.size;
-                $scope.getSearchResults();
-                $('html, body').scrollTop(0);
-                // $('html, body').animate({ scrollTop: 0 }, 'fast');
-            }
-        };
-
-        $scope.prevPage = function() {
-            if ($scope.from > 0) {
-                $scope.from -= $scope.size;
-                $scope.getSearchResults();
-                $('html, body').scrollTop(0);
-                // $('html, body').animate({ scrollTop: 0 }, 'fast');
-            }
+        $scope.getFirstIndex = function () {
+            return ($scope.pagination.current * $scope.size) + 1;
         };
 
         $scope.getLastIndex = function() {
-            var endingPoint = $scope.from + $scope.size;
+            var endingPoint = ($scope.pagination.current * $scope.size) + $scope.size;
             if (endingPoint > $scope.totalResults) {
                 endingPoint = $scope.totalResults;
             }
