@@ -23,9 +23,30 @@
         $scope.pageSize = 10;
         $scope.page = 0;
 
-        $scope.getData = function($event) {
+        $scope.pagination = {
+            current: 0
+        };
+        $scope.pageOptions = [10, 25, 50, 100, 500];
+        $scope.pageChanged = function(newPage) {
+            $scope.getData(newPage);
+        };
+        $scope.getStart = function () {
+            return ($scope.pagination.current * $scope.pageSize) + 1;
+        };
+        $scope.getEnd = function () {
+            var end = ($scope.pagination.current * $scope.pageSize) + $scope.pageSize;
+            if (end > $scope.total) {
+                return $scope.total;
+            }
+            return end;
+        };
+
+        $scope.getData = function(pageNumber) {
+            if (pageNumber) {
+                $scope.pagination.current = pageNumber - 1;
+            }
             var params = {
-                page: $scope.page,
+                page: $scope.pagination.current,
                 per_page: $scope.pageSize
             };
             gateway.async(
@@ -36,7 +57,6 @@
             ).then(function successCallback(html) {
                 $scope.accessDataList = html.data.data;
                 $scope.total = html.data.pagination.count;
-                $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
             }, function errorCallback(response) {
                 console.log("access.controller get data fail: " + response.status);
                 toaster.pop('error', "Error", "There was an issue with your request.");
@@ -70,32 +90,5 @@
             var url = "http://" + location.bucketName + "." + location.domainName + "/" + location.fileName;
             window.location=url;
         };
-
-        $scope.prevPage = function() {
-            if ($scope.page > 0) {
-                $scope.page--;
-                $scope.getData();
-            }
-        };
-
-        $scope.nextPage = function() {
-            if ($scope.page < $scope.maxPage) {
-                $scope.page++;
-                $scope.getData();
-            }
-        };
-
-        $scope.firstResultOnPage = function() {
-            return ($scope.page * $scope.pageSize) + 1;
-        };
-
-        $scope.lastResultOnPage = function() {
-            var lastItem = ($scope.page + 1) * $scope.pageSize;
-            if (lastItem > $scope.total) {
-                return $scope.total;
-            }
-            return lastItem;
-        };
-
     }
 })();

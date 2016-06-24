@@ -35,30 +35,48 @@
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane fade in active" id="accesses" ng-init="getData()">
             <h1 class="alert alert-info">Access List</h1>
-            <form id="searchForm" ng-submit="getData($event)">
-                <div class="row">
-                    <div class="col-md-1 pull-right">
-                        <button class="btn btn-primary" type="submit" id="searchBtn">
+            <div class="row">
+                <form id="searchForm" ng-submit="getData()">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="pageSize">Per page</label>
+                            <select id="pageSize" ng-options="option for option in pageOptions" ng-model="pageSize"
+                                    class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-8 text-center" style="margin-top: 25px;">
+                        <div class="range-label" ng-show="total > 0">
+                            <label>Displaying {{ getStart() }} - {{ getEnd() }} of {{ total }}</label>
+                        </div>
+                        <label ng-show="total == 0">{{errorMsg}}</label>
+                    </div>
+                    <div class="col-md-2" align="right" style="margin-top: 15px;">
+                        <button class="btn btn-primary" type="submit">
                             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                         </button>
                     </div>
-                </div>
-                <div style="margin-top: 10px" ng-show="total == 0">{{errorMsg}}</div>
-                <div style="margin-top: 10px" ng-show="total">Displaying {{firstResultOnPage()}} to {{lastResultOnPage()}} of {{total}} results</div><br/>
-                <div ng-show="accessDataList" ng-repeat="data in accessDataList">
-                    <button class="btn btn-primary pull-right" ng-show="data.dataType.location" type="button" ng-click="downloadFile(data, true)" id="download" style="margin-top: 24px" title="Download File">
+                </form>
+            </div>
+            <table>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr dir-paginate="data in accessDataList | itemsPerPage: pageSize"
+                    total-items="total"
+                    currentPage="pagination.current">
+                    <td><pre>{{data | json}}</pre></td>
+                    <td valign="top"><button class="btn btn-primary pull-right" ng-show="data.dataType.location" type="button" ng-click="downloadFile(data, true)" id="download" style="margin-top: 24px" title="Download File">
                         <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-                    </button>
-                    <pre>{{data | json}}</pre>
-                    <br/>
-                </div>
-                <nav ng-show="total > pageSize">
-                    <ul class="pager">
-                        <li><a ng-click="prevPage()" class="navbutton">Previous</a></li>
-                        <li><a ng-click="nextPage()" class="navbutton">Next</a></li>
-                    </ul>
-                </nav>
-            </form>
+                    </button></td>
+
+                </tr>
+            </table>
+            <div align="center">
+                <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+            </div>
+
         </div>
         <div role="tabpanel" class="tab-pane fade" id="access">
             <h1 class="alert alert-info">Access By ID</h1>
