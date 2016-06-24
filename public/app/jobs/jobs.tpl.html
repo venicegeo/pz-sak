@@ -196,7 +196,9 @@
 
                 </div>
                 <div class="row">
-                    <div ng-show="jobsList" ng-repeat="job in jobsList">
+                    <div ng-show="jobsList" dir-paginate="job in jobsList | itemsPerPage: pageSize"
+                        total-items="total"
+                        currentPage="pagination.current">
                         <dl class="dl-horizontal two-column nice-wrapping" ng-hide="displayJson">
                             <dt>Job ID</dt>
                             <dd>{{job.jobId}}</dd>
@@ -214,18 +216,10 @@
                         <pre ng-show="displayJson">{{job | json}}</pre>
                         <hr class="separator">
                     </div>
+                    <div align="center">
+                        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+                    </div>
                 </div>
-                <br>
-
-                <br>
-
-                <nav ng-show="jobsList && total > pageSize">
-                    <ul class="pager">
-                        <li><a ng-click="prevPage()" class="navbutton">Previous</a></li>
-                        <li><a ng-click="nextPage()" class="navbutton">Next</a></li>
-                    </ul>
-                </nav>
-
             </form>
         </div>
     </div>

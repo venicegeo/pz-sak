@@ -100,6 +100,7 @@
 
             </form>
 
+
             <div class="row">
                 <div class="col-md-2">
                     <div class="form-group">
@@ -111,7 +112,7 @@
                 <div class="col-md-6 text-center" style="margin-top: 20px;">
                     <p></p>
                     <div class="form-group">
-                        <label ng-show="logCount > 0">Displaying {{from + 1}} - {{getLastIndex()}} of {{logCount}} logs</label>
+                        <label ng-show="logCount > 0">Displaying {{getFirstIndex()}} - {{getLastIndex()}} of {{logCount}} logs</label>
                         <label ng-show="logCount == 0">No results to display</label>
                     </div>
                 </div>
@@ -139,6 +140,7 @@
                 <br>
                 <div class="row">
                     <div class="col-md-12">
+                        <span us-spinner spinner-key="spinner"></span>
                         <div class="form-group" ng-show="logs" ng-init="getLogs()">
 
 
@@ -149,7 +151,7 @@
                                     <th >Severity</th>
                                     <th >Message</th>
                                 </tr>
-                                <tr ng-repeat="log in logs">
+                                <tr dir-paginate="log in logs | itemsPerPage: size" total-items="logCount" currentPage="pagination.current">
                                     <td >{{log.stamp | utc }}</td>
                                     <td >{{log.service}}</td>
                                     <td >{{log.address}}</td>
@@ -157,15 +159,10 @@
                                     <td class="nice-wrapping">{{log.message}}</td>
                                 </tr>
                             </table>
-
+                            <div align="center">
+                                <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+                            </div>
                         </div>
-
-                        <nav ng-show="logs && logCount > size">
-                            <ul class="pager">
-                                <li><a ng-click="prevPage()" class="navbutton">Newer</a></li>
-                                <li><a ng-click="nextPage()" class="navbutton">Older</a></li>
-                            </ul>
-                        </nav>
 
                     </div>
                 </div>

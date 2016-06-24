@@ -17,32 +17,36 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('LoggerController', ['$scope', '$http', '$log', '$q',  'toaster', 'discover', LoggerController]);
+        .controller('LoggerController', ['$scope', '$http',  'toaster', 'discover', 'usSpinnerService', LoggerController]);
 
-    function LoggerController ($scope, $http, $log, $q, toaster, discover) {
+    function LoggerController ($scope, $http, toaster, discover, usSpinnerService) {
         $scope.pageOptions = [10, 50, 100, 500];
         $scope.size=100;
-        $scope.from=0;
 
-        $scope.$watch("size", function(newValue, oldValue) {
-            $scope.from=0;
-            $scope.getLogs();
-        });
+        $scope.pagination = {
+            current: 0
+        };
+        
+        $scope.pageChanged = function(newPage) {
+            $scope.getLogs(newPage);
+        };
 
         $scope.showHideSearchForm = function() {
             $scope.showSearchLogs = !$scope.showSearchLogs;
         };
 
-
         $scope.searchLogs = function() {
-            //TODO:Once Logger Search API is updated, we need to update this call to pass search params and show only what is returned.
             $scope.getLogs();
         };
 
-        $scope.getLogCount = function() {
+        $scope.getLogs = function (pageNumber) {
+            usSpinnerService.spin('spinner');
+            if (pageNumber) {
+                $scope.pagination.current = pageNumber - 1;
+            }
             var params = {
-                size : 10000,
-                from : 0
+                per_page : $scope.size,
+                page : $scope.pagination.current
             };
             if ($scope.afterDate) {
                 angular.extend(params, {
@@ -56,45 +60,7 @@
             }
             if ($scope.service) {
                 angular.extend(params, {
-                    service: $scope.service,
-                });
-            }
-            if ($scope.contains) {
-                angular.extend(params, {
-                    contains: $scope.contains
-                });
-            }
-            $http({
-                method: "GET",
-                url: "/proxy/" + discover.loggerHost + "/v1/messages",
-                params: params
-            }).then(function successCallback( html ) {
-                $scope.logCount = html.data.length;
-            }, function errorCallback(response){
-                console.log("logger.controller log count fail: "+response.status);
-                toaster.pop('error', "Error", "There was an issue with retrieving the log count.");
-            });
-        };
-
-        $scope.getLogs = function () {
-            $scope.getLogCount();
-            var params = {
-                size : $scope.size,
-                from : $scope.from,
-            };
-            if ($scope.afterDate) {
-                angular.extend(params, {
-                    after: moment($scope.afterDate).unix()
-                });
-            }
-            if ($scope.beforeDate) {
-                angular.extend(params, {
-                    before: moment($scope.beforeDate).unix()
-                });
-            }
-            if ($scope.service) {
-                angular.extend(params, {
-                    service: $scope.service,
+                    service: $scope.service
                 });
             }
             if ($scope.contains) {
@@ -107,11 +73,14 @@
 
             $http({
                 method: "GET",
-                url: "/proxy/" + discover.loggerHost + "/v1/messages",
+                url: "/proxy/" + discover.loggerHost + "/v2/message",
                 params: params
             }).then(function successCallback( html ) {
-                $scope.logs = html.data;
+                usSpinnerService.stop('spinner');
+                $scope.logs = html.data.data;
+                $scope.logCount = html.data.pagination.count;
             }, function errorCallback(response){
+                usSpinnerService.stop('spinner');
                 console.log("logger.controller get logs fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the logs.");
             });
@@ -132,7 +101,7 @@
             };
 
             $http.post(
-                "/proxy?url=" + discover.loggerHost + "/v1/messages",
+                "/proxy?url=" + discover.loggerHost + "/v2/message",
                 dataObj
             ).then(function successCallback(res) {
                 $scope.message = res;
@@ -145,26 +114,16 @@
             });
         };
 
-        $scope.nextPage = function() {
-            if ($scope.from < $scope.logCount-$scope.size) {
-                $scope.from += $scope.size;
-                $scope.getLogs();
-            }
+        $scope.getFirstIndex = function () {
+            return ($scope.pagination.current * $scope.size) + 1;
         };
 
-        $scope.prevPage = function() {
-            if ($scope.from > 0) {
-                $scope.from -= $scope.size;
-                $scope.getLogs();
+        $scope.getLastIndex = function () {
+            var end = ($scope.pagination.current * $scope.size) + $scope.size;
+            if (end > $scope.logCount) {
+                return $scope.logCount;
             }
-        };
-
-        $scope.getLastIndex = function() {
-            var endingPoint = $scope.from + $scope.size;
-            if (endingPoint > $scope.logCount) {
-                endingPoint = $scope.logCount;
-            }
-            return endingPoint;
+            return end;
         };
 
     }
