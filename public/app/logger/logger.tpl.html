@@ -112,7 +112,8 @@
                 <div class="col-md-6 text-center" style="margin-top: 20px;">
                     <p></p>
                     <div class="form-group">
-                        <label ng-show="logCount > 0">Displaying {{getFirstIndex()}} - {{getLastIndex()}} of {{logCount}} logs</label>
+                        <label ng-show="logCount > 0">Displaying {{getFirstIndex()}} - {{getLastIndex()}} of {{logCount}}<span ng-show="actualLogCount > logCount">+</span></label>
+                        <label ng-show="actualLogCount > logCount">({{actualLogCount}})</label>
                         <label ng-show="logCount == 0">No results to display</label>
                     </div>
                 </div>
