@@ -20,11 +20,17 @@
         .controller('JobsController', ['$scope', '$http', 'toaster', 'discover', 'gateway', JobsController]);
 
         function JobsController ($scope, $http, toaster, discover, gateway) {
-            $scope.pageSizeOptions = [10, 50, 100, 500];
+            $scope.pageSizeOptions = [10, 25, 50, 100, 500];
             $scope.orderOptions = ['descending', 'ascending'];
             $scope.order = 'descending';
             $scope.pageSize = 10;
             $scope.page = 0;
+            $scope.pagination = {
+                current: 0
+            };
+            $scope.pageChanged = function(newPage) {
+                $scope.figureOutPageChange(true, newPage);
+            };
             $scope.jobStatusQuery = "All";
             var BY_JOB_STATUS = "byJobStatus";
             var BY_USER_ID = "byUserId";
@@ -40,6 +46,15 @@
                     }
                 }
             });
+            $scope.figureOutPageChange = function(getCount, newPage) {
+                if ($scope.jobStatusQuery) {
+                    if ($scope.searchType == BY_JOB_STATUS) {
+                        $scope.updateFilter(getCount, newPage);
+                    } else if ($scope.searchType == BY_USER_ID) {
+                        $scope.getJobsByUserId(getCount, newPage);
+                    }
+                }
+            };
             $scope.$watch("jobStatusQuery", function(newValue, oldValue) {
                 if (angular.isDefined(newValue)) {
                     $scope.page = 0;
@@ -102,7 +117,7 @@
             };
 
 
-            $scope.updateFilter = function(getCount) {
+            $scope.updateFilter = function(getCount, pageNumber) {
 
 
                 var query = "";
@@ -110,8 +125,12 @@
                     query = "/status/" + $scope.jobStatusQuery;
                 }
 
+                if (pageNumber) {
+                    $scope.pagination.current = pageNumber - 1;
+                }
+                
                 var params = {
-                    page: $scope.page,
+                    page: $scope.pagination.current,
                     per_page: $scope.pageSize,
                     order: $scope.order
                 };
@@ -132,7 +151,6 @@
                         url: "/proxy/" + discover.jobsHost + "/job" + query + "/count"
                     }).then(function successCallback(html) {
                         $scope.total = html.data;
-                        $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
                     }, function errorCallback(response) {
                         console.log("search.controller fail  updateFilter count: " + response.status);
                         toaster.pop('error', "Error", "There was an issue with your request.");
@@ -141,43 +159,24 @@
 
             };
 
-            $scope.prevPage = function() {
-                if ($scope.page > 0) {
-                    $scope.page--;
-                    if ($scope.searchType == BY_JOB_STATUS) {
-                        $scope.updateFilter(false);
-                    } else if ($scope.searchType == BY_USER_ID) {
-                        $scope.getJobsByUserId(false);
-                    }
-                }
-            };
-
-            $scope.nextPage = function() {
-                if ($scope.page < $scope.maxPage) {
-                    $scope.page++;
-                    if ($scope.searchType == BY_JOB_STATUS) {
-                        $scope.updateFilter(false);
-                    } else if ($scope.searchType == BY_USER_ID) {
-                        $scope.getJobsByUserId(false);
-                    }
-                }
-            };
-
             $scope.firstResultOnPage = function() {
-                return ($scope.page * $scope.pageSize) + 1;
+                return ($scope.pagination.current * $scope.pageSize) + 1;
             };
 
             $scope.lastResultOnPage = function() {
-                var lastItem = ($scope.page + 1) * $scope.pageSize;
+                var lastItem = ($scope.pagination.current + 1) * $scope.pageSize;
                 if (lastItem > $scope.total) {
                     return $scope.total;
                 }
                 return lastItem;
             };
 
-            $scope.getJobsByUserId = function(getCount) {
+            $scope.getJobsByUserId = function(getCount, pageNumber) {
+                if (pageNumber) {
+                    $scope.pagination.current = pageNumber - 1;
+                }
                 var params = {
-                    page: $scope.page,
+                    page: $scope.pagination.current,
                     pageSize: $scope.pageSize,
                     order: $scope.order
                 };
@@ -190,14 +189,22 @@
                     params: params
                 }).then(function successCallback(html) {
                     $scope.jobsList = html.data;
-                    if (getCount) {
-                        $scope.total = html.data.length;
-                        $scope.maxPage = Math.ceil($scope.total / $scope.pageSize) - 1;
-                    }
                 }, function errorCallback(response) {
                     console.log("jobs.controller job by ID fail: " + response.status);
                     toaster.pop('error', "Error", "There was an issue with your job request.");
                 });
+
+                if (getCount) {
+                    $http({
+                        method: "GET",
+                        url: "/proxy/" + discover.jobsHost + "/job/userName/" + $scope.userId + "/count"
+                    }).then(function successCallback(html) {
+                        $scope.total = html.data;
+                    }, function errorCallback(response) {
+                        console.log("search.controller fail  updateFilter count: " + response.status);
+                        toaster.pop('error', "Error", "There was an issue with your request.");
+                    });
+                }
             };
         }
 })();
