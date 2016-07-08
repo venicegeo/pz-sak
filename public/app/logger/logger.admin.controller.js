@@ -28,9 +28,9 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=" + discover.loggerHost + "/v1/admin/stats"
+                url: "/proxy?url=" + discover.loggerHost + "/admin/stats"
             }).then(function successCallback( html ) {
-                $scope.adminData = html.data;
+                $scope.adminData = html.data.data;
             }, function errorCallback(response){
                 console.log("logger.admin.controller status fail: " + response.status);
                 toaster.pop('error', "Error", "There was an error retrieving the admin data");
@@ -49,7 +49,7 @@
             };
             $http({
                 method: "POST",
-                url: "/proxy?url=" + discover.loggerHost + "/v1/admin/shutdown",
+                url: "/proxy?url=" + discover.loggerHost + "/admin/shutdown",
                 data: data
             }).then(function successCallback( html ) {
                 $scope.shutdownResponse = html.data;

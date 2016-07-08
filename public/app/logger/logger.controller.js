@@ -27,7 +27,7 @@
         $scope.pagination = {
             current: 0
         };
-        
+
         $scope.pageChanged = function(newPage) {
             $scope.getLogs(newPage);
         };
@@ -46,7 +46,7 @@
                 $scope.pagination.current = pageNumber - 1;
             }
             var params = {
-                per_page : $scope.size,
+                perPage : $scope.size,
                 page : $scope.pagination.current
             };
             if ($scope.afterDate) {
@@ -74,7 +74,7 @@
 
             $http({
                 method: "GET",
-                url: "/proxy/" + discover.loggerHost + "/v2/message",
+                url: "/proxy/" + discover.loggerHost + "/message",
                 params: params
             }).then(function successCallback( html ) {
                 usSpinnerService.stop('spinner');
@@ -103,7 +103,7 @@
             };
 
             $http.post(
-                "/proxy?url=" + discover.loggerHost + "/v2/message",
+                "/proxy?url=" + discover.loggerHost + "/message",
                 dataObj
             ).then(function successCallback(res) {
                 $scope.message = res;
