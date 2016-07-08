@@ -87,18 +87,6 @@
                 $scope.serviceControllerStatus = "red";
                 console.log("home.controller fail service controller status");
             });
-            $http({
-                method: "GET",
-                url: "/proxy/" + discover.dispatcherHost + "/",
-                transformResponse: function(value){
-                    return value;
-                }
-            }).then(function successCallback(html) {
-                $scope.dispatcherStatus = (html.status === 200) ? "green" : "red";
-            }, function errorCallback(response) {
-                $scope.dispatcherStatus = "red";
-                console.log("home.controller fail dispatcher status");
-            });
 
             gateway.async(
                 "GET",
