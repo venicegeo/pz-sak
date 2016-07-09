@@ -131,7 +131,7 @@
                 
                 var params = {
                     page: $scope.pagination.current,
-                    per_page: $scope.pageSize,
+                    perPage: $scope.pageSize,
                     order: $scope.order
                 };
                 $http({
@@ -177,7 +177,7 @@
                 }
                 var params = {
                     page: $scope.pagination.current,
-                    per_page: $scope.pageSize,
+                    perPage: $scope.pageSize,
                     order: $scope.order
                 };
                 if (angular.isUndefined($scope.userId) || $scope.userId == "") {
@@ -200,7 +200,7 @@
                         url: "/proxy/" + discover.jobsHost + "/job/userName/" + $scope.userId,
                         params: {
                             page: 0,
-                            per_page: 10000,
+                            perPage: 10000,
                             order: $scope.order
                         }
                     }).then(function successCallback(html) {

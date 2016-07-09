@@ -24,7 +24,7 @@ describe('Controller: LoggerController', function () {
         $httpBackend = $injector.get('$httpBackend');
         logsRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-logger.int.geointservices.io/v1/messages?from=0&size=100').respond(
+            '/proxy/pz-logger.int.geointservices.io/message?from=0&size=100').respond(
             [
                 {
                     "service": "Gateway",
@@ -37,7 +37,7 @@ describe('Controller: LoggerController', function () {
         );
         logsCountHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-logger.int.geointservices.io/v1/messages?from=0&size=10000').respond(
+            '/proxy/pz-logger.int.geointservices.io/message?from=0&size=10000').respond(
             [
                 {
                     "service": "Gateway",
@@ -67,13 +67,13 @@ describe('Controller: LoggerController', function () {
     });
 
     it('should get a count of the logs', function () {
-        $httpBackend.expectGET('/proxy/pz-logger.int.geointservices.io/v1/messages?from=0&size=10000');
+        $httpBackend.expectGET('/proxy/pz-logger.int.geointservices.io/message?from=0&size=10000');
         $httpBackend.flush();
         expect(scope.logCount).toBe(1);
     });
 
     it('should get the first 100 logs', function () {
-        $httpBackend.expectGET('/proxy/pz-logger.int.geointservices.io/v1/messages?from=0&size=100');
+        $httpBackend.expectGET('/proxy/pz-logger.int.geointservices.io/message?from=0&size=100');
         $httpBackend.flush();
         expect(scope.logs[0].service).toBe('Gateway');
         expect(scope.logs[0].address).toBe('gnemud7srkr/10.254.0.62');

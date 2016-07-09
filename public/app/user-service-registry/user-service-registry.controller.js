@@ -341,7 +341,7 @@
 
             gateway.async(
                 "POST",
-                '/v2/job',
+                '/job',
                 data
             ).then(function successCallback( html ) {
                 $scope.jobId = html.data.jobId;
@@ -366,7 +366,7 @@
 
             var params = {
                 page: $scope.pagination.current,
-                per_page: $scope.listPerPage
+                perPage: $scope.listPerPage
             };
 
             gateway.async(
@@ -408,7 +408,7 @@
             var params = {
                 keyword: $scope.searchField,
                 page: $scope.searchPagination.current,
-                per_page: $scope.searchPerPage
+                perPage: $scope.searchPerPage
             };
 
             gateway.async(
@@ -501,10 +501,15 @@
                 "/service/" + serviceId,
                 dataObj
             ).then(function successCallback(res) {
+                // TODO: Check the status code for success
                 console.log(res);
-                $scope.getServices();
-
-                toaster.pop('success', "Success", "The service was successfully updated.")
+                if (res.status == "200") {
+                    $scope.getServices();
+                    toaster.pop('success', "Success", "The service was successfully updated.");
+                } else {
+                    console.log("service.controller update fail: "+res.status);
+                    toaster.pop('error', "Error", "There was a problem updating the service");
+                }
             }, function errorCallback(res) {
                 console.log("service.controller update fail: "+res.status);
 

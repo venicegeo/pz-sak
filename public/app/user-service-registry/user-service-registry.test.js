@@ -96,7 +96,7 @@ describe('Controller: UserServiceController', function () {
             });
         executeServiceHandler = $httpBackend.when(
             'POST',
-            '/proxy/pz-gateway.int.geointservices.io/v2/job',
+            '/proxy/pz-gateway.int.geointservices.io/job',
             {
                 "type":"execute-service",
                 "data":{
@@ -113,7 +113,7 @@ describe('Controller: UserServiceController', function () {
             );
         getServicesHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/service?page=0&per_page=25')
+            '/proxy/pz-gateway.int.geointservices.io/service?page=0&perPage=25')
             .respond({
                 "type" : "service-list",
                 "data" : [ {
@@ -189,12 +189,12 @@ describe('Controller: UserServiceController', function () {
                 "pagination" : {
                     "count" : 40,
                     "page" : 0,
-                    "per_page" : 10
+                    "perPage" : 10
                 }
             });
         searchServicesHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/service?keyword=test&page=0&per_page=25')
+            '/proxy/pz-gateway.int.geointservices.io/service?keyword=test&page=0&perPage=25')
             .respond({
                 "type" : "service-list",
                 "data" : [ {
@@ -248,7 +248,7 @@ describe('Controller: UserServiceController', function () {
                 "pagination" : {
                     "count" : 21,
                     "page" : 0,
-                    "per_page" : 5
+                    "perPage" : 5
                 }
             });
         updateServiceHandler = $httpBackend.when(
@@ -274,7 +274,7 @@ describe('Controller: UserServiceController', function () {
 
     it('should get list of all services', function () {
         scope.getServices(1);
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/service?page=0&per_page=25');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/service?page=0&perPage=25');
         $httpBackend.flush();
         expect(scope.services.length).toBe(10);
         expect(scope.totalServices).toBe(40);
@@ -283,7 +283,7 @@ describe('Controller: UserServiceController', function () {
         scope.searchField="test";
         scope.searchPerPage=25;
         scope.searchServices(1);
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/service?keyword=test&page=0&per_page=25');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/service?keyword=test&page=0&perPage=25');
         $httpBackend.flush();
         expect(scope.results.length).toBe(5);
         expect(scope.totalSearchResults).toBe(21);
@@ -321,7 +321,7 @@ describe('Controller: UserServiceController', function () {
         $httpBackend.expectPUT('/proxy/pz-gateway.int.geointservices.io/service/aaa');
         $httpBackend.expect(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/service?page=0&per_page=25');
+            '/proxy/pz-gateway.int.geointservices.io/service?page=0&perPage=25');
         $httpBackend.flush();
         expect(scope.services.length).toBe(10);
         expect(scope.totalServices).toBe(40);
@@ -333,7 +333,7 @@ describe('Controller: UserServiceController', function () {
             '/proxy/pz-gateway.int.geointservices.io/service/aaa');
         $httpBackend.expect(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/service?page=0&per_page=25');
+            '/proxy/pz-gateway.int.geointservices.io/service?page=0&perPage=25');
         $httpBackend.flush();
         expect(scope.services.length).toBe(10);
         expect(scope.totalServices).toBe(40);

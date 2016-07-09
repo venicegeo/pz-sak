@@ -23,7 +23,7 @@ describe('Controller: AccessController', function () {
         $httpBackend = $injector.get('$httpBackend');
         dataRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/data?page=0&per_page=10').respond(
+            '/proxy/pz-gateway.int.geointservices.io/data?page=0&perPage=10').respond(
             {
                 data: [
                     {
@@ -113,7 +113,7 @@ describe('Controller: AccessController', function () {
 
     it('should get a list of data objects', function () {
         scope.getData();
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/data?page=0&per_page=10');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/data?page=0&perPage=10');
         $httpBackend.flush();
         expect(scope.accessDataList.length).toBe(1);
         expect(scope.total).toBe(1);

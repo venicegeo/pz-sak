@@ -27,7 +27,7 @@ describe('Controller: JobsController', function () {
         $httpBackend = $injector.get('$httpBackend');
         jobsListRequestHandler = $httpBackend.when(
             'GET',
-            "/proxy/pz-jobmanager.int.geointservices.io/job?order=descending&page=0&per_page=10")
+            "/proxy/pz-jobmanager.int.geointservices.io/job?order=descending&page=0&perPage=10")
             .respond(
 
                 [
@@ -187,7 +187,7 @@ describe('Controller: JobsController', function () {
 
     it('should get list of jobs', function () {
         scope.updateFilter(true);
-        $httpBackend.expectGET('/proxy/pz-jobmanager.int.geointservices.io/job?order=descending&page=0&per_page=10');
+        $httpBackend.expectGET('/proxy/pz-jobmanager.int.geointservices.io/job?order=descending&page=0&perPage=10');
         $httpBackend.expectGET('/proxy/pz-jobmanager.int.geointservices.io/job/count');
         $httpBackend.flush();
         expect(scope.jobsList.length).toBe(1);

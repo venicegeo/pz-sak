@@ -47,7 +47,7 @@
             }
             var params = {
                 page: $scope.pagination.current,
-                per_page: $scope.pageSize
+                perPage: $scope.pageSize
             };
             gateway.async(
                 "GET",

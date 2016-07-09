@@ -22,7 +22,7 @@ describe('Controller: UuidController', function () {
         $httpBackend = $injector.get('$httpBackend');
         uuidsRequestHandler = $httpBackend.when(
             'POST',
-            '/proxy?url=pz-uuidgen.int.geointservices.io/v1/uuids?count=2').respond(
+            '/proxy?url=pz-uuidgen.int.geointservices.io/uuids?count=2').respond(
             {
                 "data": [
                     "aaa",
@@ -46,7 +46,7 @@ describe('Controller: UuidController', function () {
     it('should get two uuids', function () {
         scope.uuidCount = 2;
         scope.getUUIDs();
-        $httpBackend.expectPOST('/proxy?url=pz-uuidgen.int.geointservices.io/v1/uuids?count=2');
+        $httpBackend.expectPOST('/proxy?url=pz-uuidgen.int.geointservices.io/uuids?count=2');
         $httpBackend.flush();
         expect(scope.uuids.length).toBe(2);
         expect(scope.uuids[0]).toBe("aaa");
