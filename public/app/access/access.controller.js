@@ -72,7 +72,7 @@
                 "GET",
                 "/data/" + $scope.dataId
             ).then(function successCallback(html) {
-                $scope.accessData = html.data;
+                $scope.accessData = html.data.data;
             }, function errorCallback(response) {
                 console.log("access.controller get access fail: " + response.status);
                 toaster.pop('error', "Error", "There was an issue with your request.");
