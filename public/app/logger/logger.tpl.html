@@ -153,7 +153,7 @@
                                     <th >Message</th>
                                 </tr>
                                 <tr dir-paginate="log in logs | itemsPerPage: size" total-items="logCount" currentPage="pagination.current">
-                                    <td >{{log.stamp | utc }}</td>
+                                    <td >{{log.createdOn}}</td>
                                     <td >{{log.service}}</td>
                                     <td >{{log.address}}</td>
                                     <td >{{log.severity}}</td>

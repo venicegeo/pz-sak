@@ -22,18 +22,18 @@
     function LoginController ($scope, $location, $cookies, $http, discover, toaster, Auth, CONST, $rootScope) {
         $cookies.putObject(CONST.auth, Auth);
         $scope.login = function() {
-            var data = {
-                username: $scope.username,
-                credential: $scope.password
-            };
+            var test = Auth.encode($scope.username, $scope.password);//"bWNtYWhvam06bmF0UmVqOTNiM3N0MHch";//
             $http({
-                method: "POST",
-                url: "/proxy?url=" + discover.securityHost + "/verification",
-                data: data
+                method: "GET",
+                url: "/proxy?url=" + discover.gatewayHost + "/key",
+                headers: {
+                    "Authorization": "Basic " + test
+                }
             }).then(function successCallback( html ) {
-                if (html.data) {
+                if (html.data.type === "uuid") {
                     Auth[CONST.isLoggedIn] = CONST.loggedIn;
-                    Auth.encode($scope.username, $scope.password);
+                    Auth.encode(html.data.uuid, "");
+                    Auth["userStore"] = $scope.user;
                     $cookies.putObject(CONST.auth, Auth);
                     $location.path("/index.html");
                     $rootScope.$emit('loggedInEvent');
@@ -41,6 +41,7 @@
                 } else {
                     Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
                     Auth.encode("null", "null");
+                    Auth["userStore"] = "";
                     $cookies.putObject(CONST.auth, Auth);
                     $location.path("/login.html");
                     console.log("login.controller fail: "+html.status);

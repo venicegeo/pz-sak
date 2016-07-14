@@ -273,10 +273,10 @@
             var data = {
                 "url":$scope.serviceUrl,
                 "contractUrl":$scope.serviceUrl,
+                "method":$scope.method,
                 "resourceMetadata" : {
                     "name":$scope.serviceName,
-                    "description":$scope.serviceDescription,
-                    "method":$scope.method
+                    "description":$scope.serviceDescription
                 }
             };
 
@@ -466,7 +466,7 @@
                 $scope.updateServiceName = results.resourceMetadata.name;
                 $scope.updateServiceDescrip = results.resourceMetadata.description;
                 $scope.updateServiceUrl = results.url;
-                $scope.updateServiceMethod = results.resourceMetadata.method;
+                $scope.updateServiceMethod = results.method;
             }, function errorCallback(response){
                 usSpinnerService.stop("spinner-update");
                 console.log("service.controller describe service fail: "+response.status);
@@ -489,10 +489,10 @@
             var dataObj = {
                 url: $scope.updateServiceUrl,
                 contractUrl: $scope.updateServiceUrl,
+                method: $scope.updateServiceMethod,
                 resourceMetadata: {
                     name: $scope.updateServiceName,
-                    description: $scope.updateServiceDescrip,
-                    method: $scope.updateServiceMethod
+                    description: $scope.updateServiceDescrip
                 }
             };
 

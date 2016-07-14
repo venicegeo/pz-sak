@@ -30,7 +30,7 @@
                 method: "GET",
                 url: "/proxy?url=" + discover.uuidHost + "/admin/stats"
             }).then(function successCallback( html ) {
-                $scope.adminData = html.data;
+                $scope.adminData = html.data.data;
                 console.log($scope.adminData);
             }, function errorCallback(response){
                 console.log("uuid.admin.controller status fail: "+response.status);

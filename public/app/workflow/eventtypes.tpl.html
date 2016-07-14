@@ -75,11 +75,11 @@
                             <tr dir-paginate="eventType in eventTypes | itemsPerPage: typesPerPage"
                                 total-items="totalTypes"
                                 currentPage="pagination.current">
-                                <td >{{eventType.id}}</td>
+                                <td >{{eventType.eventTypeId}}</td>
                                 <td >{{eventType.name}}</td>
                                 <td class="nice-wrapping">{{eventType.mapping}}</td>
 
-                                <td align="center"> <button ng-click="deleteEventType(eventType.id)" class="btn btn-primary">
+                                <td align="center"> <button ng-click="deleteEventType(eventType.eventTypeId)" class="btn btn-primary">
                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                 </button></td>
                             </tr>

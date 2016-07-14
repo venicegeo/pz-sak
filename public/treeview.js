@@ -44,10 +44,9 @@
       auth[CONST.isloggedIn] = "aoifjakslfia(KDlaiLS";
 
       var encode = function(user, pass) {
-          auth.userStore = user;
           var decodedString = user + ":" + pass;
           auth.id = b64EncodeUnicode(decodedString);
-          return auth;
+          return auth.id;
       };
       auth.encode = encode;
       function b64EncodeUnicode(str) {

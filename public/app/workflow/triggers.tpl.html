@@ -71,7 +71,7 @@
                             <table id="searchTriggerResults" class="table-striped table-bordered table table-hover" width="100%">
                                 <tr><th >TriggerId</th>
                                     <th >Title</th>
-                                    <th >EventTypeId</th>
+                                    <th >EventTypeIds</th>
                                     <th >Query</th>
                                     <th >Task</th>
                                     <th></th>
@@ -81,12 +81,12 @@
                                     total-items="totalTriggers"
                                     currentPage="triggerPagination.current"
                                     pagination-id="triggersList">
-                                    <td >{{trigger.id}}</td>
+                                    <td >{{trigger.triggerId}}</td>
                                     <td >{{trigger.title}}</td>
-                                    <td >{{trigger.condition.eventtype_ids}}</td>
+                                    <td >{{trigger.condition.eventTypeIds}}</td>
                                     <td >{{trigger.condition.query}}</td>
-                                    <td >{{trigger.job.Task}}</td>
-                                    <td align="center"> <button ng-click="deleteTrigger(trigger.id)" class="btn btn-primary">
+                                    <td >{{trigger.job.jobType.type}}</td>
+                                    <td align="center"> <button ng-click="deleteTrigger(trigger.triggerId)" class="btn btn-primary">
                                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                     </button></td>
                                 </tr>
