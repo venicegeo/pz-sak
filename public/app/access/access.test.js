@@ -117,7 +117,6 @@ describe('Controller: AccessController', function () {
         $httpBackend.flush();
         expect(scope.accessDataList.length).toBe(1);
         expect(scope.total).toBe(1);
-        expect(scope.maxPage).toBe(0);
     });
 
     it('should get one particular data object', function () {
@@ -125,10 +124,10 @@ describe('Controller: AccessController', function () {
         scope.getAccess();
         $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/data/4ad8487a-e11c-4be2-98a8-23873d95d360');
         $httpBackend.flush();
-        expect(scope.accessData.data.dataId).toBe("4ad8487a-e11c-4be2-98a8-23873d95d360");
-        expect(scope.accessData.data.dataType.type).toBe("raster");
-        expect(scope.accessData.data.dataType.location.type).toBe("s3");
-        expect(scope.accessData.data.metadata.description).toBe("This is a test.");
+        expect(scope.accessData.dataId).toBe("4ad8487a-e11c-4be2-98a8-23873d95d360");
+        expect(scope.accessData.dataType.type).toBe("raster");
+        expect(scope.accessData.dataType.location.type).toBe("s3");
+        expect(scope.accessData.metadata.description).toBe("This is a test.");
     });
 
 });

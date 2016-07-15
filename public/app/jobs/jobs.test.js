@@ -8,7 +8,6 @@ describe('Controller: JobsController', function () {
 
     var $httpBackend;
     var jobsListRequestHandler,
-        jobsCountRequestHandler,
         resourceDataHandler,
         allStatusesHandler,
         jobsByUserHandler,
@@ -27,10 +26,10 @@ describe('Controller: JobsController', function () {
         $httpBackend = $injector.get('$httpBackend');
         jobsListRequestHandler = $httpBackend.when(
             'GET',
-            "/proxy/pz-jobmanager.int.geointservices.io/job?order=descending&page=0&perPage=10")
+            "/proxy/pz-jobmanager.int.geointservices.io/job?order=desc&page=0&perPage=10")
             .respond(
-
-                [
+                {"statusCode": 200,
+                "data": [
                 {
                     "jobId": "4e7d24b9-91d8-4f39-950b-3e254ad82d05",
                     "jobType": {
@@ -67,13 +66,12 @@ describe('Controller: JobsController', function () {
                     },
                     "submitted": "2016-04-28T16:20:10.933Z"
                 }
-                ]
+                ],
+                "pagination":{
+                    "count": 1
+                }}
             );
 
-        jobsCountRequestHandler = $httpBackend.when(
-            'GET',
-            '/proxy/pz-jobmanager.int.geointservices.io/job/count')
-            .respond(200, 1);
         resourceDataHandler = $httpBackend.when(
             'GET',
             '/proxy/pz-gateway.int.geointservices.io/data/4ad8487a-e11c-4be2-98a8-23873d95d360')
@@ -113,8 +111,8 @@ describe('Controller: JobsController', function () {
             .respond(["Cancelled","Error","Fail","Pending","Running","Submitted","Success"]);
         jobsByUserHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-jobmanager.int.geointservices.io/job/userName/citester?order=descending&page=0&pageSize=10')
-            .respond([
+            '/proxy/pz-jobmanager.int.geointservices.io/job?order=desc&page=0&perPage=10&userName=citester')
+            .respond({"data": [
                 {
                     "jobId": "92f84c34-bd0e-43fd-a8a0-30f863fbf527",
                     "jobType": {
@@ -153,7 +151,10 @@ describe('Controller: JobsController', function () {
                     },
                     "submitted": "2016-05-16T21:09:41.278Z"
                 }
-            ]
+            ],
+            "pagination": {
+                "count": 1
+            }}
             );
         jobStatusHandler = $httpBackend.when(
             'GET',
@@ -187,8 +188,7 @@ describe('Controller: JobsController', function () {
 
     it('should get list of jobs', function () {
         scope.updateFilter(true);
-        $httpBackend.expectGET('/proxy/pz-jobmanager.int.geointservices.io/job?order=descending&page=0&perPage=10');
-        $httpBackend.expectGET('/proxy/pz-jobmanager.int.geointservices.io/job/count');
+        $httpBackend.expectGET('/proxy/pz-jobmanager.int.geointservices.io/job?order=desc&page=0&perPage=10');
         $httpBackend.flush();
         expect(scope.jobsList.length).toBe(1);
         expect(scope.jobsList[0].jobId).toBe("4e7d24b9-91d8-4f39-950b-3e254ad82d05");
@@ -213,11 +213,10 @@ describe('Controller: JobsController', function () {
     it('should get all jobs from user', function () {
         scope.userId="citester";
         scope.getJobsByUserId(true);
-        $httpBackend.expectGET('/proxy/pz-jobmanager.int.geointservices.io/job/userName/citester?order=descending&page=0&pageSize=10');
+        $httpBackend.expectGET('/proxy/pz-jobmanager.int.geointservices.io/job?order=desc&page=0&perPage=10&userName=citester');
         $httpBackend.flush();
         expect(scope.jobsList.length).toBe(1);
         expect(scope.total).toBe(1);
-        expect(scope.maxPage).toBe(0);
     });
     it('should get job status', function () {
         scope.jobId = "4e7d24b9-91d8-4f39-950b-3e254ad82d05";
