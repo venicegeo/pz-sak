@@ -160,33 +160,20 @@
                 if (angular.isUndefined($scope.userId) || $scope.userId == "") {
                     return;
                 }
+                angular.extend(params, {
+                    "userName": $scope.userId
+                });
                 $http({
                     method: "GET",
-                    url: "/proxy/" + discover.jobsHost + "/job/userName/" + $scope.userId,
+                    url: "/proxy/" + discover.jobsHost + "/job",
                     params: params
                 }).then(function successCallback(html) {
-                    $scope.jobsList = html.data;
+                    $scope.jobsList = html.data.data;
+                    $scope.total = html.data.pagination.count;
                 }, function errorCallback(response) {
                     console.log("jobs.controller job by ID fail: " + response.status);
                     toaster.pop('error', "Error", "There was an issue with your job request.");
                 });
-
-                if (getCount) {
-                    $http({
-                        method: "GET",
-                        url: "/proxy/" + discover.jobsHost + "/job/userName/" + $scope.userId,
-                        params: {
-                            page: 0,
-                            perPage: 10000,
-                            order: $scope.order
-                        }
-                    }).then(function successCallback(html) {
-                        $scope.total = html.data.length;
-                    }, function errorCallback(response) {
-                        console.log("search.controller fail  updateFilter count: " + response.status);
-                        toaster.pop('error', "Error", "There was an issue with your request.");
-                    });
-                }
             };
         }
 })();
