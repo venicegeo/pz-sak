@@ -38,10 +38,10 @@ describe('Controller: UserServiceController', function () {
                     "serviceId" : "aaa",
                     "url" : "http://pzsvc-hello.int.geointservices.io/",
                     "contractUrl" : "http://pzsvc-hello.int.geointservices.io/",
+                    "method" : "GET",
                     "resourceMetadata" : {
                         "name" : "Hello World Test",
-                        "description" : "Hello world test",
-                        "method" : "GET"
+                        "description" : "Hello world test"
                     }
                 }
             });
@@ -84,10 +84,10 @@ describe('Controller: UserServiceController', function () {
             {
                 "url" : "http://pzsvc-hello.int.geointservices.io/",
                 "contractUrl" : "http://pzsvc-hello.int.geointservices.io/",
+                "method" : "GET",
                 "resourceMetadata" : {
                     "name" : "Hello World Test",
-                    "description" : "Hello world test",
-                    "method" : "GET"
+                    "description" : "Hello world test"
                 }
             })
             .respond({
@@ -96,7 +96,7 @@ describe('Controller: UserServiceController', function () {
             });
         executeServiceHandler = $httpBackend.when(
             'POST',
-            '/proxy/pz-gateway.int.geointservices.io/v2/job',
+            '/proxy/pz-gateway.int.geointservices.io/job',
             {
                 "type":"execute-service",
                 "data":{
@@ -113,65 +113,65 @@ describe('Controller: UserServiceController', function () {
             );
         getServicesHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/service?page=0&per_page=25')
+            '/proxy/pz-gateway.int.geointservices.io/service?page=0&perPage=25')
             .respond({
                 "type" : "service-list",
                 "data" : [ {
                     "serviceId" : "8c7706ab-a541-4914-b68b-d881448a7485",
                     "url" : "https://pzsvc-ossim.int.geointservices.io/execute",
+                    "method" : "POST",
                     "resourceMetadata" : {
                         "name" : "pzsvc-ossim",
-                        "description" : "The OSSIM shoreline-detection algorithm, served via piazza",
-                        "method" : "POST"
+                        "description" : "The OSSIM shoreline-detection algorithm, served via piazza"
                     }
                 }, {
                     "serviceId" : "42ad2fe7-94bb-42f6-bf09-1540abf69492",
+                    "method" : "POST",
                     "resourceMetadata" : {
                         "name" : "pz-svcs-prevgen_test",
-                        "description" : "Service that takes payload containing S3 location and bounding box for some raster file, downloads, crops and uploads the crop back up to s3.",
-                        "method" : "POST"
+                        "description" : "Service that takes payload containing S3 location and bounding box for some raster file, downloads, crops and uploads the crop back up to s3."
                     }
                 }, {
                     "serviceId" : "4166b752-fc89-45ad-bf30-0933cc769c8b",
+                    "method" : "GET",
                     "resourceMetadata" : {
                         "name" : "GetLocations Test",
-                        "description" : "Returns a location",
-                        "method" : "GET"
+                        "description" : "Returns a location"
                     }
                 }, {
                     "serviceId" : "d692fabb-6b98-427b-925d-f72c7fd34d3a",
+                    "method" : "GET",
                     "resourceMetadata" : {
                         "name" : "GetLocations Test",
-                        "description" : "Returns a location",
-                        "method" : "GET"
+                        "description" : "Returns a location"
                     }
                 }, {
                     "serviceId" : "2ea09b87-a048-4dd1-a185-4fdbbf75c3a5",
+                    "method" : "GET",
                     "resourceMetadata" : {
                         "name" : "GetLocations Test",
-                        "description" : "Returns a location",
-                        "method" : "GET"
+                        "description" : "Returns a location"
                     }
                 }, {
                     "serviceId" : "f35c33f1-4c8f-4c7f-a163-2a0c79fafd72",
                     "url" : "https://pz-servicecontroller.int.geointservices.io/jumpstart/string/toUpper",
+                    "method" : "POST",
                     "resourceMetadata" : {
                         "name" : "toUpper Params Cat and Parrot",
-                        "description" : "Service to convert string to uppercase",
-                        "method" : "POST"
+                        "description" : "Service to convert string to uppercase"
                     }
                 }, {
                     "serviceId" : "a0cec3f6-0514-4563-b72d-3c2765e94a9d"
                 }, {
                     "serviceId" : "9a81387a-55a0-4757-8137-f904046916d5",
                     "url" : "NOT ACTUALLY A SERVICE/execute",
+                    "method" : "POST",
                     "resourceMetadata" : {
                         "name" : "pzsvc-exec test",
                         "description" : "The command line, served via piazza - now edited!",
                         "classType" : {
                             "classification" : "UNCLASSIFIED"
                         },
-                        "method" : "POST",
                         "version" : "0.0",
                         "metadata" : {
                             "FavColor" : "Blue",
@@ -189,52 +189,52 @@ describe('Controller: UserServiceController', function () {
                 "pagination" : {
                     "count" : 40,
                     "page" : 0,
-                    "per_page" : 10
+                    "perPage" : 10
                 }
             });
         searchServicesHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/service?keyword=test&page=0&per_page=25')
+            '/proxy/pz-gateway.int.geointservices.io/service?keyword=test&page=0&perPage=25')
             .respond({
                 "type" : "service-list",
                 "data" : [ {
                     "serviceId" : "42ad2fe7-94bb-42f6-bf09-1540abf69492",
+                    "method" : "POST",
                     "resourceMetadata" : {
                         "name" : "pz-svcs-prevgen_test",
-                        "description" : "Service that takes payload containing S3 location and bounding box for some raster file, downloads, crops and uploads the crop back up to s3.",
-                        "method" : "POST"
+                        "description" : "Service that takes payload containing S3 location and bounding box for some raster file, downloads, crops and uploads the crop back up to s3."
                     }
                 }, {
                     "serviceId" : "4166b752-fc89-45ad-bf30-0933cc769c8b",
+                    "method" : "GET",
                     "resourceMetadata" : {
                         "name" : "GetLocations Test",
-                        "description" : "Returns a location",
-                        "method" : "GET"
+                        "description" : "Returns a location"
                     }
                 }, {
                     "serviceId" : "d692fabb-6b98-427b-925d-f72c7fd34d3a",
+                    "method" : "GET",
                     "resourceMetadata" : {
                         "name" : "GetLocations Test",
-                        "description" : "Returns a location",
-                        "method" : "GET"
+                        "description" : "Returns a location"
                     }
                 }, {
                     "serviceId" : "2ea09b87-a048-4dd1-a185-4fdbbf75c3a5",
+                    "method" : "GET",
                     "resourceMetadata" : {
                         "name" : "GetLocations Test",
-                        "description" : "Returns a location",
-                        "method" : "GET"
+                        "description" : "Returns a location"
                     }
                 }, {
                     "serviceId" : "9a81387a-55a0-4757-8137-f904046916d5",
                     "url" : "NOT ACTUALLY A SERVICE/execute",
+                    "method" : "POST",
                     "resourceMetadata" : {
                         "name" : "pzsvc-exec test",
                         "description" : "The command line, served via piazza - now edited!",
                         "classType" : {
                             "classification" : "UNCLASSIFIED"
                         },
-                        "method" : "POST",
                         "version" : "0.0",
                         "metadata" : {
                             "FavColor" : "Blue",
@@ -248,7 +248,7 @@ describe('Controller: UserServiceController', function () {
                 "pagination" : {
                     "count" : 21,
                     "page" : 0,
-                    "per_page" : 5
+                    "perPage" : 5
                 }
             });
         updateServiceHandler = $httpBackend.when(
@@ -274,7 +274,7 @@ describe('Controller: UserServiceController', function () {
 
     it('should get list of all services', function () {
         scope.getServices(1);
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/service?page=0&per_page=25');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/service?page=0&perPage=25');
         $httpBackend.flush();
         expect(scope.services.length).toBe(10);
         expect(scope.totalServices).toBe(40);
@@ -283,7 +283,7 @@ describe('Controller: UserServiceController', function () {
         scope.searchField="test";
         scope.searchPerPage=25;
         scope.searchServices(1);
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/service?keyword=test&page=0&per_page=25');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/service?keyword=test&page=0&perPage=25');
         $httpBackend.flush();
         expect(scope.results.length).toBe(5);
         expect(scope.totalSearchResults).toBe(21);
@@ -298,10 +298,10 @@ describe('Controller: UserServiceController', function () {
         {
             "url" : "http://pzsvc-hello.int.geointservices.io/",
             "contractUrl" : "http://pzsvc-hello.int.geointservices.io/",
+            "method" : "GET",
             "resourceMetadata" : {
                 "name" : "Hello World Test",
-                "description" : "Hello world test",
-                "method" : "GET"
+                "description" : "Hello world test"
             }
         });
         $httpBackend.flush();
@@ -321,7 +321,7 @@ describe('Controller: UserServiceController', function () {
         $httpBackend.expectPUT('/proxy/pz-gateway.int.geointservices.io/service/aaa');
         $httpBackend.expect(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/service?page=0&per_page=25');
+            '/proxy/pz-gateway.int.geointservices.io/service?page=0&perPage=25');
         $httpBackend.flush();
         expect(scope.services.length).toBe(10);
         expect(scope.totalServices).toBe(40);
@@ -333,7 +333,7 @@ describe('Controller: UserServiceController', function () {
             '/proxy/pz-gateway.int.geointservices.io/service/aaa');
         $httpBackend.expect(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/service?page=0&per_page=25');
+            '/proxy/pz-gateway.int.geointservices.io/service?page=0&perPage=25');
         $httpBackend.flush();
         expect(scope.services.length).toBe(10);
         expect(scope.totalServices).toBe(40);

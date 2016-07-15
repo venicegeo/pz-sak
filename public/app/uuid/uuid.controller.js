@@ -28,10 +28,10 @@
                         var url = discover.uuidHost;
                         var posturl = '';
                         if (($scope.uuidCount === undefined) || ($scope.uuidCount === null)){
-                            posturl = "/proxy?url="+ url +"/v1/uuids"
+                            posturl = "/proxy?url="+ url +"/uuids"
                         }
                         else {
-                            posturl = "/proxy?url="+ url + "/v1/uuids?count="+$scope.uuidCount;
+                            posturl = "/proxy?url="+ url + "/uuids?count="+$scope.uuidCount;
                         }
 
                         console.log(posturl);

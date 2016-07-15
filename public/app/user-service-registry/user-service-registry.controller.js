@@ -273,10 +273,10 @@
             var data = {
                 "url":$scope.serviceUrl,
                 "contractUrl":$scope.serviceUrl,
+                "method":$scope.method,
                 "resourceMetadata" : {
                     "name":$scope.serviceName,
-                    "description":$scope.serviceDescription,
-                    "method":$scope.method
+                    "description":$scope.serviceDescription
                 }
             };
 
@@ -341,7 +341,7 @@
 
             gateway.async(
                 "POST",
-                '/v2/job',
+                '/job',
                 data
             ).then(function successCallback( html ) {
                 $scope.jobId = html.data.jobId;
@@ -366,7 +366,7 @@
 
             var params = {
                 page: $scope.pagination.current,
-                per_page: $scope.listPerPage
+                perPage: $scope.listPerPage
             };
 
             gateway.async(
@@ -408,7 +408,7 @@
             var params = {
                 keyword: $scope.searchField,
                 page: $scope.searchPagination.current,
-                per_page: $scope.searchPerPage
+                perPage: $scope.searchPerPage
             };
 
             gateway.async(
@@ -466,7 +466,7 @@
                 $scope.updateServiceName = results.resourceMetadata.name;
                 $scope.updateServiceDescrip = results.resourceMetadata.description;
                 $scope.updateServiceUrl = results.url;
-                $scope.updateServiceMethod = results.resourceMetadata.method;
+                $scope.updateServiceMethod = results.method;
             }, function errorCallback(response){
                 usSpinnerService.stop("spinner-update");
                 console.log("service.controller describe service fail: "+response.status);
@@ -489,10 +489,10 @@
             var dataObj = {
                 url: $scope.updateServiceUrl,
                 contractUrl: $scope.updateServiceUrl,
+                method: $scope.updateServiceMethod,
                 resourceMetadata: {
                     name: $scope.updateServiceName,
-                    description: $scope.updateServiceDescrip,
-                    method: $scope.updateServiceMethod
+                    description: $scope.updateServiceDescrip
                 }
             };
 
@@ -501,10 +501,15 @@
                 "/service/" + serviceId,
                 dataObj
             ).then(function successCallback(res) {
+                // TODO: Check the status code for success
                 console.log(res);
-                $scope.getServices();
-
-                toaster.pop('success', "Success", "The service was successfully updated.")
+                if (res.status == "200") {
+                    $scope.getServices();
+                    toaster.pop('success', "Success", "The service was successfully updated.");
+                } else {
+                    console.log("service.controller update fail: "+res.status);
+                    toaster.pop('error', "Error", "There was a problem updating the service");
+                }
             }, function errorCallback(res) {
                 console.log("service.controller update fail: "+res.status);
 

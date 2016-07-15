@@ -69,9 +69,12 @@
                     <div class="form-group" ng-show="alerts" ng-init="getAlerts()">
 
                         <table id="searchAlertsResults" class="table-striped table-bordered table table-hover" width="100%">
-                            <tr><th >Id</th>
+                            <tr><th >Created On</th>
+                                <th >Alert Id</th>
                                 <th >Trigger Id</th>
                                 <th >Event Id</th>
+                                <th >Job Id</th>
+
                                 <th></th>
 
                             </tr>
@@ -79,10 +82,12 @@
                                 total-items="totalAlerts"
                                 currentPage="alertPagination.current"
                                 pagination-id="alertsList">
-                                <td >{{alert.id}}</td>
-                                <td >{{alert.trigger_id}}</td>
-                                <td >{{alert.event_id}}</td>
-                                <td align="center"> <button ng-click="deleteAlert(alert.id)" class="btn btn-primary">
+                                <td >{{alert.createdOn}}</td>
+                                <td >{{alert.alertId}}</td>
+                                <td >{{alert.triggerId}}</td>
+                                <td >{{alert.eventId}}</td>
+                                <td >{{alert.jobId}}</td>
+                                <td align="center"> <button ng-click="deleteAlert(alert.alertId)" class="btn btn-primary">
                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                 </button></td>
                             </tr>

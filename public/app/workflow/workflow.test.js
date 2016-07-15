@@ -29,7 +29,7 @@ describe('Controller: WorkflowController', function () {
         $httpBackend = $injector.get('$httpBackend');
         eventTypesRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/eventType?page=0&per_page=10').respond(
+            '/proxy/pz-gateway.int.geointservices.io/eventType?page=0&perPage=10').respond(
             {"data":[
                 {
                     "id": "110d6220-aee1-471b-bdaa-2bad38c41549",
@@ -57,7 +57,7 @@ describe('Controller: WorkflowController', function () {
         );
         allEventTypesRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/eventType?page=0&per_page=10000').respond(
+            '/proxy/pz-gateway.int.geointservices.io/eventType?page=0&perPage=10000').respond(
             {"data":[
                 {
                     "id": "110d6220-aee1-471b-bdaa-2bad38c41549",
@@ -85,7 +85,7 @@ describe('Controller: WorkflowController', function () {
         );
         eventsRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/event?page=0&per_page=10').respond(
+            '/proxy/pz-gateway.int.geointservices.io/event?page=0&perPage=10').respond(
             {"data":[
                 {
                     "id": "ebc35e90-38a7-4fe4-bc7c-8ad79e995ee8",
@@ -104,7 +104,7 @@ describe('Controller: WorkflowController', function () {
         );
         triggersRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/trigger?page=0&per_page=10').respond(
+            '/proxy/pz-gateway.int.geointservices.io/trigger?page=0&perPage=10').respond(
             {"data":[
                 {
                     "triggerId": "aaa",
@@ -123,7 +123,7 @@ describe('Controller: WorkflowController', function () {
         );
         alertsRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/alert?page=0&per_page=10').respond(
+            '/proxy/pz-gateway.int.geointservices.io/alert?page=0&perPage=10').respond(
             {"data":[
                 {
                     "triggerId": "aaa",
@@ -180,25 +180,25 @@ describe('Controller: WorkflowController', function () {
 
     it('should get events', function () {
         scope.getEvents();
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/event?page=0&per_page=10');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/event?page=0&perPage=10');
         $httpBackend.flush();
         expect(scope.events.length).toBe(1);
     });
     it('should get eventtypes', function () {
         scope.getEventTypes();
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/eventType?page=0&per_page=10000');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/eventType?page=0&perPage=10000');
         $httpBackend.flush();
         expect(scope.eventTypes.length).toBe(3);
     });
     it('should get alerts', function () {
         scope.getAlerts();
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/alert?page=0&per_page=10');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/alert?page=0&perPage=10');
         $httpBackend.flush();
         expect(scope.alerts.length).toBe(1);
     });
     it('should get triggers', function () {
         scope.getTriggers();
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/trigger?page=0&per_page=10');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/trigger?page=0&perPage=10');
         $httpBackend.flush();
         expect(scope.triggers.length).toBe(1);
     });
@@ -219,7 +219,7 @@ describe('Controller: WorkflowController', function () {
                     "data": {}
                 }
             );
-            $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/event?page=0&per_page=10');
+            $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/event?page=0&perPage=10');
             $httpBackend.flush();
             expect(scope.events.length).toBe(1);
         } else {
@@ -237,7 +237,7 @@ describe('Controller: WorkflowController', function () {
                 "event_id": "bbb"
             }
         );
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/alert?page=0&per_page=10');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/alert?page=0&perPage=10');
         $httpBackend.flush();
         expect(scope.alerts.length).toBe(1);
     });
@@ -260,7 +260,7 @@ describe('Controller: WorkflowController', function () {
                 }
             }
         );
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/trigger?page=0&per_page=10');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/trigger?page=0&perPage=10');
         $httpBackend.flush();
         expect(scope.triggers.length).toBe(1);
     });

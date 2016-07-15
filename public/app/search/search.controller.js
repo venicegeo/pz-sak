@@ -77,11 +77,11 @@
 
             $scope.getResultsCount(q);
 
-            gateway.async(
-                "POST",
-                "/data/query",
-                data
-            ).then(function successCallback( html ) {
+            $http({
+                method: "POST",
+                url: "/proxy/" + discover.searchHost + "/api/v1/dslfordataresources",
+                data: data
+            }).then(function successCallback( html ) {
                 $scope.searchResults = html.data.data;
             }, function errorCallback(response){
                 console.log("search.controller get search results fail: " + response.status);

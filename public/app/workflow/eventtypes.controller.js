@@ -141,7 +141,7 @@
 
             var params = {
                 page: $scope.pagination.current,
-                per_page: $scope.typesPerPage
+                perPage: $scope.typesPerPage
             };
 
             gateway.async(
