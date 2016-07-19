@@ -66,7 +66,7 @@
                     "GET",
                     "/job/" + $scope.jobId
                 ).then(function successCallback( html ) {
-                    $scope.jobStatusResult = html.data;
+                    $scope.jobStatusResult = html.data.data;
                 }, function errorCallback(response){
                     console.log("jobs.controller fail on getJobStatus");
                     toaster.pop('error', "Error", "There was an issue with your request.");
@@ -79,7 +79,7 @@
                     "GET",
                     "/data/" + $scope.resourceId
                 ).then(function successCallback( html ) {
-                    $scope.resourceData = html.data;
+                    $scope.resourceData = html.data.data;
                 }, function errorCallback(response){
                     console.log("jobs.controller fail on GetResourceData");
                     toaster.pop('error', "Error", "There was an issue with your request.");
