@@ -98,12 +98,12 @@
             </form>
         </div>
         <div role="tabpanel" class="tab-pane fade" id="getresource">
-            <h1 class="alert alert-info">Get Resource Data</h1>
+            <h1 class="alert alert-info">Get Data</h1>
             <form id="jobResourceData" ng-submit="getResourceData()">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="resourceId">Resource ID</label>
+                            <label for="resourceId">Data ID</label>
                             <input id="resourceId" type="text" class="form-control" ng-model="resourceId" placeholder="Enter a valid Resource ID" required>
 
                         </div>
@@ -111,22 +111,22 @@
 
                     <div class="col-md-2">
                         <br>
-                        <button type="submit" class="btn btn-primary">Get Resource Data</button>
+                        <button type="submit" class="btn btn-primary">Get Data</button>
                     </div>
 
                 </div>
                 <div class="row">
                     <div ng-show="resourceData">
                         <dl class="dl-horizontal two-column nice-wrapping" ng-hide="resourceData.message">
-                            <dt>Resource ID</dt>
-                            <dd>{{resourceData.data.dataId}}</dd>
+                            <dt>Data ID</dt>
+                            <dd>{{resourceData.dataId}}</dd>
                             <dt>Data Type</dt>
-                            <dd>{{resourceData.data.dataType.type}}</dd>
+                            <dd>{{resourceData.dataType.type}}</dd>
                             <dt>Data Content</dt>
-                            <dd>{{resourceData.data.dataType.content}}</dd>
+                            <dd>{{resourceData.dataType.content}}</dd>
                             <dt>Data Mimetype</dt>
-                            <dd>{{resourceData.data.dataType.mimeType}}</dd>
-                            <dt ng-repeat-start="(key, value) in resourceData.data.metadata">{{key | capitalize}}</dt>
+                            <dd>{{resourceData.dataType.mimeType}}</dd>
+                            <dt ng-repeat-start="(key, value) in resourceData.metadata">{{key | capitalize}}</dt>
                             <dd ng-repeat-end>{{value}}</dd>
                         </dl>
                         <div class="col-md-6" ng-show="resourceData.message">
