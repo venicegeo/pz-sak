@@ -114,7 +114,7 @@
                 params
             ).then(function successCallback( html ) {
                 if (html.data != null) {
-                    $scope.events = html.data.data
+                    $scope.events = html.data.data;
                     $scope.totalEvents = html.data.pagination.count;
                 }
             }, function errorCallback(response){

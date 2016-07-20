@@ -98,7 +98,7 @@
             }
 
             $http(httpObject).then(function successCallback( html ) {
-                $scope.jobIdResult = html.data.jobId;
+                $scope.jobIdResult = html.data.data.jobId;
                 toaster.pop('success', "Success", "The data was successfully sent to the loader.")
             }, function errorCallback(response){
                 if (response.data.message) {
@@ -119,7 +119,7 @@
                 "GET",
                 "/job/" + $scope.jobId
             ).then(function successCallback( html ) {
-                $scope.jobStatus = html.data;
+                $scope.jobStatus = html.data.data;
             }, function errorCallback(response){
                 console.log("ingester.controller job status fail: " + response.status);
                 toaster.pop('error', "Error", "There was an issue with your request.");
