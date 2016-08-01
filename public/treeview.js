@@ -438,7 +438,7 @@
                   return html;
               }, function errorCallback( response ) {
                   console.log("gateway call failed");
-                  return response;
+                  throw response;
               });
               return promise;
           }
