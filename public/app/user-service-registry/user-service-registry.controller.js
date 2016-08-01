@@ -154,10 +154,11 @@
                 "GET",
                 '/job/' + $scope.jobId
             ).then(function successCallback(html) {
-                if (html.data.status.indexOf("Success") > -1) {
-                    $scope.dataId = html.data.result.dataId;
+                if (html.data.data.status.indexOf("Success") > -1) {
+                    usSpinnerService.stop("spinner-execute");
+                    $scope.dataId = html.data.data.result.dataId;
                     getResourceResult($scope.dataId);
-                    $scope.jobStatusResult = JSON.stringify(html.data);
+                    $scope.jobStatusResult = JSON.stringify(html.data.data);
                     console.log($scope.serviceId);
                 }
                 else {
@@ -165,6 +166,7 @@
                         $timeout(getExecuteResult, SLOW_POLL, jobId);
                     }
                     else {
+                        usSpinnerService.stop("spinner-execute");
                         console.log("Exceeded Get Execute Results retry limit");
                         toaster.pop('error', "Error", "Exceeded Get Execute Results retry limit")
                     }
@@ -175,6 +177,7 @@
                     console.log("job not registered yet... trying again");
                     $timeout(getExecuteResult, SLOW_POLL, jobId);
                 } else {
+                    usSpinnerService.stop("spinner-execute");
                     console.log("service.controller Execute Result fail");
                     toaster.pop('error', "Error", "There was an issue with your request.");
                 }
@@ -276,7 +279,8 @@
                 "method":$scope.method,
                 "resourceMetadata" : {
                     "name":$scope.serviceName,
-                    "description":$scope.serviceDescription
+                    "description":$scope.serviceDescription,
+                    "classType": ""
                 }
             };
 
@@ -286,7 +290,7 @@
                 data
             ).then(function successCallback( html ) {
 
-                $scope.registerServiceId = html.data.serviceId;
+                $scope.registerServiceId = html.data.data.serviceId;
                 console.log($scope.registerServiceId);
                 $scope.showRegistrationSuccess = true;
                 $scope.registrationSuccess = $scope.registerServiceId;
@@ -344,8 +348,9 @@
                 '/job',
                 data
             ).then(function successCallback( html ) {
-                $scope.jobId = html.data.jobId;
+                $scope.jobId = html.data.data.jobId;
                 $scope.ExecuteResultsRetries = 0;
+                usSpinnerService.spin("spinner-execute");
                 getExecuteResult($scope.jobId)
 
 
