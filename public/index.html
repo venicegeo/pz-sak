@@ -86,7 +86,7 @@
 </head>
 <body ng-controller="SAKappController">
 <div class="page-wrap">
-<h2 style="margin-top: 10px;font-weight: bold">PZ-Client Swiss Army Knife Utility <img src="images/pz-client-logo.png" width="150" height="66"></h2>
+<h2 style="margin-top: 10px;font-weight: bold">PZ-Client Swiss Army Knife Utility <img src="images/pz-client-logo.png" width="150" height="66"><span ng-show="auth[util.isLoggedIn] == util.loggedIn" class="pull-right" style="font-size: 18px;">{{auth["userStore"]}} (<a ng-click="logout()" style="cursor: pointer">logout</a>)</span></h2>
 
 
 <div ui-view="" ng-hide="auth[util.isLoggedIn] == util.loggedIn"></div>

@@ -39,10 +39,16 @@
       var auth = {
           id : "",
           userStore : "",
-          encode : undefined
+          encode : undefined,
+          setUser: undefined
       };
       auth[CONST.isloggedIn] = "aoifjakslfia(KDlaiLS";
 
+      var setUser = function(user) {
+          auth.userStore = user;
+          return;
+      };
+      auth.setUser = setUser;
       var encode = function(user, pass) {
           var decodedString = user + ":" + pass;
           auth.id = b64EncodeUnicode(decodedString);
@@ -57,13 +63,13 @@
       if ((angular.isDefined($cookies.getObject(CONST.auth)) &&
           $cookies.getObject(CONST.auth)[CONST.isLoggedIn] === CONST.loggedIn)) {
           auth.id = $cookies.getObject(CONST.auth).id;
-          auth.userStore = $cookies.getObject(CONST.auth).user;
+          auth.userStore = $cookies.getObject(CONST.auth).userStore;
           auth[CONST.isLoggedIn] = CONST.loggedIn;
       }
       return auth;
   });
 
-  app.controller('SAKappController', function($scope, $timeout, $http, Auth, CONST) {
+  app.controller('SAKappController', function($scope, $timeout, $http, Auth, CONST, $cookies, $location) {
     $scope.auth = Auth;
     $scope.util = CONST;
     $scope.year = (new Date()).getFullYear();
@@ -269,6 +275,14 @@
 
         }
     ];
+
+    $scope.logout = function() {
+        Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
+        Auth.encode("null", "null");
+        Auth.setUser("");
+        $cookies.putObject(CONST.auth, Auth);
+        $location.path("/login.html");
+    };
 
     $scope.my_data = treedata_avm;
 
