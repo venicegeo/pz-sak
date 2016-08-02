@@ -22,34 +22,37 @@
     function LoginController ($scope, $location, $cookies, $http, discover, toaster, Auth, CONST, $rootScope) {
         $cookies.putObject(CONST.auth, Auth);
         $scope.login = function() {
-            var test = Auth.encode($scope.username, $scope.password);//"bWNtYWhvam06bmF0UmVqOTNiM3N0MHch";//
+            var id = Auth.encode($scope.username, $scope.password);
             $http({
                 method: "GET",
                 url: "/proxy?url=" + discover.gatewayHost + "/key",
                 headers: {
-                    "Authorization": "Basic " + test
+                    "Authorization": "Basic " + id
                 }
             }).then(function successCallback( html ) {
                 if (html.data.type === "uuid") {
                     Auth[CONST.isLoggedIn] = CONST.loggedIn;
                     Auth.encode(html.data.uuid, "");
-                    Auth["userStore"] = $scope.user;
+                    Auth.setUser($scope.username);
                     $cookies.putObject(CONST.auth, Auth);
                     $location.path("/index.html");
                     $rootScope.$emit('loggedInEvent');
+                    $scope.username = "";
+                    $scope.password = "";
                     toaster.pop('success', "Success", "You have logged in successfully.");
                 } else {
-                    Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
-                    Auth.encode("null", "null");
-                    Auth["userStore"] = "";
-                    $cookies.putObject(CONST.auth, Auth);
-                    $location.path("/login.html");
-                    console.log("login.controller fail: "+html.status);
-                    toaster.pop('warning', "Invalid Credentials", "You have entered the wrong username or password.");
+                    console.log("verification success but no ID present");
+                    toaster.pop('error', 'Error', 'An error was encountered while logging in. Please try again later.')
                 }
             }, function errorCallback(response){
-                console.log("login.controller fail: "+response.status);
-                toaster.pop('error', "Error", "There was an issue with authentication.");
+                Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
+                Auth.encode("null", "null");
+                Auth.setUser("");
+                $cookies.putObject(CONST.auth, Auth);
+                $location.path("/login.html");
+                $scope.password = "";
+                console.log("login.controller fail: "+html.status);
+                toaster.pop('warning', "Invalid Credentials", "You have entered the wrong username or password.");
             });
 
         };
