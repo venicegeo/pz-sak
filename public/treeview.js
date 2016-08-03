@@ -293,6 +293,27 @@
 
     };
 
+      $http({
+              method: "GET",
+              url: "/banner.json",
+          }
+      ).then(function successCallback(response){
+          $scope.bannerText = response.data.bannerText;
+          $scope.bannerStyle={
+              'background-color': response.data.bannerBackgroundColor,
+              'color': response.data.bannerColor
+          };
+          if ($scope.bannerText != "") {
+              $scope.pageStyle = {
+                  'margin-bottom': '-40px',
+                  'min-height': '99%'
+              }
+          } else {
+              $scope.pageStyle = {}
+          }
+      }, function errorCallback(){
+          console.log("banner info not set")
+      });
   });
 
   app.filter('capitalize', function() {
