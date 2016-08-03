@@ -85,7 +85,8 @@
 
 </head>
 <body ng-controller="SAKappController">
-<div class="page-wrap">
+<div class="banner" ng-show="bannerText != ''" ng-style="bannerStyle">{{bannerText}}</div>
+<div class="page-wrap" ng-style="pageStyle">
 <h2 style="margin-top: 10px;font-weight: bold">PZ-Client Swiss Army Knife Utility <img src="images/pz-client-logo.png" width="150" height="66"><span ng-show="auth[util.isLoggedIn] == util.loggedIn" class="pull-right" style="font-size: 18px;">{{auth["userStore"]}} (<a ng-click="logout()" style="cursor: pointer">logout</a>)</span></h2>
 
 
@@ -102,7 +103,7 @@
         </td>
         <td style="padding:20px;vertical-align:top;width:100%">
 
-            <div data-ng-include src="bodyDiv" id="body" style="width:100%; height:100%; min-height: 800px" class="alert alert-warning">
+            <div data-ng-include src="bodyDiv" id="body" style="width:100%; height:100%; min-height: 680px" class="alert alert-warning">
 
             </div>
         </td>
@@ -111,8 +112,9 @@
 </div>
 <footer class="site-footer">
     <div class="pull-right">
-        <p class="text-muted">&copy; RadiantBlue Technologies {{year}}</p>
+        <span class="text-muted">&copy; RadiantBlue Technologies {{year}}</span>
     </div>
 </footer>
+<div class="banner" ng-show="bannerText != ''" ng-style="bannerStyle">{{bannerText}}</div>
 </body>
 </html>
