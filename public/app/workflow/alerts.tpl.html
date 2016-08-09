@@ -50,7 +50,8 @@
                     </div>
                     <div class="col-md-8 text-center" style="margin-top: 25px;">
                         <div class="range-label" ng-show="totalAlerts > 0">
-                            <label>Displaying {{ getAlertStart() }} - {{ getAlertEnd() }} of {{ totalAlerts }}</label>
+                            <label>Displaying {{ getAlertStart() }} - {{ getAlertEnd() }} of {{ totalAlerts }}<span ng-show="actualAlertCount > totalAlerts">+</span></label>
+                            <label ng-show="actualAlertCount > totalAlerts">({{actualAlertCount}})</label>
                         </div>
                         <label ng-show="totalAlerts == 0">No results to display</label>
                     </div>

@@ -442,6 +442,13 @@
 
   }]);
 
+    app.factory('settings', [function() {
+        var settings = {
+            elasticSearchLimit : 10000
+        };
+        return settings;
+    }]);
+
   app.factory('gateway', ['$http', 'discover', 'Auth',  function($http, discover, Auth) {
       var gateway = {
           async: function(method, endPoint, body, params, fixTransform) {

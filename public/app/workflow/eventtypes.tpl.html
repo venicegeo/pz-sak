@@ -48,7 +48,8 @@
                     </div>
                     <div class="col-md-8 text-center" style="margin-top: 25px;">
                         <div class="range-label" ng-show="totalTypes > 0">
-                            <label>Displaying {{ getStart() }} - {{ getEnd() }} of {{ totalTypes }}</label>
+                            <label>Displaying {{ getStart() }} - {{ getEnd() }} of {{ totalTypes }}<span ng-show="actualTypeCount > totalTypes">+</span></label>
+                            <label ng-show="actualTypeCount > totalTypes">({{actualTypeCount}})</label>
                         </div>
                         <label ng-show="totalTypes == 0">No results to display</label>
                     </div>
