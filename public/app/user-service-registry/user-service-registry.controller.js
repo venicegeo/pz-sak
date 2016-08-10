@@ -18,11 +18,12 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('UserServiceController', ['$scope', 'toaster', '$timeout', 'usSpinnerService', 'gateway', UserServiceController]);
+        .controller('UserServiceController', ['$scope', 'toaster', '$timeout', 'usSpinnerService', 'gateway', 'settings', UserServiceController]);
 
 
 
-    function UserServiceController($scope, toaster, $timeout, usSpinnerService, gateway) {
+    function UserServiceController($scope, toaster, $timeout, usSpinnerService, gateway, settings) {
+        $scope.elasticSearchLimit = settings.elasticSearchLimit;
         $scope.executeInputMap = {};
         $scope.executeOutputMap = {};
         $scope.method = 'GET';
@@ -382,7 +383,8 @@
             ).then(function successCallback( html ) {
                 usSpinnerService.stop("spinner-list");
                 $scope.services = angular.fromJson(html.data.data);
-                $scope.totalServices = html.data.pagination.count;
+                $scope.actualServicesCount = html.data.pagination.count;
+                $scope.totalServices = ($scope.actualServicesCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualServicesCount;
             }, function errorCallback(response){
                 usSpinnerService.stop("spinner-list");
                 console.log("service.controller list services fail: " + response.status);

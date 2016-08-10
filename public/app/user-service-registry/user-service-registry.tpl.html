@@ -202,7 +202,8 @@
                     </div>
                     <div class="col-md-8 text-center">
                         <div class="range-label" ng-show="totalServices > 0" style="margin-top: 15px;">
-                            <label>Displaying {{ getListStart() }} - {{ getListEnd() }} of {{ totalServices }}</label>
+                            <label>Displaying {{ getListStart() }} - {{ getListEnd() }} of {{ totalServices }}<span ng-show="actualServicesCount > totalServices">+</span></label>
+                            <label ng-show="actualServicesCount > totalServices">({{actualServicesCount}})</label>
                         </div>
                         <label ng-show="totalServices == 0">No results to display</label>
                     </div>
