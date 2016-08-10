@@ -17,9 +17,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('JobsController', ['$scope', '$http', 'toaster', 'discover', 'gateway', JobsController]);
+        .controller('JobsController', ['$scope', '$http', 'toaster', 'discover', 'gateway', 'settings', JobsController]);
 
-        function JobsController ($scope, $http, toaster, discover, gateway) {
+        function JobsController ($scope, $http, toaster, discover, gateway, settings) {
+            $scope.elasticSearchLimit = settings.elasticSearchLimit;
             $scope.pageSizeOptions = [10, 25, 50, 100, 500];
             $scope.orderOptions = ['desc', 'asc'];
             $scope.order = 'desc';
@@ -129,7 +130,8 @@
                     params: params
                 }).then(function successCallback(html) {
                     $scope.jobsList = html.data.data;
-                    $scope.total = html.data.pagination.count;
+                    $scope.actualTotal = html.data.pagination.count;
+                    $scope.total = ($scope.actualTotal > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualTotal;
                 }, function errorCallback(response) {
                     console.log("search.controller fail updateFilter query");
                     toaster.pop('error', "Error", "There was an issue with your request.");
@@ -169,7 +171,8 @@
                     params: params
                 }).then(function successCallback(html) {
                     $scope.jobsList = html.data.data;
-                    $scope.total = html.data.pagination.count;
+                    $scope.actualTotal = html.data.pagination.count;
+                    $scope.total = ($scope.actualTotal > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualTotal;
                 }, function errorCallback(response) {
                     console.log("jobs.controller job by ID fail: " + response.status);
                     toaster.pop('error', "Error", "There was an issue with your job request.");
