@@ -17,12 +17,12 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('LoggerController', ['$scope', '$http',  'toaster', 'discover', 'usSpinnerService', LoggerController]);
+        .controller('LoggerController', ['$scope', '$http',  'toaster', 'discover', 'settings', 'usSpinnerService', LoggerController]);
 
-    function LoggerController ($scope, $http, toaster, discover, usSpinnerService) {
+    function LoggerController ($scope, $http, toaster, discover, settings, usSpinnerService) {
         $scope.pageOptions = [10, 50, 100, 500];
         $scope.size=100;
-        $scope.elasticSearchLimit = 10000;
+        $scope.elasticSearchLimit = settings.elasticSearchLimit;
 
         $scope.pagination = {
             current: 0

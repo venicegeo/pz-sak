@@ -61,7 +61,11 @@
                     </div>
                 </div>
                 <div style="margin-top: 10px" ng-show="totalResults == 0">{{errorMsg}}</div>
-                <div style="margin-top: 10px" ng-show="totalResults">Displaying {{getFirstIndex()}} to {{getLastIndex()}} of {{totalResults}} results</div><br/>
+                <div style="margin-top: 10px" ng-show="totalResults">
+                    <label>Displaying {{getFirstIndex()}} to {{getLastIndex()}} of {{totalResults}}<span ng-show="actualResultsCount > totalResults">+</span></label>
+                    <label ng-show="actualResultsCount > totalResults">({{actualResultsCount}})</label>
+                </div>
+                <br/>
                 <table>
                     <tr>
                         <th></th>

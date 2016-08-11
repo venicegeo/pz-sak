@@ -18,10 +18,11 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('EventtypesController', ['$scope', 'toaster', 'gateway', EventtypesController]);
+        .controller('EventtypesController', ['$scope', 'toaster', 'gateway', 'settings', EventtypesController]);
 
-    function EventtypesController ($scope, toaster, gateway) {
+    function EventtypesController ($scope, toaster, gateway, settings) {
 
+        $scope.elasticSearchLimit = settings.elasticSearchLimit;
         $scope.showNewEventTypeForm = false;
         $scope.showEventTypeTable = false;
         $scope.eventTypeMappings = [];
@@ -57,7 +58,7 @@
             $scope.newEventTypeDataType = "";
             $scope.eventTypeMappings = [];
 
-        }
+        };
         $scope.addMapping = function (){
 
             if (!$scope.showEventTypeTable){
@@ -80,11 +81,11 @@
             $scope.disableEventTypeName = true;
             $scope.newEventTypeParameterName = "";
             $scope.newEventTypeDataType = "";
-        }
+        };
 
         $scope.deleteEventMapping = function(mapKey){
             $scope.eventTypeMappings.splice(mapKey, 1);
-        }
+        };
 
         $scope.updateTypeTable = function (eventTypeId) {
 
@@ -151,7 +152,8 @@
                 params
             ).then(function successCallback( html ) {
                 $scope.eventTypes = html.data.data;
-                $scope.totalTypes = html.data.pagination.count;
+                $scope.actualTypeCount = html.data.pagination.count;
+                $scope.totalTypes = ($scope.actualTypeCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualTypeCount;
             }, function errorCallback(response){
                 console.log("eventtypes.controller get eventtypes fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the event types.");

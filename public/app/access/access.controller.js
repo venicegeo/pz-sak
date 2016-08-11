@@ -17,9 +17,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('AccessController', ['$scope', 'toaster', 'gateway', AccessController]);
+        .controller('AccessController', ['$scope', 'toaster', 'gateway', 'settings', AccessController]);
 
-    function AccessController($scope, toaster, gateway) {
+    function AccessController($scope, toaster, gateway, settings) {
+        $scope.elasticSearchLimit = settings.elasticSearchLimit;
         $scope.pageSize = 10;
         $scope.page = 0;
 
@@ -56,7 +57,8 @@
                 params
             ).then(function successCallback(html) {
                 $scope.accessDataList = html.data.data;
-                $scope.total = html.data.pagination.count;
+                $scope.actualTotal = html.data.pagination.count;
+                $scope.total = ($scope.actualTotal > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualTotal;
             }, function errorCallback(response) {
                 console.log("access.controller get data fail: " + response.status);
                 toaster.pop('error', "Error", "There was an issue with your request.");

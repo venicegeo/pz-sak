@@ -18,10 +18,11 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('SearchController', ['$scope', '$http', 'toaster', 'discover', 'gateway', SearchController]);
+        .controller('SearchController', ['$scope', '$http', 'toaster', 'discover', 'gateway','settings', SearchController]);
 
 
-    function SearchController($scope, $http, toaster, discover, gateway) {
+    function SearchController($scope, $http, toaster, discover, gateway, settings) {
+        $scope.elasticSearchLimit = settings.elasticSearchLimit;
         $scope.size = 100;
 
         $scope.pageOptions = [10, 25, 50, 100, 500];
@@ -38,7 +39,8 @@
                 url: "/proxy/" + discover.searchHost + "/api/v1/recordcount",
                 data: query
             }).then(function successCallback( html ) {
-                $scope.totalResults = html.data;
+                $scope.actualResultsCount = html.data;
+                $scope.totalResults = ($scope.actualResultsCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualResultsCount;
                 if ($scope.totalResults == 0) {
                     $scope.errorMsg = "No results to display";
                 }
@@ -77,13 +79,13 @@
 
             $scope.getResultsCount(q);
 
-            $http({
-                method: "POST",
-                url: "/proxy/" + discover.searchHost + "/api/v1/dslfordataresources",
-                data: data
-            }).then(function successCallback( html ) {
+            gateway.async(
+                "POST",
+                "/data/query",
+                data
+            ).then(function successCallback( html ) {
                 $scope.searchResults = html.data.data;
-            }, function errorCallback(response){
+            }, function errorCallback( response ) {
                 console.log("search.controller get search results fail: " + response.status);
                 toaster.pop('error', "Error", "There was an issue with your search request.");
             });

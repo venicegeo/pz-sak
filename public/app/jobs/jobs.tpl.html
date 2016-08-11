@@ -170,7 +170,8 @@
 
                     <div class="col-md-6 text-center" style="margin-top: 35px;">
                         <div class="form-group">
-                            <label ng-show="total > 0">Displaying {{firstResultOnPage()}} - {{lastResultOnPage()}} of {{total}}</label>
+                            <label ng-show="total > 0">Displaying {{firstResultOnPage()}} - {{lastResultOnPage()}} of {{total}}<span ng-show="actualTotal > total">+</span></label>
+                            <label ng-show="actualTotal > total">({{actualTotal}})</label>
                             <label ng-show="total == 0">No results to display</label>
                         </div>
                     </div>

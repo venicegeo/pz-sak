@@ -18,10 +18,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('WorkflowController', ['$scope', '$http', '$log', '$q',  'toaster', 'discover', 'gateway', WorkflowController]);
+        .controller('WorkflowController', ['$scope', 'toaster', 'gateway', 'settings', WorkflowController]);
 
-    function WorkflowController ($scope, $http, $log, $q, toaster, discover, gateway) {
-
+    function WorkflowController ($scope, toaster, gateway, settings) {
+        $scope.elasticSearchLimit = settings.elasticSearchLimit;
         $scope.selectedTypes = [];
         $scope.addedTypes = [];
         $scope.eventTypeValues = [];
@@ -115,7 +115,8 @@
             ).then(function successCallback( html ) {
                 if (html.data != null) {
                     $scope.events = html.data.data;
-                    $scope.totalEvents = html.data.pagination.count;
+                    $scope.actualEventCount = html.data.pagination.count;
+                    $scope.totalEvents = ($scope.actualEventCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualEventCount;
                 }
             }, function errorCallback(response){
                 console.log("workflow.controller get events fail: "+response.status);
@@ -296,7 +297,8 @@
             ).then(function successCallback( html ) {
                 if(html.data != null) {
                     $scope.alerts = html.data.data;
-                    $scope.totalAlerts = html.data.pagination.count;
+                    $scope.actualAlertCount = html.data.pagination.count;
+                    $scope.totalAlerts = ($scope.actualAlertCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualAlertCount;
                 }
             }, function errorCallback(response){
                 console.log("workflow.controller get alerts fail: "+response.status);
@@ -376,7 +378,8 @@
             ).then(function successCallback( html ) {
                 if(html.data != null) {
                     $scope.triggers = html.data.data;
-                    $scope.totalTriggers = html.data.pagination.count;
+                    $scope.actualTriggerCount = html.data.pagination.count;
+                    $scope.totalTriggers = ($scope.actualTriggerCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualTriggerCount;
                 }
             }, function errorCallback(response){
                 console.log("workflow.controller get triggers fail: "+response.status);
