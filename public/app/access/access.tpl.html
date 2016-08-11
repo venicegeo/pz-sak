@@ -47,7 +47,8 @@
                     </div>
                     <div class="col-md-8 text-center" style="margin-top: 25px;">
                         <div class="range-label" ng-show="total > 0">
-                            <label>Displaying {{ getStart() }} - {{ getEnd() }} of {{ total }}</label>
+                            <label>Displaying {{ getStart() }} - {{ getEnd() }} of {{ total }}<span ng-show="actualTotal > total">+</span></label>
+                            <label ng-show="actualTotal > total">({{actualTotal}})</label>
                         </div>
                         <label ng-show="total == 0">{{errorMsg}}</label>
                     </div>
