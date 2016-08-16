@@ -18,13 +18,21 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('AboutController', ['$scope', AboutController]);
+        .controller('AboutController', ['$scope', 'gateway', AboutController]);
 
-    function AboutController ($scope) {
+    function AboutController ($scope, gateway) {
 
         $scope.getVersionNumber = function() {
-            // TODO: Get version number from Piazza services somehow
-            $scope.versionNumber = "8.0-ALPHA";
+            gateway.async(
+                "GET",
+                "/version"
+            ).then(function successCallback( html ) {
+                $scope.versionNumber = html.data.version;
+            }, function errorCallback(response){
+                console.log("about.controller get version fail: "+response.status);
+                toaster.pop('error', "Error", "There was an issue with retrieving the version.");
+            });
+
         };
     }
 
