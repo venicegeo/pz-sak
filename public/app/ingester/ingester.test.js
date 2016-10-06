@@ -42,7 +42,9 @@ describe('Controller: IngesterController', function () {
             '{"type":"ingest","host":"true","data":{"dataType":{"type":"text","content":"some text to ingest"},"metadata":{}}}')
             .respond(
             {
-                jobId: "4e7d24b9-91d8-4f39-950b-3e254ad82d05"
+                data : {
+                    jobId: "4e7d24b9-91d8-4f39-950b-3e254ad82d05"
+                }
             }
         );
         // This needs to be form data
@@ -64,16 +66,18 @@ describe('Controller: IngesterController', function () {
             '/proxy/pz-gateway.int.geointservices.io/job/4e7d24b9-91d8-4f39-950b-3e254ad82d05').respond(
             {
                 "type" : "status",
-                "jobId" : "4e7d24b9-91d8-4f39-950b-3e254ad82d05",
-                "result" : {
-                    "type" : "data",
-                    "dataId" : "3ca9d6c7-163c-45e7-8e62-0bb834c07a9f"
-                },
-                "status" : "Success",
-                "jobType" : "ingest",
-                "submittedBy" : "UNAUTHENTICATED",
-                "progress" : {
-                    "percentComplete" : 100
+                "data" : {
+                    "jobId": "4e7d24b9-91d8-4f39-950b-3e254ad82d05",
+                    "result": {
+                        "type": "data",
+                        "dataId": "3ca9d6c7-163c-45e7-8e62-0bb834c07a9f"
+                    },
+                    "status": "Success",
+                    "jobType": "IngestJob",
+                    "createdBy": "testUser",
+                    "progress": {
+                        "percentComplete": 100
+                    }
                 }
             });
         loginHandler = $httpBackend.when(
