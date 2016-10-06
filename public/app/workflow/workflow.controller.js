@@ -390,6 +390,7 @@
 
         $scope.postTrigger = function(){
             $scope.errorMsg = "";
+            // TODO: Fix this! No longer takes a list of eventTypes
             var eventTriggerType = [];
 
             for(var i=0;i<$scope.selectedEventTypes.length;i++){
@@ -401,13 +402,13 @@
             var dataObj = {
 
                 title: $scope.triggerTitle,
+                eventTypeId: eventTriggerType,
                 condition:{
-                    query: angular.fromJson($scope.triggerQuery),
-                    eventtype_ids: eventTriggerType,
+                    query: angular.fromJson($scope.triggerQuery)
                 },
                 job: {
                     task: JSON.parse($scope.triggerJob)
-                },
+                }
             };
 
             gateway.async(

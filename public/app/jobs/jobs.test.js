@@ -173,16 +173,18 @@ describe('Controller: JobsController', function () {
             '/proxy/pz-gateway.int.geointservices.io/job/4e7d24b9-91d8-4f39-950b-3e254ad82d05').respond(
             {
                 "type" : "status",
-                "jobId" : "4e7d24b9-91d8-4f39-950b-3e254ad82d05",
-                "result" : {
-                    "type" : "data",
-                    "dataId" : "3ca9d6c7-163c-45e7-8e62-0bb834c07a9f"
-                },
-                "status" : "Success",
-                "jobType" : "ingest",
-                "submittedBy" : "UNAUTHENTICATED",
-                "progress" : {
-                    "percentComplete" : 100
+                "data" : {
+                    "jobId": "4e7d24b9-91d8-4f39-950b-3e254ad82d05",
+                    "result": {
+                        "type": "data",
+                        "dataId": "3ca9d6c7-163c-45e7-8e62-0bb834c07a9f"
+                    },
+                    "status": "Success",
+                    "jobType": "IngestJob",
+                    "createdBy": "UNAUTHENTICATED",
+                    "progress": {
+                        "percentComplete": 100
+                    }
                 }
             });
         loginHandler = $httpBackend.when(
@@ -210,9 +212,8 @@ describe('Controller: JobsController', function () {
         scope.getResourceData();
         $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/data/4ad8487a-e11c-4be2-98a8-23873d95d360');
         $httpBackend.flush();
-        expect(scope.resourceData.type).toBe("data");
-        expect(scope.resourceData.data.dataId).toBe("4ad8487a-e11c-4be2-98a8-23873d95d360");
-        expect(scope.resourceData.data.metadata.description).toBe("This is a test.");
+        expect(scope.resourceData.dataId).toBe("4ad8487a-e11c-4be2-98a8-23873d95d360");
+        expect(scope.resourceData.metadata.description).toBe("This is a test.");
     });
     it('should get all possible statuses', function () {
         scope.getAllStatuses();

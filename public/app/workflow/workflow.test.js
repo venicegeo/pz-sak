@@ -168,9 +168,9 @@ describe('Controller: WorkflowController', function () {
             '/proxy/pz-gateway.int.geointservices.io/trigger',
             {
                 "title": "Test Trigger",
+                "eventTypeId": [],
                 "condition": {
-                    "query": {},
-                    "eventtype_ids": []
+                    "query": {}
                 },
                 "job": {
                     "task": {}
@@ -254,7 +254,7 @@ describe('Controller: WorkflowController', function () {
         expect(scope.alerts.length).toBe(1);
     });
     it('should post a trigger', function () {
-        scope.selectedEventTypes = [];
+        scope.selectedEventTypes = "";
         scope.triggerTitle = "Test Trigger";
         scope.triggerQuery = "{}";
         scope.triggerJob = "{}";
@@ -263,9 +263,9 @@ describe('Controller: WorkflowController', function () {
             '/proxy/pz-gateway.int.geointservices.io/trigger',
             {
                 "title": "Test Trigger",
+                "eventTypeId": [],
                 "condition": {
-                    "query": {},
-                    "eventtype_ids": []
+                    "query": {}
                 },
                 "job": {
                     "task": {}

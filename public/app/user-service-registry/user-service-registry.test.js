@@ -99,12 +99,15 @@ describe('Controller: UserServiceController', function () {
                 "method" : "GET",
                 "resourceMetadata" : {
                     "name" : "Hello World Test",
-                    "description" : "Hello world test"
+                    "description" : "Hello world test",
+                    "classType": ""
                 }
             })
             .respond({
                 "type": "service",
-                "serviceId": "aaa"
+                "data": {
+                    "serviceId": "aaa"
+                }
             });
         executeServiceHandler = $httpBackend.when(
             'POST',
@@ -313,7 +316,8 @@ describe('Controller: UserServiceController', function () {
             "method" : "GET",
             "resourceMetadata" : {
                 "name" : "Hello World Test",
-                "description" : "Hello world test"
+                "description" : "Hello world test",
+                "classType": ""
             }
         });
         $httpBackend.flush();
