@@ -28,7 +28,7 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=" + discover.workflowHost + "/admin/stats",
+                url: "/proxy?url=" + discover.workflowHost + "/admin/stats"
             }).then(function successCallback( html ) {
                 $scope.adminData = html.data.data;
             }, function errorCallback(response){
@@ -43,7 +43,7 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=" + discover.workflowHost + "/admin/settings",
+                url: "/proxy?url=" + discover.workflowHost + "/admin/settings"
             }).then(function successCallback( html ) {
                 $scope.settingsData = html.data.data;
             }, function errorCallback(response){

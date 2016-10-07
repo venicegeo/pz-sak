@@ -27,7 +27,7 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=" + discover.jobsHost + "/admin/stats",
+                url: "/proxy?url=" + discover.jobsHost + "/admin/stats"
             }).then(function successCallback( html ) {
                 $scope.adminData = html.data;
             }, function errorCallback(response){

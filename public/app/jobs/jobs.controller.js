@@ -94,7 +94,7 @@
 
                     $http({
                         method: "GET",
-                        url: "/proxy?url=" + discover.jobsHost + "/job/status",
+                        url: "/proxy?url=" + discover.jobsHost + "/job/status"
                     }).then(function successCallback( html ) {
                         $scope.jobStatuses = [];
                         $scope.jobStatuses.push.apply($scope.jobStatuses, html.data);
