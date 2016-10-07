@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('SearchAdminController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', SearchAdminController]);
+        .controller('SearchAdminController', ['$scope', '$http', 'toaster', 'discover', SearchAdminController]);
 
-    function SearchAdminController ($scope, $http, $log, $q, toaster, discover) {
+    function SearchAdminController ($scope, $http, toaster, discover) {
 
         $scope.getStatus = function () {
             $scope.adminData = "";
@@ -28,7 +28,7 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=" + discover.searchHost + "/metrics",
+                url: "/proxy?url=" + discover.searchHost + "/metrics"
             }).then(function successCallback( html ) {
                 $scope.adminData = html.data;
             }, function errorCallback(response){
