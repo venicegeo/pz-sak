@@ -18,7 +18,11 @@
 
 describe('Controller: LoggerController', function () {
 
-    var $httpBackend, logsRequestHandler, loginHandler;
+    var $httpBackend,
+        logsRequestHandler,
+        logsAltRequestHandler,
+        logsPostHandler,
+        loginHandler;
         // $cookies;
 
     // load the controller's module
@@ -50,6 +54,46 @@ describe('Controller: LoggerController', function () {
                 "count": 1
             }}
         );
+        logsAltRequestHandler = $httpBackend.when(
+            'GET',
+            '/proxy/pz-logger.int.geointservices.io/message?perPage=100&page=0').respond(
+            {"statusCode": 200,
+                "data": [
+                {
+                    "service": "Gateway",
+                    "address": "gnemud7srkr/10.254.0.62",
+                    "createdOn": "2016-07-14T20:44:50.2344549Z",
+                    "severity": "Info",
+                    "message": "User UNAUTHENTICATED requested Job Status for febb497e-cd11-4ea7-ab02-e6601aded786."
+                }
+            ],
+            "pagination": {
+                "count": 1
+            }}
+        );
+        logsPostHandler = $httpBackend.when(
+            'POST',
+            '/proxy?url=pz-logger.int.geointservices.io/message',
+            {
+                "service": "sakui-log-tester",
+                "address": "128.1.2.3",
+                "createdOn": "2016-10-07T02:39:16.424Z",
+                "severity": "Info",
+                "message": "This is a test"
+            }
+        ).respond(
+            {
+                "statusCode": 200,
+                "type": "logmessage",
+                "data": {
+                    "service": "sakui-log-tester",
+                    "address": "128.1.2.3",
+                    "createdOn": "2016-10-07T02:39:16.424Z",
+                    "severity": "Info",
+                    "message": "This is a test"
+                }
+            }
+        );
         loginHandler = $httpBackend.when(
             'GET',
             '/login.html').respond({});
@@ -70,6 +114,27 @@ describe('Controller: LoggerController', function () {
 
     it('should get the first 100 logs', function () {
         scope.getLogs(0);
+        $httpBackend.expectGET('/proxy/pz-logger.int.geointservices.io/message?page=0&perPage=100');
+        $httpBackend.flush();
+        expect(scope.logs[0].service).toBe('Gateway');
+        expect(scope.logs[0].address).toBe('gnemud7srkr/10.254.0.62');
+        expect(scope.logs[0].createdOn).toBe("2016-07-14T20:44:50.2344549Z");
+        expect(scope.logs[0].severity).toBe('Info');
+        expect(scope.logs[0].message).toBe('User UNAUTHENTICATED requested Job Status for febb497e-cd11-4ea7-ab02-e6601aded786.');
+    });
+    it('should post log', function () {
+        scope.logMessage = "This is a test";
+        scope.postLog("2016-10-07T02:39:16.424Z");
+        $httpBackend.expectPOST('/proxy?url=pz-logger.int.geointservices.io/message',
+        {
+            "service": "sakui-log-tester",
+            "address": "128.1.2.3",
+            "createdOn": "2016-10-07T02:39:16.424Z",
+            "severity": "Info",
+            "message": "This is a test"
+        });
+        scope.pagination.current = 0;
+        scope.size = 100;
         $httpBackend.expectGET('/proxy/pz-logger.int.geointservices.io/message?page=0&perPage=100');
         $httpBackend.flush();
         expect(scope.logs[0].service).toBe('Gateway');

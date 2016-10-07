@@ -90,18 +90,25 @@
 
         };
 
-        $scope.postLog = function(){
+        $scope.postLog = function(date){
             $scope.errorMsg = "";
 
-            var currentTime = moment().unix();
+            var currentTime;
+            if (!date) {
+                currentTime = moment.utc().format("YYYY-MM-DDTHH:mm:ss.SSSZ").replace("+00:00", "Z");
+            } else {
+                currentTime = date;
+            }
             var logMessage = $scope.logMessage;
             var dataObj = {
                 service: "sakui-log-tester",
                 address: "128.1.2.3",
-                stamp: currentTime,
+                createdOn: currentTime,
                 severity: "Info",
                 message: logMessage
             };
+            console.log(currentTime);
+            console.log(dataObj);
 
             $http.post(
                 "/proxy?url=" + discover.loggerHost + "/message",
