@@ -28,7 +28,7 @@
 
             $http({
                 method: "GET",
-                url: "/proxy?url=" + discover.serviceControllerHost + "/metrics",
+                url: "/proxy?url=" + discover.serviceControllerHost + "/metrics"
             }).then(function successCallback( html ) {
                 $scope.classes = html.data["classes"];
                 $scope.classesLoaded = html.data["classes.loaded"];
