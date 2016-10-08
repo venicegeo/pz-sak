@@ -18,9 +18,21 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('AccessAdminController', ['$scope', '$log', '$q', '$http', 'toaster', AccessAdminController]);
+        .controller('AccessAdminController', ['$scope', '$http', 'toaster', 'discover', AccessAdminController]);
 
-    function AccessAdminController($scope, $log, $q, $http, toaster) {
+    function AccessAdminController($scope, $http, toaster, discover) {
+
+        $scope.getStats = function() {
+            $http({
+                method: "GET",
+                url: "/proxy/" + discover.accessHost + "/admin/stats"
+            }).then(function (html) {
+                $scope.adminStats = html.data;
+            }, function (response) {
+                toaster.pop('error', "Error", "There was an issue with your request.");
+            });
+
+        };
 
     }
 })();
