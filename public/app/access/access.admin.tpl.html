@@ -24,10 +24,17 @@
 </head>
 <body>
 
-<div ng-controller="AccessAdminController" class="container-fluid">
+<div ng-controller="AccessAdminController" class="container-fluid" ng-init="getStats()">
     <div class="row">
         <h1 class="alert alert-info">Access Admin Info</h1>
-        <p>[Access admin placeholder]</p>
+        <p>Display status info about the Access Service</p>
+        <div>
+            <table>
+                <tr><td style="width:210px">Active Threads:</td><td style="width:250px">{{adminStats.activeThreads}}</td></tr>
+                <tr><td>Thread Queue:</td> <td>{{adminStats.threadQueue}}</td></tr>
+            </table>
+        </div>
+        <toaster-container></toaster-container>
     </div>
 </div>
 
