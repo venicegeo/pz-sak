@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('JobsAdminController', ['$scope', '$log', '$q', '$http', 'toaster', 'discover', JobsAdminController]);
+        .controller('JobsAdminController', ['$scope', '$http', 'toaster', 'discover', JobsAdminController]);
 
-    function JobsAdminController($scope, $log, $q, $http, toaster, discover) {
+    function JobsAdminController($scope, $http, toaster, discover) {
         $scope.getAdminStats = function () {
             $scope.adminData = "";
             $scope.errorMsg = "";
@@ -28,10 +28,9 @@
             $http({
                 method: "GET",
                 url: "/proxy?url=" + discover.jobsHost + "/admin/stats"
-            }).then(function successCallback( html ) {
+            }).then(function( html ) {
                 $scope.adminData = html.data;
-            }, function errorCallback(response){
-                console.log("jobs admin stats fail: " + response.status);
+            }, function(){
                 toaster.pop('error', "Error", "There was an error retrieving the admin data");
             });
 

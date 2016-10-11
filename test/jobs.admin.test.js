@@ -19,7 +19,6 @@
 describe('Controller: JobsAdminController', function () {
 
     var $httpBackend, statusRequestHandler,
-        resetRequestHandler,
         loginHandler;
 
     // load the controller's module
@@ -31,8 +30,6 @@ describe('Controller: JobsAdminController', function () {
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
-        // $cookies = $injector.get('$cookies');
-        // $cookies.putObject('auth', '{isLoggedIn:true}');
         $httpBackend = $injector.get('$httpBackend');
         statusRequestHandler = $httpBackend.when(
             'GET',
