@@ -54,7 +54,6 @@ OGC.WFS.Client = OpenLayers.Class({
     getFeatureTypes: function (cb){
         var localFeatureTypes = [];
         var isAsync = (cb instanceof Function);
-
         if ( this.wfsFeatureTypes === undefined ){
             OpenLayers.Format.WFSCapabilities.v1.prototype.readers = {
                 "wfs": {
@@ -125,7 +124,6 @@ OGC.WFS.Client = OpenLayers.Class({
                 async: isAsync,
                 success: function ( request )
                 {
-                    console.log('request########', request)
                     var doc = request.responseXML;
                     if ( !doc || !doc.documentElement )
                     {

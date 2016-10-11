@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('WorkflowAdminController', ['$scope', '$http', '$log', '$q', 'toaster', 'discover', WorkflowAdminController]);
+        .controller('WorkflowAdminController', ['$scope', '$http', 'toaster', 'discover', WorkflowAdminController]);
 
-    function WorkflowAdminController ($scope, $http, $log, $q, toaster, discover) {
+    function WorkflowAdminController ($scope, $http, toaster, discover) {
 
         $scope.getStatus = function () {
             $scope.adminData = "";
@@ -36,44 +36,6 @@
                 toaster.pop('error', "Error", "There was an error retrieving the admin workflow data");
             });
 
-        };
-        $scope.getSettings = function () {
-            $scope.settingsData = "";
-            $scope.errorMsg = "";
-
-            $http({
-                method: "GET",
-                url: "/proxy?url=" + discover.workflowHost + "/admin/settings"
-            }).then(function successCallback( html ) {
-                $scope.settingsData = html.data.data;
-            }, function errorCallback(response){
-                console.log("workflow admin settings fail");
-                toaster.pop('error', "Error", "There was an error retrieving the admin settings data");
-
-            });
-
-        };
-        $scope.postSettings = function(){
-            $scope.errorMsg = "";
-
-            var currentTime = moment().utc().toISOString();
-            var workflowMessage = $scope.workflowMessage;
-            var dataObj = {
-                debug: "true"
-            };
-
-            $http.post(
-                "/proxy?url=" + discover.workflowHost + "/admin/settings",
-                dataObj
-            ).then(function successCallback(res) {
-                $scope.settings = res;
-                $scope.workflowMessage = null;
-                toaster.pop('success', "Success", "The admin settings was successfully posted.")
-
-            }, function errorCallback(res) {
-                console.log("workflow admin post settings fail: "+res.status);
-                toaster.pop('error', "Error", "There was a problem submitting the admin settings.");
-            });
         };
 
         $scope.getUptime = function(dateString) {
