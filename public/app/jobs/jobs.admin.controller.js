@@ -28,10 +28,9 @@
             $http({
                 method: "GET",
                 url: "/proxy?url=" + discover.jobsHost + "/admin/stats"
-            }).then(function successCallback( html ) {
+            }).then(function( html ) {
                 $scope.adminData = html.data;
-            }, function errorCallback(response){
-                console.log("jobs admin stats fail: " + response.status);
+            }, function(){
                 toaster.pop('error', "Error", "There was an error retrieving the admin data");
             });
 
