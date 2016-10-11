@@ -23,18 +23,19 @@
         function WfsController ($scope, $log, $q, usSpinnerService, toaster) {
 
                 //OpenLayers.ProxyHost = "/proxy/index?url=";
+                if (!String.prototype.startsWith) {
+                    String.prototype.startsWith = function(searchString, position){
+                        position = position || 0;
+                        return this.substr(position, searchString.length) === searchString;
+                    };
+                }
 
                 $scope.source = [];
                 //$scope.endPoint = 'http://demo.boundlessgeo.com/geoserver/wfs';
                 //$scope.endPoint = 'http://omar.ossim.org/omar/wfs';
-                //$scope.endPoint = 'http://localhost:8080/geoserver/wfs';
                 //$scope.endPoint = 'http://demo.opengeo.org/geoserver/wfs';
                 //$scope.endPoint = 'http://giswebservices.massgis.state.ma.us/geoserver/wfs';
                 //$scope.endPoint = 'http://clc.developpement-durable.gouv.fr/geoserver/wfs';
-                //$scope.endPoint = 'http://localhost:8080/omar/wfs'
-                //$scope.endPoint = 'http://localhost:7272/wfs';
-                //$scope.endPoint = 'http://10.0.10.183:9999/wfs';
-                //$scope.endPoint = 'http://10.0.10.183/geoserver/wfs';
                 //$scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
 
                 // Only allow our geoserver instance for now (until we figure out proxy madness
@@ -109,10 +110,6 @@
 
                     usSpinnerService.spin('spinner');
 
-                    // $scope.getFeatureObj = wfsClient.getFeature('omar:raster_entry', 'http://omar.ossim.org', "file_type='nitf'", function(it) {
-                    //	$log.warn('getFeature', it);
-                    // } );
-
                     var deferred = $q.defer();
 
 
@@ -169,7 +166,6 @@
                                 // use the tool to parse the data
                                 var response = (formatter.read( doc ));
 
-                                //console.log( 'response', response );
                                 $scope.describeResults = response.featureTypes[0].properties;
                                 $scope.showManualFeatureTypeTable = true;
                             },
@@ -196,8 +192,6 @@
 
                                 // use the formatter to parse the data
                                 var response = (format.read(doc));
-
-                                //console.log(response.features);
 
                                 $scope.featureResults = response.features;
                                 $scope.columnNames = Object.keys(response.features[0].properties);

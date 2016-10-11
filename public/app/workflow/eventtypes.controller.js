@@ -100,9 +100,9 @@
                 "GET",
                 "/eventType/"+eventTypeId
             ).then(function successCallback( html ) {
-                $scope.eventTypeId = html.data.id;
-                $scope.eventTypeName = html.data.name;
-                $scope.eventTypeMapping = html.data.mapping;
+                $scope.eventTypeId = html.data.data.eventTypeId;
+                $scope.eventTypeName = html.data.data.name;
+                $scope.eventTypeMapping = html.data.data.mapping;
 
             }, function errorCallback(response){
                 console.log("eventtypes.controller update type fail: "+response.status);
