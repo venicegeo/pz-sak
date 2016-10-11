@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('JobsAdminController', ['$scope', '$log', '$q', '$http', 'toaster', 'discover', JobsAdminController]);
+        .controller('JobsAdminController', ['$scope', '$http', 'toaster', 'discover', JobsAdminController]);
 
-    function JobsAdminController($scope, $log, $q, $http, toaster, discover) {
+    function JobsAdminController($scope, $http, toaster, discover) {
         $scope.getAdminStats = function () {
             $scope.adminData = "";
             $scope.errorMsg = "";
