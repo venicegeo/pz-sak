@@ -29,8 +29,8 @@
         <div>
             <table>
                 <tr><td style="width:210px">Last Started:</td><td style="width:250px">{{adminData.createdOn}}</td><td>({{getUptime(adminData.createdOn)}})</td></tr>
-                <tr><td>Number of Requests:</td> <td>{{adminData.num_requests}}</td></tr>
-                <tr><td>Number of UUIDs created:</td> <td>{{adminData.num_uuids}}</td></tr>
+                <tr><td>Number of Requests:</td> <td>{{adminData.numRequests}}</td></tr>
+                <tr><td>Number of UUIDs created:</td> <td>{{adminData.numUuids}}</td></tr>
             </table>
             <br/>
             <form ng-submit="reset()">

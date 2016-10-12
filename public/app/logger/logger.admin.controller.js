@@ -29,10 +29,9 @@
             $http({
                 method: "GET",
                 url: "/proxy?url=" + discover.loggerHost + "/admin/stats"
-            }).then(function successCallback( html ) {
+            }).then(function( html ) {
                 $scope.adminData = html.data.data;
-            }, function errorCallback(response){
-                console.log("logger.admin.controller status fail: " + response.status);
+            }, function(){
                 toaster.pop('error', "Error", "There was an error retrieving the admin data");
             });
 
@@ -51,9 +50,9 @@
                 method: "POST",
                 url: "/proxy?url=" + discover.loggerHost + "/admin/shutdown",
                 data: data
-            }).then(function successCallback( html ) {
+            }).then(function( html ) {
                 $scope.shutdownResponse = html.data;
-            }, function errorCallback(response) {
+            }, function(response) {
                 // 502 means the service was killed
                 if (response.status == "502") {
                     toaster.pop('success', "Success", "Service successfully shutdown");
