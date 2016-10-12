@@ -183,6 +183,32 @@ describe('Controller: SearchController', function () {
         expect(scope.searchResults[0].dataId).toBe("a02cfb35-15cb-4c3c-8192-90e385e1d0d5");
     });
 
+    it('should get start index', function () {
+        scope.pagination.current = 1;
+        scope.size = 10;
+        var start = scope.getFirstIndex();
+        $httpBackend.flush();
+        expect(start).toBe(11);
+    });
+
+    it('should get alert end index', function () {
+        scope.pagination.current = 1;
+        scope.size = 10;
+        scope.totalResults = 23;
+        var end = scope.getLastIndex();
+        $httpBackend.flush();
+        expect(end).toBe(20);
+    });
+
+    it('should get alert end index alt', function () {
+        scope.pagination.current = 1;
+        scope.size = 10;
+        scope.totalResults = 15;
+        var end = scope.getLastIndex();
+        $httpBackend.flush();
+        expect(end).toBe(15);
+    });
+
     it('should add tag', function () {
         scope.indexId = "indexID";
         scope.typeId = "typeID";
