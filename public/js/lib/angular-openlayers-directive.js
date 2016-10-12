@@ -1459,8 +1459,13 @@ angular.module('openlayers-directive').factory('olHelpers', ["$q", "$log", "$htt
                     $log.error('[AngularJS - Openlayers] - ImageWMS Layer needs ' +
                                'valid server url and params properties');
                 }
+
+                /*
+                 jmcmahon 10/12/2016 *** proxy config ***
+                 Make sure url is first so proxy works
+                 */
                 oSource = new ol.source.ImageWMS({
-                    url: source.url,
+                    url: source.url + "?url=" + source.params.url,
                     imageLoadFunction: source.imageLoadFunction,
                     attributions: createAttribution(source),
                     crossOrigin: (typeof source.crossOrigin === 'undefined') ? 'anonymous' : source.crossOrigin,
