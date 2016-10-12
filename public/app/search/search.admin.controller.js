@@ -29,10 +29,9 @@
             $http({
                 method: "GET",
                 url: "/proxy?url=" + discover.searchHost + "/metrics"
-            }).then(function successCallback( html ) {
+            }).then(function( html ) {
                 $scope.adminData = html.data;
-            }, function errorCallback(response){
-                console.log("Search.admin.controller status fail");
+            }, function(){
                 toaster.pop('error', "Error", "There was an issue with your status request.");
             });
 

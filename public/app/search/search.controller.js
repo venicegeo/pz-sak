@@ -41,11 +41,10 @@
             }).then(function successCallback( html ) {
                 $scope.actualResultsCount = html.data;
                 $scope.totalResults = ($scope.actualResultsCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualResultsCount;
-                if ($scope.totalResults == 0) {
+                if ($scope.totalResults === 0) {
                     $scope.errorMsg = "No results to display";
                 }
-            }, function errorCallback(response){
-                console.log("search.controller results count fail: " + response.status);
+            }, function(){
                 toaster.pop('error', "Error", "There was an issue with your request.");
             });
         };
@@ -72,9 +71,12 @@
             }
 
             var data = {
-                "query": q,
-                "size": $scope.size,
-                "from": $scope.pagination.current * $scope.size
+                "query": q
+            };
+
+            var params = {
+                "page": $scope.pagination.current,
+                "perPage": $scope.size
             };
 
             $scope.getResultsCount(q);
@@ -82,11 +84,11 @@
             gateway.async(
                 "POST",
                 "/data/query",
-                data
-            ).then(function successCallback( html ) {
+                data,
+                params
+            ).then(function( html ) {
                 $scope.searchResults = html.data.data;
-            }, function errorCallback( response ) {
-                console.log("search.controller get search results fail: " + response.status);
+            }, function() {
                 toaster.pop('error', "Error", "There was an issue with your search request.");
             });
 
@@ -152,17 +154,14 @@
                             "Content-Type": "application/x-www-form-urlencoded"
                         }
                     }
-                ).then(function successCallback(res) {
+                ).then(function() {
                     $scope.tagMsg = "Keyword added successfully";
-                    console.log("Success!");
-                }, function errorCallback(res) {
-                    console.log("search.controller tag fail: " + res.status);
+                }, function() {
                     toaster.pop('error', "Error", "There was an issue with your tag request.");
                 });
 
 
-            }, function errorCallback(response){
-                console.log("search.controller search fail");
+            }, function(){
                 toaster.pop('error', "Error", "There was an issue with your search request.");
             });
 
