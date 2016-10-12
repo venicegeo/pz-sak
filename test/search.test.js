@@ -49,11 +49,9 @@ describe('Controller: SearchController', function () {
         );
         getSearchResultsHandler = $httpBackend.when(
             'POST',
-            '/proxy/pz-gateway.int.geointservices.io/data/query',
+            '/proxy/pz-gateway.int.geointservices.io/data/query?page=0&perPage=1',
             {
-                "query": {"match_all": {}},
-                "size" : 1,
-                "from" : 0
+                "query": {"match_all": {}}
             }
         ).respond(
             {
@@ -167,11 +165,9 @@ describe('Controller: SearchController', function () {
         scope.pagination.current = 0;
         scope.size = 1;
         scope.getSearchResults();
-        $httpBackend.expectPOST('/proxy/pz-gateway.int.geointservices.io/data/query',
+        $httpBackend.expectPOST('/proxy/pz-gateway.int.geointservices.io/data/query?page=0&perPage=1',
         {
-            "query": {"match_all": {}},
-            "size": 1,
-            "from": 0
+            "query": {"match_all": {}}
         });
         $httpBackend.flush();
         expect(scope.searchResults[0].dataId).toBe("a02cfb35-15cb-4c3c-8192-90e385e1d0d5");
@@ -179,11 +175,9 @@ describe('Controller: SearchController', function () {
     it('should get the pageChange', function () {
         scope.size = 1;
         scope.pageChanged(1);
-        $httpBackend.expectPOST('/proxy/pz-gateway.int.geointservices.io/data/query',
+        $httpBackend.expectPOST('/proxy/pz-gateway.int.geointservices.io/data/query?page=0&perPage=1',
         {
-            "query": {"match_all": {}},
-            "size": 1,
-            "from": 0
+            "query": {"match_all": {}}
         });
         $httpBackend.flush();
         expect(scope.searchResults[0].dataId).toBe("a02cfb35-15cb-4c3c-8192-90e385e1d0d5");
