@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('WmsController', ['$scope', '$log', '$q', 'olData', 'toaster',  WmsController]);
+        .controller('WmsController', ['$scope', '$log', 'olData', 'toaster',  WmsController]);
 
-        function WmsController ($scope, $log, $q, olData, toaster) {
+        function WmsController ($scope, $log, olData, toaster) {
 
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 				var target = $(e.target).attr("href");
@@ -135,24 +135,29 @@
 				window.open($scope.endPoint + "?service=WMS&version=" + $scope.version + "&request=GetCapabilities");
 			};
 
-            $scope.updateMap = function () {
+			$scope.updateMap = function () {
             	if ($scope.selectedLayer != null) {
                     $scope.layers[0].source.params.LAYERS = $scope.selectedLayer.Name;
 					$scope.layers[0].source.url = getProxiedEndPoint();
 					var bounds;
 					var extent;
 					if ($scope.selectedLayer.EX_GeographicBoundingBox) {
+						var minLon = $scope.selectedLayer.EX_GeographicBoundingBox[0];
+						var minLat = $scope.selectedLayer.EX_GeographicBoundingBox[1];
+						var maxLon = $scope.selectedLayer.EX_GeographicBoundingBox[2];
+						var maxLat = $scope.selectedLayer.EX_GeographicBoundingBox[3];
+
 						bounds = new OpenLayers.Bounds(
-							$scope.selectedLayer.EX_GeographicBoundingBox[0],
-							$scope.selectedLayer.EX_GeographicBoundingBox[1],
-							$scope.selectedLayer.EX_GeographicBoundingBox[2],
-							$scope.selectedLayer.EX_GeographicBoundingBox[3]);
+							minLon,
+							minLat,
+							maxLon,
+							maxLat);
 
 						extent = [
-							$scope.selectedLayer.EX_GeographicBoundingBox[0],
-							$scope.selectedLayer.EX_GeographicBoundingBox[1],
-							$scope.selectedLayer.EX_GeographicBoundingBox[2],
-							$scope.selectedLayer.EX_GeographicBoundingBox[3]
+							minLon,
+							minLat,
+							maxLon,
+							maxLat
 						];
 					} else {
 						bounds = new OpenLayers.Bounds(

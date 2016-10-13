@@ -50,7 +50,7 @@ OGC.WMS.Client = OpenLayers.Class({
                 },*/
                 success: function ( request )
                 {
-                    console.log('request########', request)
+                    //console.log('request########', request)
                     var doc = request.responseXML;
                     if ( !doc || !doc.documentElement )
                     {
@@ -64,11 +64,11 @@ OGC.WMS.Client = OpenLayers.Class({
                     {
                         var layer = response.Capability.Layer.Layer[i];
 
-                        console.log( 'layer', layer );
+                        //console.log( 'layer', layer );
 
                         localLayers.push( layer );
 
-                        console.log(formatter);
+                        //console.log(formatter);
 
                     }
                 }

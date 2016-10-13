@@ -1460,12 +1460,8 @@ angular.module('openlayers-directive').factory('olHelpers', ["$q", "$log", "$htt
                                'valid server url and params properties');
                 }
 
-                /*
-                 jmcmahon 10/12/2016 *** proxy config ***
-                 Make sure url is first so proxy works
-                 */
                 oSource = new ol.source.ImageWMS({
-                    url: source.url + "?url=" + source.params.url,
+                    url: source.url,
                     imageLoadFunction: source.imageLoadFunction,
                     attributions: createAttribution(source),
                     crossOrigin: (typeof source.crossOrigin === 'undefined') ? 'anonymous' : source.crossOrigin,
@@ -2126,7 +2122,8 @@ angular.module('openlayers-directive').factory('olHelpers', ["$q", "$log", "$htt
                 layerConfig.visible = layer.visible;
             }
             if (isDefinedAndNotNull(layer.extent)) {
-                layerConfig.extent = layer.extent;
+                // 10/13/2016 jmcmahon for some reason this is messing us up
+                // layerConfig.extent = layer.extent;
             }
             if (isDefinedAndNotNull(layer.zIndex)) {
                 layerConfig.zIndex = layer.zIndex;
