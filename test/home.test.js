@@ -115,4 +115,49 @@ describe('Controller: HomeController', function () {
         expect(scope.gatewayStatus).toBe("green");
     });
 
+    it('should get failure health checks', function () {
+        loggerRequestHandler.respond(500, '');
+        uuidRequestHandler.respond(500, '');
+        workflowRequestHandler.respond(500, '');
+        searchRequestHandler.respond(500, '');
+        serviceControllerRequestHandler.respond(500, '');
+        gatewayRequestHandler.respond(500, '');
+        scope.getStatuses();
+        $httpBackend.expectGET('/proxy/pz-logger.int.geointservices.io/');
+        $httpBackend.expectGET('/proxy/pz-uuidgen.int.geointservices.io/');
+        $httpBackend.expectGET('/proxy/pz-workflow.int.geointservices.io/');
+        $httpBackend.expectGET('/proxy/pz-search-query.int.geointservices.io/');
+        $httpBackend.expectGET('/proxy/pz-servicecontroller.int.geointservices.io/');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/');
+        $httpBackend.flush();
+        expect(scope.loggerStatus).toBe("red");
+        expect(scope.uuidStatus).toBe("red");
+        expect(scope.workflowStatus).toBe("red");
+        expect(scope.searchStatus).toBe("red");
+        expect(scope.serviceControllerStatus).toBe("red");
+        expect(scope.gatewayStatus).toBe("red");
+    });
+
+    it('should get failure health checks alt', function () {
+        loggerRequestHandler.respond(201, '');
+        uuidRequestHandler.respond(201, '');
+        workflowRequestHandler.respond(201, '');
+        searchRequestHandler.respond(201, '');
+        serviceControllerRequestHandler.respond(201, '');
+        gatewayRequestHandler.respond(201, '');
+        scope.getStatuses();
+        $httpBackend.expectGET('/proxy/pz-logger.int.geointservices.io/');
+        $httpBackend.expectGET('/proxy/pz-uuidgen.int.geointservices.io/');
+        $httpBackend.expectGET('/proxy/pz-workflow.int.geointservices.io/');
+        $httpBackend.expectGET('/proxy/pz-search-query.int.geointservices.io/');
+        $httpBackend.expectGET('/proxy/pz-servicecontroller.int.geointservices.io/');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/');
+        $httpBackend.flush();
+        expect(scope.loggerStatus).toBe("red");
+        expect(scope.uuidStatus).toBe("red");
+        expect(scope.workflowStatus).toBe("red");
+        expect(scope.searchStatus).toBe("red");
+        expect(scope.serviceControllerStatus).toBe("red");
+        expect(scope.gatewayStatus).toBe("red");
+    });
 });

@@ -43,29 +43,26 @@
             $http({
                 method: "GET",
                 url: "/proxy/" + discover.loggerHost + "/"
-            }).then(function successCallback(html) {
+            }).then(function(html) {
                 $scope.loggerStatus = (html.status === 200) ? "green" : "red";
-            }, function errorCallback(response) {
+            }, function() {
                 $scope.loggerStatus = "red";
-                console.log("home.controller fail logger status");
             });
             $http({
                 method: "GET",
                 url: "/proxy/" + discover.uuidHost + "/"
-            }).then(function successCallback(html) {
+            }).then(function(html) {
                 $scope.uuidStatus = (html.status === 200) ? "green" : "red";
-            }, function errorCallback(response) {
+            }, function() {
                 $scope.uuidStatus = "red";
-                console.log("home.controller fail uuidgen status");
             });
             $http({
                 method: "GET",
                 url: "/proxy/" + discover.workflowHost + "/"
-            }).then(function successCallback(html) {
+            }).then(function(html) {
                 $scope.workflowStatus = (html.status === 200) ? "green" : "red";
-            }, function errorCallback(response) {
+            }, function() {
                 $scope.workflowStatus = "red";
-                console.log("home.controller fail workflow status");
             });
             $http({
                 method: "GET",
@@ -73,20 +70,18 @@
                 transformResponse: function(value){
                     return value;
                 }
-            }).then(function successCallback(html) {
+            }).then(function(html) {
                 $scope.searchStatus = (html.status === 200) ? "green" : "red";
-            }, function errorCallback(response) {
+            }, function() {
                 $scope.searchStatus = "red";
-                console.log("home.controller fail search query status");
             });
             $http({
                 method: "GET",
                 url: "/proxy/" + discover.serviceControllerHost + "/"
-            }).then(function successCallback(html) {
+            }).then(function(html) {
                 $scope.serviceControllerStatus = (html.status === 200) ? "green" : "red";
-            }, function errorCallback(response) {
+            }, function() {
                 $scope.serviceControllerStatus = "red";
-                console.log("home.controller fail service controller status");
             });
 
             gateway.async(
@@ -95,11 +90,10 @@
                 null,
                 null,
                 true
-            ).then(function successCallback( html ) {
+            ).then(function( html ) {
                 $scope.gatewayStatus = (html.status === 200) ? "green" : "red";
-            }, function errorCallback(response){
+            }, function(){
                 $scope.gatewayStatus = "red";
-                console.log("home.controller fail gateway status");
             });
         };
 
