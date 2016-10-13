@@ -100,4 +100,32 @@ describe('Controller: WorkflowAdminController', function () {
         expect(scope.shutdownResponse.statusCode).toBe(502);
     });
 
+    it('should fail admin stats', function () {
+        statusRequestHandler.respond(500, '');
+        scope.getStatus();
+        $httpBackend.expectGET('/proxy?url=pz-workflow.int.geointservices.io/admin/stats');
+        $httpBackend.flush();
+    });
+
+    it('should fail shut system', function () {
+        resetRequestHandler.respond(502, '');
+        scope.shutdownReason = "some reason";
+        scope.reset();
+        $httpBackend.expectPOST('/proxy?url=pz-workflow.int.geointservices.io/admin/shutdown',
+            {
+                "reason" : "some reason"
+            });
+        $httpBackend.flush();
+    });
+    it('should fail shut system for 500', function () {
+        resetRequestHandler.respond(500, '');
+        scope.shutdownReason = "some reason";
+        scope.reset();
+        $httpBackend.expectPOST('/proxy?url=pz-workflow.int.geointservices.io/admin/shutdown',
+            {
+                "reason" : "some reason"
+            });
+        $httpBackend.flush();
+    });
+
 });
