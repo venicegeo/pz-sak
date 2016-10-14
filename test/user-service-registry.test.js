@@ -19,7 +19,7 @@
 describe('Controller: UserServiceController', function () {
 
     var $httpBackend;
-    var executeResultRequestHandler,
+    var jobStatusHandler,
         executeServiceHandler,
         resourceDataHandler,
         describeRequestHandler,
@@ -123,7 +123,23 @@ describe('Controller: UserServiceController', function () {
             })
             .respond({
                     "type": "job",
-                    "jobId": "bbb"
+                    "data": {
+                        "jobId": "bbb"
+                    }
+                }
+            );
+        jobStatusHandler = $httpBackend.when(
+            'GET',
+            '/proxy/pz-gateway.int.geointservices.io/job/bbb')
+            .respond({
+                    "type": "job-status",
+                    "data": {
+                        "jobId": "bbb",
+                        "status": "Success",
+                        "result": {
+                            "dataId": "4ad8487a-e11c-4be2-98a8-23873d95d360"
+                        }
+                    }
                 }
             );
         getServicesHandler = $httpBackend.when(
@@ -353,6 +369,100 @@ describe('Controller: UserServiceController', function () {
         $httpBackend.flush();
         expect(scope.services.length).toBe(10);
         expect(scope.totalServices).toBe(40);
+    });
+
+    it('should create execute input map', function () {
+        scope.inputs = [
+            {
+                "content": "This is a test",
+                "dataType": {
+                    "type": "body"
+                },
+                "formatSelect": "text/plain"
+            }
+        ];
+        scope.resourceResult = {
+            "type":"execute-service",
+            "data":{
+                "serviceId":
+                    "aaa",
+                "dataInputs": {},
+                "dataOutput": [ {  "mimeType":"application/json", "type":"text"}]
+            }
+        };
+        scope.executeService();
+        $httpBackend.expectPOST('/proxy/pz-gateway.int.geointservices.io/job',
+            {
+                "type":"execute-service",
+                "data":{
+                    "serviceId":
+                        "aaa",
+                    "dataInputs": {},
+                    "dataOutput": [ {  "mimeType":"application/json", "type":"text"}]
+                }
+            });
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/job/bbb');
+
+        $httpBackend.flush();
+        expect(scope.executeSuccess).toBe("\"4ad8487a-e11c-4be2-98a8-23873d95d360\"");
+    });
+
+    it('should show update service form', function() {
+        scope.showUpdateServiceForm("aaa");
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/service/aaa');
+        $httpBackend.flush();
+        expect(scope.updateResourceId).toBe("aaa");
+    });
+
+    it('should get list start index', function () {
+        scope.pagination.current = 1;
+        scope.listPerPage = 10;
+        var start = scope.getListStart();
+        $httpBackend.flush();
+        expect(start).toBe(11);
+    });
+
+    it('should get list end index', function () {
+        scope.pagination.current = 1;
+        scope.listPerPage = 10;
+        scope.totalServices = 23;
+        var end = scope.getListEnd();
+        $httpBackend.flush();
+        expect(end).toBe(20);
+    });
+
+    it('should get list end index alt', function () {
+        scope.pagination.current = 1;
+        scope.listPerPage = 10;
+        scope.totalServices = 15;
+        var end = scope.getListEnd();
+        $httpBackend.flush();
+        expect(end).toBe(15);
+    });
+    it('should get search start index', function () {
+        scope.searchPagination.current = 1;
+        scope.searchPerPage = 10;
+        var start = scope.getSearchStart();
+        $httpBackend.flush();
+        expect(start).toBe(11);
+    });
+
+    it('should get search end index', function () {
+        scope.searchPagination.current = 1;
+        scope.searchPerPage = 10;
+        scope.totalSearchResults = 23;
+        var end = scope.getSearchEnd();
+        $httpBackend.flush();
+        expect(end).toBe(20);
+    });
+
+    it('should get search end index alt', function () {
+        scope.searchPagination.current = 1;
+        scope.searchPerPage = 10;
+        scope.totalSearchResults = 15;
+        var end = scope.getSearchEnd();
+        $httpBackend.flush();
+        expect(end).toBe(15);
     });
 
 });

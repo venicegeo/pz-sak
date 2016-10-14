@@ -82,69 +82,17 @@
 
         var SLOW_POLL = 5000;
 
-        /*function resetServiceInputArrays() {
-            $scope.bodyInputs = [];
-            $scope.urlInputs = [];
-            $scope.rasterInputs = [];
-            $scope.textInputs = [];
-
-
-        }
-        function resetServiceOutputArrays(){
-            $scope.rasterOutputs = [];
-            $scope.textOutputs = [];
-
-        }*/
-
-        /*function processServiceInputs(inputs) {
-            resetServiceInputArrays();
-            var i;
-            for (i=0;i<inputs.length;i++){
-                inputs[i].formatSelect = inputs[i].formats[0].mimeType;
-                switch(inputs[i].dataType.type) {
-                    case "body":
-                        $scope.bodyInputs.push(inputs[i]);
-                        break;
-                    case "urlparameter":
-                        $scope.urlInputs.push(inputs[i]);
-                        break;
-                    case "raster":
-                        $scope.rasterInputs.push(inputs[i]);
-                        break;
-                    case "text":
-                        $scope.textInputs.push(inputs[i]);
-                        break;
-                }
-            }
-        }
-
-        function processServiceOutputs(outputs) {
-            resetServiceOutputArrays();
-            var i;
-            for (i=0;i<outputs.length;i++) {
-                outputs[i].dataType.mimeType = outputs[i].formats[0].mimeType;
-                switch(outputs[i].dataType.type) {
-                    case "raster":
-                        $scope.rasterOutputs.push(outputs[i]);
-                        break;
-                    case "text":
-                        $scope.textOutputs.push(outputs[i]);
-                        break;
-                }
-            }
-        }*/
         function getResourceResult(resourceId){
 
             gateway.async(
                 "GET",
                 '/data/' + resourceId
-            ).then(function successCallback(html) {
+            ).then(function(html) {
                 $scope.resourceResult = "";
                 $scope.executeSuccess = JSON.stringify(html.data.data.dataId);
                 $scope.showExecuteSuccess = true;
                 toaster.pop("success","Success",  "The service was executed successfully.")
-            }, function errorCallback(response) {
-                console.log("service.controller Resource Result fail");
+            }, function() {
                 toaster.pop('error', "Error", "There was an issue with your request.");
             });
         }
@@ -154,13 +102,12 @@
             gateway.async(
                 "GET",
                 '/job/' + $scope.jobId
-            ).then(function successCallback(html) {
+            ).then(function(html) {
                 if (html.data.data.status.indexOf("Success") > -1) {
                     usSpinnerService.stop("spinner-execute");
                     $scope.dataId = html.data.data.result.dataId;
                     getResourceResult($scope.dataId);
                     $scope.jobStatusResult = JSON.stringify(html.data.data);
-                    console.log($scope.serviceId);
                 }
                 else {
                     if ($scope.ExecuteResultsRetries < $scope.maxExecuteResultsRetries) {
@@ -168,18 +115,15 @@
                     }
                     else {
                         usSpinnerService.stop("spinner-execute");
-                        console.log("Exceeded Get Execute Results retry limit");
                         toaster.pop('error', "Error", "Exceeded Get Execute Results retry limit")
                     }
                 }
-            }, function errorCallback(response) {
+            }, function(response) {
                 if ((response.data.message == "Job Not Found.") &&
                     ($scope.ExecuteResultsRetries < $scope.maxExecuteResultsRetries)) {
-                    console.log("job not registered yet... trying again");
                     $timeout(getExecuteResult, SLOW_POLL, jobId);
                 } else {
                     usSpinnerService.stop("spinner-execute");
-                    console.log("service.controller Execute Result fail");
                     toaster.pop('error', "Error", "There was an issue with your request.");
                 }
             });
@@ -189,21 +133,15 @@
             gateway.async(
                 "GET",
                 '/service/' + $scope.serviceId
-            ).then(function successCallback(html) {
+            ).then(function(html) {
                 var serviceMetadata = html.data.service;
                 $scope.serviceId = serviceMetadata.serviceId;
                 $scope.describeUrl = serviceMetadata.url;
                 $scope.describeMetadata = serviceMetadata.resourceMetadata;
-                // $scope.inputs = serviceMetadata.inputs;
-                // $scope.outputs = serviceMetadata.outputs;
-                // processServiceInputs($scope.inputs);
-                // processServiceOutputs($scope.outputs);
-                console.log($scope.serviceId);
-            }, function errorCallback(response) {
-                console.log("service.controller describe fail");
+            }, function() {
                 toaster.pop('error', "Error", "There was an issue with your request.");
             });
-        }
+        };
 
 
         $scope.addInput = function() {
@@ -223,7 +161,7 @@
                     "title" : ""
                 },
                 "formats" : []
-            }
+            };
 
             $scope.registerInputs.push(newInput);
         };
@@ -245,7 +183,7 @@
                     "title" : ""
                 },
                 "formats" : []
-            }
+            };
 
             $scope.registerOutputs.push(newOutput);
         };
@@ -257,7 +195,7 @@
                 "schema" : null,
                 "maximumMegabytes" : null,
                 "dataType" : null
-            }
+            };
             $scope.registerInputs[$index].formats.push(newFormat);
         };
         $scope.addOutputFormat = function($index) {
@@ -267,7 +205,7 @@
                 "schema" : null,
                 "maximumMegabytes" : null,
                 "dataType" : null
-            }
+            };
             $scope.registerOutputs[$index].formats.push(newFormat);
         };
 
@@ -289,10 +227,9 @@
                 "POST",
                 '/service',
                 data
-            ).then(function successCallback( html ) {
+            ).then(function( html ) {
 
                 $scope.registerServiceId = html.data.data.serviceId;
-                console.log($scope.registerServiceId);
                 $scope.showRegistrationSuccess = true;
                 $scope.registrationSuccess = $scope.registerServiceId;
                 $scope.serviceName = "";
@@ -300,10 +237,9 @@
                 $scope.serviceUrl = "";
                 $scope.method = "";
 
-                toaster.pop("success","Success",  "The service was registered successfully.")
+                toaster.pop("success","Success",  "The service was registered successfully.");
 
-            }, function errorCallback(response){
-                console.log("service.controller Registration fail");
+            }, function(){
                 toaster.pop('error', "Error", "There was an issue with your registration request.");
             });
 
@@ -312,13 +248,13 @@
         function createExecuteInputMap(inputs) {
             //executeInputMap
             var i = 0;
-            for (i = 0; i < inputs.length; i++) {
+            for (; i < inputs.length; i++) {
                 switch (inputs[i].dataType.type) {
                     case "urlparameter":
                         $scope.executeInputMap[inputs[i].name] = {
                             "content": inputs[i].content,
                             "type": "text"
-                        }
+                        };
                         break;
                     case "body":
                     case "raster":
@@ -327,36 +263,26 @@
                             "content": inputs[i].content,
                             "type": inputs[i].dataType.type,
                             "mimeType": inputs[i].formatSelect
-                        }
+                        };
                         break;
-
-
                 }
             }
         }
         $scope.executeService = function() {
             createExecuteInputMap($scope.inputs);
             $scope.executeMsg = "";
-           //var executeServiceData = {
-            //   "serviceId" : $scope.serviceId,
-            //   "dataInputs" : $scope.executeInputMap,
-            //   "dataOutput" : $scope.outputs[$scope.selectedOutput].dataType
-           //};
             var data = $scope.resourceResult;
 
             gateway.async(
                 "POST",
                 '/job',
                 data
-            ).then(function successCallback( html ) {
+            ).then(function( html ) {
                 $scope.jobId = html.data.data.jobId;
                 $scope.ExecuteResultsRetries = 0;
                 usSpinnerService.spin("spinner-execute");
                 getExecuteResult($scope.jobId)
-
-
-            }, function errorCallback(response){
-                console.log("service.controller execution fail");
+            }, function(){
                 toaster.pop('error', "Error", "There was an issue with your execution request.");
             });
 
@@ -380,14 +306,13 @@
                 "/service",
                 undefined,
                 params
-            ).then(function successCallback( html ) {
+            ).then(function( html ) {
                 usSpinnerService.stop("spinner-list");
                 $scope.services = angular.fromJson(html.data.data);
                 $scope.actualServicesCount = html.data.pagination.count;
                 $scope.totalServices = ($scope.actualServicesCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualServicesCount;
-            }, function errorCallback(response){
+            }, function(){
                 usSpinnerService.stop("spinner-list");
-                console.log("service.controller list services fail: " + response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the services.");
             });
 
@@ -423,11 +348,10 @@
                 "/service",
                 undefined,
                 params
-            ).then(function successCallback( html ) {
+            ).then(function( html ) {
                 $scope.results = angular.fromJson(html.data.data);
                 $scope.totalSearchResults = html.data.pagination.count;
-            }, function errorCallback(response){
-                console.log("service.controller fail on search");
+            }, function(){
                 toaster.pop('error', "Error", "There was an issue with your search request.");
             });
 
@@ -454,19 +378,13 @@
         $scope.showUpdateServiceForm = function(serviceId){
             usSpinnerService.spin('spinner-update');
 
-            if (!$scope.showUpdateService){
-                $scope.showUpdateService = true;
-            }
-            else{
-                $scope.showUpdateService = false;
-            }
+            $scope.showUpdateService = !$scope.showUpdateService;
 
             gateway.async(
                 "GET",
                 '/service/' + serviceId
-            ).then(function successCallback( html ) {
+            ).then(function( html ) {
                 usSpinnerService.stop('spinner-update');
-                console.log(html);
 
                 var results = angular.fromJson(html.data.service);
                 $scope.updateResourceId = results.serviceId;
@@ -474,9 +392,8 @@
                 $scope.updateServiceDescrip = results.resourceMetadata.description;
                 $scope.updateServiceUrl = results.url;
                 $scope.updateServiceMethod = results.method;
-            }, function errorCallback(response){
+            }, function(){
                 usSpinnerService.stop("spinner-update");
-                console.log("service.controller describe service fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the service.");
             });
 
@@ -486,12 +403,7 @@
             var serviceId = $scope.updateResourceId;
 
 
-            if (!$scope.showUpdateService){
-                $scope.showUpdateService = true;
-            }
-            else{
-                $scope.showUpdateService = false;
-            }
+            $scope.showUpdateService = !$scope.showUpdateService;
 
             var dataObj = {
                 url: $scope.updateServiceUrl,
@@ -507,19 +419,14 @@
                 "PUT",
                 "/service/" + serviceId,
                 dataObj
-            ).then(function successCallback(res) {
-                // TODO: Check the status code for success
-                console.log(res);
+            ).then(function(res) {
                 if (res.status == "200") {
                     $scope.getServices();
                     toaster.pop('success', "Success", "The service was successfully updated.");
                 } else {
-                    console.log("service.controller update fail: "+res.status);
                     toaster.pop('error', "Error", "There was a problem updating the service");
                 }
-            }, function errorCallback(res) {
-                console.log("service.controller update fail: "+res.status);
-
+            }, function() {
                 toaster.pop('error', "Error", "There was a problem updating the service.");
             });
 
@@ -534,14 +441,10 @@
             gateway.async(
                 "DELETE",
                 "/service/" + serviceId
-            ).then(function successCallback(res) {
-                console.log(res);
-
+            ).then(function() {
                 $scope.getServices();
                 toaster.pop('success', "Success", "The service was successfully deleted.")
-            }, function errorCallback(res) {
-                console.log("service.controller delete fail: "+res.status);
-
+            }, function() {
                 toaster.pop('error', "Error", "There was a problem deleting the Service.");
             });
         };
