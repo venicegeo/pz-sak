@@ -35,8 +35,6 @@ describe('Controller: WmsController', function () {
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
-        // $cookies = $injector.get('$cookies');
-        // $cookies.putObject('auth', '{isLoggedIn:true}');
         $httpBackend = $injector.get('$httpBackend');
         capabilitiesHandler = $httpBackend.when(
             'GET',
@@ -153,47 +151,20 @@ describe('Controller: WmsController', function () {
         // TODO: Fix this
         expect(scope.showLayerSelect).toBe(false);
     });
-    // it('should get the search results', function () {
-    //     scope.pagination.current = 0;
-    //     scope.size = 1;
-    //     scope.getSearchResults();
-    //     $httpBackend.expectPOST('/proxy/pz-gateway.int.geointservices.io/data/query',
-    //     {
-    //         "query": {"match_all": {}},
-    //         "size": 1,
-    //         "from": 0
-    //     });
-    //     $httpBackend.flush();
-    //     expect(scope.searchResults[0].dataId).toBe("a02cfb35-15cb-4c3c-8192-90e385e1d0d5");
-    // });
-    // it('should get the pageChange', function () {
-    //     scope.size = 1;
-    //     scope.pageChanged(1);
-    //     $httpBackend.expectPOST('/proxy/pz-gateway.int.geointservices.io/data/query',
-    //     {
-    //         "query": {"match_all": {}},
-    //         "size": 1,
-    //         "from": 0
-    //     });
-    //     $httpBackend.flush();
-    //     expect(scope.searchResults[0].dataId).toBe("a02cfb35-15cb-4c3c-8192-90e385e1d0d5");
-    // });
 
-    // it('should add tag', function () {
-    //     scope.indexId = "indexID";
-    //     scope.typeId = "typeID";
-    //     scope.documentId = "documentID";
-    //     scope.tag = "tag1";
-    //     scope.addTags();
-    //     $httpBackend.expectGET('/proxy?url=pz-search-query.int.geointservices.io/indexID/typeID/documentID');
-    //     $httpBackend.expectPOST('/proxy?url=pz-search-query.int.geointservices.io/indexID/typeID/documentID/_update',
-    //         {
-    //             "doc": {
-    //                 "keywords": ["tag1"]
-    //             }
-    //         });
-    //     $httpBackend.flush();
-    //     expect(scope.tagMsg).toBe("Keyword added successfully");
-    // });
+    it('should update map', function () {
+        scope.selectedLayer = {
+            Name: "topp:states",
+            BoundingBox: [
+                {
+                    "extent": [1,2,3,4]
+                }
+            ]
+        };
+        scope.updateMap();
+        $httpBackend.flush();
+        expect(scope.center.lat).toBe(3);
+        expect(scope.center.lon).toBe(2);
+    });
 
 });

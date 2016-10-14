@@ -2122,8 +2122,7 @@ angular.module('openlayers-directive').factory('olHelpers', ["$q", "$log", "$htt
                 layerConfig.visible = layer.visible;
             }
             if (isDefinedAndNotNull(layer.extent)) {
-                // 10/13/2016 jmcmahon for some reason this is messing us up
-                // layerConfig.extent = layer.extent;
+                layerConfig.extent = layer.extent;
             }
             if (isDefinedAndNotNull(layer.zIndex)) {
                 layerConfig.zIndex = layer.zIndex;
