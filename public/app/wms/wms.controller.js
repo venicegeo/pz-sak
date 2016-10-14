@@ -102,8 +102,8 @@
                          type: 'ImageWMS',
                          url: getProxiedEndPoint(),
 						 params: {}
-                     },
-					 extent: []
+                     }
+					 //extent: []
                    }
                  ]
         	});
@@ -171,7 +171,7 @@
 					var centerLonLat = bounds.getCenterLonLat();
 					$scope.center.lon = centerLonLat.lon;
 					$scope.center.lat = centerLonLat.lat;
-					$scope.layers[0].extent = extent;
+					//$scope.layers[0].extent = extent;
 
 					olData.getMap().then(function(olMap) {
 						var mapSize = olMap.getSize();
