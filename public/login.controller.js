@@ -44,14 +44,13 @@
                     console.log("verification success but no ID present");
                     toaster.pop('error', 'Error', 'An error was encountered while logging in. Please try again later.')
                 }
-            }, function errorCallback(response){
+            }, function errorCallback(){
                 Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
                 Auth.encode("null", "null");
                 Auth.setUser("");
                 $cookies.putObject(CONST.auth, Auth);
                 $location.path("/login.html");
                 $scope.password = "";
-                console.log("login.controller fail: "+html.status);
                 toaster.pop('warning', "Invalid Credentials", "You have entered the wrong username or password.");
             });
 
