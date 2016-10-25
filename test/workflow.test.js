@@ -27,7 +27,8 @@ describe('Controller: WorkflowController', function () {
         eventsRequestHandler,
         eventPostRequestHandler,
         alertPostRequestHandler,
-        triggerPostRequestHandler;
+        triggerPostRequestHandler,
+        eventTypeRequestHandler;
 
     // load the controller's module
     beforeEach(module('SAKapp'));
@@ -44,7 +45,7 @@ describe('Controller: WorkflowController', function () {
             '/proxy/pz-gateway.int.geointservices.io/eventType?page=0&perPage=10').respond(
             {"data":[
                 {
-                    "id": "110d6220-aee1-471b-bdaa-2bad38c41549",
+                    "eventTypeId": "110d6220-aee1-471b-bdaa-2bad38c41549",
                     "name": "sak-event-2",
                     "mapping": {
                         "isDone": "boolean",
@@ -53,12 +54,12 @@ describe('Controller: WorkflowController', function () {
                     }
                 },
                 {
-                    "id": "b066fd7e-4a13-4a89-92b6-2bd1cccf9423",
+                    "eventTypeId": "b066fd7e-4a13-4a89-92b6-2bd1cccf9423",
                     "name": "sak-event",
                     "mapping": {}
                 },
                 {
-                    "id": "d9acc1d6-bde4-4a7f-b21e-49043663b47f",
+                    "eventTypeId": "d9acc1d6-bde4-4a7f-b21e-49043663b47f",
                     "name": "Test Event Type",
                     "mapping": {}
                 }
@@ -72,7 +73,7 @@ describe('Controller: WorkflowController', function () {
             '/proxy/pz-gateway.int.geointservices.io/eventType?page=0&perPage=10000').respond(
             {"data":[
                 {
-                    "id": "110d6220-aee1-471b-bdaa-2bad38c41549",
+                    "eventTypeId": "110d6220-aee1-471b-bdaa-2bad38c41549",
                     "name": "sak-event-2",
                     "mapping": {
                         "isDone": "boolean",
@@ -81,12 +82,12 @@ describe('Controller: WorkflowController', function () {
                     }
                 },
                 {
-                    "id": "b066fd7e-4a13-4a89-92b6-2bd1cccf9423",
+                    "eventTypeId": "b066fd7e-4a13-4a89-92b6-2bd1cccf9423",
                     "name": "sak-event",
                     "mapping": {}
                 },
                 {
-                    "id": "d9acc1d6-bde4-4a7f-b21e-49043663b47f",
+                    "eventTypeId": "d9acc1d6-bde4-4a7f-b21e-49043663b47f",
                     "name": "Test Event Type",
                     "mapping": {}
                 }
@@ -100,9 +101,9 @@ describe('Controller: WorkflowController', function () {
             '/proxy/pz-gateway.int.geointservices.io/event?page=0&perPage=10').respond(
             {"data":[
                 {
-                    "id": "ebc35e90-38a7-4fe4-bc7c-8ad79e995ee8",
-                    "eventtype_id": "110d6220-aee1-471b-bdaa-2bad38c41549",
-                    "date": "2016-05-30T20:12:31.217Z",
+                    "eventId": "ebc35e90-38a7-4fe4-bc7c-8ad79e995ee8",
+                    "eventTypeId": "110d6220-aee1-471b-bdaa-2bad38c41549",
+                    "createdOn": "2016-05-30T20:12:31.217Z",
                     "data": {
                         "isDone": "true",
                         "name": "test",
@@ -150,8 +151,8 @@ describe('Controller: WorkflowController', function () {
             'POST',
             '/proxy/pz-gateway.int.geointservices.io/event/test-eventtype',
             {
-                "eventtype_id": "aaa",
-                "date": "2016-05-30T20:12:25.000Z",
+                "eventTypeId": "aaa",
+                "createdOn": "2016-05-30T20:12:25.000Z",
                 "data":{}
             }
         ).respond(200, "Success");
@@ -159,8 +160,8 @@ describe('Controller: WorkflowController', function () {
             'POST',
             '/proxy/pz-gateway.int.geointservices.io/alert',
             {
-                "trigger_id": "aaa",
-                "event_id": "bbb"
+                "triggerId": "aaa",
+                "eventId": "bbb"
             }
         ).respond(200, "Success");
         triggerPostRequestHandler = $httpBackend.when(
@@ -177,6 +178,25 @@ describe('Controller: WorkflowController', function () {
                 }
             }
         ).respond(200, "Success");
+        eventTypeRequestHandler = $httpBackend.when(
+            'GET',
+            '/proxy/pz-gateway.int.geointservices.io/eventType/aaa').respond(
+            {
+                "statusCode": 200,
+                "type": "eventtype",
+                "data": {
+                    "eventTypeId": "aaa",
+                    "name": "type name",
+                    "mapping": {
+                        "ItemId": "string",
+                        "Problem": "string",
+                        "Severity": "integer"
+                    },
+                    "createdBy": "unitTester",
+                    "createdOn": "2016-10-17T19:30:44.735078838Z"
+                }
+            }
+        );
         loginHandler = $httpBackend.when(
             'GET',
             '/login.html').respond({});
@@ -196,6 +216,37 @@ describe('Controller: WorkflowController', function () {
         $httpBackend.flush();
         expect(scope.events.length).toBe(1);
     });
+    it('should get events alt', function () {
+        eventsRequestHandler.respond(
+        {"data":[
+            {
+                "eventId": "ebc35e90-38a7-4fe4-bc7c-8ad79e995ee8",
+                "eventTypeId": "110d6220-aee1-471b-bdaa-2bad38c41549",
+                "createdOn": "2016-05-30T20:12:31.217Z",
+                "data": {
+                    "isDone": "true",
+                    "name": "test",
+                    "size": "2"
+                }
+            }
+        ],
+            "pagination": {
+                "count": 121000
+            }
+        });
+        scope.getEvents();
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/event?page=0&perPage=10');
+        $httpBackend.flush();
+        expect(scope.events.length).toBe(1);
+    });
+
+    it('should get events failure', function () {
+        eventsRequestHandler.respond(500, "");
+        scope.getEvents();
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/event?page=0&perPage=10');
+        $httpBackend.flush();
+    });
+
     it('should get events page chage', function () {
         scope.eventsPageChanged(1);
         $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/event?page=0&perPage=10');
@@ -208,6 +259,41 @@ describe('Controller: WorkflowController', function () {
         $httpBackend.flush();
         expect(scope.eventTypes.length).toBe(3);
     });
+    it('should get eventtypes failure', function () {
+        allEventTypesRequestHandler.respond(500, "");
+        scope.getEventTypes();
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/eventType?page=0&perPage=10000');
+        $httpBackend.flush();
+    });
+
+    it('should update type table', function () {
+        scope.showEventForm = true;
+        scope.updateTypeTable("aaa");
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/eventType/aaa');
+        $httpBackend.flush();
+        expect(scope.showNewEventForm).toBe(false);
+        expect(scope.eventTypeLabel).toBe("type name");
+        expect(scope.eventTypeId).toBe("aaa");
+        expect(scope.eventTypeName).toBe("type name");
+        expect(scope.parameters.ItemId).toBe("string");
+    });
+    it('should update type table failure', function () {
+        eventTypeRequestHandler.respond(500, "");
+        scope.updateTypeTable("aaa");
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/eventType/aaa');
+        $httpBackend.flush();
+    });
+
+    it('should select event type', function () {
+        scope.showNewEventForm = true;
+        scope.selectEventType("eventType");
+        $httpBackend.flush();
+        expect(scope.newEventType).toBe("eventType");
+        expect(scope.showNewEventForm).toBe(false);
+    });
+
+
+
     it('should get alerts', function () {
         scope.getAlerts();
         $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/alert?page=0&perPage=10');
@@ -244,7 +330,7 @@ describe('Controller: WorkflowController', function () {
             $httpBackend.expectPOST(
                 '/proxy/pz-gateway.int.geointservices.io/event/test-eventtype',
                 {
-                    "eventtype_id": "aaa",
+                    "eventTypeId": "aaa",
                     "date": moment().utc().toISOString(),//"2016-05-30T20:12:25.000Z",
                     "data": {}
                 }
@@ -263,8 +349,8 @@ describe('Controller: WorkflowController', function () {
         $httpBackend.expectPOST(
             '/proxy/pz-gateway.int.geointservices.io/alert',
             {
-                "trigger_id": "aaa",
-                "event_id": "bbb"
+                "triggerId": "aaa",
+                "eventId": "bbb"
             }
         );
         $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/alert?page=0&perPage=10');
@@ -365,4 +451,23 @@ describe('Controller: WorkflowController', function () {
         $httpBackend.flush();
         expect(end).toBe(15);
     });
+    it('should show/hide forms', function () {
+        scope.showNewEventForm = true;
+        scope.showNewEventTypeForm = true;
+        scope.showEventTable = true;
+
+        scope.showHideNewEventType();
+        expect(scope.showNewEventTypeForm).toBe(false);
+
+        scope.showHideEventTable();
+        expect(scope.showEventTable).toBe(false);
+
+        scope.showHideNewEventForm();
+        expect(scope.showNewEventForm).toBe(false);
+
+        scope.cancelCreateEvent();
+        expect(scope.showNewEventForm).toBe(true);
+        $httpBackend.flush();
+    });
+
 });

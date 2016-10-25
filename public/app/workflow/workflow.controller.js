@@ -112,14 +112,13 @@
                 "/event",
                 null,
                 params
-            ).then(function successCallback( html ) {
+            ).then(function( html ) {
                 if (html.data != null) {
                     $scope.events = html.data.data;
                     $scope.actualEventCount = html.data.pagination.count;
                     $scope.totalEvents = ($scope.actualEventCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualEventCount;
                 }
-            }, function errorCallback(response){
-                console.log("workflow.controller get events fail: "+response.status);
+            }, function(){
                 toaster.pop('error', "Error", "There was an issue with retrieving the events.");
             });
 
@@ -141,12 +140,6 @@
             $scope.showNewEventForm = !$scope.showNewEventForm;
         };
 
-        $scope.loadEventsPage = function() {
-
-            //Load event Types drop down with values from service
-            $scope.getEventTypes();
-        };
-
         $scope.getEventTypes = function () {
             $scope.eventType = "";
             $scope.eventTypes = [];
@@ -160,37 +153,30 @@
                 "/eventType",
                 null,
                 params
-            ).then(function successCallback( html ) {
+            ).then(function( html ) {
                 if(html.data != null) {
                     $scope.eventTypes = html.data.data;
                     $scope.selectedEventTypes = html.data.data;
                 }
-            }, function errorCallback(response){
-                console.log("workflow.controller get eventtypes fail: "+response.status);
+            }, function(){
                 toaster.pop('error', "Error", "There was an issue with retrieving the event types.");
             });
 
         };
         $scope.updateTypeTable = function (eventTypeId) {
 
-            if (!$scope.showEventForm){
-                $scope.showNewEventForm = true;
-            }
-            else{
-                $scope.showNewEventForm = false;
-            }
+            $scope.showNewEventForm = !$scope.showEventForm;
 
             gateway.async(
                 "GET",
                 "/eventType/"+eventTypeId
-            ).then(function successCallback( html ) {
-                $scope.eventTypeLabel = html.data.name;
-                $scope.eventTypeId = html.data.id;
-                $scope.eventTypeName = html.data.name;
-                $scope.parameters = html.data.mapping;
+            ).then(function( html ) {
+                $scope.eventTypeLabel = html.data.data.name;
+                $scope.eventTypeId = html.data.data.eventTypeId;
+                $scope.eventTypeName = html.data.data.name;
+                $scope.parameters = html.data.data.mapping;
 
-            }, function errorCallback(response){
-                console.log("workflow.controller update type fail: "+response.status);
+            }, function(){
                 toaster.pop('error', "Error", "There was an issue with retrieving the event type.");
             });
 
@@ -198,12 +184,8 @@
 
         $scope.selectEventType = function(newEventType) {
             //User selected to create an event associated with an event type
-
-            //TODO: Show/hide new event table
             $scope.showHideNewEventForm();
             $scope.newEventType = newEventType;
-
-            //TODO: On submit, hide the event type table and have toaster pop open showing success.
         };
 
 
@@ -211,7 +193,6 @@
 
 
     $scope.postEvent = function(params){
-        console.log(params);
         var array = $.map(params, function(value, index) {
             return [index];
         });
@@ -220,38 +201,31 @@
         for(var i=0;i<array.length;i++){
             result[array[i]] = $scope.eventTypeValues[i];
         }
-        console.log(result);
 
         $scope.errorMsg = "";
 
         var currentTime = moment().utc().toISOString();
-        var alertMessage = $scope.alertMessage;
         var dataObj = {
-            eventtype_id: $scope.eventType.id,
-            date: currentTime,
+            eventTypeId: $scope.eventType.eventTypeId,
+            createdOn: currentTime,
             data: result
         };
-
-        console.log(dataObj);
 
         gateway.async(
             "POST",
             "/event/" + $scope.eventTypeName,
             dataObj
-        ).then(function successCallback(res) {
+        ).then(function(res) {
             $scope.message = res;
 
             //reload events table
             $scope.getEvents();
 
             //clear input values
-            $scope.alertMessage = null;
             $scope.eventType = null;
-            toaster.pop('success', "Success", "The event was successfully sent.")
+            toaster.pop('success', "Success", "The event was successfully sent.");
 
-        }, function errorCallback(res) {
-            console.log("workflow.controller post event fail: "+res.status);
-
+        }, function() {
             toaster.pop('error', "Error", "There was a problem submitting the event message.");
         });
     };
@@ -261,16 +235,14 @@
             gateway.async(
                 "DELETE",
                 "/event/" + eventId
-            ).then(function successCallback(html) {
+            ).then(function(html) {
                 $scope.message = html;
-                console.log("success");
 
                 //reload events table
                 $scope.getEvents();
 
                 toaster.pop('success', "Success", "The event was successfully deleted.");
-            }, function errorCallback(response) {
-                console.log("workflow.controller delete event fail: " + response.status);
+            }, function() {
                 toaster.pop('error', "Error", "There was a problem deleting the event.");
             });
         };
@@ -294,14 +266,13 @@
                 "/alert",
                 null,
                 params
-            ).then(function successCallback( html ) {
+            ).then(function( html ) {
                 if(html.data != null) {
                     $scope.alerts = html.data.data;
                     $scope.actualAlertCount = html.data.pagination.count;
                     $scope.totalAlerts = ($scope.actualAlertCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualAlertCount;
                 }
-            }, function errorCallback(response){
-                console.log("workflow.controller get alerts fail: "+response.status);
+            }, function(){
                 toaster.pop('error', "Error", "There was an issue with retrieving the alerts.");
             });
 
@@ -312,15 +283,15 @@
             var alertTrigger = $scope.alertTrigger;
             var alertEvent = $scope.alertEvent;
             var dataObj = {
-                trigger_id: alertTrigger,
-                event_id: alertEvent
+                triggerId: alertTrigger,
+                eventId: alertEvent
             };
 
             gateway.async(
                 "POST",
                 "/alert",
                 dataObj
-            ).then(function successCallback(res) {
+            ).then(function(res) {
                 $scope.message = res;
 
                 //reload alerts table
@@ -329,11 +300,9 @@
                 //set inputs to null to clear
                 $scope.alertTrigger = null;
                 $scope.alertEvent = null;
-                toaster.pop('success', "Success", "The alert was successfully sent.")
+                toaster.pop('success', "Success", "The alert was successfully sent.");
 
-            }, function errorCallback(res) {
-                console.log("workflow.controller post alert fail: "+res.status);
-
+            }, function() {
                 toaster.pop('error', "Error", "There was a problem submitting the alert message.");
             });
         };
@@ -342,16 +311,14 @@
             gateway.async(
                 "DELETE",
                 "/alert/"+alertId
-            ).then(function successCallback( html ) {
+            ).then(function( html ) {
                 $scope.message = html;
-                console.log("success");
 
                 //getAlerts again to reload table
                 $scope.getAlerts();
 
                 toaster.pop('success', "Success", "The alert was successfully deleted.");
-            }, function errorCallback(response) {
-                console.log("workflow.controller delete alert fail: "+response.status);
+            }, function() {
                 toaster.pop('error', "Error", "There was a problem deleting the alert message.");
             });
         };
@@ -375,14 +342,13 @@
                 "/trigger",
                 null,
                 params
-            ).then(function successCallback( html ) {
+            ).then(function( html ) {
                 if(html.data != null) {
                     $scope.triggers = html.data.data;
                     $scope.actualTriggerCount = html.data.pagination.count;
                     $scope.totalTriggers = ($scope.actualTriggerCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualTriggerCount;
                 }
-            }, function errorCallback(response){
-                console.log("workflow.controller get triggers fail: "+response.status);
+            }, function(){
                 toaster.pop('error', "Error", "There was an issue with retrieving the triggers.");
             });
 
@@ -396,7 +362,6 @@
             for(var i=0;i<$scope.selectedEventTypes.length;i++){
                 eventTriggerType[i] = $scope.selectedEventTypes[i].id;
             }
-            console.log(eventTriggerType);
 
             var currentTime = moment().utc().toISOString();
             var dataObj = {
@@ -415,23 +380,20 @@
                 "POST",
                 "/trigger",
                 dataObj
-            ).then(function successCallback(res) {
+            ).then(function(res) {
                 $scope.message = res;
 
                 //reload table
                 $scope.getTriggers();
 
                 //set input fields to null to clear
-                //$scope.triggerMessage = null;
                 $scope.triggerTitle = null;
                 $scope.triggerQuery = null;
                 $scope.selectedEventTypes = null;
                 $scope.triggerJob = null;
-                toaster.pop('success', "Success", "The trigger was successfully posted.")
+                toaster.pop('success', "Success", "The trigger was successfully posted.");
 
-            }, function errorCallback(res) {
-                console.log("workflow.controller post trigger fail: "+res.status);
-
+            }, function() {
                 toaster.pop('error', "Error", "There was a problem submitting the trigger message.");
             });
         };
@@ -444,10 +406,9 @@
             gateway.async(
                 "GET",
                 "/trigger/"+triggerId
-            ).then(function successCallback( html ) {
+            ).then(function( html ) {
                 $scope.trigger = html.data;
-            }, function errorCallback(response){
-                console.log("workflow.controller get trigger by id fail: "+response.status);
+            }, function(){
                 toaster.pop('error', "Error", "There was an issue with retrieving the trigger.");
             });
 
@@ -459,15 +420,13 @@
             gateway.async(
                 "DELETE",
                 "/trigger/"+triggerId
-            ).then(function successCallback(res) {
+            ).then(function(res) {
                 $scope.message = res;
                 $scope.getTriggers();
                 $scope.workflowMessage = null;
-                toaster.pop('success', "Success", "The trigger was successfully deleted.")
+                toaster.pop('success', "Success", "The trigger was successfully deleted.");
 
-            }, function errorCallback(res) {
-                console.log("workflow.controller delete trigger fail: "+res.status);
-
+            }, function() {
                 toaster.pop('error', "Error", "There was a problem deleting the trigger.");
             });
         };
