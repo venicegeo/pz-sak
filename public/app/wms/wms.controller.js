@@ -81,7 +81,7 @@
                         	opacity: 0,
                             source: {
                                 type: 'OSM',
-                                url: 'http://{a-c}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png'
+                                url: config.baseUrl
                             }
                         }
                     },
