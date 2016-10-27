@@ -31,6 +31,7 @@ describe('Controller: HomeController', function () {
     beforeEach(module('SAKapp'));
 
     var HomeController,
+        discover,
         scope;
 
     // Initialize the controller and a mock scope
@@ -39,9 +40,10 @@ describe('Controller: HomeController', function () {
         // $cookies = $injector.get('$cookies');
         // $cookies.putObject('auth', '{isLoggedIn:true}');
         $httpBackend = $injector.get('$httpBackend');
+        discover = $injector.get('discover');
         loggerRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-logger.int.geointservices.io/').respond(
+            '/proxy/' + discover.loggerHost + '/').respond(
             {
                 "statusCode": 200,
                 "type": "string",
@@ -50,7 +52,7 @@ describe('Controller: HomeController', function () {
         );
         uuidRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-uuidgen.int.geointservices.io/').respond(
+            '/proxy/' + discover.uuidHost + '/').respond(
             {
                 "statusCode": 200,
                 "data": "Hi. I'm pz-uuidgen."
@@ -58,7 +60,7 @@ describe('Controller: HomeController', function () {
         );
         workflowRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-workflow.int.geointservices.io/').respond(
+            '/proxy/' + discover.workflowHost + '/').respond(
             {
                 "statusCode": 200,
                 "data": "Hi! I'm pz-workflow."
@@ -66,17 +68,17 @@ describe('Controller: HomeController', function () {
         );
         searchRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-search-query.int.geointservices.io/').respond(
+            '/proxy/' + discover.searchHost + '/').respond(
             "Hello Piazza Search Query! DSL-input endpoint at /api/v1/datafull"
         );
         serviceControllerRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-servicecontroller.int.geointservices.io/').respond(
+            '/proxy/' + discover.serviceControllerHost + '/').respond(
             "servicecontroller ok"
         );
         gatewayRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/').respond(
+            '/proxy/' + discover.gatewayHost + '/').respond(
             "Hello, Health Check here for pz-gateway."
         );
         loginHandler = $httpBackend.when(
@@ -100,12 +102,12 @@ describe('Controller: HomeController', function () {
 
     it('should get health checks', function () {
         scope.getStatuses();
-        $httpBackend.expectGET('/proxy/pz-logger.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-uuidgen.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-workflow.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-search-query.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-servicecontroller.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/');
+        $httpBackend.expectGET('/proxy/' + discover.loggerHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.uuidHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.workflowHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.searchHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.serviceControllerHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/');
         $httpBackend.flush();
         expect(scope.loggerStatus).toBe("green");
         expect(scope.uuidStatus).toBe("green");
@@ -123,12 +125,12 @@ describe('Controller: HomeController', function () {
         serviceControllerRequestHandler.respond(500, '');
         gatewayRequestHandler.respond(500, '');
         scope.getStatuses();
-        $httpBackend.expectGET('/proxy/pz-logger.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-uuidgen.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-workflow.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-search-query.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-servicecontroller.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/');
+        $httpBackend.expectGET('/proxy/' + discover.loggerHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.uuidHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.workflowHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.searchHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.serviceControllerHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/');
         $httpBackend.flush();
         expect(scope.loggerStatus).toBe("red");
         expect(scope.uuidStatus).toBe("red");
@@ -146,12 +148,12 @@ describe('Controller: HomeController', function () {
         serviceControllerRequestHandler.respond(201, '');
         gatewayRequestHandler.respond(201, '');
         scope.getStatuses();
-        $httpBackend.expectGET('/proxy/pz-logger.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-uuidgen.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-workflow.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-search-query.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-servicecontroller.int.geointservices.io/');
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/');
+        $httpBackend.expectGET('/proxy/' + discover.loggerHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.uuidHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.workflowHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.searchHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.serviceControllerHost + '/');
+        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/');
         $httpBackend.flush();
         expect(scope.loggerStatus).toBe("red");
         expect(scope.uuidStatus).toBe("red");
