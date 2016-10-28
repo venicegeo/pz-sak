@@ -8,5 +8,5 @@ cd $root
 node --version
 npm --version
 npm install
-./node_modules/karma/bin/karma --version
-./node_modules/karma/bin/karma start
+karma --version
+karma start
