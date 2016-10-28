@@ -34,24 +34,22 @@ describe('Controller: UserServiceController', function () {
     beforeEach(module('SAKapp'));
 
     var UserServiceController,
-        discover,
         scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
         $httpBackend = $injector.get('$httpBackend');
-        discover = $injector.get('discover');
 
         describeRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/' + discover.gatewayHost + '/service/aaa')
+            '/proxy/pz-gateway.int.geointservices.io/service/aaa')
             .respond({
                 "type" : "service",
                 "service" : {
                     "serviceId" : "aaa",
-                    "url" : "http://pzsvc-hello.com/",
-                    "contractUrl" : "http://pzsvc-hello.com/",
+                    "url" : "http://pzsvc-hello.int.geointservices.io/",
+                    "contractUrl" : "http://pzsvc-hello.int.geointservices.io/",
                     "method" : "GET",
                     "resourceMetadata" : {
                         "name" : "Hello World Test",
@@ -61,7 +59,7 @@ describe('Controller: UserServiceController', function () {
             });
         resourceDataHandler = $httpBackend.when(
             'GET',
-            '/proxy/' + discover.gatewayHost + '/data/4ad8487a-e11c-4be2-98a8-23873d95d360')
+            '/proxy/pz-gateway.int.geointservices.io/data/4ad8487a-e11c-4be2-98a8-23873d95d360')
             .respond({
                 "type" : "data",
                 "data" : {
@@ -94,10 +92,10 @@ describe('Controller: UserServiceController', function () {
             });
         registerServiceHandler = $httpBackend.when(
             'POST',
-            '/proxy/' + discover.gatewayHost + '/service',
+            '/proxy/pz-gateway.int.geointservices.io/service',
             {
-                "url" : "http://pzsvc-hello.com/",
-                "contractUrl" : "http://pzsvc-hello.com/",
+                "url" : "http://pzsvc-hello.int.geointservices.io/",
+                "contractUrl" : "http://pzsvc-hello.int.geointservices.io/",
                 "method" : "GET",
                 "resourceMetadata" : {
                     "name" : "Hello World Test",
@@ -113,7 +111,7 @@ describe('Controller: UserServiceController', function () {
             });
         executeServiceHandler = $httpBackend.when(
             'POST',
-            '/proxy/' + discover.gatewayHost + '/job',
+            '/proxy/pz-gateway.int.geointservices.io/job',
             {
                 "type":"execute-service",
                 "data":{
@@ -132,7 +130,7 @@ describe('Controller: UserServiceController', function () {
             );
         jobStatusHandler = $httpBackend.when(
             'GET',
-            '/proxy/' + discover.gatewayHost + '/job/bbb')
+            '/proxy/pz-gateway.int.geointservices.io/job/bbb')
             .respond({
                     "type": "job-status",
                     "data": {
@@ -146,12 +144,12 @@ describe('Controller: UserServiceController', function () {
             );
         getServicesHandler = $httpBackend.when(
             'GET',
-            '/proxy/' + discover.gatewayHost + '/service?page=0&perPage=25')
+            '/proxy/pz-gateway.int.geointservices.io/service?page=0&perPage=25')
             .respond({
                 "type" : "service-list",
                 "data" : [ {
                     "serviceId" : "8c7706ab-a541-4914-b68b-d881448a7485",
-                    "url" : "https://pzsvc-ossim.com/execute",
+                    "url" : "https://pzsvc-ossim.int.geointservices.io/execute",
                     "method" : "POST",
                     "resourceMetadata" : {
                         "name" : "pzsvc-ossim",
@@ -187,7 +185,7 @@ describe('Controller: UserServiceController', function () {
                     }
                 }, {
                     "serviceId" : "f35c33f1-4c8f-4c7f-a163-2a0c79fafd72",
-                    "url" : "https://servicecontroller.com/jumpstart/string/toUpper",
+                    "url" : "https://pz-servicecontroller.int.geointservices.io/jumpstart/string/toUpper",
                     "method" : "POST",
                     "resourceMetadata" : {
                         "name" : "toUpper Params Cat and Parrot",
@@ -227,7 +225,7 @@ describe('Controller: UserServiceController', function () {
             });
         searchServicesHandler = $httpBackend.when(
             'GET',
-            '/proxy/' + discover.gatewayHost + '/service?keyword=test&page=0&perPage=25')
+            '/proxy/pz-gateway.int.geointservices.io/service?keyword=test&page=0&perPage=25')
             .respond({
                 "type" : "service-list",
                 "data" : [ {
@@ -286,11 +284,11 @@ describe('Controller: UserServiceController', function () {
             });
         updateServiceHandler = $httpBackend.when(
             'PUT',
-            '/proxy/' + discover.gatewayHost + '/service/aaa')
+            '/proxy/pz-gateway.int.geointservices.io/service/aaa')
             .respond(200);
         deleteServiceHandler = $httpBackend.when(
             'DELETE',
-            '/proxy/' + discover.gatewayHost + '/service/aaa')
+            '/proxy/pz-gateway.int.geointservices.io/service/aaa')
             .respond(200);
         loginHandler = $httpBackend.when(
             'GET',
@@ -307,7 +305,7 @@ describe('Controller: UserServiceController', function () {
 
     it('should get list of all services', function () {
         scope.getServices(1);
-        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/service?page=0&perPage=25');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/service?page=0&perPage=25');
         $httpBackend.flush();
         expect(scope.services.length).toBe(10);
         expect(scope.totalServices).toBe(40);
@@ -316,21 +314,21 @@ describe('Controller: UserServiceController', function () {
         scope.searchField="test";
         scope.searchPerPage=25;
         scope.searchServices(1);
-        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/service?keyword=test&page=0&perPage=25');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/service?keyword=test&page=0&perPage=25');
         $httpBackend.flush();
         expect(scope.results.length).toBe(5);
         expect(scope.totalSearchResults).toBe(21);
     });
     it('should register a service', function () {
-        scope.serviceUrl="http://pzsvc-hello.com/";
+        scope.serviceUrl="http://pzsvc-hello.int.geointservices.io/";
         scope.serviceName="Hello World Test";
         scope.serviceDescription="Hello world test";
         scope.method="GET";
         scope.registerService();
-        $httpBackend.expectPOST('/proxy/' + discover.gatewayHost + '/service',
+        $httpBackend.expectPOST('/proxy/pz-gateway.int.geointservices.io/service',
         {
-            "url" : "http://pzsvc-hello.com/",
-            "contractUrl" : "http://pzsvc-hello.com/",
+            "url" : "http://pzsvc-hello.int.geointservices.io/",
+            "contractUrl" : "http://pzsvc-hello.int.geointservices.io/",
             "method" : "GET",
             "resourceMetadata" : {
                 "name" : "Hello World Test",
@@ -344,18 +342,18 @@ describe('Controller: UserServiceController', function () {
     it('should describe a service', function () {
         scope.serviceId = "aaa";
         scope.describeService();
-        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/service/aaa');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/service/aaa');
         $httpBackend.flush();
-        expect(scope.describeUrl).toBe("http://pzsvc-hello.com/");
+        expect(scope.describeUrl).toBe("http://pzsvc-hello.int.geointservices.io/");
         expect(scope.describeMetadata.name).toBe("Hello World Test");
     });
     it('should update a service', function () {
         scope.updateResourceId="aaa";
         scope.updateService();
-        $httpBackend.expectPUT('/proxy/' + discover.gatewayHost + '/service/aaa');
+        $httpBackend.expectPUT('/proxy/pz-gateway.int.geointservices.io/service/aaa');
         $httpBackend.expect(
             'GET',
-            '/proxy/' + discover.gatewayHost + '/service?page=0&perPage=25');
+            '/proxy/pz-gateway.int.geointservices.io/service?page=0&perPage=25');
         $httpBackend.flush();
         expect(scope.services.length).toBe(10);
         expect(scope.totalServices).toBe(40);
@@ -364,10 +362,10 @@ describe('Controller: UserServiceController', function () {
         scope.deleteService("aaa");
         $httpBackend.expect(
             'DELETE',
-            '/proxy/' + discover.gatewayHost + '/service/aaa');
+            '/proxy/pz-gateway.int.geointservices.io/service/aaa');
         $httpBackend.expect(
             'GET',
-            '/proxy/' + discover.gatewayHost + '/service?page=0&perPage=25');
+            '/proxy/pz-gateway.int.geointservices.io/service?page=0&perPage=25');
         $httpBackend.flush();
         expect(scope.services.length).toBe(10);
         expect(scope.totalServices).toBe(40);
@@ -393,7 +391,7 @@ describe('Controller: UserServiceController', function () {
             }
         };
         scope.executeService();
-        $httpBackend.expectPOST('/proxy/' + discover.gatewayHost + '/job',
+        $httpBackend.expectPOST('/proxy/pz-gateway.int.geointservices.io/job',
             {
                 "type":"execute-service",
                 "data":{
@@ -403,7 +401,7 @@ describe('Controller: UserServiceController', function () {
                     "dataOutput": [ {  "mimeType":"application/json", "type":"text"}]
                 }
             });
-        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/job/bbb');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/job/bbb');
 
         $httpBackend.flush();
         expect(scope.executeSuccess).toBe("\"4ad8487a-e11c-4be2-98a8-23873d95d360\"");
@@ -411,7 +409,7 @@ describe('Controller: UserServiceController', function () {
 
     it('should show update service form', function() {
         scope.showUpdateServiceForm("aaa");
-        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/service/aaa');
+        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/service/aaa');
         $httpBackend.flush();
         expect(scope.updateResourceId).toBe("aaa");
     });
