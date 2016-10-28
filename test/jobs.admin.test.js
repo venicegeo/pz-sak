@@ -25,17 +25,15 @@ describe('Controller: JobsAdminController', function () {
     beforeEach(module('SAKapp'));
 
     var JobsAdminController,
-        discover,
         scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
         $httpBackend = $injector.get('$httpBackend');
-        discover = $injector.get('discover');
         statusRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy?url=' + discover.jobsHost + '/admin/stats').respond(
+            '/proxy?url=pz-jobmanager.int.geointservices.io/admin/stats').respond(
             {
                 "running": 299,
                 "activeThreads": 0
@@ -56,7 +54,7 @@ describe('Controller: JobsAdminController', function () {
 
     it('should get the admin stats', function () {
         scope.getAdminStats();
-        $httpBackend.expectGET('/proxy?url=' + discover.jobsHost + '/admin/stats');
+        $httpBackend.expectGET('/proxy?url=pz-jobmanager.int.geointservices.io/admin/stats');
         $httpBackend.flush();
         expect(scope.adminData.running).toBe(299);
         expect(scope.adminData.activeThreads).toBe(0);

@@ -24,22 +24,23 @@ describe('Controller: SearchController', function () {
         getDocHandler,
         putDocHandler,
         loginHandler;
+        // $cookies;
 
     // load the controller's module
     beforeEach(module('SAKapp'));
 
     var SearchController,
-        discover,
         scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
+        // $cookies = $injector.get('$cookies');
+        // $cookies.putObject('auth', '{isLoggedIn:true}');
         $httpBackend = $injector.get('$httpBackend');
-        discover = $injector.get('discover');
         getResultsCountHandler = $httpBackend.when(
             'POST',
-            '/proxy/' + discover.searchHost + '/api/v1/recordcount',
+            '/proxy/pz-search-query.int.geointservices.io/api/v1/recordcount',
             {
                 "match_all": {}
             }
@@ -48,7 +49,7 @@ describe('Controller: SearchController', function () {
         );
         getSearchResultsHandler = $httpBackend.when(
             'POST',
-            '/proxy/' + discover.gatewayHost + '/data/query?page=0&perPage=1',
+            '/proxy/pz-gateway.int.geointservices.io/data/query?page=0&perPage=1',
             {
                 "query": {"match_all": {}}
             }
@@ -115,7 +116,7 @@ describe('Controller: SearchController', function () {
         );
         getDocHandler = $httpBackend.when(
             'GET',
-            '/proxy?url=' + discover.searchHost + '/indexID/typeID/documentID'
+            '/proxy?url=pz-search-query.int.geointservices.io/indexID/typeID/documentID'
         ).respond(
             {
                 "_source": {}
@@ -123,7 +124,7 @@ describe('Controller: SearchController', function () {
         );
         putDocHandler = $httpBackend.when(
             'POST',
-            '/proxy?url=' + discover.searchHost + '/indexID/typeID/documentID/_update',
+            '/proxy?url=pz-search-query.int.geointservices.io/indexID/typeID/documentID/_update',
             {
                 "doc": {
                     "keywords": ["tag1"]
@@ -151,7 +152,7 @@ describe('Controller: SearchController', function () {
                 "match_all": {}
             }
         );
-        $httpBackend.expectPOST('/proxy/' + discover.searchHost + '/api/v1/recordcount',
+        $httpBackend.expectPOST('/proxy/pz-search-query.int.geointservices.io/api/v1/recordcount',
             {
                 "match_all": {}
             }
@@ -164,7 +165,7 @@ describe('Controller: SearchController', function () {
         scope.pagination.current = 0;
         scope.size = 1;
         scope.getSearchResults();
-        $httpBackend.expectPOST('/proxy/' + discover.gatewayHost + '/data/query?page=0&perPage=1',
+        $httpBackend.expectPOST('/proxy/pz-gateway.int.geointservices.io/data/query?page=0&perPage=1',
         {
             "query": {"match_all": {}}
         });
@@ -174,7 +175,7 @@ describe('Controller: SearchController', function () {
     it('should get the pageChange', function () {
         scope.size = 1;
         scope.pageChanged(1);
-        $httpBackend.expectPOST('/proxy/' + discover.gatewayHost + '/data/query?page=0&perPage=1',
+        $httpBackend.expectPOST('/proxy/pz-gateway.int.geointservices.io/data/query?page=0&perPage=1',
         {
             "query": {"match_all": {}}
         });
@@ -214,8 +215,8 @@ describe('Controller: SearchController', function () {
         scope.documentId = "documentID";
         scope.tag = "tag1";
         scope.addTags();
-        $httpBackend.expectGET('/proxy?url=' + discover.searchHost + '/indexID/typeID/documentID');
-        $httpBackend.expectPOST('/proxy?url=' + discover.searchHost + '/indexID/typeID/documentID/_update',
+        $httpBackend.expectGET('/proxy?url=pz-search-query.int.geointservices.io/indexID/typeID/documentID');
+        $httpBackend.expectPOST('/proxy?url=pz-search-query.int.geointservices.io/indexID/typeID/documentID/_update',
             {
                 "doc": {
                     "keywords": ["tag1"]
