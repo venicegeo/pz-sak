@@ -271,10 +271,32 @@
             label: 'About',
             onSelect: function(branch) {
                 return $scope.bodyDiv = "app/about/about.tpl.html";
-            },
+            }
 
         }
     ];
+
+    // How do we check that they have the proper authz
+    // if (user has admin role) {
+      treedata_avm.splice(7, 0,
+          {
+              label: 'User',
+              onSelect: function(branch) {
+                  return $scope.bodyDiv = "app/user/user.tpl.html";
+              },
+
+              children: [
+                  {
+                      label: 'Admin',
+                      onSelect: function(branch) {
+                          return $scope.bodyDiv = "app/user/user.admin.tpl.html";
+                      }
+                  }
+              ]
+
+          }
+      );
+    // }
 
     $scope.logout = function() {
         Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
@@ -432,7 +454,7 @@
           jobsHost : "pz-jobmanager" + hostname,
           jobsType : CORE_SERVICE,
           jobsPort : "",
-          securityHost : "pz-security" + hostname,
+          securityHost : "pz-idam" + hostname,
           securityType : CORE_SERVICE,
           securityPort : "",
           swaggerUI : "pz-swagger" + hostname,
