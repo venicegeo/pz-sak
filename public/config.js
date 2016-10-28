@@ -16,5 +16,7 @@
 
 config = {
     baseUrl: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    defaultDomain: '.int.geointservices.io'
+    defaultDomain: '.int.geointservices.io',
+    jenkinsUrl: 'jenkins.devops.geointservices.io',
+    devOpsUrl: 'login.devops.geointservices.io'
 };

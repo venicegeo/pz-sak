@@ -151,7 +151,7 @@ describe('Controller: UserServiceController', function () {
                 "type" : "service-list",
                 "data" : [ {
                     "serviceId" : "8c7706ab-a541-4914-b68b-d881448a7485",
-                    "url" : "https://pzsvc-ossim.int.geointservices.io/execute",
+                    "url" : "https://pzsvc-ossim.com/execute",
                     "method" : "POST",
                     "resourceMetadata" : {
                         "name" : "pzsvc-ossim",
@@ -187,7 +187,7 @@ describe('Controller: UserServiceController', function () {
                     }
                 }, {
                     "serviceId" : "f35c33f1-4c8f-4c7f-a163-2a0c79fafd72",
-                    "url" : "https://pz-servicecontroller.int.geointservices.io/jumpstart/string/toUpper",
+                    "url" : "https://servicecontroller.com/jumpstart/string/toUpper",
                     "method" : "POST",
                     "resourceMetadata" : {
                         "name" : "toUpper Params Cat and Parrot",

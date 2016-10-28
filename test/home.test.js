@@ -97,7 +97,7 @@ describe('Controller: HomeController', function () {
     it('should get the running services', function () {
         scope.getRunningServices();
         $httpBackend.flush();
-        expect(scope.services.loggerHost).toBe("pz-logger.int.geointservices.io");
+        expect(scope.services.loggerHost).toBe(discover.loggerHost);
     });
 
     it('should get health checks', function () {
