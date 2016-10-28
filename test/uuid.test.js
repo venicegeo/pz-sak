@@ -24,17 +24,17 @@ describe('Controller: UuidController', function () {
     beforeEach(module('SAKapp'));
 
     var UuidController,
+        discover,
         scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
-        // $cookies = $injector.get('$cookies');
-        // $cookies.putObject('auth', '{isLoggedIn:true}');
         $httpBackend = $injector.get('$httpBackend');
+        discover = $injector.get('discover');
         uuidsRequestHandler = $httpBackend.when(
             'POST',
-            '/proxy?url=pz-uuidgen.int.geointservices.io/uuids?count=2').respond(
+            '/proxy?url=' + discover.uuidHost + '/uuids?count=2').respond(
             {
                 "data": [
                     "aaa",
@@ -58,7 +58,7 @@ describe('Controller: UuidController', function () {
     it('should get two uuids', function () {
         scope.uuidCount = 2;
         scope.getUUIDs();
-        $httpBackend.expectPOST('/proxy?url=pz-uuidgen.int.geointservices.io/uuids?count=2');
+        $httpBackend.expectPOST('/proxy?url=' + discover.uuidHost + '/uuids?count=2');
         $httpBackend.flush();
         expect(scope.uuids.length).toBe(2);
         expect(scope.uuids[0]).toBe("aaa");

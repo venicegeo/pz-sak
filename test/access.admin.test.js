@@ -25,17 +25,17 @@ describe('Controller: AccessAdminController', function () {
     beforeEach(module('SAKapp'));
 
     var AccessAdminController,
+        discover,
         scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
-        // $cookies = $injector.get('$cookies');
-        // $cookies.putObject('auth', '{isLoggedIn:true}');
         $httpBackend = $injector.get('$httpBackend');
+        discover = $injector.get('discover');
         statusRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-access.int.geointservices.io/admin/stats').respond(
+            '/proxy/' + discover.accessHost + '/admin/stats').respond(
             {
                 "activeThreads": 200,
                 "threadQueue": 300
@@ -56,7 +56,7 @@ describe('Controller: AccessAdminController', function () {
 
     it('should get the admin stats', function () {
         scope.getStats();
-        $httpBackend.expectGET('/proxy/pz-access.int.geointservices.io/admin/stats');
+        $httpBackend.expectGET('/proxy/' + discover.accessHost + '/admin/stats');
         $httpBackend.flush();
         expect(scope.adminStats.activeThreads).toBe(200);
         expect(scope.adminStats.threadQueue).toBe(300);

@@ -25,17 +25,17 @@ describe('Controller: AccessController', function () {
     beforeEach(module('SAKapp'));
 
     var AccessController,
+        discover,
         scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
-        // $cookies = $injector.get('$cookies');
-        // $cookies.putObject('auth', '{isLoggedIn:true}');
         $httpBackend = $injector.get('$httpBackend');
+        discover = $injector.get('discover');
         dataRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/data?page=0&perPage=10').respond(
+            '/proxy/' + discover.gatewayHost + '/data?page=0&perPage=10').respond(
             {
                 data: [
                     {
@@ -73,7 +73,7 @@ describe('Controller: AccessController', function () {
         );
         accessRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/data/4ad8487a-e11c-4be2-98a8-23873d95d360').respond(
+            '/proxy/' + discover.gatewayHost + '/data/4ad8487a-e11c-4be2-98a8-23873d95d360').respond(
             {
                 "type" : "data",
                 "data" : {
@@ -125,7 +125,7 @@ describe('Controller: AccessController', function () {
 
     it('should get a list of data objects', function () {
         scope.getData();
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/data?page=0&perPage=10');
+        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/data?page=0&perPage=10');
         $httpBackend.flush();
         expect(scope.accessDataList.length).toBe(1);
         expect(scope.total).toBe(1);
@@ -134,7 +134,7 @@ describe('Controller: AccessController', function () {
     it('should get one particular data object', function () {
         scope.dataId = "4ad8487a-e11c-4be2-98a8-23873d95d360";
         scope.getAccess();
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/data/4ad8487a-e11c-4be2-98a8-23873d95d360');
+        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/data/4ad8487a-e11c-4be2-98a8-23873d95d360');
         $httpBackend.flush();
         expect(scope.accessData.dataId).toBe("4ad8487a-e11c-4be2-98a8-23873d95d360");
         expect(scope.accessData.dataType.type).toBe("raster");
