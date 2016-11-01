@@ -1,2 +1,6 @@
 /.idea/
 sak.iml
+node_modules/
+node_modules_win/
+node_modules_nix/
+report/
