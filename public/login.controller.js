@@ -22,7 +22,7 @@
     function LoginController ($scope, $location, $cookies, $http, discover, toaster, Auth, CONST, $rootScope) {
         $cookies.putObject(CONST.auth, Auth);
         $scope.login = function() {
-            var id = Auth.encode($scope.username, $scope.password);
+            var id = Auth.encode($scope.username, $scope.pass);
             $http({
                 method: "GET",
                 url: "/proxy?url=" + discover.gatewayHost + "/key",
@@ -38,7 +38,7 @@
                     $location.path("/index.html");
                     $rootScope.$emit('loggedInEvent');
                     $scope.username = "";
-                    $scope.password = "";
+                    $scope.pass = "";
                     toaster.pop('success', "Success", "You have logged in successfully.");
                 } else {
                     console.log("verification success but no ID present");
@@ -50,7 +50,7 @@
                 Auth.setUser("");
                 $cookies.putObject(CONST.auth, Auth);
                 $location.path("/login.html");
-                $scope.password = "";
+                $scope.pass = "";
                 toaster.pop('warning', "Invalid Credentials", "You have entered the wrong username or password.");
             });
 
