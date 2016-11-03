@@ -21,4 +21,3 @@ Angular app used to query WFS endpoints
 1. You can pass a CQL filter to the WFS by using the CQL Filter input
 ``` Ex: STATE_NAME='Indiana' ```
 2. You can also change the amount of features returned by using the "Max Features" input
-
