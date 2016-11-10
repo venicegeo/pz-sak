@@ -281,6 +281,7 @@
         Auth.encode("null", "null");
         Auth.setUser("");
         $cookies.putObject(CONST.auth, Auth);
+        $scope.logoutMessage = "You have successfully logged out.";
         $location.path("/login.html");
     };
 
