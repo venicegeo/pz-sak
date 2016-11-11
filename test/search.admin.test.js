@@ -25,17 +25,17 @@ describe('Controller: SearchAdminController', function () {
     beforeEach(module('SAKapp'));
 
     var SearchAdminController,
+        discover,
         scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
-        // $cookies = $injector.get('$cookies');
-        // $cookies.putObject('auth', '{isLoggedIn:true}');
         $httpBackend = $injector.get('$httpBackend');
+        discover = $injector.get('discover');
         metricsRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy?url=pz-search-query.int.geointservices.io/metrics').respond(
+            '/proxy?url=' + discover.searchHost + '/metrics').respond(
             {
                 "mem":403869,
                 "mem.free":255862,
@@ -60,7 +60,7 @@ describe('Controller: SearchAdminController', function () {
 
     it('should get the version', function () {
         scope.getStatus();
-        $httpBackend.expectGET('/proxy?url=pz-search-query.int.geointservices.io/metrics');
+        $httpBackend.expectGET('/proxy?url=' + discover.searchHost + '/metrics');
         $httpBackend.flush();
         expect(scope.adminData.mem).toBe(403869);
     });

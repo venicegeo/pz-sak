@@ -27,18 +27,18 @@ describe('Controller: IngesterController', function () {
     beforeEach(module('SAKapp'));
 
     var IngestController,
+        discover,
         scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
-        // $cookies = $injector.get('$cookies');
-        // $cookies.putObject('auth', '{isLoggedIn:true}');
         $httpBackend = $injector.get('$httpBackend');
+        discover = $injector.get('discover');
         $document = $injector.get('$document');
         ingestTextRequestHandler = $httpBackend.when(
             'POST',
-            '/proxy?url=pz-gateway.int.geointservices.io/data',
+            '/proxy?url=' + discover.gatewayHost + '/data',
             '{"type":"ingest","host":"true","data":{"dataType":{"type":"text","content":"some text to ingest"},"metadata":{}}}')
             .respond(
             {
@@ -50,7 +50,7 @@ describe('Controller: IngesterController', function () {
         // This needs to be form data
         ingestFileRequestHandler = $httpBackend.when(
             'POST',
-            '/proxy/pz-gateway.int.geointservices.io/data/file',
+            '/proxy/' + discover.gatewayHost + '/data/file',
             '------WebKitFormBoundaryMBGwzlWj0FoVC4TW Content-Disposition: form-data; name="data" {"type":"ingest","host":"true","data":{"dataType":{"type":"raster"},"metadata":{"name":"Elevation","classification":"unclassified"}}} ------WebKitFormBoundaryMBGwzlWj0FoVC4TW Content-Disposition: form-data; name="file"; filename="elevation.tif" Content-Type: image/tiff ------WebKitFormBoundaryMBGwzlWj0FoVC4TW--',
             {
                 "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundaryMBGwzlWj0FoVC4TW",
@@ -63,7 +63,7 @@ describe('Controller: IngesterController', function () {
         );
         jobStatusHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/job/4e7d24b9-91d8-4f39-950b-3e254ad82d05').respond(
+            '/proxy/' + discover.gatewayHost + '/job/4e7d24b9-91d8-4f39-950b-3e254ad82d05').respond(
             {
                 "type" : "status",
                 "data" : {
@@ -98,18 +98,18 @@ describe('Controller: IngesterController', function () {
         scope.ingestType= "Text";
         scope.message = "some text to ingest";
         scope.ingest();
-        $httpBackend.expectPOST('/proxy?url=pz-gateway.int.geointservices.io/data', '{"type":"ingest","host":"true","data":{"dataType":{"type":"text","content":"some text to ingest"},"metadata":{}}}');
+        $httpBackend.expectPOST('/proxy?url=' + discover.gatewayHost + '/data', '{"type":"ingest","host":"true","data":{"dataType":{"type":"text","content":"some text to ingest"},"metadata":{}}}');
         $httpBackend.flush();
         expect(scope.jobIdResult).toBe("4e7d24b9-91d8-4f39-950b-3e254ad82d05");
     });
 
     it('should ingest a raster file', function () {
         scope.ingestType = "File";
-        scope.file = "elevation.tif"
+        scope.file = "elevation.tif";
         scope.jobIdResult = "4e7d24b9-91d8-4f39-950b-3e254ad82d05";
         scope.ingest();
         // TODO: Figure FormData out
-        /*$httpBackend.expectPOST('/proxy?url=pz-gateway.int.geointservices.io/data/file',
+        /*$httpBackend.expectPOST('/proxy?url=' + discover.gatewayHost + '/data/file',
             '------WebKitFormBoundaryMBGwzlWj0FoVC4TW Content-Disposition: form-data; name="data" {"type":"ingest","host":"true","data":{"dataType":{"type":"raster"},"metadata":{"name":"Elevation","classification":"unclassified"}}} ------WebKitFormBoundaryMBGwzlWj0FoVC4TW Content-Disposition: form-data; name="file"; filename="elevation.tif" Content-Type: image/tiff ------WebKitFormBoundaryMBGwzlWj0FoVC4TW--',
             {
                 "Content-Type":"multipart/form-data; boundary=----WebKitFormBoundaryMBGwzlWj0FoVC4TW",
@@ -123,7 +123,7 @@ describe('Controller: IngesterController', function () {
     it('should get job status', function () {
         scope.jobId = "4e7d24b9-91d8-4f39-950b-3e254ad82d05";
         scope.getJobStatus();
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/job/4e7d24b9-91d8-4f39-950b-3e254ad82d05');
+        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/job/4e7d24b9-91d8-4f39-950b-3e254ad82d05');
         $httpBackend.flush();
         expect(scope.jobStatus.jobId).toBe("4e7d24b9-91d8-4f39-950b-3e254ad82d05");
         expect(scope.jobStatus.status).toBe("Success");

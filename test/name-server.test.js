@@ -22,11 +22,13 @@ describe('Controller: NameServerController', function () {
     beforeEach(module('SAKapp'));
 
     var NameServerController,
+        discover,
         scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
+        discover = $injector.get('discover');
         NameServerController = $controller('NameServerController', {
             $scope: scope
         });
@@ -34,7 +36,7 @@ describe('Controller: NameServerController', function () {
 
     it('should get the services', function () {
         scope.getServices();
-        expect(scope.data.loggerHost).toBe("pz-logger.int.geointservices.io");
+        expect(scope.data.loggerHost).toBe(discover.loggerHost);
     });
 
 });
