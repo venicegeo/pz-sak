@@ -85,7 +85,7 @@
             label: 'Home',
             onSelect: function(branch) {
                 return $scope.bodyDiv = "app/home/home.tpl.html";
-            },
+            }
 
         },
         {
@@ -189,7 +189,7 @@
         label: 'Admin',
                 onSelect: function(branch) {
                     return $scope.bodyDiv = "app/user-service-registry/user-service-registry.admin.tpl.html";
-              },
+              }
         }
         ]
 
@@ -255,14 +255,14 @@
         label: 'WFS',
         onSelect: function(branch) {
           return $scope.bodyDiv = "app/wfs/wfs.tpl.html";
-        },
+        }
 
 
       }, {
         label: 'WMS',
         onSelect: function(branch) {
           return $scope.bodyDiv = "app/wms/wms.tpl.html";
-        },
+        }
 
 
 
@@ -401,7 +401,7 @@
   app.factory('discover', [function() {
     var hostname;
     if (window.location.hostname == "localhost") {
-        hostname = ".int.geointservices.io"
+        hostname = config.defaultDomain;
     } else {
         var firstDotIndex = window.location.hostname.indexOf(".");
         hostname = window.location.hostname.substring(firstDotIndex);
@@ -433,7 +433,7 @@
           jobsHost : "pz-jobmanager" + hostname,
           jobsType : CORE_SERVICE,
           jobsPort : "",
-          securityHost : "pz-security" + hostname,
+          securityHost : "pz-idam" + hostname,
           securityType : CORE_SERVICE,
           securityPort : "",
           swaggerUI : "pz-swagger" + hostname,
