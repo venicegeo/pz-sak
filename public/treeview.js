@@ -69,10 +69,45 @@
       return auth;
   });
 
-  app.controller('SAKappController', function($scope, $timeout, $http, Auth, CONST, $cookies, $location) {
+  app.controller('SAKappController', function($scope, $rootScope, $timeout, $http, Auth, CONST, $cookies, $location) {
     $scope.auth = Auth;
     $scope.util = CONST;
     $scope.year = (new Date()).getFullYear();
+
+    var idleTime = 0;
+    var idleInterval;
+
+    //Zero the idle timer on mouse movement.
+    $(this).mousemove(function (e) {
+        idleTime = 0;
+    });
+    $(this).keypress(function (e) {
+        idleTime = 0;
+    });
+
+    function timerIncrement() {
+      if (Auth[CONST.isLoggedIn] === CONST.loggedIn) {
+        idleTime = idleTime + 1;
+        if (idleTime > 14) {
+            $scope.logout();
+        }
+      }
+    }
+
+    //Increment the idle time counter every minute.
+    function startIdleTimer() {
+        idleTime = 0;
+        return setInterval(timerIncrement, 60000);
+    }
+
+    function stopIdleTimer() {
+        clearInterval(idleInterval);
+    }
+
+    $rootScope.$on('loggedInEvent', function(event, args){
+        idleInterval = startIdleTimer();
+    });
+
     var tree, treedata_avm;
     $scope.my_tree_handler = function(branch) {
       var _ref;
@@ -212,7 +247,6 @@
         {
         label: 'Workflow',
           onSelect: function(branch) {
-            console.log(branch);
             branch.expanded = !branch.expanded;
           },
 
@@ -281,6 +315,7 @@
         Auth.encode("null", "null");
         Auth.setUser("");
         $cookies.putObject(CONST.auth, Auth);
+        stopIdleTimer();
         $location.path("/login.html");
     };
 
@@ -387,7 +422,6 @@
 
             if (shouldGoToLogin) {
                 $state.go('login');
-                console.log('redirected to login')
                 event.preventDefault();
             }
 
