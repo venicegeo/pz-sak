@@ -89,7 +89,8 @@
       if (Auth[CONST.isLoggedIn] === CONST.loggedIn) {
         idleTime = idleTime + 1;
         if (idleTime > 14) {
-            $scope.logout();
+            // Calling $scope.logout directly doesn't forward to the login page
+            angular.element("#logoutButton").triggerHandler('click');
         }
       }
     }
