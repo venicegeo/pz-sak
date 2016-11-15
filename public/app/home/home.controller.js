@@ -22,6 +22,8 @@
 
     function HomeController ($scope, $http, discover, gateway, Auth, CONST, $rootScope) {
         $scope.auth = Auth[CONST.isLoggedIn];
+        $scope.jenkinsUrl = config.jenkinsUrl;
+        $scope.devOpsUrl = config.devOpsUrl;
 
         $rootScope.$on('loggedInEvent', function(event, args){
             $scope.getStatuses();

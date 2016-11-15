@@ -25,17 +25,17 @@ describe('Controller: AboutController', function () {
     beforeEach(module('SAKapp'));
 
     var AboutController,
+        discover,
         scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
-        // $cookies = $injector.get('$cookies');
-        // $cookies.putObject('auth', '{isLoggedIn:true}');
         $httpBackend = $injector.get('$httpBackend');
+        discover = $injector.get('discover');
         versionRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/version').respond(
+            '/proxy/' + discover.gatewayHost + '/version').respond(
             {
                 "version": "1.1.1-ci-322-g938125e-ci",
                 "components": {
@@ -73,7 +73,7 @@ describe('Controller: AboutController', function () {
 
     it('should get the version', function () {
         scope.getVersionNumber();
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/version');
+        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/version');
         $httpBackend.flush();
         expect(scope.versionNumber).toBe("1.1.1-ci-322-g938125e-ci");
     });

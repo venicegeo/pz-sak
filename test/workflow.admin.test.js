@@ -26,17 +26,17 @@ describe('Controller: WorkflowAdminController', function () {
     beforeEach(module('SAKapp'));
 
     var WorkflowAdminController,
+        discover,
         scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
-        // $cookies = $injector.get('$cookies');
-        // $cookies.putObject('auth', '{isLoggedIn:true}');
         $httpBackend = $injector.get('$httpBackend');
+        discover = $injector.get('discover');
         statusRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy?url=pz-workflow.int.geointservices.io/admin/stats').respond(
+            '/proxy?url=' + discover.workflowHost + '/admin/stats').respond(
             {
                 "statusCode": 200,
                 "type": "workflowstats",
@@ -48,7 +48,7 @@ describe('Controller: WorkflowAdminController', function () {
         );
         resetRequestHandler = $httpBackend.when(
             'POST',
-            '/proxy?url=pz-workflow.int.geointservices.io/admin/shutdown',
+            '/proxy?url=' + discover.workflowHost + '/admin/shutdown',
             {
                 "reason" : "some reason"
             }
@@ -74,7 +74,7 @@ describe('Controller: WorkflowAdminController', function () {
 
     it('should get the admin stats', function () {
         scope.getStatus();
-        $httpBackend.expectGET('/proxy?url=pz-workflow.int.geointservices.io/admin/stats');
+        $httpBackend.expectGET('/proxy?url=' + discover.workflowHost + '/admin/stats');
         $httpBackend.flush();
         expect(scope.adminData.createdOn).toBe("2016-10-06T11:13:46.184957203Z");
         expect(scope.adminData.numMessages).toBe(11037);
@@ -92,7 +92,7 @@ describe('Controller: WorkflowAdminController', function () {
     it('should shut system down', function () {
         scope.shutdownReason = "some reason";
         scope.reset();
-        $httpBackend.expectPOST('/proxy?url=pz-workflow.int.geointservices.io/admin/shutdown',
+        $httpBackend.expectPOST('/proxy?url=' + discover.workflowHost + '/admin/shutdown',
             {
                 "reason" : "some reason"
             });
@@ -103,7 +103,7 @@ describe('Controller: WorkflowAdminController', function () {
     it('should fail admin stats', function () {
         statusRequestHandler.respond(500, '');
         scope.getStatus();
-        $httpBackend.expectGET('/proxy?url=pz-workflow.int.geointservices.io/admin/stats');
+        $httpBackend.expectGET('/proxy?url=' + discover.workflowHost + '/admin/stats');
         $httpBackend.flush();
     });
 
@@ -111,7 +111,7 @@ describe('Controller: WorkflowAdminController', function () {
         resetRequestHandler.respond(502, '');
         scope.shutdownReason = "some reason";
         scope.reset();
-        $httpBackend.expectPOST('/proxy?url=pz-workflow.int.geointservices.io/admin/shutdown',
+        $httpBackend.expectPOST('/proxy?url=' + discover.workflowHost + '/admin/shutdown',
             {
                 "reason" : "some reason"
             });
@@ -121,7 +121,7 @@ describe('Controller: WorkflowAdminController', function () {
         resetRequestHandler.respond(500, '');
         scope.shutdownReason = "some reason";
         scope.reset();
-        $httpBackend.expectPOST('/proxy?url=pz-workflow.int.geointservices.io/admin/shutdown',
+        $httpBackend.expectPOST('/proxy?url=' + discover.workflowHost + '/admin/shutdown',
             {
                 "reason" : "some reason"
             });

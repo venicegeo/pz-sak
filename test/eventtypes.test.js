@@ -29,15 +29,17 @@ describe('Controller: EventtypesController', function () {
     beforeEach(module('SAKapp'));
 
     var EventtypesController,
+        discover,
         scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
         $httpBackend = $injector.get('$httpBackend');
+        discover = $injector.get('discover');
         eventTypesRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/eventType?page=0&perPage=10').respond(
+            '/proxy/' + discover.gatewayHost + '/eventType?page=0&perPage=10').respond(
             {"data":[
                 {
                     "id": "110d6220-aee1-471b-bdaa-2bad38c41549",
@@ -65,7 +67,7 @@ describe('Controller: EventtypesController', function () {
         );
         getOneEventTypesHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-gateway.int.geointservices.io/eventType/110d6220-aee1-471b-bdaa-2bad38c41549').respond(
+            '/proxy/' + discover.gatewayHost + '/eventType/110d6220-aee1-471b-bdaa-2bad38c41549').respond(
             {"data": {
                 "eventTypeId": "110d6220-aee1-471b-bdaa-2bad38c41549",
                 "name": "sak-event-2",
@@ -80,7 +82,7 @@ describe('Controller: EventtypesController', function () {
         );
         createEventTypeRequestHandler = $httpBackend.when(
             'POST',
-            '/proxy/pz-gateway.int.geointservices.io/eventType',
+            '/proxy/' + discover.gatewayHost + '/eventType',
             {
                 "name": "testEventType",
                 "mapping": {
@@ -109,7 +111,7 @@ describe('Controller: EventtypesController', function () {
         );
         deleteEventTypeRequestHandler = $httpBackend.when(
             'DELETE',
-            '/proxy/pz-gateway.int.geointservices.io/eventType/110d6220-aee1-471b-bdaa-2bad38c41549').respond(
+            '/proxy/' + discover.gatewayHost + '/eventType/110d6220-aee1-471b-bdaa-2bad38c41549').respond(
             {
                 "statusCode": 200
             }
@@ -182,7 +184,7 @@ describe('Controller: EventtypesController', function () {
     it('should update type table', function () {
         scope.showEventTypeTable = true;
         scope.updateTypeTable("110d6220-aee1-471b-bdaa-2bad38c41549");
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/eventType/110d6220-aee1-471b-bdaa-2bad38c41549');
+        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/eventType/110d6220-aee1-471b-bdaa-2bad38c41549');
         $httpBackend.flush();
         expect(scope.eventTypeId).toBe("110d6220-aee1-471b-bdaa-2bad38c41549");
         expect(scope.eventTypeName).toBe("sak-event-2");
@@ -200,14 +202,14 @@ describe('Controller: EventtypesController', function () {
             scope.eventTypeName = "test-eventtype";
             scope.postEvent([]);
             $httpBackend.expectPOST(
-                '/proxy/pz-gateway.int.geointservices.io/event/test-eventtype',
+                '/proxy/' + discover.gatewayHost + '/event/test-eventtype',
                 {
                     "eventtype_id": "aaa",
                     "date": moment().utc().toISOString(),//"2016-05-30T20:12:25.000Z",
                     "data": {}
                 }
             );
-            $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/event?page=0&perPage=10');
+            $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/event?page=0&perPage=10');
             $httpBackend.flush();
             expect(scope.events.length).toBe(1);
         } else {
@@ -216,7 +218,7 @@ describe('Controller: EventtypesController', function () {
     });
     it('should get all eventTypes', function () {
         scope.getEventTypes(1);
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/eventType?page=0&perPage=10');
+        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/eventType?page=0&perPage=10');
         $httpBackend.flush();
         expect(scope.eventTypes.length).toBe(3);
         expect(scope.actualTypeCount).toBe(3);
@@ -224,8 +226,8 @@ describe('Controller: EventtypesController', function () {
     });
     it('should delete eventType', function () {
         scope.deleteEventType("110d6220-aee1-471b-bdaa-2bad38c41549");
-        $httpBackend.expectDELETE('/proxy/pz-gateway.int.geointservices.io/eventType/110d6220-aee1-471b-bdaa-2bad38c41549');
-        $httpBackend.expectGET('/proxy/pz-gateway.int.geointservices.io/eventType?page=0&perPage=10');
+        $httpBackend.expectDELETE('/proxy/' + discover.gatewayHost + '/eventType/110d6220-aee1-471b-bdaa-2bad38c41549');
+        $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/eventType?page=0&perPage=10');
         $httpBackend.flush();
         expect(scope.eventTypes.length).toBe(3);
         expect(scope.actualTypeCount).toBe(3);

@@ -23,23 +23,22 @@ describe('Controller: LoggerController', function () {
         logsAltRequestHandler,
         logsPostHandler,
         loginHandler;
-        // $cookies;
 
     // load the controller's module
     beforeEach(module('SAKapp'));
 
     var LoggerController,
+        discover,
         scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
-        // $cookies = $injector.get('$cookies');
-        // $cookies.putObject('auth', '{isLoggedIn:true}');
         $httpBackend = $injector.get('$httpBackend');
+        discover = $injector.get('discover');
         logsRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-logger.int.geointservices.io/message?page=0&perPage=100').respond(
+            '/proxy/' + discover.loggerHost + '/message?page=0&perPage=100').respond(
             {"statusCode": 200,
                 "data": [
                 {
@@ -56,7 +55,7 @@ describe('Controller: LoggerController', function () {
         );
         logsAltRequestHandler = $httpBackend.when(
             'GET',
-            '/proxy/pz-logger.int.geointservices.io/message?perPage=100&page=0').respond(
+            '/proxy/' + discover.loggerHost + '/message?perPage=100&page=0').respond(
             {"statusCode": 200,
                 "data": [
                 {
@@ -73,7 +72,7 @@ describe('Controller: LoggerController', function () {
         );
         logsPostHandler = $httpBackend.when(
             'POST',
-            '/proxy?url=pz-logger.int.geointservices.io/message',
+            '/proxy?url=' + discover.loggerHost + '/message',
             {
                 "service": "sakui-log-tester",
                 "address": "128.1.2.3",
@@ -114,7 +113,7 @@ describe('Controller: LoggerController', function () {
 
     it('should get the first 100 logs', function () {
         scope.getLogs(0);
-        $httpBackend.expectGET('/proxy/pz-logger.int.geointservices.io/message?page=0&perPage=100');
+        $httpBackend.expectGET('/proxy/' + discover.loggerHost + '/message?page=0&perPage=100');
         $httpBackend.flush();
         expect(scope.logs[0].service).toBe('Gateway');
         expect(scope.logs[0].address).toBe('gnemud7srkr/10.254.0.62');
@@ -125,7 +124,7 @@ describe('Controller: LoggerController', function () {
     it('should post log', function () {
         scope.logMessage = "This is a test";
         scope.postLog("2016-10-07T02:39:16.424Z");
-        $httpBackend.expectPOST('/proxy?url=pz-logger.int.geointservices.io/message',
+        $httpBackend.expectPOST('/proxy?url=' + discover.loggerHost + '/message',
         {
             "service": "sakui-log-tester",
             "address": "128.1.2.3",
@@ -135,7 +134,7 @@ describe('Controller: LoggerController', function () {
         });
         scope.pagination.current = 0;
         scope.size = 100;
-        $httpBackend.expectGET('/proxy/pz-logger.int.geointservices.io/message?page=0&perPage=100');
+        $httpBackend.expectGET('/proxy/' + discover.loggerHost + '/message?page=0&perPage=100');
         $httpBackend.flush();
         expect(scope.logs[0].service).toBe('Gateway');
         expect(scope.logs[0].address).toBe('gnemud7srkr/10.254.0.62');
