@@ -24,6 +24,7 @@
     <!---->
     <!-- Angular 1.1.5 or 1.2.12 ?-->
     <!---->
+    <script src="js/lib/jquery.min.js"></script>
     <script type="text/javascript" src="js/lib/angular.min.js"></script>
     <script type="text/javascript" src="js/lib/angular-ui-router.js"></script>
     <script type="text/javascript" src="js/lib/angular-cookies.min.js"></script>
@@ -65,7 +66,6 @@
 
 
     <!-- Vendors -->
-	<script src="js/lib/jquery.min.js"></script>
 	<script src="js/lib/spin.js"></script>
 	<script src="js/lib/angular-spinner.min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
@@ -89,7 +89,7 @@
 <body ng-controller="SAKappController">
 <div class="banner" ng-show="bannerText != ''" ng-style="bannerStyle">{{bannerText}}</div>
 <div class="page-wrap" ng-style="pageStyle">
-<h2 style="margin-top: 10px;font-weight: bold">PZ-Client Swiss Army Knife Utility <img src="images/pz-client-logo.png" width="150" height="66"><span ng-show="auth[util.isLoggedIn] == util.loggedIn" class="pull-right" style="font-size: 18px;"><!--{{auth["userStore"]}} -->(<a ng-click="logout()" style="cursor: pointer">logout</a>)</span></h2>
+<h2 style="margin-top: 10px;font-weight: bold">PZ-Client Swiss Army Knife Utility <img src="images/pz-client-logo.png" width="150" height="66"><span ng-show="auth[util.isLoggedIn] == util.loggedIn" class="pull-right" style="font-size: 18px;"><!--{{auth["userStore"]}} -->(<a id="logoutButton" ng-click="logout()" style="cursor: pointer">logout</a>)</span></h2>
 
 
 <div ui-view="" ng-hide="auth[util.isLoggedIn] == util.loggedIn"></div>
