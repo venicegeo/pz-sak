@@ -22,6 +22,18 @@
     function LoginController ($scope, $location, $cookies, $http, discover, toaster, Auth, CONST, $rootScope) {
         $cookies.putObject(CONST.auth, Auth);
         $scope.login = function() {
+            if (angular.isUndefined($scope.apikey) || $scope.apikey === "") {
+                // there's a problem for now but in the future just request an apikey
+                toaster.pop('error', 'Error', 'Please enter an api key.');
+                return;
+            }
+            $rootScope.apikey = $scope.apikey;
+            var redirect_uri="https://" + discover.sak + "/geoaxis";
+            //window.location.replace("https://"+ discover.sak +"/loginProxy?url="+redirect_uri);
+            window.location.replace("https://localhost/loginProxy?url="+redirect_uri);
+        };
+
+        /*$scope.login = function() {
             var id = Auth.encode($scope.username, $scope.pass);
             $http({
                 method: "GET",
@@ -54,7 +66,7 @@
                 toaster.pop('warning', "Invalid Credentials", "You have entered the wrong username or password.");
             });
 
-        };
+        };*/
     }
 
 })();

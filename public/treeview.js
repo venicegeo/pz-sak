@@ -18,7 +18,7 @@
   var app, deps;
 
   deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive',
-      'toaster', 'ui.router', 'ngCookies', 'angularUtils.directives.dirPagination'];
+      'toaster', 'ui.router', 'ngCookies', 'angularUtils.directives.dirPagination', 'ngRoute'];
 
   if (angular.version.full.indexOf("1.2") >= 0) {
     deps.push('ngAnimate');
@@ -306,7 +306,7 @@
             label: 'About',
             onSelect: function(branch) {
                 return $scope.bodyDiv = "app/about/about.tpl.html";
-            },
+            }
 
         }
     ];
@@ -332,7 +332,7 @@
 
       $http({
               method: "GET",
-              url: "/banner.json",
+              url: "/banner.json"
           }
       ).then(function successCallback(response){
           $scope.bannerText = response.data.bannerText;
@@ -366,9 +366,50 @@
       };
   });
 
-  app.config(function($stateProvider, $urlRouterProvider, $cookiesProvider)
+  app.config(function($stateProvider, $urlRouterProvider, $cookiesProvider, $routeProvider)
   {
       $cookiesProvider.defaults.secure = true;
+
+      $routeProvider
+             .when('/geoaxis', {
+
+                 template: '/login.html',
+                 controller: function ($location,$rootScope,$http,discover,Auth) {
+                     $rootScope.accesstoken = $location.search();
+                     var redirectUrl = "https://" + discover.sak + "/geoaxis";
+                     $http.post(
+                         "https://localhost/responseProxy?code=" + code + "&url=" + redirectUrl,
+                         null
+                     ).then(
+                        function(res) {
+                            console.log(res);
+                            $http.get(
+                                "/profileProxy?token=" + res.access_token
+                            ).then(function(userProfileResponse) {
+                                // actually get the user's data here
+                            },
+                            function(res){
+                                // error
+                            });
+                        },
+                        function(res){
+                            // error
+                            console.log(res);
+                        });
+                     //$location.path("/login");
+               }
+             });
+             /*.when('/', {
+                 template: '',
+                 controller: function () {
+                     // What to do with the response from second request
+                     if (Auth[CONST.isLoggedIn] === CONST.loggedIn) {
+                         $location.path("/index");
+                     } else {
+                         $location.path("/login");
+                     }
+                 }
+             });*/
 
       $stateProvider
       // available for anybody
@@ -383,8 +424,7 @@
               templateUrl : '/index.html',
               data : {requireLogin : true }
           });
-
-      $urlRouterProvider.otherwise("login");
+      // $urlRouterProvider.otherwise("login");
   });
 
 
@@ -472,7 +512,8 @@
           securityType : CORE_SERVICE,
           securityPort : "",
           swaggerUI : "pz-swagger" + hostname,
-          docs : "pz-docs" + hostname
+          docs : "pz-docs" + hostname,
+          sak : "pz-sak" + hostname
     };
     return discover;
 
