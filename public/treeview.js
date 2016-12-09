@@ -18,7 +18,7 @@
   var app, deps;
 
   deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive',
-      'toaster', 'ui.router', 'ngCookies', 'angularUtils.directives.dirPagination', 'ngRoute'];
+      'toaster', 'ui.router', 'ngStorage', 'angularUtils.directives.dirPagination', 'ngRoute'];
 
   if (angular.version.full.indexOf("1.2") >= 0) {
     deps.push('ngAnimate');
@@ -35,7 +35,7 @@
       return CONSTANTS;
   });
 
-  app.factory('Auth',function($cookies, CONST) {
+  app.factory('Auth',function($sessionStorage, CONST) {
       var auth = {
           id : "",
           userStore : "",
@@ -60,16 +60,16 @@
               return String.fromCharCode('0x' + p1);
           }));
       }
-      if ((angular.isDefined($cookies.getObject(CONST.auth)) &&
-          $cookies.getObject(CONST.auth)[CONST.isLoggedIn] === CONST.loggedIn)) {
-          auth.id = $cookies.getObject(CONST.auth).id;
-          auth.userStore = $cookies.getObject(CONST.auth).userStore;
+      if ((angular.isDefined($sessionStorage[CONST.auth]) &&
+          $sessionStorage[CONST.auth][CONST.isLoggedIn] === CONST.loggedIn)) {
+          auth.id = $sessionStorage[CONST.auth].id;
+          auth.userStore = $sessionStorage[CONST.auth].userStore;
           auth[CONST.isLoggedIn] = CONST.loggedIn;
       }
       return auth;
   });
 
-  app.controller('SAKappController', function($scope, $rootScope, $timeout, $http, Auth, CONST, $cookies, $location) {
+  app.controller('SAKappController', function($scope, $rootScope, $timeout, $http, Auth, CONST, $sessionStorage, $location) {
     $scope.auth = Auth;
     $scope.util = CONST;
     $scope.year = (new Date()).getFullYear();
@@ -315,7 +315,7 @@
         Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
         Auth.encode("null", "null");
         Auth.setUser("");
-        $cookies.putObject(CONST.auth, Auth);
+        $sessionStorage[CONST.auth] = Auth;
         stopIdleTimer();
         $scope.logoutMessage = "You have successfully logged out.";
         $location.path("/login.html");
@@ -366,35 +366,55 @@
       };
   });
 
-  app.config(function($stateProvider, $urlRouterProvider, $cookiesProvider, $routeProvider)
+  app.config(function($stateProvider, $urlRouterProvider, $routeProvider)
   {
-      $cookiesProvider.defaults.secure = true;
-
       $routeProvider
              .when('/geoaxis', {
 
                  template: '/login.html',
-                 controller: function ($location,$rootScope,$http,discover,Auth) {
+                 controller: function ($location,$rootScope,$http,discover,Auth,$sessionStorage,CONST) {
                      $rootScope.accesstoken = $location.search();
                      var redirectUrl = "https://" + discover.sak + "/geoaxis";
                      $http.post(
-                         "https://localhost/responseProxy?code=" + code + "&url=" + redirectUrl,
+                         "/responseProxy?code=" + $rootScope.accesstoken.code + "&url=" + redirectUrl,
                          null
                      ).then(
                         function(res) {
                             console.log(res);
                             $http.get(
-                                "/profileProxy?token=" + res.access_token
+                                "/profileProxy",
+                                {
+                                    "headers": {
+                                        "Authorization": res.data.access_token
+                                    }
+                                }
                             ).then(function(userProfileResponse) {
                                 // actually get the user's data here
-                            },
+                                    Auth.id = $sessionStorage[CONST.auth].id;
+                                    Auth[CONST.isLoggedIn] = CONST.loggedIn;
+                                    Auth.setUser(userProfileResponse.data.username);
+                                    $sessionStorage[CONST.auth] = Auth;
+                                    $location.path("/index");
+                                    $rootScope.$emit('loggedInEvent');
+                                },
                             function(res){
                                 // error
+                                // display error page
+                                Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
+                                Auth.encode("null", "null");
+                                Auth.setUser("");
+                                $sessionStorage[CONST.auth] = Auth;
+                                $location.path("/login");
                             });
                         },
                         function(res){
                             // error
-                            console.log(res);
+                            // display error page
+                            Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
+                            Auth.encode("null", "null");
+                            Auth.setUser("");
+                            $sessionStorage[CONST.auth] = Auth;
+                            $location.path("/login");
                         });
                      //$location.path("/login");
                }
@@ -424,7 +444,7 @@
               templateUrl : '/index.html',
               data : {requireLogin : true }
           });
-      // $urlRouterProvider.otherwise("login");
+      //$urlRouterProvider.otherwise("index");
   });
 
 

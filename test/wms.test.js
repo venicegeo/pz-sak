@@ -24,7 +24,6 @@ describe('Controller: WmsController', function () {
         getFeatureHandler,
         manualWfsHandler,
         loginHandler;
-        // $cookies;
 
     // load the controller's module
     beforeEach(module('SAKapp'));
