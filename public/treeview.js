@@ -380,7 +380,6 @@
                          null
                      ).then(
                         function(res) {
-                            console.log(res);
                             $http.get(
                                 "/profileProxy",
                                 {
@@ -416,7 +415,6 @@
                             $sessionStorage[CONST.auth] = Auth;
                             $location.path("/login");
                         });
-                     //$location.path("/login");
                }
              })
              .when('/', {
@@ -444,7 +442,6 @@
               templateUrl : '/index.html',
               data : {requireLogin : true }
           });
-      //$urlRouterProvider.otherwise("index");
   });
 
 
