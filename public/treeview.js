@@ -418,10 +418,10 @@
                         });
                      //$location.path("/login");
                }
-             });
-             /*.when('/', {
-                 template: '',
-                 controller: function () {
+             })
+             .when('/', {
+                 template: 'login.html',
+                 controller: function (Auth,CONST,$location) {
                      // What to do with the response from second request
                      if (Auth[CONST.isLoggedIn] === CONST.loggedIn) {
                          $location.path("/index");
@@ -429,7 +429,7 @@
                          $location.path("/login");
                      }
                  }
-             });*/
+             });
 
       $stateProvider
       // available for anybody
