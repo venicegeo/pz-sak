@@ -312,6 +312,19 @@
     ];
 
     $scope.logout = function() {
+        pzlogger.async(
+            6,
+            Auth.userStore,
+            "logoutSuccess",
+            "",
+            "User " + Auth.userStore + " logged out successfully",
+            false
+        ).then(function () {
+            //$scope.resourceData = html.data.data;
+        }, function (){
+            //toaster.pop('error', "Error", "There was an issue with your request.");
+        });
+
         Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
         Auth.encode("null", "null");
         Auth.setUser("");
@@ -372,7 +385,7 @@
              .when('/geoaxis', {
 
                  template: '/login.html',
-                 controller: function ($location,$rootScope,$http,discover,Auth,$sessionStorage,CONST) {
+                 controller: function ($scope,$location,$rootScope,$http,discover,Auth,$sessionStorage,CONST,pzlogger) {
                      $rootScope.accesstoken = $location.search();
                      var redirectUrl = "https://" + discover.sak + "/geoaxis";
                      $http.post(
@@ -389,6 +402,18 @@
                                 }
                             ).then(function(userProfileResponse) {
                                 // actually get the user's data here
+                                    pzlogger.async(
+                                        6,
+                                        Auth.userStore,
+                                        "loginSuccess",
+                                        "",
+                                        "User " + Auth.userStore + " logged in successfully",
+                                        false
+                                    ).then(function () {
+                                        //$scope.resourceData = html.data.data;
+                                    }, function (){
+                                        //toaster.pop('error', "Error", "There was an issue with your request.");
+                                    });
                                     Auth.id = $sessionStorage[CONST.auth].id;
                                     Auth[CONST.isLoggedIn] = CONST.loggedIn;
                                     Auth.setUser(userProfileResponse.data.username);
@@ -398,21 +423,45 @@
                                 },
                             function(res){
                                 // error
-                                // display error page
+                                pzlogger.async(
+                                    4,
+                                    $sessionStorage[CONST.auth].id,
+                                    "loginFailure",
+                                    "",
+                                    "User login failed",
+                                    false
+                                ).then(function () {
+                                    //$scope.resourceData = html.data.data;
+                                }, function (){
+                                    //toaster.pop('error', "Error", "There was an issue with your request.");
+                                });
                                 Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
                                 Auth.encode("null", "null");
                                 Auth.setUser("");
                                 $sessionStorage[CONST.auth] = Auth;
+                                $scope.logoutMessage = "An error occurred during login";
                                 $location.path("/login");
                             });
                         },
                         function(res){
                             // error
-                            // display error page
+                            pzlogger.async(
+                                4,
+                                $sessionStorage[CONST.auth].id,
+                                "loginFailure",
+                                "",
+                                "User login failed",
+                                false
+                            ).then(function () {
+                                //$scope.resourceData = html.data.data;
+                            }, function (){
+                                //toaster.pop('error', "Error", "There was an issue with your request.");
+                            });
                             Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
                             Auth.encode("null", "null");
                             Auth.setUser("");
                             $sessionStorage[CONST.auth] = Auth;
+                            $scope.logoutMessage = "An error occurred during login";
                             $location.path("/login");
                         });
                }
@@ -576,5 +625,46 @@
       };
       return gateway;
   }]);
+
+    app.factory('pzlogger', ['$http', 'discover',  function($http, discover) {
+        var pzlogger = {
+            async: function(severity, actor, action, actee, message, fixTransform) {
+                var httpObject = {
+                    method: "POST",
+                    url: "/proxy/" + discover.loggerHost + "/syslog"
+                };
+                var body = {
+                        "severity": severity,
+                        "facility": 1,
+                        "version": 1,
+                        "timeStamp": moment().utc().toISOString(),
+                        "application": "pz-sak",
+                        "hostName": discover.sak,
+                        "auditData": {
+                            "actor": actor,
+                            "action": action,
+                            "actee": actee
+                        },
+                        "message": message
+                    };
+
+                if (angular.isDefined(body)) {
+                    angular.extend(httpObject, {
+                        data: body
+                    });
+                }
+                if (fixTransform) {
+                    angular.extend(httpObject, {
+                        transformResponse: function(value){
+                            return value;
+                        }
+                    });
+                }
+                var promise = $http(httpObject);
+                return promise;
+            }
+        };
+        return pzlogger;
+    }]);
 
 }).call(this);
