@@ -28,6 +28,12 @@
 
   app.factory('CONST', function() {
       var CONSTANTS = {
+          fatal: 2,
+          error: 3,
+          warning: 4,
+          notice: 5,
+          informational: 6,
+          debug: 7,
           isLoggedIn: "aiDfl3sFi0af9lkI4KL0D",
           loggedIn: "idoIk.de4lE39EaseuKL2",
           auth: "eJwoK3bw9C*1GickqW0pnQ1"
@@ -38,6 +44,7 @@
   app.factory('Auth',function($sessionStorage, CONST) {
       var auth = {
           id : "",
+          sessionId : "",
           userStore : "",
           encode : undefined,
           setUser: undefined
@@ -313,7 +320,7 @@
 
     $scope.logout = function() {
         pzlogger.async(
-            6,
+            CONST.informational,
             Auth.userStore,
             "logoutSuccess",
             "",
@@ -328,6 +335,7 @@
         Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
         Auth.encode("null", "null");
         Auth.setUser("");
+        Auth.sessionId = undefined;
         $sessionStorage[CONST.auth] = Auth;
         stopIdleTimer();
         $scope.logoutMessage = "You have successfully logged out.";
@@ -385,7 +393,7 @@
              .when('/geoaxis', {
 
                  template: '/login.html',
-                 controller: function ($scope,$location,$rootScope,$http,discover,Auth,$sessionStorage,CONST,pzlogger) {
+                 controller: function ($scope,$location,$rootScope,$http,discover,Auth,$sessionStorage,CONST,pzlogger,gateway,toaster) {
                      $rootScope.accesstoken = $location.search();
                      var redirectUrl = "https://" + discover.sak + "/geoaxis";
                      $http.post(
@@ -403,8 +411,8 @@
                             ).then(function(userProfileResponse) {
                                 // actually get the user's data here
                                     pzlogger.async(
-                                        6,
-                                        Auth.userStore,
+                                        CONST.informational,
+                                        userProfileResponse.data.username,
                                         "loginSuccess",
                                         "",
                                         "User " + Auth.userStore + " logged in successfully",
@@ -417,14 +425,29 @@
                                     Auth.id = $sessionStorage[CONST.auth].id;
                                     Auth[CONST.isLoggedIn] = CONST.loggedIn;
                                     Auth.setUser(userProfileResponse.data.username);
-                                    $sessionStorage[CONST.auth] = Auth;
-                                    $location.path("/index");
-                                    $rootScope.$emit('loggedInEvent');
+                                    gateway.async(
+                                        "POST",
+                                        "/proxy/" + discover.uuidHost + "/uuids"
+                                    ).then(
+                                        function(html) {
+                                            Auth.sessionId = html.data.data[0];
+                                            $sessionStorage[CONST.auth] = Auth;
+                                            $location.path("/index");
+                                            $rootScope.$emit('loggedInEvent');
+                                        },
+                                        function(res) {
+                                            $scope.logoutMessage = "An error occurred getting the session id.";
+                                            $location.path("/login");
+                                            toaster.pop("error", "Error", "An error occurred getting the session id.")
+                                        }
+                                    );
+
+
                                 },
                             function(res){
                                 // error
                                 pzlogger.async(
-                                    4,
+                                    CONST.warning,
                                     $sessionStorage[CONST.auth].id,
                                     "loginFailure",
                                     "",
@@ -438,6 +461,7 @@
                                 Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
                                 Auth.encode("null", "null");
                                 Auth.setUser("");
+                                Auth.sessionId = undefined;
                                 $sessionStorage[CONST.auth] = Auth;
                                 $scope.logoutMessage = "An error occurred during login";
                                 $location.path("/login");
@@ -446,7 +470,7 @@
                         function(res){
                             // error
                             pzlogger.async(
-                                4,
+                                CONST.warning,
                                 $sessionStorage[CONST.auth].id,
                                 "loginFailure",
                                 "",
@@ -460,6 +484,7 @@
                             Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
                             Auth.encode("null", "null");
                             Auth.setUser("");
+                            Auth.sessionId = undefined;
                             $sessionStorage[CONST.auth] = Auth;
                             $scope.logoutMessage = "An error occurred during login";
                             $location.path("/login");
