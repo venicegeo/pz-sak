@@ -415,7 +415,7 @@
                                         userProfileResponse.data.username,
                                         "loginSuccess",
                                         "",
-                                        "User " + Auth.userStore + " logged in successfully",
+                                        "User " + userProfileResponse.data.username + " logged in successfully",
                                         false
                                     ).then(function () {
                                         //$scope.resourceData = html.data.data;
@@ -665,6 +665,7 @@
                         "timeStamp": moment().utc().toISOString(),
                         "application": "pz-sak",
                         "hostName": discover.sak,
+                        "process": -1,
                         "auditData": {
                             "actor": actor,
                             "action": action,
