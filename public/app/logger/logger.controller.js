@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('LoggerController', ['$scope', '$http',  'toaster', 'discover', 'settings', 'usSpinnerService', LoggerController]);
+        .controller('LoggerController', ['$scope', '$http',  'toaster', 'discover', 'settings', 'spinnerService', LoggerController]);
 
-    function LoggerController ($scope, $http, toaster, discover, settings, usSpinnerService) {
+    function LoggerController ($scope, $http, toaster, discover, settings, spinnerService) {
         $scope.pageOptions = [10, 50, 100, 500];
         $scope.size=100;
         $scope.elasticSearchLimit = settings.elasticSearchLimit;
@@ -42,7 +42,7 @@
         };
 
         $scope.getLogs = function (pageNumber) {
-            usSpinnerService.spin('spinner');
+            spinnerService.show('spinner');
             if (pageNumber) {
                 $scope.pagination.current = pageNumber - 1;
             }
@@ -78,12 +78,12 @@
                 url: "/proxy/" + discover.loggerHost + "/message",
                 params: params
             }).then(function successCallback( html ) {
-                usSpinnerService.stop('spinner');
+                spinnerService.hide('spinner');
                 $scope.logs = html.data.data;
                 $scope.actualLogCount = html.data.pagination.count;
                 $scope.logCount = ($scope.actualLogCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualLogCount;
             }, function errorCallback(response){
-                usSpinnerService.stop('spinner');
+                spinnerService.hide('spinner');
                 console.log("logger.controller get logs fail: "+response.status);
                 toaster.pop('error', "Error", "There was an issue with retrieving the logs.");
             });
