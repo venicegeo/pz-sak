@@ -121,26 +121,5 @@ describe('Controller: LoggerController', function () {
         expect(scope.logs[0].severity).toBe('Info');
         expect(scope.logs[0].message).toBe('User UNAUTHENTICATED requested Job Status for febb497e-cd11-4ea7-ab02-e6601aded786.');
     });
-    it('should post log', function () {
-        scope.logMessage = "This is a test";
-        scope.postLog("2016-10-07T02:39:16.424Z");
-        $httpBackend.expectPOST('/proxy?url=' + discover.loggerHost + '/message',
-        {
-            "service": "sakui-log-tester",
-            "address": "128.1.2.3",
-            "createdOn": "2016-10-07T02:39:16.424Z",
-            "severity": "Info",
-            "message": "This is a test"
-        });
-        scope.pagination.current = 0;
-        scope.size = 100;
-        $httpBackend.expectGET('/proxy/' + discover.loggerHost + '/message?page=0&perPage=100');
-        $httpBackend.flush();
-        expect(scope.logs[0].service).toBe('Gateway');
-        expect(scope.logs[0].address).toBe('gnemud7srkr/10.254.0.62');
-        expect(scope.logs[0].createdOn).toBe("2016-07-14T20:44:50.2344549Z");
-        expect(scope.logs[0].severity).toBe('Info');
-        expect(scope.logs[0].message).toBe('User UNAUTHENTICATED requested Job Status for febb497e-cd11-4ea7-ab02-e6601aded786.');
-    });
 
 });
