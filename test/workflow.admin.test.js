@@ -85,7 +85,6 @@ describe('Controller: WorkflowAdminController', function () {
         var date = moment();
         date.subtract(time);
         var uptime = scope.getUptime(date.format());
-        $httpBackend.flush();
         expect(uptime).toBe("an hour ago");
     });
 

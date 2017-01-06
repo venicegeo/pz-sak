@@ -107,7 +107,6 @@ describe('Controller: LoggerController', function () {
     });
 
     it('should have page size default to 100', function () {
-        $httpBackend.flush();
         expect(scope.size).toBe(100);
     });
 

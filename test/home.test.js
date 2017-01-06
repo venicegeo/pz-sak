@@ -94,7 +94,6 @@ describe('Controller: HomeController', function () {
 
     it('should get the running services', function () {
         scope.getRunningServices();
-        $httpBackend.flush();
         expect(scope.services.loggerHost).toBe(discover.loggerHost);
     });
 
