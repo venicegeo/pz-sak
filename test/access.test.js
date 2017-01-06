@@ -119,7 +119,6 @@ describe('Controller: AccessController', function () {
     });
 
     it('should have page size default to 10', function () {
-        $httpBackend.flush();
         expect(scope.pageSize).toBe(10);
     });
 

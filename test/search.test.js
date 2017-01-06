@@ -186,7 +186,6 @@ describe('Controller: SearchController', function () {
         scope.pagination.current = 1;
         scope.size = 10;
         var start = scope.getFirstIndex();
-        $httpBackend.flush();
         expect(start).toBe(11);
     });
 
@@ -195,7 +194,6 @@ describe('Controller: SearchController', function () {
         scope.size = 10;
         scope.totalResults = 23;
         var end = scope.getLastIndex();
-        $httpBackend.flush();
         expect(end).toBe(20);
     });
 
@@ -204,7 +202,6 @@ describe('Controller: SearchController', function () {
         scope.size = 10;
         scope.totalResults = 15;
         var end = scope.getLastIndex();
-        $httpBackend.flush();
         expect(end).toBe(15);
     });
 
