@@ -148,7 +148,7 @@ describe('Controller: WfsController', function () {
         scope.endPoint = 'geoserver.test.com/geoserver/ows';
         scope.getCapabilities();
         //$httpBackend.expectGET('/uproxy/geoserver.test.com/geoserver/ows?service=WFS&version=1.1.0&request=GetCapabilities');
-        $httpBackend.flush();
+        //$httpBackend.flush();
         // TODO: Fix this
         expect(scope.showFeatureTypeSelect).toBe(false);
     });
