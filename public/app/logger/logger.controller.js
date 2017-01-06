@@ -90,40 +90,6 @@
 
         };
 
-        $scope.postLog = function(date){
-            $scope.errorMsg = "";
-
-            var currentTime;
-            if (!date) {
-                currentTime = moment.utc().format("YYYY-MM-DDTHH:mm:ss.SSSZ").replace("+00:00", "Z");
-            } else {
-                currentTime = date;
-            }
-            var logMessage = $scope.logMessage;
-            var dataObj = {
-                service: "sakui-log-tester",
-                address: "128.1.2.3",
-                createdOn: currentTime,
-                severity: "Info",
-                message: logMessage
-            };
-            console.log(currentTime);
-            console.log(dataObj);
-
-            $http.post(
-                "/proxy?url=" + discover.loggerHost + "/message",
-                dataObj
-            ).then(function successCallback(res) {
-                $scope.message = res;
-                $scope.getLogs();
-                $scope.logMessage = null;
-                toaster.pop('success', "Success", "The log was successfully posted.")
-            }, function errorCallback(res) {
-                console.log("logger.controller post log fail: "+res.status);
-                toaster.pop('error', "Error", "There was a problem submitting the log message.");
-            });
-        };
-
         $scope.getFirstIndex = function () {
             return ($scope.pagination.current * $scope.size) + 1;
         };

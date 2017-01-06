@@ -18,7 +18,7 @@
   var app, deps;
 
   deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive',
-      'toaster', 'ui.router', 'ngCookies', 'angularUtils.directives.dirPagination'];
+      'toaster', 'ui.router', 'ngStorage', 'angularUtils.directives.dirPagination', 'ngRoute'];
 
   if (angular.version.full.indexOf("1.2") >= 0) {
     deps.push('ngAnimate');
@@ -28,6 +28,12 @@
 
   app.factory('CONST', function() {
       var CONSTANTS = {
+          fatal: 2,
+          error: 3,
+          warning: 4,
+          notice: 5,
+          informational: 6,
+          debug: 7,
           isLoggedIn: "aiDfl3sFi0af9lkI4KL0D",
           loggedIn: "idoIk.de4lE39EaseuKL2",
           auth: "eJwoK3bw9C*1GickqW0pnQ1"
@@ -35,9 +41,10 @@
       return CONSTANTS;
   });
 
-  app.factory('Auth',function($cookies, CONST) {
+  app.factory('Auth',function($sessionStorage, CONST) {
       var auth = {
           id : "",
+          sessionId : "",
           userStore : "",
           encode : undefined,
           setUser: undefined
@@ -60,16 +67,16 @@
               return String.fromCharCode('0x' + p1);
           }));
       }
-      if ((angular.isDefined($cookies.getObject(CONST.auth)) &&
-          $cookies.getObject(CONST.auth)[CONST.isLoggedIn] === CONST.loggedIn)) {
-          auth.id = $cookies.getObject(CONST.auth).id;
-          auth.userStore = $cookies.getObject(CONST.auth).userStore;
+      if ((angular.isDefined($sessionStorage[CONST.auth]) &&
+          $sessionStorage[CONST.auth][CONST.isLoggedIn] === CONST.loggedIn)) {
+          auth.id = $sessionStorage[CONST.auth].id;
+          auth.userStore = $sessionStorage[CONST.auth].userStore;
           auth[CONST.isLoggedIn] = CONST.loggedIn;
       }
       return auth;
   });
 
-  app.controller('SAKappController', function($scope, $rootScope, $timeout, $http, Auth, CONST, $cookies, $location) {
+  app.controller('SAKappController', function($scope, $rootScope, $timeout, $http, Auth, CONST, $sessionStorage, $location) {
     $scope.auth = Auth;
     $scope.util = CONST;
     $scope.year = (new Date()).getFullYear();
@@ -306,16 +313,30 @@
             label: 'About',
             onSelect: function(branch) {
                 return $scope.bodyDiv = "app/about/about.tpl.html";
-            },
+            }
 
         }
     ];
 
     $scope.logout = function() {
+        pzlogger.async(
+            CONST.informational,
+            Auth.userStore,
+            "logoutSuccess",
+            "",
+            "User " + Auth.userStore + " logged out successfully",
+            false
+        ).then(function () {
+            //$scope.resourceData = html.data.data;
+        }, function (){
+            //toaster.pop('error', "Error", "There was an issue with your request.");
+        });
+
         Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
         Auth.encode("null", "null");
         Auth.setUser("");
-        $cookies.putObject(CONST.auth, Auth);
+        Auth.sessionId = undefined;
+        $sessionStorage[CONST.auth] = Auth;
         stopIdleTimer();
         $scope.logoutMessage = "You have successfully logged out.";
         $location.path("/login.html");
@@ -332,7 +353,7 @@
 
       $http({
               method: "GET",
-              url: "/banner.json",
+              url: "/banner.json"
           }
       ).then(function successCallback(response){
           $scope.bannerText = response.data.bannerText;
@@ -366,9 +387,121 @@
       };
   });
 
-  app.config(function($stateProvider, $urlRouterProvider, $cookiesProvider)
+  app.config(function($stateProvider, $urlRouterProvider, $routeProvider)
   {
-      $cookiesProvider.defaults.secure = true;
+      $routeProvider
+             .when('/geoaxis', {
+
+                 template: '/login.html',
+                 controller: function ($scope,$location,$rootScope,$http,discover,Auth,$sessionStorage,CONST,pzlogger,gateway,toaster) {
+                     $rootScope.accesstoken = $location.search();
+                     var redirectUrl = "https://" + discover.sak + "/geoaxis";
+                     $http.post(
+                         "/responseProxy?code=" + $rootScope.accesstoken.code + "&url=" + redirectUrl,
+                         null
+                     ).then(
+                        function(res) {
+                            $http.get(
+                                "/profileProxy",
+                                {
+                                    "headers": {
+                                        "Authorization": res.data.access_token
+                                    }
+                                }
+                            ).then(function(userProfileResponse) {
+                                // actually get the user's data here
+                                    pzlogger.async(
+                                        CONST.informational,
+                                        userProfileResponse.data.username,
+                                        "loginSuccess",
+                                        "",
+                                        "User " + userProfileResponse.data.username + " logged in successfully",
+                                        false
+                                    ).then(function () {
+                                        //$scope.resourceData = html.data.data;
+                                    }, function (){
+                                        //toaster.pop('error', "Error", "There was an issue with your request.");
+                                    });
+                                    Auth.id = $sessionStorage[CONST.auth].id;
+                                    Auth[CONST.isLoggedIn] = CONST.loggedIn;
+                                    Auth.setUser(userProfileResponse.data.username);
+                                    gateway.async(
+                                        "POST",
+                                        "/proxy/" + discover.uuidHost + "/uuids"
+                                    ).then(
+                                        function(html) {
+                                            Auth.sessionId = html.data.data[0];
+                                            $sessionStorage[CONST.auth] = Auth;
+                                            $location.path("/index");
+                                            $rootScope.$emit('loggedInEvent');
+                                        },
+                                        function(res) {
+                                            $scope.logoutMessage = "An error occurred getting the session id.";
+                                            $location.path("/login");
+                                            toaster.pop("error", "Error", "An error occurred getting the session id.")
+                                        }
+                                    );
+
+
+                                },
+                            function(res){
+                                // error
+                                pzlogger.async(
+                                    CONST.warning,
+                                    $sessionStorage[CONST.auth].id,
+                                    "loginFailure",
+                                    "",
+                                    "User login failed",
+                                    false
+                                ).then(function () {
+                                    //$scope.resourceData = html.data.data;
+                                }, function (){
+                                    //toaster.pop('error', "Error", "There was an issue with your request.");
+                                });
+                                Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
+                                Auth.encode("null", "null");
+                                Auth.setUser("");
+                                Auth.sessionId = undefined;
+                                $sessionStorage[CONST.auth] = Auth;
+                                $scope.logoutMessage = "An error occurred during login";
+                                $location.path("/login");
+                            });
+                        },
+                        function(res){
+                            // error
+                            pzlogger.async(
+                                CONST.warning,
+                                $sessionStorage[CONST.auth].id,
+                                "loginFailure",
+                                "",
+                                "User login failed",
+                                false
+                            ).then(function () {
+                                //$scope.resourceData = html.data.data;
+                            }, function (){
+                                //toaster.pop('error', "Error", "There was an issue with your request.");
+                            });
+                            Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
+                            Auth.encode("null", "null");
+                            Auth.setUser("");
+                            Auth.sessionId = undefined;
+                            $sessionStorage[CONST.auth] = Auth;
+                            $scope.logoutMessage = "An error occurred during login";
+                            $location.path("/login");
+                        });
+               }
+             })
+             .when('/', {
+                 template: 'login.html',
+                 controller: function (Auth,CONST,$location) {
+                     // What to do with the response from second request
+                     if (Auth[CONST.isLoggedIn] === CONST.loggedIn) {
+                         $location.path("/index");
+                     } else {
+                         $location.path("/login");
+                     }
+                 }
+             });
 
       $stateProvider
       // available for anybody
@@ -383,8 +516,6 @@
               templateUrl : '/index.html',
               data : {requireLogin : true }
           });
-
-      $urlRouterProvider.otherwise("login");
   });
 
 
@@ -472,7 +603,8 @@
           securityType : CORE_SERVICE,
           securityPort : "",
           swaggerUI : "pz-swagger" + hostname,
-          docs : "pz-docs" + hostname
+          docs : "pz-docs" + hostname,
+          sak : "pz-sak" + hostname
     };
     return discover;
 
@@ -518,5 +650,47 @@
       };
       return gateway;
   }]);
+
+    app.factory('pzlogger', ['$http', 'discover',  function($http, discover) {
+        var pzlogger = {
+            async: function(severity, actor, action, actee, message, fixTransform) {
+                var httpObject = {
+                    method: "POST",
+                    url: "/proxy/" + discover.loggerHost + "/syslog"
+                };
+                var body = {
+                        "severity": severity,
+                        "facility": 1,
+                        "version": 1,
+                        "timeStamp": moment().utc().toISOString(),
+                        "application": "pz-sak",
+                        "hostName": discover.sak,
+                        "process": -1,
+                        "auditData": {
+                            "actor": actor,
+                            "action": action,
+                            "actee": actee
+                        },
+                        "message": message
+                    };
+
+                if (angular.isDefined(body)) {
+                    angular.extend(httpObject, {
+                        data: body
+                    });
+                }
+                if (fixTransform) {
+                    angular.extend(httpObject, {
+                        transformResponse: function(value){
+                            return value;
+                        }
+                    });
+                }
+                var promise = $http(httpObject);
+                return promise;
+            }
+        };
+        return pzlogger;
+    }]);
 
 }).call(this);
