@@ -116,7 +116,7 @@ describe('Controller: IngesterController', function () {
                 "Authorization":"Basic"
             }
         );*/
-        $httpBackend.flush();
+        //$httpBackend.flush();
         expect(scope.jobIdResult).toBe("4e7d24b9-91d8-4f39-950b-3e254ad82d05");
     });
 

@@ -37,8 +37,6 @@ describe('Controller: HomeController', function () {
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
         scope = $rootScope.$new();
-        // $cookies = $injector.get('$cookies');
-        // $cookies.putObject('auth', '{isLoggedIn:true}');
         $httpBackend = $injector.get('$httpBackend');
         discover = $injector.get('discover');
         loggerRequestHandler = $httpBackend.when(
@@ -96,7 +94,6 @@ describe('Controller: HomeController', function () {
 
     it('should get the running services', function () {
         scope.getRunningServices();
-        $httpBackend.flush();
         expect(scope.services.loggerHost).toBe(discover.loggerHost);
     });
 

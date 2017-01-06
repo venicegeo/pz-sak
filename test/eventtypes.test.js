@@ -133,7 +133,6 @@ describe('Controller: EventtypesController', function () {
         scope.pagination.current = 1;
         scope.typesPerPage = 10;
         var start = scope.getStart();
-        $httpBackend.flush();
         expect(start).toBe(11);
     });
     it('should get end index', function () {
@@ -141,7 +140,6 @@ describe('Controller: EventtypesController', function () {
         scope.typesPerPage = 10;
         scope.totalTypes = 23;
         var end = scope.getEnd();
-        $httpBackend.flush();
         expect(end).toBe(20);
     });
     it('should get end index alt', function () {
@@ -149,12 +147,10 @@ describe('Controller: EventtypesController', function () {
         scope.typesPerPage = 10;
         scope.totalTypes = 15;
         var end = scope.getEnd();
-        $httpBackend.flush();
         expect(end).toBe(15);
     });
     it('should clear the form', function () {
         scope.clearForm();
-        $httpBackend.flush();
 
         expect(scope.disableEventTypeName).toBe(false);
         expect(scope.newEventTypeName).toBe(null);
@@ -167,7 +163,6 @@ describe('Controller: EventtypesController', function () {
         scope.newEventTypeDataType = "boolean";
         scope.newEventTypeName = "eventType1";
         scope.addMapping();
-        $httpBackend.flush();
 
         expect(scope.showNewEventTypeForm).toBe(true);
         expect(scope.eventTypeName).toBe("eventType1");
@@ -178,7 +173,6 @@ describe('Controller: EventtypesController', function () {
     it('should delete mapping', function () {
         scope.eventTypeMappings = [{"isDone": "boolean"}];
         scope.deleteEventMapping("isDone");
-        $httpBackend.flush();
         expect(scope.eventTypeMappings.length).toBe(0);
     });
     it('should update type table', function () {
@@ -212,8 +206,6 @@ describe('Controller: EventtypesController', function () {
             $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/event?page=0&perPage=10');
             $httpBackend.flush();
             expect(scope.events.length).toBe(1);
-        } else {
-            $httpBackend.flush();
         }
     });
     it('should get all eventTypes', function () {

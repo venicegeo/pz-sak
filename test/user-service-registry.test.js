@@ -420,7 +420,6 @@ describe('Controller: UserServiceController', function () {
         scope.pagination.current = 1;
         scope.listPerPage = 10;
         var start = scope.getListStart();
-        $httpBackend.flush();
         expect(start).toBe(11);
     });
 
@@ -429,7 +428,6 @@ describe('Controller: UserServiceController', function () {
         scope.listPerPage = 10;
         scope.totalServices = 23;
         var end = scope.getListEnd();
-        $httpBackend.flush();
         expect(end).toBe(20);
     });
 
@@ -438,14 +436,12 @@ describe('Controller: UserServiceController', function () {
         scope.listPerPage = 10;
         scope.totalServices = 15;
         var end = scope.getListEnd();
-        $httpBackend.flush();
         expect(end).toBe(15);
     });
     it('should get search start index', function () {
         scope.searchPagination.current = 1;
         scope.searchPerPage = 10;
         var start = scope.getSearchStart();
-        $httpBackend.flush();
         expect(start).toBe(11);
     });
 
@@ -454,7 +450,6 @@ describe('Controller: UserServiceController', function () {
         scope.searchPerPage = 10;
         scope.totalSearchResults = 23;
         var end = scope.getSearchEnd();
-        $httpBackend.flush();
         expect(end).toBe(20);
     });
 
@@ -463,7 +458,6 @@ describe('Controller: UserServiceController', function () {
         scope.searchPerPage = 10;
         scope.totalSearchResults = 15;
         var end = scope.getSearchEnd();
-        $httpBackend.flush();
         expect(end).toBe(15);
     });
 

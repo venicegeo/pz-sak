@@ -254,8 +254,6 @@ describe('Controller: WorkflowController', function () {
             $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/event?page=0&perPage=10');
             $httpBackend.flush();
             expect(scope.events.length).toBe(1);
-        } else {
-            $httpBackend.flush();
         }
     });
     it('should post an alert', function () {
@@ -300,7 +298,6 @@ describe('Controller: WorkflowController', function () {
         scope.eventsPagination.current = 1;
         scope.typesPerPage = 10;
         var start = scope.getEventStart();
-        $httpBackend.flush();
         expect(start).toBe(11);
     });
     it('should get event end index', function () {
@@ -308,7 +305,6 @@ describe('Controller: WorkflowController', function () {
         scope.eventsPerPage = 10;
         scope.totalEvents = 23;
         var end = scope.getEventEnd();
-        $httpBackend.flush();
         expect(end).toBe(20);
     });
     it('should get event end index alt', function () {
@@ -316,7 +312,6 @@ describe('Controller: WorkflowController', function () {
         scope.eventsPerPage = 10;
         scope.totalEvents = 15;
         var end = scope.getEventEnd();
-        $httpBackend.flush();
         expect(end).toBe(15);
     });
 
@@ -324,7 +319,6 @@ describe('Controller: WorkflowController', function () {
         scope.alertsPagination.current = 1;
         scope.alertsPerPage = 10;
         var start = scope.getAlertStart();
-        $httpBackend.flush();
         expect(start).toBe(11);
     });
     it('should get alert end index', function () {
@@ -332,7 +326,6 @@ describe('Controller: WorkflowController', function () {
         scope.alertsPerPage = 10;
         scope.totalAlerts = 23;
         var end = scope.getAlertEnd();
-        $httpBackend.flush();
         expect(end).toBe(20);
     });
     it('should get alert end index alt', function () {
@@ -340,7 +333,6 @@ describe('Controller: WorkflowController', function () {
         scope.alertsPerPage = 10;
         scope.totalAlerts = 15;
         var end = scope.getAlertEnd();
-        $httpBackend.flush();
         expect(end).toBe(15);
     });
 
@@ -348,7 +340,6 @@ describe('Controller: WorkflowController', function () {
         scope.triggersPagination.current = 1;
         scope.triggersPerPage = 10;
         var start = scope.getTriggerStart();
-        $httpBackend.flush();
         expect(start).toBe(11);
     });
     it('should get triggers end index', function () {
@@ -356,7 +347,6 @@ describe('Controller: WorkflowController', function () {
         scope.triggersPerPage = 10;
         scope.totalTriggers = 23;
         var end = scope.getTriggerEnd();
-        $httpBackend.flush();
         expect(end).toBe(20);
     });
     it('should get triggers end index alt', function () {
@@ -364,7 +354,6 @@ describe('Controller: WorkflowController', function () {
         scope.triggersPerPage = 10;
         scope.totalTriggers = 15;
         var end = scope.getTriggerEnd();
-        $httpBackend.flush();
         expect(end).toBe(15);
     });
 });

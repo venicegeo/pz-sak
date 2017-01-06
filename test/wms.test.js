@@ -24,7 +24,6 @@ describe('Controller: WmsController', function () {
         getFeatureHandler,
         manualWfsHandler,
         loginHandler;
-        // $cookies;
 
     // load the controller's module
     beforeEach(module('SAKapp'));
@@ -149,7 +148,7 @@ describe('Controller: WmsController', function () {
         scope.endPoint = 'geoserver.test.com/geoserver/ows';
         scope.getCapabilities();
         //$httpBackend.expectGET('/uproxy/geoserver.test.com/geoserver/ows?service=WFS&version=1.1.0&request=GetCapabilities');
-        $httpBackend.flush();
+        //$httpBackend.flush();
         // TODO: Fix this
         expect(scope.showLayerSelect).toBe(false);
     });
@@ -164,7 +163,6 @@ describe('Controller: WmsController', function () {
             ]
         };
         scope.updateMap();
-        $httpBackend.flush();
         expect(scope.center.lat).toBe(3);
         expect(scope.center.lon).toBe(2);
     });

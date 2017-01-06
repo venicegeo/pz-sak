@@ -17,44 +17,22 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('LoginController', ['$scope', '$location', '$cookies', "$http", "discover", "toaster", "Auth", "CONST", "$rootScope", LoginController]);
+        .controller('LoginController', ['$scope', '$sessionStorage', "discover", "toaster", "Auth", "CONST", LoginController]);
 
-    function LoginController ($scope, $location, $cookies, $http, discover, toaster, Auth, CONST, $rootScope) {
-        $cookies.putObject(CONST.auth, Auth);
+    function LoginController ($scope, $sessionStorage, discover, toaster, Auth, CONST) {
+        $sessionStorage[CONST.auth] = Auth;
         $scope.login = function() {
-            var id = Auth.encode($scope.username, $scope.pass);
-            $http({
-                method: "GET",
-                url: "/proxy?url=" + discover.gatewayHost + "/key",
-                headers: {
-                    "Authorization": "Basic " + id
-                }
-            }).then(function successCallback( html ) {
-                if (html.data.type === "uuid") {
-                    Auth[CONST.isLoggedIn] = CONST.loggedIn;
-                    Auth.encode(html.data.uuid, "");
-                    Auth.setUser($scope.username);
-                    $cookies.putObject(CONST.auth, Auth);
-                    $location.path("/index.html");
-                    $rootScope.$emit('loggedInEvent');
-                    $scope.username = "";
-                    $scope.pass = "";
-                    toaster.pop('success', "Success", "You have logged in successfully.");
-                } else {
-                    console.log("verification success but no ID present");
-                    toaster.pop('error', 'Error', 'An error was encountered while logging in. Please try again later.')
-                }
-            }, function errorCallback(){
-                Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
-                Auth.encode("null", "null");
-                Auth.setUser("");
-                $cookies.putObject(CONST.auth, Auth);
-                $location.path("/login.html");
-                $scope.pass = "";
-                toaster.pop('warning', "Invalid Credentials", "You have entered the wrong username or password.");
-            });
-
+            if (angular.isUndefined($scope.apikey) || $scope.apikey === "") {
+                // For now, just have the user enter their API Key
+                toaster.pop('error', 'Error', 'Please enter an api key.');
+                return;
+            }
+            Auth.encode($scope.apikey, "");
+            $sessionStorage[CONST.auth] = Auth;
+            var redirect_uri="https://" + discover.sak + "/geoaxis";
+            window.location.replace("/loginProxy?url="+redirect_uri);
         };
+
     }
 
 })();

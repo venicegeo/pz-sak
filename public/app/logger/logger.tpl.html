@@ -29,7 +29,6 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#getlogs" aria-controls="getlogs" role="tab" data-toggle="tab">Get Logs</a></li>
-        <li role="presentation"><a href="#sendlog" aria-controls="sendlog" role="tab" data-toggle="tab">Send Log</a></li>
     </ul>
 
     <!-- Tab panes -->
@@ -169,28 +168,6 @@
 
 
 
-        </div>
-        <div role="tabpanel" class="tab-pane fade" id="sendlog">
-            <div class="row">
-                <h1 class="alert alert-info">Send to the Logger Service</h1>
-                <form ng-submit="postLog()">
-
-                    <div class="form-group">
-                        <label for="logMessage">Message to send to Logger:</label>
-                        <input id="logMessage" ng-model="logMessage" type="text" class="form-control" placeholder="Enter a message" required>
-
-
-
-                        <br>
-                        <button type="submit"  class="btn btn-primary">Log Message</button></div>
-
-
-
-                    <br>
-
-                    <br>
-                </form>
-            </div>
         </div>
     </div>
 
