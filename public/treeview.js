@@ -76,7 +76,7 @@
       return auth;
   });
 
-  app.controller('SAKappController', function($scope, $rootScope, $timeout, $http, Auth, CONST, $sessionStorage, $location) {
+  app.controller('SAKappController', function($scope, $rootScope, $timeout, $http, Auth, CONST, $sessionStorage, $location, pzlogger) {
     $scope.auth = Auth;
     $scope.util = CONST;
     $scope.year = (new Date()).getFullYear();
@@ -425,10 +425,10 @@
                                     Auth.id = $sessionStorage[CONST.auth].id;
                                     Auth[CONST.isLoggedIn] = CONST.loggedIn;
                                     Auth.setUser(userProfileResponse.data.username);
-                                    gateway.async(
-                                        "POST",
-                                        "/proxy/" + discover.uuidHost + "/uuids"
-                                    ).then(
+                                    $http({
+                                        method: "POST",
+                                        url: uuidHost + "/uuids"
+                                    }).then(
                                         function(html) {
                                             Auth.sessionId = html.data.data[0];
                                             $sessionStorage[CONST.auth] = Auth;
