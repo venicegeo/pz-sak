@@ -427,7 +427,7 @@
                                     Auth.setUser(userProfileResponse.data.username);
                                     $http({
                                         method: "POST",
-                                        url: discover.uuidHost + "/uuids"
+                                        url: "/proxy/" + discover.uuidHost + "/uuids"
                                     }).then(
                                         function(html) {
                                             Auth.sessionId = html.data.data[0];
@@ -665,7 +665,7 @@
                         "timeStamp": moment().utc().toISOString(),
                         "application": "pz-sak",
                         "hostName": discover.sak,
-                        "process": -1,
+                        "process": "sak-nginx",
                         "auditData": {
                             "actor": actor,
                             "action": action,
