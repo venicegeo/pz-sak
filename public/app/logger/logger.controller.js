@@ -42,7 +42,9 @@
         };
 
         $scope.getLogs = function (pageNumber) {
-            spinnerService.show('spinner');
+            if ($scope.spinner) {
+                spinnerService.show('spinner');
+            }
             if (pageNumber) {
                 $scope.pagination.current = pageNumber - 1;
             }
@@ -78,13 +80,16 @@
                 url: "/proxy/" + discover.loggerHost + "/message",
                 params: params
             }).then(function successCallback( html ) {
-                spinnerService.hide('spinner');
+                if ($scope.spinner) {
+                    spinnerService.hide('spinner');
+                }
                 $scope.logs = html.data.data;
                 $scope.actualLogCount = html.data.pagination.count;
                 $scope.logCount = ($scope.actualLogCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualLogCount;
-            }, function errorCallback(response){
-                spinnerService.hide('spinner');
-                console.log("logger.controller get logs fail: "+response.status);
+            }, function errorCallback(){
+                if ($scope.spinner) {
+                    spinnerService.hide('spinner');
+                }
                 toaster.pop('error', "Error", "There was an issue with retrieving the logs.");
             });
 
@@ -100,6 +105,10 @@
                 return $scope.logCount;
             }
             return end;
+        };
+
+        $scope.spinnerLoaded = function() {
+            $scope.spinner = true;
         };
 
     }
