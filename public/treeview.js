@@ -427,7 +427,7 @@
                                     Auth.setUser(userProfileResponse.data.username);
                                     $http({
                                         method: "POST",
-                                        url: uuidHost + "/uuids"
+                                        url: discover.uuidHost + "/uuids"
                                     }).then(
                                         function(html) {
                                             Auth.sessionId = html.data.data[0];
