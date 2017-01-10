@@ -405,7 +405,7 @@
       };
   });
 
-    app.config(function($stateProvider, $urlRouterProvider, $routeProvider)
+  app.config(function($stateProvider, $urlRouterProvider, $routeProvider)
   {
       $routeProvider
              .when('/geoaxis', {
