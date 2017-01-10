@@ -77,7 +77,7 @@
 
             $http({
                 method: "GET",
-                url: "/proxy/" + discover.loggerHost + "/message",
+                url: "/proxy/" + discover.loggerHost + "/syslog",
                 params: params
             }).then(function successCallback( html ) {
                 if ($scope.spinner) {
