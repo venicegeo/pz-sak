@@ -387,7 +387,25 @@
       };
   });
 
-  app.config(function($stateProvider, $urlRouterProvider, $routeProvider)
+  app.filter('severity', function() {
+      return function(input) {
+          if (!!input) {
+              switch (input) {
+                  case 2: return 'Critical';
+                  case 3: return 'Error';
+                  case 4: return 'Warning';
+                  case 5: return 'Notice';
+                  case 6: return 'Info';
+                  case 7: return 'Debug';
+                  default: return '';
+              }
+          } else {
+              return '';
+          }
+      };
+  });
+
+    app.config(function($stateProvider, $urlRouterProvider, $routeProvider)
   {
       $routeProvider
              .when('/geoaxis', {
