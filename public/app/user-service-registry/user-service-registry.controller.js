@@ -18,11 +18,11 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('UserServiceController', ['$scope', 'toaster', '$timeout', 'usSpinnerService', 'gateway', 'settings', UserServiceController]);
+        .controller('UserServiceController', ['$scope', 'toaster', '$timeout', 'spinnerService', 'gateway', 'settings', UserServiceController]);
 
 
 
-    function UserServiceController($scope, toaster, $timeout, usSpinnerService, gateway, settings) {
+    function UserServiceController($scope, toaster, $timeout, spinnerService, gateway, settings) {
         $scope.elasticSearchLimit = settings.elasticSearchLimit;
         $scope.executeInputMap = {};
         $scope.executeOutputMap = {};
@@ -104,7 +104,9 @@
                 '/job/' + $scope.jobId
             ).then(function(html) {
                 if (html.data.data.status.indexOf("Success") > -1) {
-                    usSpinnerService.stop("spinner-execute");
+                    if ($scope.spinnerExecute) {
+                        spinnerService.hide("spinner-execute");
+                    }
                     $scope.dataId = html.data.data.result.dataId;
                     getResourceResult($scope.dataId);
                     $scope.jobStatusResult = JSON.stringify(html.data.data);
@@ -114,7 +116,9 @@
                         $timeout(getExecuteResult, SLOW_POLL, jobId);
                     }
                     else {
-                        usSpinnerService.stop("spinner-execute");
+                        if ($scope.spinnerExecute) {
+                            spinnerService.hide("spinner-execute");
+                        }
                         toaster.pop('error', "Error", "Exceeded Get Execute Results retry limit")
                     }
                 }
@@ -123,7 +127,9 @@
                     ($scope.ExecuteResultsRetries < $scope.maxExecuteResultsRetries)) {
                     $timeout(getExecuteResult, SLOW_POLL, jobId);
                 } else {
-                    usSpinnerService.stop("spinner-execute");
+                    if ($scope.spinnerExecute) {
+                        spinnerService.hide("spinner-execute");
+                    }
                     toaster.pop('error', "Error", "There was an issue with your request.");
                 }
             });
@@ -280,7 +286,9 @@
             ).then(function( html ) {
                 $scope.jobId = html.data.data.jobId;
                 $scope.ExecuteResultsRetries = 0;
-                usSpinnerService.spin("spinner-execute");
+                if ($scope.spinnerExecute) {
+                    spinnerService.show("spinner-execute");
+                }
                 getExecuteResult($scope.jobId)
             }, function(){
                 toaster.pop('error', "Error", "There was an issue with your execution request.");
@@ -289,8 +297,9 @@
         };
 
         $scope.getServices = function(pageNumber) {
-            usSpinnerService.spin("spinner-list");
-
+            if ($scope.spinnerList) {
+                spinnerService.show("spinner-list");
+            }
             $scope.services = [];
             if (pageNumber) {
                 $scope.pagination.current = pageNumber - 1;
@@ -307,12 +316,16 @@
                 undefined,
                 params
             ).then(function( html ) {
-                usSpinnerService.stop("spinner-list");
+                if ($scope.spinnerList) {
+                    spinnerService.hide("spinner-list");
+                }
                 $scope.services = angular.fromJson(html.data.data);
                 $scope.actualServicesCount = html.data.pagination.count;
                 $scope.totalServices = ($scope.actualServicesCount > $scope.elasticSearchLimit) ? $scope.elasticSearchLimit : $scope.actualServicesCount;
             }, function(){
-                usSpinnerService.stop("spinner-list");
+                if ($scope.spinnerList) {
+                    spinnerService.hide("spinner-list");
+                }
                 toaster.pop('error', "Error", "There was an issue with retrieving the services.");
             });
 
@@ -376,16 +389,18 @@
 
 
         $scope.showUpdateServiceForm = function(serviceId){
-            usSpinnerService.spin('spinner-update');
-
+            if ($scope.spinnerUpdate) {
+                spinnerService.show('spinner-update');
+            }
             $scope.showUpdateService = !$scope.showUpdateService;
 
             gateway.async(
                 "GET",
                 '/service/' + serviceId
             ).then(function( html ) {
-                usSpinnerService.stop('spinner-update');
-
+                if ($scope.spinnerUpdate) {
+                    spinnerService.hide('spinner-update');
+                }
                 var results = angular.fromJson(html.data.service);
                 $scope.updateResourceId = results.serviceId;
                 $scope.updateServiceName = results.resourceMetadata.name;
@@ -393,7 +408,9 @@
                 $scope.updateServiceUrl = results.url;
                 $scope.updateServiceMethod = results.method;
             }, function(){
-                usSpinnerService.stop("spinner-update");
+                if ($scope.spinnerUpdate) {
+                    spinnerService.hide("spinner-update");
+                }
                 toaster.pop('error', "Error", "There was an issue with retrieving the service.");
             });
 
@@ -447,6 +464,18 @@
             }, function() {
                 toaster.pop('error', "Error", "There was a problem deleting the Service.");
             });
+        };
+
+        $scope.spinnerListLoaded = function() {
+            $scope.spinnerList = true;
+        };
+
+        $scope.spinnerExecuteLoaded = function() {
+            $scope.spinnerExecute = true;
+        };
+
+        $scope.spinnerUpdateLoaded = function() {
+            $scope.spinnerUpdate = true;
         };
 
     }

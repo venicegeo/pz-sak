@@ -17,7 +17,7 @@
 (function() {
   var app, deps;
 
-  deps = ['angularBootstrapNavTree', 'angularSpinner', 'openlayers-directive',
+  deps = ['angularBootstrapNavTree', 'angularSpinners', 'openlayers-directive',
       'toaster', 'ui.router', 'ngStorage', 'angularUtils.directives.dirPagination', 'ngRoute'];
 
   if (angular.version.full.indexOf("1.2") >= 0) {

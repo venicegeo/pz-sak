@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('WfsController', ['$scope', '$log', '$q', 'usSpinnerService', 'toaster', WfsController]);
+        .controller('WfsController', ['$scope', '$log', '$q', 'spinnerService', 'toaster', WfsController]);
 
-        function WfsController ($scope, $log, $q, usSpinnerService, toaster) {
+        function WfsController ($scope, $log, $q, spinnerService, toaster) {
 
                 //OpenLayers.ProxyHost = "/proxy/index?url=";
                 if (!String.prototype.startsWith) {
@@ -108,7 +108,7 @@
                 // GetFeature
                 $scope.getFeature = function () {
 
-                    usSpinnerService.spin('spinner');
+                    spinnerService.show('spinner');
 
                     var deferred = $q.defer();
 
@@ -135,7 +135,7 @@
                         $scope.features = data;
                         $log.warn('$scope.features', $scope.features);
                         $scope.showGetFeatureTable = true;
-                        usSpinnerService.stop('spinner');
+                        spinnerService.hide('spinner');
 
                     });
                 };

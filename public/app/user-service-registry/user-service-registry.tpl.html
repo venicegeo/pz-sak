@@ -130,7 +130,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <span us-spinner spinner-key="spinner-execute"></span>
+                        <spinner name="spinner-execute" img-src="angular-spinners.gif" on-loaded="spinnerExecuteLoaded()"></spinner>
                         <label id="executeSuccess" ng-show="showExecuteSuccess" ng-model="executeSuccess">
                             <h3>
                                 <span class="label label-success">The Execute was successful for Data Id: {{executeSuccess}}</span></h3></label>
@@ -152,7 +152,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <span us-spinner spinner-key="spinner-update"></span>
+                    <spinner name="spinner-update" img-src="angular-spinners.gif" on-loaded="spinnerUpdateLoaded()"></spinner>
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="updateServiceName">Name</label>
@@ -196,7 +196,7 @@
             <div class="row"><br><br></div>
 
             <div class="row">
-                <span us-spinner spinner-key="spinner-list"></span>
+                <spinner name="spinner-list" img-src="angular-spinners.gif" on-loaded="spinnerListLoaded()"></spinner>
                 <div class="row">
                     <div class="col-md-2">
                     </div>
