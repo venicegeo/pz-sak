@@ -153,10 +153,10 @@
                                     <th >Message</th>
                                 </tr>
                                 <tr dir-paginate="log in logs | itemsPerPage: size" total-items="logCount" currentPage="pagination.current">
-                                    <td >{{log.createdOn}}</td>
-                                    <td >{{log.service}}</td>
-                                    <td >{{log.address}}</td>
-                                    <td >{{log.severity}}</td>
+                                    <td >{{log.timeStamp}}</td>
+                                    <td >{{log.application}}</td>
+                                    <td >{{log.hostName}}</td>
+                                    <td >{{log.severity | severity}}</td>
                                     <td class="nice-wrapping">{{log.message}}</td>
                                 </tr>
                             </table>
