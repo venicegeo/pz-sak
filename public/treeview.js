@@ -46,13 +46,15 @@
           id : "",
           sessionId : "",
           userStore : "",
+          userDN: "",
           encode : undefined,
           setUser: undefined
       };
       auth[CONST.isloggedIn] = "aoifjakslfia(KDlaiLS";
 
-      var setUser = function(user) {
+      var setUser = function(user, dn) {
           auth.userStore = user;
+          auth.userDN = dn;
           return;
       };
       auth.setUser = setUser;
@@ -321,7 +323,7 @@
     $scope.logout = function() {
         pzlogger.async(
             CONST.informational,
-            Auth.userStore,
+            Auth.userDN,
             "logoutSuccess",
             "",
             "User " + Auth.userStore + " logged out successfully",
@@ -334,7 +336,7 @@
 
         Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
         Auth.encode("null", "null");
-        Auth.setUser("");
+        Auth.setUser("", "");
         Auth.sessionId = undefined;
         $sessionStorage[CONST.auth] = Auth;
         stopIdleTimer();
@@ -430,7 +432,7 @@
                                 // actually get the user's data here
                                     pzlogger.async(
                                         CONST.informational,
-                                        userProfileResponse.data.username,
+                                        userProfileResponse.data.DN,
                                         "loginSuccess",
                                         "",
                                         "User " + userProfileResponse.data.username + " logged in successfully",
@@ -442,7 +444,9 @@
                                     });
                                     Auth.id = $sessionStorage[CONST.auth].id;
                                     Auth[CONST.isLoggedIn] = CONST.loggedIn;
-                                    Auth.setUser(userProfileResponse.data.username);
+                                    Auth.setUser(
+                                        userProfileResponse.data.username,
+                                        userProfileResponse.data.DN);
                                     $http({
                                         method: "POST",
                                         url: "/proxy/" + discover.uuidHost + "/uuids"
@@ -478,7 +482,7 @@
                                 });
                                 Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
                                 Auth.encode("null", "null");
-                                Auth.setUser("");
+                                Auth.setUser("", "");
                                 Auth.sessionId = undefined;
                                 $sessionStorage[CONST.auth] = Auth;
                                 $scope.logoutMessage = "An error occurred during login";
@@ -501,7 +505,7 @@
                             });
                             Auth[CONST.isLoggedIn] = "aiefjkd39dkal3ladfljfk2kKA3kd";
                             Auth.encode("null", "null");
-                            Auth.setUser("");
+                            Auth.setUser("", "");
                             Auth.sessionId = undefined;
                             $sessionStorage[CONST.auth] = Auth;
                             $scope.logoutMessage = "An error occurred during login";
