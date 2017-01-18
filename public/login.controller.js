@@ -27,7 +27,7 @@
             show: true
         };
         // If you're not logged in and you didn't just logout
-        if ($sessionStorage[CONST.auth][CONST.isLoggedIn] === CONST.loggedIn) {
+        if ($sessionStorage[CONST.auth][CONST.isLoggedIn] !== CONST.loggedIn) {
             $('#warningModal').modal(options);
         }
 
