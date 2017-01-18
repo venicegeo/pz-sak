@@ -27,7 +27,9 @@
             show: true
         };
         // If you're not logged in and you didn't just logout
-        $('#warningModal').modal(options);
+        if ($sessionStorage[CONST.auth][CONST.isLoggedIn] === CONST.loggedIn) {
+            $('#warningModal').modal(options);
+        }
 
         $scope.login = function() {
             if (angular.isUndefined($scope.apikey) || $scope.apikey === "") {
