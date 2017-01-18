@@ -21,6 +21,14 @@
 
     function LoginController ($scope, $sessionStorage, discover, toaster, Auth, CONST) {
         $sessionStorage[CONST.auth] = Auth;
+        var options = {
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+        };
+        // If you're not logged in and you didn't just logout
+        $('#warningModal').modal(options);
+
         $scope.login = function() {
             if (angular.isUndefined($scope.apikey) || $scope.apikey === "") {
                 // For now, just have the user enter their API Key
