@@ -13,6 +13,8 @@
  *
  * Copyright 2014 Michael Bromley <michael@michaelbromley.co.uk>
  * The MIT License (https://github.com/michaelbromley/angularUtils)
+ *
+ * angular-utils-pagination v0.11.1
  */
 
 (function() {
