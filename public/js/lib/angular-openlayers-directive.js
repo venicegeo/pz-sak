@@ -1,3 +1,6 @@
+/**
+    angular-openlayers-directive v1.9.2
+ */
 (function (root, factory) {
     if (typeof require === 'function' && typeof exports === 'object') {
         // CommonJS
