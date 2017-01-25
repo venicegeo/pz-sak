@@ -97,6 +97,32 @@
             }, function(){
                 $scope.gatewayStatus = "red";
             });
+
+            $http({
+                method: "GET",
+                url: "/proxy/" + discover.hello + "/"
+            }).then(function(html) {
+                $scope.helloStatus = (html.status === 200) ? "green" : "red";
+            }, function() {
+                $scope.helloStatus = "red";
+            });
+            $http({
+                method: "GET",
+                url: "/" + discover.elasticsearchHost + "/"
+            }).then(function(html) {
+                $scope.elasticsearchStatus = (html.status === 200) ? "green" : "red";
+            }, function() {
+                $scope.elasticsearchStatus = "red";
+            });
+            $http({
+                method: "GET",
+                url: "/geoserver/web"
+            }).then(function(html) {
+                $scope.geoserverStatus = (html.status === 200) ? "green" : "red";
+            }, function() {
+                $scope.geoserverStatus = "red";
+            });
+
         };
 
     }

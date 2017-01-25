@@ -626,7 +626,10 @@
           securityPort : "",
           swaggerUI : "pz-swagger" + hostname,
           docs : "pz-docs" + hostname,
-          sak : "pz-sak" + hostname
+          sak : "pz-sak" + hostname,
+          hello: "pzsvc-hello" + hostname,
+          elasticsearchHost: window.location.hostname + "/elasticsearch",
+          geoserverHost: window.location.hostname + "/geoserver"
     };
     return discover;
 

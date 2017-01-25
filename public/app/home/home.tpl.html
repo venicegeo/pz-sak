@@ -82,6 +82,12 @@
                         <dd><a ng-href="#" ng-click="openPage(services.serviceControllerHost)">https://{{services.serviceControllerHost}}</a></dd>
                         <dt>Gateway:&nbsp;<span class="statusIndicator {{gatewayStatus}}"></span></dt>
                         <dd><a ng-href="#" ng-click="openPage(services.gatewayHost)">https://{{services.gatewayHost}}</a></dd>
+                        <dt>Hello:&nbsp;<span class="statusIndicator {{helloStatus}}"></span></dt>
+                        <dd><a ng-href="#" ng-click="openPage(services.hello)">https://{{services.hello}}</a></dd>
+                        <dt>Elasticsearch:&nbsp;<span class="statusIndicator {{elasticsearchStatus}}"></span></dt>
+                        <dd><a ng-href="#" ng-click="openPage(services.elasticsearchHost)">https://{{services.elasticsearchHost}}</a></dd>
+                        <dt>Geoserver:&nbsp;<span class="statusIndicator {{geoserverStatus}}"></span></dt>
+                        <dd><a ng-href="#" ng-click="openPage(services.geoserverHost + '/web')">https://{{services.geoserverHost + '/web'}}</a></dd>
                     </dl>
 
                     <hr class="separator">
