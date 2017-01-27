@@ -18,10 +18,10 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('SearchController', ['$scope', '$http', 'toaster', 'discover', 'gateway','settings', SearchController]);
+        .controller('SearchController', ['$scope', '$http', 'toaster', 'discover', 'gateway','settings', '$window', SearchController]);
 
 
-    function SearchController($scope, $http, toaster, discover, gateway, settings) {
+    function SearchController($scope, $http, toaster, discover, gateway, settings, $win) {
         $scope.elasticSearchLimit = settings.elasticSearchLimit;
         $scope.size = 100;
 
@@ -106,7 +106,7 @@
                 location = accessData.data.dataType.location;
             }
             var url = "http://" + location.bucketName + "." + location.domainName + "/" + location.fileName;
-            window.location=url;
+            $win.location=url;
         };
 
         $scope.addTags = function() {

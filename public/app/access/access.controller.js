@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('AccessController', ['$scope', 'toaster', 'gateway', 'settings', AccessController]);
+        .controller('AccessController', ['$scope', 'toaster', 'gateway', 'settings', '$window', AccessController]);
 
-    function AccessController($scope, toaster, gateway, settings) {
+    function AccessController($scope, toaster, gateway, settings, $win) {
         $scope.elasticSearchLimit = settings.elasticSearchLimit;
         $scope.pageSize = 10;
         $scope.page = 0;
@@ -91,7 +91,7 @@
                 location = accessData.data.dataType.location;
             }
             var url = "http://" + location.bucketName + "." + location.domainName + "/" + location.fileName;
-            window.location=url;
+            $win.location=url;
         };
     }
 })();
