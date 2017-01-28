@@ -10,3 +10,4 @@ applications:
   services:
     - pz-geoserver-efs
     - geoaxis
+    - pz-elasticsearch
