@@ -48,14 +48,6 @@ describe('Controller: HomeController', function () {
                 "data": "Hi. I'm pz-logger."
             }
         );
-        uuidRequestHandler = $httpBackend.when(
-            'GET',
-            '/proxy/' + discover.uuidHost + '/').respond(
-            {
-                "statusCode": 200,
-                "data": "Hi. I'm pz-uuidgen."
-            }
-        );
         workflowRequestHandler = $httpBackend.when(
             'GET',
             '/proxy/' + discover.workflowHost + '/').respond(
@@ -100,14 +92,12 @@ describe('Controller: HomeController', function () {
     it('should get health checks', function () {
         scope.getStatuses();
         $httpBackend.expectGET('/proxy/' + discover.loggerHost + '/');
-        $httpBackend.expectGET('/proxy/' + discover.uuidHost + '/');
         $httpBackend.expectGET('/proxy/' + discover.workflowHost + '/');
         $httpBackend.expectGET('/proxy/' + discover.searchHost + '/');
         $httpBackend.expectGET('/proxy/' + discover.serviceControllerHost + '/');
         $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/');
         $httpBackend.flush();
         expect(scope.loggerStatus).toBe("green");
-        expect(scope.uuidStatus).toBe("green");
         expect(scope.workflowStatus).toBe("green");
         expect(scope.searchStatus).toBe("green");
         expect(scope.serviceControllerStatus).toBe("green");
@@ -123,14 +113,12 @@ describe('Controller: HomeController', function () {
         gatewayRequestHandler.respond(500, '');
         scope.getStatuses();
         $httpBackend.expectGET('/proxy/' + discover.loggerHost + '/');
-        $httpBackend.expectGET('/proxy/' + discover.uuidHost + '/');
         $httpBackend.expectGET('/proxy/' + discover.workflowHost + '/');
         $httpBackend.expectGET('/proxy/' + discover.searchHost + '/');
         $httpBackend.expectGET('/proxy/' + discover.serviceControllerHost + '/');
         $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/');
         $httpBackend.flush();
         expect(scope.loggerStatus).toBe("red");
-        expect(scope.uuidStatus).toBe("red");
         expect(scope.workflowStatus).toBe("red");
         expect(scope.searchStatus).toBe("red");
         expect(scope.serviceControllerStatus).toBe("red");
@@ -146,14 +134,12 @@ describe('Controller: HomeController', function () {
         gatewayRequestHandler.respond(201, '');
         scope.getStatuses();
         $httpBackend.expectGET('/proxy/' + discover.loggerHost + '/');
-        $httpBackend.expectGET('/proxy/' + discover.uuidHost + '/');
         $httpBackend.expectGET('/proxy/' + discover.workflowHost + '/');
         $httpBackend.expectGET('/proxy/' + discover.searchHost + '/');
         $httpBackend.expectGET('/proxy/' + discover.serviceControllerHost + '/');
         $httpBackend.expectGET('/proxy/' + discover.gatewayHost + '/');
         $httpBackend.flush();
         expect(scope.loggerStatus).toBe("red");
-        expect(scope.uuidStatus).toBe("red");
         expect(scope.workflowStatus).toBe("red");
         expect(scope.searchStatus).toBe("red");
         expect(scope.serviceControllerStatus).toBe("red");
