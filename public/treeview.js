@@ -41,7 +41,24 @@
       return CONSTANTS;
   });
 
-  app.factory('Auth',function($sessionStorage, CONST) {
+    app.factory('uuid', [function() {
+        var uuidGenerator = {
+            generate: function() {
+                var d = Date.now();
+                if(window.performance && typeof window.performance.now === "function"){
+                    d += performance.now(); //use high-precision timer if available
+                }
+                var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = (d + Math.random()*16)%16 | 0;
+                    d = Math.floor(d/16);
+                    return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+                });
+                return uuid;            }
+        };
+        return uuidGenerator;
+    }]);
+
+    app.factory('Auth',function($sessionStorage, CONST) {
       var auth = {
           id : "",
           sessionId : "",
@@ -681,23 +698,6 @@
             }
         };
         return pzlogger;
-    }]);
-
-    app.factory('uuid', [function() {
-        var uuidGenerator = {
-            generate: function() {
-                var d = Date.now();
-                if(window.performance && typeof window.performance.now === "function"){
-                    d += performance.now(); //use high-precision timer if available
-                }
-                var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                    var r = (d + Math.random()*16)%16 | 0;
-                    d = Math.floor(d/16);
-                    return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-                });
-                return uuid;            }
-        };
-        return uuidGenerator;
     }]);
 
 
