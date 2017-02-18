@@ -20,7 +20,6 @@ describe('Controller: HomeController', function () {
 
     var $httpBackend,
         loggerRequestHandler,
-        uuidRequestHandler,
         workflowRequestHandler,
         searchRequestHandler,
         serviceControllerRequestHandler,
@@ -106,7 +105,6 @@ describe('Controller: HomeController', function () {
 
     it('should get failure health checks', function () {
         loggerRequestHandler.respond(500, '');
-        uuidRequestHandler.respond(500, '');
         workflowRequestHandler.respond(500, '');
         searchRequestHandler.respond(500, '');
         serviceControllerRequestHandler.respond(500, '');
@@ -127,7 +125,6 @@ describe('Controller: HomeController', function () {
 
     it('should get failure health checks alt', function () {
         loggerRequestHandler.respond(201, '');
-        uuidRequestHandler.respond(201, '');
         workflowRequestHandler.respond(201, '');
         searchRequestHandler.respond(201, '');
         serviceControllerRequestHandler.respond(201, '');
