@@ -87,9 +87,11 @@
           }));
       }
       if ((angular.isDefined($sessionStorage[CONST.auth]) &&
-          $sessionStorage[CONST.auth][CONST.isLoggedIn] === CONST.loggedIn)) {
+            $sessionStorage[CONST.auth][CONST.isLoggedIn] === CONST.loggedIn)) {
           auth.id = $sessionStorage[CONST.auth].id;
           auth.userStore = $sessionStorage[CONST.auth].userStore;
+          auth.userDN = $sessionStorage[CONST.auth].userDN;
+          auth.sessionId = $sessionStorage[CONST.auth].sessionId;
           auth[CONST.isLoggedIn] = CONST.loggedIn;
       }
       return auth;
