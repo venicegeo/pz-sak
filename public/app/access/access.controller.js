@@ -91,7 +91,7 @@
                 location = accessData.data.dataType.location;
             }
             var url = "http://" + location.bucketName + "." + location.domainName + "/" + location.fileName;
-            $win.location=url;
+            $win.location.assign(url);
         };
     }
 })();
