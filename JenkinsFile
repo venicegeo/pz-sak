@@ -11,26 +11,24 @@ node {
     ])
   }
 
-  stage('Archive') {
+  stage('Karma Tests') {
     npmSetup()
-
     withEnv(["PATH+=${nodejs}/bin"]) {
-      sh 'npm install'
-      sh './ci/archive.sh'
+      sh './ci/karma.sh'
     }
+  }
 
+  stage('Archive') {
+    sh './ci/archive.sh'
     mavenPush()
   }
 
   stage('Initial Scans') {
     dependencyCheck()
 
-    // Where do unit tests (karma) run?
-
-    // For sonar in the past, we run karma tests that generates lcov.info
-    // and then our sonar-project.properties file says where that file is.
-    // Rather than run sonar() I guess we should continue doing that
-    sh './ci/sonar.sh'
+    // We shouldn't need to run sonar again because the lcov.info file was
+    // already generated with karma tests and the sonar-project.properties file exists
+    // sh './ci/sonar.sh'
   }
 
   stage ('CI Deploy') {
