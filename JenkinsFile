@@ -2,7 +2,7 @@
 
 node {
 // ('sl61')
-  def nodejs = tool 'Node 5.10.0'
+  def nodejs = tool 'NodeJS_6'
 
   stage('Setup') {
     git([
