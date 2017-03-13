@@ -12,9 +12,8 @@ node {
   }
 
   stage('Karma Tests') {
+    npmSetup()
     withEnv(["PATH+=${nodejs}/bin"]) {
-      npmSetup()
-      sh 'npm install'
       sh './ci/karma.sh'
     }
   }
