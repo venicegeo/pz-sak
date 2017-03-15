@@ -41,6 +41,13 @@ node {
     postman()
   }
 
+  stage('Reset') {
+    git([
+      url: "https://github.com/venicegeo/pz-sak",
+      branch: "master"
+    ])
+  }
+
   stage('Staging Deploy') {
     cfPush {
       cfTarget = 'stage'
