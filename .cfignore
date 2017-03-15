@@ -1,0 +1,6 @@
+./.npmcache
+./node_modules
+./test
+./screenshots
+./ci
+./conf
