@@ -12,4 +12,3 @@ applications:
     - geoaxis
   env:
     NPM_CONFIG_CACHE: ~/workspace/venice/piazza/pz-sak/.npmcache
-    
