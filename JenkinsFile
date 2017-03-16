@@ -1,4 +1,4 @@
-@Library('pipelib@v0.2.13') _
+@Library('pipelib@master') _
 
 node {
 // ('sl61')
