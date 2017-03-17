@@ -20,7 +20,9 @@ node {
 
   stage('Archive') {
     sh './ci/archive.sh'
-    mavenPush()
+    mavenPush {
+      mavenRepo = 'Piazza'
+    }
   }
 
   stage('Initial Scans') {
