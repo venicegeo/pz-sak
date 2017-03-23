@@ -2889,9 +2889,9 @@
       }
     },
     "moment": {
-      "version": "2.8.4",
-      "from": "moment@2.8.4",
-      "resolved": "https://nexus.devops.geointservices.io/content/repositories/npmjs/moment/-/moment-2.8.4.tgz"
+      "version": "2.12.0",
+      "from": "moment@2.12.0",
+      "resolved": "https://nexus.devops.geointservices.io/content/repositories/npmjs/moment/-/moment-2.12.0.tgz"
     },
     "mout": {
       "version": "0.10.0",
