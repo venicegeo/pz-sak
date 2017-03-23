@@ -53,7 +53,7 @@
                 cryptoObj.getRandomValues(array);
                 var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                     var randomValue = array[0] / 10000000000;
-                    array = array.slice(1, array.length - 1);
+                    array = array.slice(1, array.length);
                     var r = (d + randomValue*16)%16 | 0;
                     d = Math.floor(d/16);
                     return (c=='x' ? r : (r&0x3|0x8)).toString(16);
