@@ -42,14 +42,19 @@
   });
 
     app.factory('uuid', [function() {
+        var cryptoObj = window.crypto || window.msCrypto;
         var uuidGenerator = {
             generate: function() {
                 var d = Date.now();
                 if(window.performance && typeof window.performance.now === "function"){
                     d += performance.now(); //use high-precision timer if available
                 }
+                var array = new Uint32Array(32);
+                cryptoObj.getRandomValues(array);
                 var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                    var r = (d + Math.random()*16)%16 | 0;
+                    var randomValue = array[0] / 10000000000;
+                    array = array.slice(1, array.length - 1);
+                    var r = (d + randomValue*16)%16 | 0;
                     d = Math.floor(d/16);
                     return (c=='x' ? r : (r&0x3|0x8)).toString(16);
                 });
