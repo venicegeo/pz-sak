@@ -1,7 +1,7 @@
 applications:
-- name: pz-sak
-  host: pz-sak
-  buildpack: staticfile_buildpack
+- name: pz-sak-patrick-test
+  host: pz-sak-patrick-test
+  buildpack: nodejs_buildpack
   services:
     - pz-geoserver-efs
     - geoaxis
