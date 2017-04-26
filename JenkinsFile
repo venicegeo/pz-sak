@@ -24,7 +24,7 @@ node {
   }
 
   stage('Initial Scans') {
-    // dependencyCheck()
+    dependencyCheck()
 
     // We shouldn't need to run sonar again because the lcov.info file was
     // already generated with karma tests and the sonar-project.properties file exists
@@ -33,7 +33,7 @@ node {
 
   stage ('CI Deploy') {
     cfPush()
-    // zap()
+    zap()
     cfBgDeploy()
   }
 
@@ -58,7 +58,7 @@ node {
   }
 
   stage('Final Scans') {
-    // fortify()
+    fortify()
   }
 
   stage ('Cleanup') {
