@@ -5,7 +5,7 @@ Angular app for testing Piazza services
 ## Dependencies
 * nginx 1.8.1
 
-Note: Unit tests require NodeJS 5 or later
+Note: Unit tests require NodeJS 5 or later (for any `npm` command)
 
 ## Running
 1. Clone this repo
