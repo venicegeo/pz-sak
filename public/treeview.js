@@ -349,8 +349,9 @@
         Auth.sessionId = undefined;
         $sessionStorage[CONST.auth] = Auth;
         stopIdleTimer();
-        $scope.logoutMessage = "You have successfully logged out.";
-        $location.path("/login.html");
+
+        // Need to redirect the user to logout completely
+        window.location = "/logoutProxy"
     };
 
     $scope.my_data = treedata_avm;
