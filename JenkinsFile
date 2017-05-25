@@ -12,7 +12,7 @@ node {
       branch: "master"
     ])
   }
-/*
+
   stage('Karma Tests') {
     npmSetup()
     withEnv(["PATH+=${nodejs}/bin"]) {
@@ -42,12 +42,11 @@ node {
     }
     cfBgDeploy()
   }
-*/
+
   stage ('Integration Testing') {
     postman()
   }
 
-/*
   stage('Reset') {
     git([
       url: env.GIT_URL ? env.GIT_URL : 'https://github.com/venicegeo/pz-sak',
@@ -69,7 +68,6 @@ node {
       threadfixId = THREADFIX_ID
     }
   }
-*/
 
   stage ('Cleanup') {
     deleteDir()
