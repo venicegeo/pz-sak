@@ -43,7 +43,7 @@ node {
     cfBgDeploy()
   }
 
-  stage ('Integration Testing') {
+  stage ('Int: Integration Testing') {
     postman()
   }
 
@@ -56,11 +56,24 @@ node {
 
   stage('Staging Deploy') {
     cfPush {
-      cfTarget = 'stage'
+      cfSpace = 'stage'
     }
     cfBgDeploy {
-      cfTarget = 'stage'
+      cfSpace = 'stage'
     }
+  }
+
+  stage ('Stage: Integration Testing') {
+    postman {
+      cfSpace = 'stage'
+    }
+  }
+
+  stage('Reset') {
+    git([
+      url: env.GIT_URL ? env.GIT_URL : 'https://github.com/venicegeo/pz-sak',
+      branch: "master"
+    ])
   }
 
   stage('Final Scans') {
