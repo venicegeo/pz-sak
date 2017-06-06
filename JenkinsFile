@@ -1,5 +1,3 @@
-@Library('pipelib@master') _
-
 def THREADFIX_ID = env.THREADFIX_ID ? env.THREADFIX_ID : '115'
 
 node {
