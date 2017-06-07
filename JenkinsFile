@@ -1,102 +1,151 @@
 def THREADFIX_ID = env.THREADFIX_ID ? env.THREADFIX_ID : '115'
 
 node {
-// ('sl61')
   def nodejs = tool 'NodeJS_6'
+  def mvn = tool 'M3'
+  def root = pwd()
+  def appvers = sh(script: "git describe --long --tags --always | sed 's/\\./-/'g", returnStdout: true)
+  def appName = "pz-sak-${appvers}"
 
   stage('Setup') {
     deleteDir()
-    git([
+    /*git([
       url: env.GIT_URL ? env.GIT_URL : 'https://github.com/venicegeo/pz-sak',
       branch: "master"
-    ])
+    ])*/
+	git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}"
   }
-**dot mil needs credentials to clone**
+  
+  /*
   stage('Setup') {
     deleteDir()
     git url: "git@gitlab.gs.mil:venice/pz-jobcommon", branch: "master", credentialsId: "aaef610c-9fd0-4812-9027-755ff3a872a5"
-  }
+  }*/
 
   stage('Karma Tests') {
-    ~~npmSetup()~~
-    sh "npm stuff"
-    withEnv(["PATH+=${nodejs}/bin"]) {
-      sh './ci/karma.sh'
+    withEnv(["PATH+=${nodejs}/bin", "NPM_CONFIG_CACHE=${root}/.npmcache", "HOME=${WORKSPACE}"]) {
+	  withCredentials([[$class: 'StringBinding', credentialsId: 'baxtersh_npm_credentials', variable: 'NPM_AUTH']]) {
+	    sh "mkdir -p ${root}/.npmcache"
+		sh "npm set always-auth true"
+	    sh "npm set _auth ${NPM_AUTH}"		
+	    sh "npm install"
+		sh "./node_modules/karma/bin/karma --version"
+        sh "./node_modules/karma/bin/karma start"
+	  }
     }
   }
 
   stage('Archive') {
-    ~~sh './ci/archive.sh'~~
-    ~~mavenPush()~~
+	def archiveName = "pz-sak.tar.gz"
+    sh "tar -czf ${archiveName} -C ${root} public"
+    sh """mvn -X --settings ~/.m2/settings.xml deploy:deploy-file -Dfile=${archiveName} \
+		-DrepositoryId=nexus \
+		-Durl="${env.ARTIFACT_STORAGE_URL}" \
+		-DgroupId="org.piazza" \
+		-DgeneratePom=false \
+		-Dpackaging=tar.gz \
+		-Dmaven.repo.local="${root}/.m2/repository" \
+		-DartifactId=pz-sak \
+		 -Dversion=${appvers} \
+	"""
   }
 
   stage('Initial Scans') {
-    ~~dependencyCheck {~~
-      ~~threadfixId = THREADFIX_ID~~
-    ~~}~~
-      sh "owasp stuff"
-
-    // We shouldn't need to run sonar again because the lcov.info file was
-    // already generated with karma tests and the sonar-project.properties file exists
-    // sh './ci/sonar.sh'
+    withCredentials([[$class: 'StringBinding', credentialsId: '978C467A-2B26-47AE-AD2F-4AFD5A4AF695', variable: 'THREADFIX_KEY']]) {
+      sh "/jslave/dependency-check/dependency-check/bin/dependency-check.sh --version"	 
+      sh '/jslave/dependency-check/dependency-check/bin/dependency-check.sh --project "pz-sak" --scan "." --format "XML" --enableExperimental --disableBundleAudit' 
+      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml https://threadfix.gs.mil/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"	 
+	}	  
   }
 
   stage ('CI Deploy') {
-    ~~cfPush()~~
-    sh "cf auth"
-    sh "cf push"
-    ~~zap {~~
-      ~~threadfixId = THREADFIX_ID~~
-    ~~}~~
-    sh "owasp things"
-    ~~cfBgDeploy()~~
-    sh "cf bg deploy"
+    if(!fileExists('.cf')) {
+      sh "mkdir -p .cf"
+    }
+    withEnv(['CF_HOME=.cf']) {
+      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ldap_baxtersh', usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
+        sh "cf api ${env.PCF_API_ENDPOINT}"
+        sh "cf auth ${CFUSER} ${CFPASS}"
+        sh "cf target -o Optimus -s ${env.PCF_SPACE}"
+        sh "cf push ${appName} --hostname ${appName} -f manifest.jenkins.yml -d ${env.PCF_DOMAIN} --no-start"	
+		sh "cf set-env SPACE ${env.PCF_SPACE}"
+		sh "cf set-env DOMAIN ${env.PCF_DOMAIN}"
+		sh "cf start"
+	  }
+	}
+	withCredentials([[$class: 'StringBinding', credentialsId: '978C467A-2B26-47AE-AD2F-4AFD5A4AF695', variable: 'THREADFIX_KEY']]) {
+	  sh """${env.ZAPROXY_HOME}/zap.sh -cmd \
+	    -quickout ${root}/out/zap.xml \
+	    -quickurl https://${appName}.${env.PCF_DOMAIN} \
+	  """
+	  cat ${root}/out/zap.xml
+	  // Do we have to explicitly upload this to Threadfix or something?
+	}
+    withEnv(['CF_HOME=.cf']) {
+      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ldap_baxtersh', usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
+        sh "cf api ${env.PCF_API_ENDPOINT}"
+        sh "cf auth ${CFUSER} ${CFPASS}"
+        sh "cf target -o Optimus -s ${env.PCF_SPACE}"
+		def legacyAppName = sh(script: "cf routes | grep \"pz-sak \" | awk '{print $4}'", returnStdout: true)
+		sh "cf map-route ${appName} ${env.PCF_DOMAIN} --hostname pz-sak"
+		def appExists = sh(script: "cf target ${legacyAppName}", returnStatus: true) == 0
+		if (appExists) {
+		  // Delete old app. Do we have to unmap the route?
+	      sh "cf delete ${legacyAppName} -f"
+		}
+	  }
+	}
   }
 
   stage ('Int: Integration Testing') {
+	  /*
     ~~postman()~~
-    sh "postman stuff"
+    sh "postman stuff"*/
   }
-
+/*
   ## We probably don't need this step?
   stage('Reset') {
     git([
       url: env.GIT_URL ? env.GIT_URL : 'https://github.com/venicegeo/pz-sak',
       branch: "master"
     ])
-  }
+  }*/
 
   stage('Staging Deploy') {
+	  /*
     cfPush {
       cfSpace = 'stage'
     }
     cfBgDeploy {
       cfSpace = 'stage'
-    }
+    }*/
   }
 
   stage ('Stage: Integration Testing') {
+	  /*
     postman {
       cfSpace = 'stage'
-    }
+    }*/
   }
-
+/*
   ## We may not need this
   stage('Reset') {
     git([
       url: env.GIT_URL ? env.GIT_URL : 'https://github.com/venicegeo/pz-sak',
       branch: "master"
     ])
-  }
+  }*/
 
   stage('Final Scans') {
+	  /*
     ~~fortify {~~
       ~~threadfixId = THREADFIX_ID~~
     ~~}~~
-    sh "/opt/fortify stuff"
+    sh "/opt/fortify stuff"*/
   }
+  /*
   ## We do this already in the beginning?
   stage ('Cleanup') {
     deleteDir()
-  }
+  }*/
 }
