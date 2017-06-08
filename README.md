@@ -19,4 +19,3 @@ Note: Unit tests require NodeJS 5 or later (for any `npm` command)
 3. Run `./node_modules/karma/bin/karma start`
 
 Troubleshooting: If phantomjs is having problems starting it may need to be installed globally via `npm install -g phantomjs-prebuilt`
-
