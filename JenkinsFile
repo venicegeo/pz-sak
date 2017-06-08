@@ -37,8 +37,7 @@ node {
   }
 
   stage('Archive') {
-  /*
-	def archiveName = "pz-sak.tar.gz"
+    def archiveName = "pz-sak.tar.gz"
     sh "tar -czf ${archiveName} -C ${root} public"
     sh """mvn -X --settings ~/.m2/settings.xml deploy:deploy-file -Dfile=${archiveName} \
 		-DrepositoryId=nexus \
@@ -49,7 +48,7 @@ node {
 		-Dmaven.repo.local="${root}/.m2/repository" \
 		-DartifactId=pz-sak \
 		 -Dversion=${appvers} \
-	"""*/
+	"""
   }
 
   stage('Initial Scans') {
