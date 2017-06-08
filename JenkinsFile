@@ -41,7 +41,7 @@ node {
     sh "tar -czf ${archiveName} -C ${root} public"
     sh """mvn -X --settings ~/.m2/settings.xml deploy:deploy-file -Dfile=${archiveName} \
 		-DrepositoryId=nexus \
-		-Durl="${env.ARTIFACT_STORAGE_URL}" \
+		-Durl="${env.ARTIFACT_STORAGE_DEPLOY_URL}" \
 		-DgroupId="org.piazza" \
 		-DgeneratePom=false \
 		-Dpackaging=tar.gz \
@@ -87,7 +87,7 @@ node {
         sh "cf api ${env.PCF_API_ENDPOINT}"
         sh "cf auth ${CFUSER} ${CFPASS}"
         sh "cf target -o Optimus -s ${env.PCF_SPACE}"
-		def legacyAppName = sh(script: "cf routes | grep \"pz-sak \" | awk '{print $4}'", returnStdout: true)
+		def legacyAppName = sh(script: "cf routes | grep \"pz-sak \" | awk '{print \$4}'", returnStdout: true)
 		sh "cf map-route ${appName} ${env.PCF_DOMAIN} --hostname pz-sak"
 		def appExists = sh(script: "cf target ${legacyAppName}", returnStatus: true) == 0
 		if (appExists) {
@@ -126,7 +126,7 @@ node {
         sh "cf api ${env.PCF_API_ENDPOINT}"
         sh "cf auth ${CFUSER} ${CFPASS}"
         sh "cf target -o Optimus -s ${env.PCF_SPACE}"
-		def legacyAppName = sh(script: "cf routes | grep \"pz-sak \" | awk '{print $4}'", returnStdout: true)
+		def legacyAppName = sh(script: "cf routes | grep \"pz-sak \" | awk '{print \$4}'", returnStdout: true)
 		sh "cf map-route ${appName} ${env.PCF_DOMAIN} --hostname pz-sak"
 		def appExists = sh(script: "cf target ${legacyAppName}", returnStatus: true) == 0
 		if (appExists) {
