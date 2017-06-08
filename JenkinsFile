@@ -4,7 +4,6 @@ node {
   def nodejs = tool 'NodeJS_6'
   def mvn = tool 'M3'
   def root = pwd()
-  def appName = "pz-sak-${appvers}"
 
   stage('Setup') {                                                              
     deleteDir()                                                                 
@@ -16,6 +15,7 @@ node {
   }    
   
   def appvers = sh(script: "git describe --long --tags --always | sed 's/\\./-/'g", returnStdout: true)
+  def appName = "pz-sak-${appvers}"
   
   /*
   stage('Setup') {
