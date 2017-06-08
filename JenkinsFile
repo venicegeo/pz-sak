@@ -4,7 +4,6 @@ node {
   def nodejs = tool 'NodeJS_6'
   def mvn = tool 'M3'
   def root = pwd()
-  def appvers = sh(script: "git describe --long --tags --always | sed 's/\\./-/'g", returnStdout: true)
   def appName = "pz-sak-${appvers}"
 
   stage('Setup') {
@@ -15,6 +14,8 @@ node {
     ])*/
 	git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}"
   }
+  
+  def appvers = sh(script: "git describe --long --tags --always | sed 's/\\./-/'g", returnStdout: true)
   
   /*
   stage('Setup') {
@@ -58,7 +59,7 @@ node {
 	}	  
   }
 
-  stage ('CI Deploy') {
+  stage ('Int Deploy') {
     if(!fileExists('.cf')) {
       sh "mkdir -p .cf"
     }
@@ -90,62 +91,61 @@ node {
 		sh "cf map-route ${appName} ${env.PCF_DOMAIN} --hostname pz-sak"
 		def appExists = sh(script: "cf target ${legacyAppName}", returnStatus: true) == 0
 		if (appExists) {
-		  // Delete old app. Do we have to unmap the route?
+		  // Delete old app. Do we have to unmap the routes?
 	      sh "cf delete ${legacyAppName} -f"
 		}
 	  }
 	}
   }
 
-  stage ('Int: Integration Testing') {
-	  /*
-    ~~postman()~~
-    sh "postman stuff"*/
-  }
-/*
-  ## We probably don't need this step?
-  stage('Reset') {
-    git([
-      url: env.GIT_URL ? env.GIT_URL : 'https://github.com/venicegeo/pz-sak',
-      branch: "master"
-    ])
-  }*/
-
-  stage('Staging Deploy') {
-	  /*
-    cfPush {
-      cfSpace = 'stage'
+  stage('Stage Deploy') {
+    if(!fileExists('.cf')) {
+      sh "mkdir -p .cf"
     }
-    cfBgDeploy {
-      cfSpace = 'stage'
-    }*/
+    withEnv(['CF_HOME=.cf']) {
+      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ldap_baxtersh', usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
+        sh "cf api ${env.PCF_API_ENDPOINT}"
+        sh "cf auth ${CFUSER} ${CFPASS}"
+        sh "cf target -o Optimus -s ${env.PCF_SPACE}"
+        sh "cf push ${appName} --hostname ${appName} -f manifest.jenkins.yml -d ${env.PCF_DOMAIN} --no-start"	
+		sh "cf set-env SPACE ${env.PCF_SPACE}"
+		sh "cf set-env DOMAIN ${env.PCF_DOMAIN}"
+		sh "cf start"
+	  }
+	}
+	withCredentials([[$class: 'StringBinding', credentialsId: '978C467A-2B26-47AE-AD2F-4AFD5A4AF695', variable: 'THREADFIX_KEY']]) {
+	  sh """${env.ZAPROXY_HOME}/zap.sh -cmd \
+	    -quickout ${root}/out/zap.xml \
+	    -quickurl https://${appName}.${env.PCF_DOMAIN} \
+	  """
+	  cat ${root}/out/zap.xml
+	  // Do we have to explicitly upload this to Threadfix or something?
+	}
+    withEnv(['CF_HOME=.cf']) {
+      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ldap_baxtersh', usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
+        sh "cf api ${env.PCF_API_ENDPOINT}"
+        sh "cf auth ${CFUSER} ${CFPASS}"
+        sh "cf target -o Optimus -s ${env.PCF_SPACE}"
+		def legacyAppName = sh(script: "cf routes | grep \"pz-sak \" | awk '{print $4}'", returnStdout: true)
+		sh "cf map-route ${appName} ${env.PCF_DOMAIN} --hostname pz-sak"
+		def appExists = sh(script: "cf target ${legacyAppName}", returnStatus: true) == 0
+		if (appExists) {
+		  // Delete old app. Do we have to unmap the routes?
+	      sh "cf delete ${legacyAppName} -f"
+		}
+	  }
+	}
   }
-
-  stage ('Stage: Integration Testing') {
-	  /*
-    postman {
-      cfSpace = 'stage'
-    }*/
-  }
-/*
-  ## We may not need this
-  stage('Reset') {
-    git([
-      url: env.GIT_URL ? env.GIT_URL : 'https://github.com/venicegeo/pz-sak',
-      branch: "master"
-    ])
-  }*/
 
   stage('Final Scans') {
-	  /*
-    ~~fortify {~~
-      ~~threadfixId = THREADFIX_ID~~
-    ~~}~~
-    sh "/opt/fortify stuff"*/
+	withCredentials([[$class: 'StringBinding', credentialsId: '978C467A-2B26-47AE-AD2F-4AFD5A4AF695', variable: 'THREADFIX_KEY']]) {
+      sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} '**/*.js' -exclude 'test/*.js' -exclude package.json -exclude 'node_modules/**/*.js' -exclude 'public/js/**/*.js'"
+      sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER}  -scan -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr"
+      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${env.BUILD_NUMBER}.fpr https://threadfix.gs.mil/rest/applications/${THREADFIX_ID}/upload?apiKey=$THREADFIX_KEY"
+	}
   }
-  /*
-  ## We do this already in the beginning?
+
   stage ('Cleanup') {
     deleteDir()
-  }*/
+  }
 }
