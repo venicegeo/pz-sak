@@ -5,18 +5,18 @@ node {
   def mvn = tool 'M3'
   def root = pwd()
 
-  stage('Setup') {                                                              
-    deleteDir()                                                                 
-    if(env.GITLAB_CREDS) {                                                      
+  stage('Setup') {
+    deleteDir()
+    if(env.GITLAB_CREDS) {
       git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}", credentialsId: "${env.GITLAB_CREDS}"
-    } else {                                                                    
-      git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}"                    
-    }                                                                           
-  }    
-  
+    } else {
+      git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}"
+    }
+  }
+
   def appvers = sh(script: "git describe --long --tags --always | sed 's/\\./-/'g", returnStdout: true)
   def appName = "pz-sak-${appvers}"
-  
+
   /*
   stage('Setup') {
     deleteDir()
@@ -28,7 +28,7 @@ node {
 	  withCredentials([[$class: 'StringBinding', credentialsId: 'baxtersh_npm_credentials', variable: 'NPM_AUTH']]) {
 	    sh "mkdir -p ${root}/.npmcache"
 		sh "npm set always-auth true"
-	    sh "npm set _auth ${NPM_AUTH}"		
+	    sh "npm set _auth ${NPM_AUTH}"
 	    sh "npm install"
 		sh "./node_modules/karma/bin/karma --version"
         sh "./node_modules/karma/bin/karma start"
@@ -53,10 +53,10 @@ node {
 
   stage('Initial Scans') {
     withCredentials([[$class: 'StringBinding', credentialsId: 'THREADFIX_API_KEY', variable: 'THREADFIX_KEY']]) {
-      sh "/jslave/dependency-check/dependency-check/bin/dependency-check.sh --version"	 
-      sh '/jslave/dependency-check/dependency-check/bin/dependency-check.sh --project "pz-sak" --scan "." --format "XML" --enableExperimental --disableBundleAudit' 
-      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml https://threadfix.gs.mil/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"	 
-	}	  
+      sh "/jslave/dependency-check/dependency-check/bin/dependency-check.sh --version"
+      sh '/jslave/dependency-check/dependency-check/bin/dependency-check.sh --project "pz-sak" --scan "." --format "XML" --enableExperimental --disableBundleAudit'
+      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml https://threadfix.gs.mil/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"
+	}
   }
 
   stage ('Int Deploy') {
@@ -68,7 +68,7 @@ node {
         sh "cf api ${env.PCF_API_ENDPOINT}"
         sh "cf auth ${CFUSER} ${CFPASS}"
         sh "cf target -o Optimus -s ${env.PHASE_ONE_PCF_SPACE}"
-        sh "cf push ${appName} --hostname ${appName} -f manifest.jenkins.yml -d ${env.PHASE_ONE_PCF_DOMAIN} --no-start"	
+        sh "cf push ${appName} --hostname ${appName} -f manifest.jenkins.yml -d ${env.PHASE_ONE_PCF_DOMAIN} --no-start"
 		sh "cf set-env SPACE ${env.PHASE_ONE_PCF_SPACE}"
 		sh "cf set-env DOMAIN ${env.PHASE_ONE_PCF_DOMAIN}"
 		sh "cf start"
@@ -108,7 +108,7 @@ node {
 			sh "cf api ${env.PCF_API_ENDPOINT}"
 			sh "cf auth ${CFUSER} ${CFPASS}"
 			sh "cf target -o Optimus -s ${env.PHASE_TWO_PCF_SPACE}"
-			sh "cf push ${appName} --hostname ${appName} -f manifest.jenkins.yml -d ${env.PHASE_TWO_PCF_DOMAIN} --no-start"	
+			sh "cf push ${appName} --hostname ${appName} -f manifest.jenkins.yml -d ${env.PHASE_TWO_PCF_DOMAIN} --no-start"
 			sh "cf set-env SPACE ${env.PHASE_TWO_PCF_SPACE}"
 			sh "cf set-env DOMAIN ${env.PHASE_TWO_PCF_DOMAIN}"
 			sh "cf start"
