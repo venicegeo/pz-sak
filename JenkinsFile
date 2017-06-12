@@ -15,7 +15,7 @@ node {
   }
 
   def appvers = sh(script: "git describe --long --tags --always | sed 's/\\./-/'g", returnStdout: true)
-  sh "dt=\"$(echo \"$dt\"|tr -d '\\n')\""
+  sh "dt=\"\$(echo \"\$dt\"|tr -d '\\n')\""
   def appName = "pz-sak-${appvers}"
 
   /*
