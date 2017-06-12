@@ -6,7 +6,6 @@ node {
   def root = pwd()
 
   stage('Setup') {
-	sh "env"
     deleteDir()
     if(env.GITLAB_CREDS) {
       git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}", credentialsId: "${env.GITLAB_CREDS}"
@@ -69,7 +68,7 @@ node {
         sh "cf api ${env.PCF_API_ENDPOINT}"
         sh "cf auth ${CFUSER} ${CFPASS}"
         sh "cf target -o ${env.PCF_ORG} -s ${env.PHASE_ONE_PCF_SPACE}"
-		sh "echo push ${appName} --hostname ${appName} -f manifest.jenkins.yml -d ${env.PHASE_ONE_PCF_DOMAIN} --no-start"
+		echo "push ${appName} --hostname ${appName} -f manifest.jenkins.yml -d ${env.PHASE_ONE_PCF_DOMAIN} --no-start"
         sh "cf push ${appName} --hostname ${appName} -f manifest.jenkins.yml -d ${env.PHASE_ONE_PCF_DOMAIN} --no-start"
 		sh "cf set-env SPACE ${env.PHASE_ONE_PCF_SPACE}"
 		sh "cf set-env DOMAIN ${env.PHASE_ONE_PCF_DOMAIN}"
