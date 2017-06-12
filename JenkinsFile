@@ -112,7 +112,9 @@ node {
 		// Remove Legacy applications
 		for (Object legacyApp : legacyAppNames.trim().tokenize(',')) {
 		  def legacyAppName = legacyApp.toString().trim()
-		  sh "cf delete -f ${legacyAppName}"
+		  if (legacyAppName != appName) {
+		    sh "cf delete -f ${legacyAppName}"
+		  }
 		}
 	  }
 	}
@@ -153,7 +155,9 @@ node {
 		    // Remove Legacy applications
 		    for (Object legacyApp : legacyAppNames.trim().tokenize(',')) {
 		      def legacyAppName = legacyApp.toString().trim()
-		      sh "cf delete -f ${legacyAppName}"
+			  if (legacyAppName != appName) {
+		        sh "cf delete -f ${legacyAppName}"
+			  }
 		    }
 		  }
 		}
