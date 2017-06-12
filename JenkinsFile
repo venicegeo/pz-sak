@@ -82,7 +82,7 @@ node {
 	    -quickout ${root}/zap-out/zap.xml \
 	    -quickurl https://${appName}.${env.PHASE_ONE_PCF_DOMAIN} \
 	  """
-	  echo "cat ${root}/zap-out/zap.xml"
+	  sh "cat ${root}/zap-out/zap.xml"
 	  // Do we have to explicitly upload this to Threadfix or something?
 	}
     withEnv(['CF_HOME=.cf']) {
@@ -123,7 +123,7 @@ node {
 			-quickout ${root}/zap-out/zap.xml \
 			-quickurl https://${appName}.${env.PHASE_TWO_PCF_DOMAIN} \
 		  """
-		  echo "cat ${root}/zap-out/zap.xml"
+		  sh "cat ${root}/zap-out/zap.xml"
 		  // Do we have to explicitly upload this to Threadfix or something?
 		}
 		withEnv(['CF_HOME=.cf']) {
