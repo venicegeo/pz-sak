@@ -81,7 +81,7 @@ node {
 	    -quickout ${root}/out/zap.xml \
 	    -quickurl https://${appName}.${env.PHASE_ONE_PCF_DOMAIN} \
 	  """
-	  cat ${root}/out/zap.xml
+	  cat "${root}/out/zap.xml"
 	  // Do we have to explicitly upload this to Threadfix or something?
 	}
     withEnv(['CF_HOME=.cf']) {
