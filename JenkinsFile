@@ -46,7 +46,7 @@ node {
 			-DrepositoryId=nexus \
 			-DartifactId=pz-sak \
 			-Dversion=${appvers} \
-			-DgroupId="org.piazza" \
+			-DgroupId="org.venice.piazza" \
 			-Dpackaging=tar.gz \
 			-DremoteRepositories="nexus::default::${env.ARTIFACT_STORAGE_DEPLOY_URL}" \
 			>> /dev/null 2>&1 \
@@ -59,7 +59,7 @@ node {
       sh """mvn -X --settings ~/.m2/settings.xml deploy:deploy-file -Dfile=${archiveName} \
 		-DrepositoryId=nexus \
 		-Durl="${env.ARTIFACT_STORAGE_DEPLOY_URL}" \
-		-DgroupId="org.piazza" \
+		-DgroupId="org.venice.piazza" \
 		-DgeneratePom=false \
 		-Dpackaging=tar.gz \
 		-Dmaven.repo.local="${root}/.m2/repository" \
