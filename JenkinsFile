@@ -92,7 +92,7 @@ node {
 		def legacyAppNames = sh(script: "cf routes | grep \"pz-sak \" | awk '{print \$4}'", returnStdout: true)
 		sh "cf map-route ${appName} ${env.PHASE_ONE_PCF_DOMAIN} --hostname pz-sak"
 		// Remove Legacy applications
-		for (Object legacyApp : legacyAppNames.tokenize(',')) {
+		for (Object legacyApp : legacyAppNames.trim().tokenize(',')) {
 		  def legacyAppName = legacyApp.toString().trim()
 		  sh "cf delete -f ${legacyAppName}"
 		}
@@ -132,7 +132,7 @@ node {
 			def legacyAppNames = sh(script: "cf routes | grep \"pz-sak \" | awk '{print \$4}'", returnStdout: true)
 			sh "cf map-route ${appName} ${env.PHASE_TWO_PCF_DOMAIN} --hostname pz-sak"
 		    // Remove Legacy applications
-		    for (Object legacyApp : legacyAppNames.tokenize(',')) {
+		    for (Object legacyApp : legacyAppNames.trim().tokenize(',')) {
 		      def legacyAppName = legacyApp.toString().trim()
 		      sh "cf delete -f ${legacyAppName}"
 		    }
