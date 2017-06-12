@@ -92,8 +92,8 @@ node {
 		def legacyAppNames = sh(script: "cf routes | grep \"pz-sak \" | awk '{print \$4}'", returnStdout: true)
 		sh "cf map-route ${appName} ${env.PHASE_ONE_PCF_DOMAIN} --hostname pz-sak"
 		// Remove Legacy applications
-		(legacyAppNames.tokenize(',')).each {
-		  sh "cf delete -f ${it}"
+		for (Object legacyApp : legacyAppNames.tokenize(',')) {
+		  sh "cf delete -f ${legacyApp}"
 		}
 	  }
 	}
