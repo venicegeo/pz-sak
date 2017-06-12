@@ -77,11 +77,12 @@ node {
 	  }
 	}
 	withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
+	  sh "mkdir -p ${root}/zap-out"
 	  sh """${zapHome}/zap.sh -cmd \
-	    -quickout ${root}/out/zap.xml \
+	    -quickout ${root}/zap-out/zap.xml \
 	    -quickurl https://${appName}.${env.PHASE_ONE_PCF_DOMAIN} \
 	  """
-	  echo "${root}/out/zap.xml"
+	  echo "${root}/zap-out/zap.xml"
 	  // Do we have to explicitly upload this to Threadfix or something?
 	}
     withEnv(['CF_HOME=.cf']) {
@@ -117,11 +118,12 @@ node {
 		  }
 		}
 		withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
+		  sh "mkdir -p ${root}/zap-out"
 		  sh """${zapHome}/zap.sh -cmd \
-			-quickout ${root}/out/zap.xml \
+			-quickout ${root}/zap-out/zap.xml \
 			-quickurl https://${appName}.${env.PHASE_TWO_PCF_DOMAIN} \
 		  """
-		  echo "${root}/out/zap.xml"
+		  echo "${root}/zap-out/zap.xml"
 		  // Do we have to explicitly upload this to Threadfix or something?
 		}
 		withEnv(['CF_HOME=.cf']) {
