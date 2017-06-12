@@ -75,6 +75,7 @@ node {
 		sh "cf start ${appName}"
 	  }
 	}
+	/*
 	withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
 	  sh """${env.ZAPROXY_HOME}/zap.sh -cmd \
 	    -quickout ${root}/out/zap.xml \
@@ -82,7 +83,7 @@ node {
 	  """
 	  cat ${root}/out/zap.xml
 	  // Do we have to explicitly upload this to Threadfix or something?
-	}
+	}*/
     withEnv(['CF_HOME=.cf']) {
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ldap_baxtersh', usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
         sh "cf api ${env.PCF_API_ENDPOINT}"
@@ -114,7 +115,7 @@ node {
 			sh "cf set-env ${appName} DOMAIN ${env.PHASE_TWO_PCF_DOMAIN}"
 			sh "cf start ${appName}"
 		  }
-		}
+		}/*
 		withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
 		  sh """${env.ZAPROXY_HOME}/zap.sh -cmd \
 			-quickout ${root}/out/zap.xml \
@@ -122,7 +123,7 @@ node {
 		  """
 		  cat ${root}/out/zap.xml
 		  // Do we have to explicitly upload this to Threadfix or something?
-		}
+		}*/
 		withEnv(['CF_HOME=.cf']) {
 		  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ldap_baxtersh', usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
 			sh "cf api ${env.PCF_API_ENDPOINT}"
