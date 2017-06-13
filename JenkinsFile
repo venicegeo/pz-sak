@@ -56,7 +56,7 @@ node {
       withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
         sh "curl -L ${env.SSPF_PACKAGE} -o sspf.zip"
         sh "unzip sspf.zip"
-        dir("./sspf-master") {
+        dir("./sspf-master/sspf") {
           sh "/bin/curl --fail --silent ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}?apiKey=${THREADFIX_KEY} | ./sspf.py"
         }
       }
