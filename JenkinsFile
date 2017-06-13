@@ -22,10 +22,12 @@ node {
   stage('Karma Tests') {
     withEnv(["PATH+=${nodejs}/bin", "NPM_CONFIG_CACHE=${root}/.npmcache", "HOME=${WORKSPACE}"]) {
       withCredentials([[$class: 'UsernamePasswordBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", variable: 'NPM_AUTH']]) {
-        def base64encoded = "${NPM_AUTH}".getBytes().encodeBase64().toString()
+		sh "set +x"
+        def base64encoded = sh(script: "echo -n ${NPM_AUTH} | base64", returnStdout: true).trim()
         sh "mkdir -p ${root}/.npmcache"
         sh "npm set always-auth true"
         sh "npm set _auth ${base64encoded}"
+		sh "set -x"
         sh "npm install"
         sh "./node_modules/karma/bin/karma --version"
         sh "./node_modules/karma/bin/karma start"
