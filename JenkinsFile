@@ -22,9 +22,7 @@ node {
   stage('Karma Tests') {
     withEnv(["PATH+=${nodejs}/bin", "NPM_CONFIG_CACHE=${root}/.npmcache", "HOME=${WORKSPACE}"]) {
 	  withCredentials([[$class: 'UsernamePasswordBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", variable: 'NPM_AUTH']]) {
-		echo "${NPM_AUTH}"
 		def base64encoded = sh(script: "echo -n ${NPM_AUTH} | base64", returnStdout: true).trim()
-		echo "${base64encoded}"
 	    sh "mkdir -p ${root}/.npmcache"
 		sh "npm set always-auth true"
 	    sh "npm set _auth ${base64encoded}"
