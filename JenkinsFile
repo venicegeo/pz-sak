@@ -25,7 +25,7 @@ node {
         def base64encoded = sh(script: "echo -n ${NPM_AUTH} | base64", returnStdout: true).trim()
         sh "mkdir -p ${root}/.npmcache"
         sh "npm set always-auth true"
-        sh "npm set _auth ${base64encoded}"
+        sh "npm set _auth ${base64encoded} > /dev/null 2>&1"
         sh "npm install"
         sh "./node_modules/karma/bin/karma --version"
         sh "./node_modules/karma/bin/karma start"
