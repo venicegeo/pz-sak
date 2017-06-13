@@ -1,4 +1,4 @@
-def THREADFIX_ID = env.THREADFIX_ID ? env.THREADFIX_ID : '115'
+#!/usr/bin/groovy
 
 node {
   def nodejs = tool 'NodeJS_6'
@@ -33,6 +33,22 @@ node {
     }
   }
 
+  stage("Dependency Check") {
+    withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
+      sh "/jslave/dependency-check/dependency-check/bin/dependency-check.sh --version"
+      sh '/jslave/dependency-check/dependency-check/bin/dependency-check.sh --project "pz-sak" --scan "." --format "XML" --enableExperimental --disableBundleAudit'
+      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"
+	}
+  }
+
+  stage("Fortify Scans") {
+	withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
+      sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} '**/*.js' -exclude 'test/*.js' -exclude package.json -exclude 'node_modules/**/*.js' -exclude 'public/js/**/*.js'"
+      sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER}  -scan -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr"
+      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${env.BUILD_NUMBER}.fpr ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"
+	}
+  }
+
   stage('Archive') {
 	def archiveName = "pz-sak.tar.gz"
 	// Check if exists already
@@ -65,13 +81,6 @@ node {
 
   }
 
-  stage('Initial Scans') {
-    withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
-      sh "/jslave/dependency-check/dependency-check/bin/dependency-check.sh --version"
-      sh '/jslave/dependency-check/dependency-check/bin/dependency-check.sh --project "pz-sak" --scan "." --format "XML" --enableExperimental --disableBundleAudit'
-      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"
-	}
-  }
 
   stage ('Int Deploy') {
     if(!fileExists('.cf')) {
@@ -159,15 +168,4 @@ node {
 	  }
   }
 
-  stage('Final Scans') {
-	withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
-      sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} '**/*.js' -exclude 'test/*.js' -exclude package.json -exclude 'node_modules/**/*.js' -exclude 'public/js/**/*.js'"
-      sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER}  -scan -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr"
-      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${env.BUILD_NUMBER}.fpr ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"
-	}
-  }
-
-  stage ('Cleanup') {
-    deleteDir()
-  }
 }
