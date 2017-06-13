@@ -23,11 +23,11 @@ node {
     withEnv(["PATH+=${nodejs}/bin", "NPM_CONFIG_CACHE=${root}/.npmcache", "HOME=${WORKSPACE}"]) {
       withCredentials([[$class: 'UsernamePasswordBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", variable: 'NPM_AUTH']]) {
         def base64encoded = sh(script: "echo -n ${NPM_AUTH} | base64", returnStdout: true).trim()
-        sh """set +x \
-		  mkdir -p ${root}/.npmcache \
-          npm set always-auth true \
-          npm set _auth ${base64encoded} > /dev/null 2>&1 \
-		  set -x \
+        sh """set +x; \
+		  mkdir -p ${root}/.npmcache; \
+          npm set always-auth true; \
+          npm set _auth ${base64encoded}; \
+		  set -x; \
 		"""
         sh "npm install"
         sh "./node_modules/karma/bin/karma --version"
