@@ -1,3 +1,5 @@
+#!/usr/bin/groovy
+
 def THREADFIX_ID = env.THREADFIX_ID ? env.THREADFIX_ID : '115'
 
 node {
@@ -19,26 +21,53 @@ node {
   appvers = appvers.trim()
   def appName = "pz-sak-${appvers}"
 
-  /*
-  stage('Setup') {
-    deleteDir()
-    git url: "git@gitlab.gs.mil:venice/pz-jobcommon", branch: "master", credentialsId: "aaef610c-9fd0-4812-9027-755ff3a872a5"
-  }*/
-
-  stage('Karma Tests') {
+  //@TODO rework npm auth mechanism to get a token
+  stage("Karma Tests") {
     withEnv(["PATH+=${nodejs}/bin", "NPM_CONFIG_CACHE=${root}/.npmcache", "HOME=${WORKSPACE}"]) {
-	  withCredentials([[$class: 'StringBinding', credentialsId: 'baxtersh_npm_credentials', variable: 'NPM_AUTH']]) {
-	    sh "mkdir -p ${root}/.npmcache"
-		sh "npm set always-auth true"
-	    sh "npm set _auth ${NPM_AUTH}"
-	    sh "npm install"
-		sh "./node_modules/karma/bin/karma --version"
+      withCredentials([[$class: 'StringBinding', credentialsId: 'baxtersh_npm_credentials', variable: 'NPM_AUTH']]) {
+        sh "mkdir -p ${root}/.npmcache"
+        sh "npm set always-auth true"
+        sh "npm set _auth ${NPM_AUTH}"
+        sh "npm install"
+        sh "./node_modules/karma/bin/karma --version"
         sh "./node_modules/karma/bin/karma start"
-	  }
+      }
     }
   }
 
-  stage('Archive') {
+  stage("Dependency Check") {
+    withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
+      sh "/jslave/dependency-check/dependency-check/bin/dependency-check.sh --version"
+      sh '/jslave/dependency-check/dependency-check/bin/dependency-check.sh --project "pz-sak" --scan "." --format "XML" --enableExperimental --disableBundleAudit'
+      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml https://threadfix.gs.mil/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"
+	}
+  }
+
+  stage("Fortify Scans") {
+    withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
+      sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} '**/*.js' -exclude 'test/*.js' -exclude package.json -exclude 'node_modules/**/*.js' -exclude 'public/js/**/*.js'"
+      sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER}  -scan -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr"
+      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${env.BUILD_NUMBER}.fpr ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=$THREADFIX_KEY"
+    }
+  }
+
+  //@TODO Use https://github.com/venicegeo/sspf to query threadfix for any highs/crits
+  stage("Sec Scans Pass/Fail") {
+    sh "mkdir -p sspf-repo"
+    dir("./sspf-repo") {
+      git url: "https://github.com/venicegeo/sspf"
+      dir("./sspf") {
+        withCredentials([[$class: 'StringBinding', credentialsId: '978C467A-2B26-47AE-AD2F-4AFD5A4AF695', variable: 'THREADFIXKEY']]) {
+          sh "curl  --fail --silent 'https://threadfix.devops.geointservices.io/rest/applications/94?apiKey=$THREADFIXKEY' | ./sspf.py"
+          sh "curl  --fail --silent 'https://threadfix.devops.geointservices.io/rest/applications/93?apiKey=$THREADFIXKEY' | ./sspf.py"
+          sh "curl  --fail --silent 'https://threadfix.devops.geointservices.io/rest/applications/92?apiKey=$THREADFIXKEY' | ./sspf.py"
+          sh "curl  --fail --silent 'https://threadfix.devops.geointservices.io/rest/applications/91?apiKey=$THREADFIXKEY' | ./sspf.py"
+        }
+      }
+    }
+  }
+
+  stage("Archive") {
 	def archiveName = "pz-sak.tar.gz"
 	// Check if exists already
 	def getDependencyStatus = sh(script: """mvn --quiet --settings ~/.m2/settings.xml dependency:get \
@@ -70,13 +99,6 @@ node {
 
   }
 
-  stage('Initial Scans') {
-    withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
-      sh "/jslave/dependency-check/dependency-check/bin/dependency-check.sh --version"
-      sh '/jslave/dependency-check/dependency-check/bin/dependency-check.sh --project "pz-sak" --scan "." --format "XML" --enableExperimental --disableBundleAudit'
-      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml https://threadfix.gs.mil/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"
-	}
-  }
 
   stage ('Int Deploy') {
     if(!fileExists('.cf')) {
@@ -164,15 +186,5 @@ node {
 	  }
   }
 
-  stage('Final Scans') {
-	withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
-      sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} '**/*.js' -exclude 'test/*.js' -exclude package.json -exclude 'node_modules/**/*.js' -exclude 'public/js/**/*.js'"
-      sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER}  -scan -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr"
-      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${env.BUILD_NUMBER}.fpr ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=$THREADFIX_KEY"
-	}
-  }
-
-  stage ('Cleanup') {
-    deleteDir()
-  }
 }
+
