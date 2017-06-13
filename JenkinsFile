@@ -21,15 +21,15 @@ node {
 
   stage('Karma Tests') {
     withEnv(["PATH+=${nodejs}/bin", "NPM_CONFIG_CACHE=${root}/.npmcache", "HOME=${WORKSPACE}"]) {
-	  withCredentials([[$class: 'UsernamePasswordBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", variable: 'NPM_AUTH']]) {
-		def base64encoded = sh(script: "echo -n ${NPM_AUTH} | base64", returnStdout: true).trim()
-	    sh "mkdir -p ${root}/.npmcache"
-		sh "npm set always-auth true"
-	    sh "npm set _auth ${base64encoded}"
-	    sh "npm install"
-		sh "./node_modules/karma/bin/karma --version"
+      withCredentials([[$class: 'UsernamePasswordBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", variable: 'NPM_AUTH']]) {
+        def base64encoded = sh(script: "echo -n ${NPM_AUTH} | base64", returnStdout: true).trim()
+        sh "mkdir -p ${root}/.npmcache"
+        sh "npm set always-auth true"
+        sh "npm set _auth ${base64encoded}"
+        sh "npm install"
+        sh "./node_modules/karma/bin/karma --version"
         sh "./node_modules/karma/bin/karma start"
-	  }
+      }
     }
   }
 
@@ -38,21 +38,25 @@ node {
       sh "/jslave/dependency-check/dependency-check/bin/dependency-check.sh --version"
       sh '/jslave/dependency-check/dependency-check/bin/dependency-check.sh --project "pz-sak" --scan "." --format "XML" --enableExperimental --disableBundleAudit'
       sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"
-	}
+    }
   }
 
   stage("Fortify Scans") {
-	withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
+    withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
       sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} '**/*.js' -exclude 'test/*.js' -exclude package.json -exclude 'node_modules/**/*.js' -exclude 'public/js/**/*.js'"
       sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER}  -scan -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr"
       sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${env.BUILD_NUMBER}.fpr ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"
-	}
+    }
   }
 
-  stage('Archive') {
-	def archiveName = "pz-sak.tar.gz"
-	// Check if exists already
-	def getDependencyStatus = sh(script: """mvn --quiet --settings ~/.m2/settings.xml dependency:get \
+  stage("Security Scan Pass/Fail") {
+    // Do sspf here
+  }
+
+  stage("Archive") {
+    def archiveName = "pz-sak.tar.gz"
+    // Check if exists already
+    def getDependencyStatus = sh(script: """mvn --quiet --settings ~/.m2/settings.xml dependency:get \
 			-Dmaven.repo.local="${root}/.m2/repository" \
 			-DrepositoryId=nexus \
 			-DartifactId=pz-sak \
@@ -82,7 +86,7 @@ node {
   }
 
 
-  stage ('Int Deploy') {
+  stage ("Int Deploy") {
     if(!fileExists('.cf')) {
       sh "mkdir -p .cf"
     }
