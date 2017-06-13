@@ -19,12 +19,6 @@ node {
   appvers = appvers.trim()
   def appName = "pz-sak-${appvers}"
 
-  /*
-  stage('Setup') {
-    deleteDir()
-    git url: "git@gitlab.gs.mil:venice/pz-jobcommon", branch: "master", credentialsId: "aaef610c-9fd0-4812-9027-755ff3a872a5"
-  }*/
-
   stage('Karma Tests') {
     withEnv(["PATH+=${nodejs}/bin", "NPM_CONFIG_CACHE=${root}/.npmcache", "HOME=${WORKSPACE}"]) {
 	  withCredentials([[$class: 'StringBinding', credentialsId: 'baxtersh_npm_credentials', variable: 'NPM_AUTH']]) {
