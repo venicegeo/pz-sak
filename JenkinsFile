@@ -21,7 +21,7 @@ node {
 
   stage('Karma Tests') {
     withEnv(["PATH+=${nodejs}/bin", "NPM_CONFIG_CACHE=${root}/.npmcache", "HOME=${WORKSPACE}"]) {
-	  withCredentials([[$class: 'StringBinding', credentialsId: 'baxtersh_npm_credentials', variable: 'NPM_AUTH']]) {
+	  withCredentials([[$class: 'StringBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", variable: 'NPM_AUTH']]) {
 	    sh "mkdir -p ${root}/.npmcache"
 		sh "npm set always-auth true"
 	    sh "npm set _auth ${NPM_AUTH}"
@@ -77,7 +77,7 @@ node {
       sh "mkdir -p .cf"
     }
     withEnv(['CF_HOME=.cf']) {
-      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ldap_baxtersh', usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
+      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.PCF_CREDS}", usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
         sh "cf api ${env.PCF_API_ENDPOINT}"
         sh "cf auth ${CFUSER} ${CFPASS}"
         sh "cf target -o ${env.PCF_ORG} -s ${env.PHASE_ONE_PCF_SPACE}"
@@ -97,7 +97,7 @@ node {
 	  // Do we have to explicitly upload this to Threadfix or something?
 	}
     withEnv(['CF_HOME=.cf']) {
-      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ldap_baxtersh', usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
+      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.PCF_CREDS}", usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
         sh "cf api ${env.PCF_API_ENDPOINT}"
         sh "cf auth ${CFUSER} ${CFPASS}"
         sh "cf target -o ${env.PCF_ORG} -s ${env.PHASE_ONE_PCF_SPACE}"
@@ -120,7 +120,7 @@ node {
 		  sh "mkdir -p .cf"
 		}
 		withEnv(['CF_HOME=.cf']) {
-		  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ldap_baxtersh', usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
+		  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.PCF_CREDS}", usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
 			sh "cf api ${env.PCF_API_ENDPOINT}"
 			sh "cf auth ${CFUSER} ${CFPASS}"
 			sh "cf target -o ${env.PCF_ORG} -s ${env.PHASE_TWO_PCF_SPACE}"
@@ -140,7 +140,7 @@ node {
 		  // Do we have to explicitly upload this to Threadfix or something?
 		}
 		withEnv(['CF_HOME=.cf']) {
-		  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ldap_baxtersh', usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
+		  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.PCF_CREDS}", usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
 			sh "cf api ${env.PCF_API_ENDPOINT}"
 			sh "cf auth ${CFUSER} ${CFPASS}"
 			sh "cf target -o ${env.PCF_ORG} -s ${env.PHASE_TWO_PCF_SPACE}"
