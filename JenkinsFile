@@ -141,7 +141,7 @@ node {
 	}
   }
 
-  if(DEPLOY_PHASE_TWO) {
+  if(params.DEPLOY_PHASE_TWO) {
 	  stage('Stage Deploy') {
 		if(!fileExists('.cf')) {
 		  sh "mkdir -p .cf"
