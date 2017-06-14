@@ -19,6 +19,12 @@ node {
   appvers = appvers.trim()
   def appName = "pz-sak-${appvers}"
 
+  if(params.SECENV) {
+    stage("Security Configs") {
+      //Do CTM Stuff
+    }
+  }
+
   stage('Karma Tests') {
     withEnv(["PATH+=${nodejs}/bin", "NPM_CONFIG_CACHE=${root}/.npmcache", "HOME=${WORKSPACE}"]) {
       withCredentials([[$class: 'UsernamePasswordBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", variable: 'NPM_AUTH']]) {
