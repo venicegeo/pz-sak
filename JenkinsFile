@@ -19,9 +19,13 @@ node {
   appvers = appvers.trim()
   def appName = "pz-sak-${appvers}"
 
-  if(params.SECENV) {
-    stage("Security Configs") {
-      //Do CTM Stuff
+  if(params.SECENV_CONFIGS) {
+    stage("Security Env Extra Configs") {
+      sh "mkdir -p .sec-configs"
+      dir("./.sec-configs") {
+        git url: "${env.SECENV_CONFIGS}", credentialsId: "${env.GITLAB_CREDS}"
+        sh "cp ./pz-sak-secenv-configs/uc-deploy/* ../"
+      }
     }
   }
 
