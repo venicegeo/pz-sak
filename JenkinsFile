@@ -19,7 +19,7 @@ node {
   appvers = appvers.trim()
   def appName = "pz-sak-${appvers}"
 
-  if(params.SECENV_CONFIGS) {
+  if(params.SIDECAR_CONFIG_REPO) {
     stage("Security Env Extra Configs") {
       sh "mkdir -p .sec-configs"
       dir("./.sec-configs") {
