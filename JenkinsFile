@@ -64,22 +64,20 @@ node {
 
   stage("Sonar") {
     withCredentials([string(credentialsId: "${env.SONAR_TOKEN}", variable: 'USERNAME')]) {
-      withEnv(["HOME=${root}", "_JAVA_OPTIONS=-Duser.home=${root}"]) {
-        def projectId = "venicegeo:piazza:pz-sak"
-        sh """
-          ${mvn}/bin/mvn sonar:sonar \
-            -Dsonar.javascript.lcov.reportPath=report/coverage/lcov.info \
-            -Dmaven.repo.local=${root} \
-            -Dsonar.host.url=${env.SONAR_URL} \
-            -Dsonar.projectKey=${projectId} \
-            -Dsonar.projectName=${projectId} \
-            -Dsonar.language=js \
-            -Dsonar.sources=public/app \
-            -Dsonar.tests=test \
-            -Dsonar.redmine.project-key=13 \
-            -Dsonar.projectBaseDir=${root} \
-            -Dsonar.projectVersion=${appvers} \
-            -Dsonar.login=${USERNAME} -P nga
+      def sonar = tool 'SonarQube Runner 2.8'
+      def projectId = "venicegeo:piazza:pz-sak"
+      sh """
+        ${sonar}/bin/sonar-scanner \
+          -Dsonar.javascript.lcov.reportPath=report/coverage/lcov.info \
+          -Dsonar.host.url=${env.SONAR_URL} \
+          -Dsonar.projectKey=${projectId} \
+          -Dsonar.projectName=${projectId} \
+          -Dsonar.language=js \
+          -Dsonar.sources=public/app \
+          -Dsonar.tests=test \
+          -Dsonar.projectBaseDir=${root} \
+          -Dsonar.projectVersion=${appvers} \
+          -Dsonar.login=${USERNAME}
         """
       }
     }
