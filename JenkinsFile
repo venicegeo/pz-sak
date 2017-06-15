@@ -79,7 +79,6 @@ node {
           -Dsonar.projectVersion=${appvers} \
           -Dsonar.login=${USERNAME}
         """
-      }
     }
   }
 
