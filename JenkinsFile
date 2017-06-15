@@ -62,6 +62,26 @@ node {
     }
   }
 
+  stage("Sonar") {
+    withCredentials([string(credentialsId: "${env.SONAR_TOKEN}", variable: 'USERNAME')]) {
+      def sonar = tool 'SonarQube Runner 2.8'
+      def projectId = "venicegeo:piazza:pz-sak"
+      sh """
+        ${sonar}/bin/sonar-scanner \
+          -Dsonar.javascript.lcov.reportPath=report/coverage/lcov.info \
+          -Dsonar.host.url=${env.SONAR_URL} \
+          -Dsonar.projectKey=${projectId} \
+          -Dsonar.projectName=${projectId} \
+          -Dsonar.language=js \
+          -Dsonar.sources=public/app \
+          -Dsonar.tests=test \
+          -Dsonar.projectBaseDir=${root} \
+          -Dsonar.projectVersion=${appvers} \
+          -Dsonar.login=${USERNAME}
+        """
+    }
+  }
+
   stage("Security Scan Pass/Fail") {
     // Query threadfix and block if any highs/crits are found
     sh "mkdir -p sspf-pkg"
