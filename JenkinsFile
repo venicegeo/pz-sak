@@ -23,7 +23,7 @@ node {
     stage("Security Env Extra Configs") {
       sh "mkdir -p .sec-configs"
       dir("./.sec-configs") {
-        git url: "${env.SECENV_CONFIGS}", credentialsId: "${env.GITLAB_CREDS}"
+        git url: "${env.SIDECAR_CONFIG_REPO}", credentialsId: "${env.GITLAB_CREDS}"
         sh "cp ./pz-sak-secenv-configs/uc-deploy/* ../"
       }
     }
