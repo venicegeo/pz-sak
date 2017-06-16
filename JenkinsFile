@@ -42,6 +42,7 @@ node {
         sh "./node_modules/karma/bin/karma start"
       }
     }
+  }
 
   stage("Dependency Check") {
     withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
