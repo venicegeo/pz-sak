@@ -29,22 +29,19 @@ node {
     }
   }
 
-  stage('Karma Tests') {
+ stage('Karma Tests') {
     withEnv(["PATH+=${nodejs}/bin", "NPM_CONFIG_CACHE=${root}/.npmcache", "HOME=${WORKSPACE}"]) {
       withCredentials([[$class: 'UsernamePasswordBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", variable: 'NPM_AUTH']]) {
         def base64encoded = sh(script: "echo -n ${NPM_AUTH} | base64", returnStdout: true).trim()
-        sh """set +x; \
-		  mkdir -p ${root}/.npmcache; \
-          npm set always-auth true; \
-          npm set _auth ${base64encoded}; \
-		  set -x; \
-		"""
+        if (fileExists('/jslave/.npmrc')) {
+            sh "cp /jslave/.npmrc ."
+            sh "cat .npmrc"
+        }
         sh "npm install"
         sh "./node_modules/karma/bin/karma --version"
         sh "./node_modules/karma/bin/karma start"
       }
     }
-  }
 
   stage("Dependency Check") {
     withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
