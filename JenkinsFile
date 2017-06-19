@@ -37,6 +37,7 @@ node {
             sh "cp /jslave/.npmrc ."
             sh "cat .npmrc"
         }
+        sh "rm npm-shrinkwrap.json"
         sh "npm install"
         sh "./node_modules/karma/bin/karma --version"
         sh "./node_modules/karma/bin/karma start"
