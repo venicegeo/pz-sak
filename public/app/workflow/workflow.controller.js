@@ -436,7 +436,7 @@
             });
         };
 
-        $scope.getTriggerById = function () {
+        $scope.getTriggerById = function (triggerId) {
             $scope.triggerById = "";
             $scope.triggerId = "";
             $scope.errorMsg = "";

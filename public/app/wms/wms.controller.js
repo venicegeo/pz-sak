@@ -22,6 +22,20 @@
 
         function WmsController ($scope, $log, olData, toaster) {
 
+            var newmap = new ol.Map({
+                target: 'newmap',
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.MapQuest({layer: 'sat'})
+                    })
+                ],
+                view: new ol.View({
+                    //center: ol.proj.fromLonLat([-98, 39]),
+                    center: ol.proj.fromLonLat([0, 0]),
+                    zoom: 2
+                })
+            });
+
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 				var target = $(e.target).attr("href");
 				if (target == "#explorer") {
@@ -31,21 +45,6 @@
 					newmap.updateSize();
 				}
 			});
-
-			var newmap = new ol.Map({
-				target: 'newmap',
-				layers: [
-					new ol.layer.Tile({
-						source: new ol.source.MapQuest({layer: 'sat'})
-					})
-				],
-				view: new ol.View({
-					//center: ol.proj.fromLonLat([-98, 39]),
-					center: ol.proj.fromLonLat([0, 0]),
-					zoom: 2
-				})
-			});
-
 
 			$scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
             $scope.version = '1.3.0';
