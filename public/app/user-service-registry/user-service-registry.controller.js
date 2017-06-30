@@ -271,6 +271,8 @@
                             "mimeType": inputs[i].formatSelect
                         };
                         break;
+                    default:
+                        $scope.executeInputMap[inputs[i].name] = {}
                 }
             }
         }

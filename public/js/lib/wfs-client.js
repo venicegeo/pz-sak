@@ -22,7 +22,7 @@
 //= require_self
 
 'use strict';
-var OGC = OGC || {WFS: {}};
+var OGC = {WFS: {}};
 
 OGC.WFS.Client = OpenLayers.Class({
     initialize: function ( wfsServer ){

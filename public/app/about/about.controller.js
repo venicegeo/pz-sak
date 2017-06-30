@@ -18,9 +18,9 @@
     'use strict';
     angular
         .module('SAKapp')
-        .controller('AboutController', ['$scope', 'gateway', AboutController]);
+        .controller('AboutController', ['$scope', 'gateway', 'toaster', AboutController]);
 
-    function AboutController ($scope, gateway) {
+    function AboutController ($scope, gateway, toaster) {
 
         $scope.getVersionNumber = function() {
             gateway.async(
