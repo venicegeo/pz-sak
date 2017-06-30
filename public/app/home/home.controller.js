@@ -52,14 +52,6 @@
             });
             $http({
                 method: "GET",
-                url: "/proxy/" + discover.uuidHost + "/"
-            }).then(function(html) {
-                $scope.uuidStatus = (html.status === 200) ? "green" : "red";
-            }, function() {
-                $scope.uuidStatus = "red";
-            });
-            $http({
-                method: "GET",
                 url: "/proxy/" + discover.workflowHost + "/"
             }).then(function(html) {
                 $scope.workflowStatus = (html.status === 200) ? "green" : "red";

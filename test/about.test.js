@@ -51,7 +51,6 @@ describe('Controller: AboutController', function () {
                     "pz-idam": "a5deb81",
                     "pz-servicecontroller": "SPRINT03-328-g0057fca",
                     "pz-swagger": "v2.1.4-41-g86e6e5f",
-                    "pz-uuidgen": "Sprint03-125-g4a0a46c",
                     "pz-workflow": "Sprint03-642-g3516425",
                     "pzsvc-hello": "767ae0c",
                     "pzsvc-preview-generator": "Sprint03-16-g04f2cfe"

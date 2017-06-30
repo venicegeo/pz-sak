@@ -5,8 +5,5 @@ root=$(pwd -P)
 popd > /dev/null
 
 cd $root
-node --version
-npm --version
-npm install
-karma --version
-karma start
+./node_modules/karma/bin/karma --version
+./node_modules/karma/bin/karma start

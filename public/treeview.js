@@ -41,7 +41,29 @@
       return CONSTANTS;
   });
 
-  app.factory('Auth',function($sessionStorage, CONST) {
+    app.factory('uuid', [function() {
+        var cryptoObj = window.crypto || window.msCrypto;
+        var uuidGenerator = {
+            generate: function() {
+                var d = Date.now();
+                if(window.performance && typeof window.performance.now === "function"){
+                    d += performance.now(); //use high-precision timer if available
+                }
+                var array = new Uint32Array(32);
+                cryptoObj.getRandomValues(array);
+                var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var randomValue = array[0] / 10000000000;
+                    array = array.slice(1, array.length);
+                    var r = (d + randomValue*16)%16 | 0;
+                    d = Math.floor(d/16);
+                    return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+                });
+                return uuid;            }
+        };
+        return uuidGenerator;
+    }]);
+
+    app.factory('Auth',function($sessionStorage, CONST) {
       var auth = {
           id : "",
           sessionId : "",
@@ -70,9 +92,11 @@
           }));
       }
       if ((angular.isDefined($sessionStorage[CONST.auth]) &&
-          $sessionStorage[CONST.auth][CONST.isLoggedIn] === CONST.loggedIn)) {
+            $sessionStorage[CONST.auth][CONST.isLoggedIn] === CONST.loggedIn)) {
           auth.id = $sessionStorage[CONST.auth].id;
           auth.userStore = $sessionStorage[CONST.auth].userStore;
+          auth.userDN = $sessionStorage[CONST.auth].userDN;
+          auth.sessionId = $sessionStorage[CONST.auth].sessionId;
           auth[CONST.isLoggedIn] = CONST.loggedIn;
       }
       return auth;
@@ -239,21 +263,6 @@
         ]
 
         },
-      {
-        label: 'UUIDs',
-        onSelect: function(branch) {
-          return $scope.bodyDiv = "app/uuid/uuid.tpl.html";
-        },
-
-        children: [
-          {
-            label: 'Admin',
-            onSelect: function(branch) {
-              return $scope.bodyDiv = "app/uuid/uuid.admin.tpl.html";
-            }
-          }
-        ]
-      },
         {
         label: 'Workflow',
           onSelect: function(branch) {
@@ -340,8 +349,9 @@
         Auth.sessionId = undefined;
         $sessionStorage[CONST.auth] = Auth;
         stopIdleTimer();
-        $scope.logoutMessage = "You have successfully logged out.";
-        $location.path("/login.html");
+
+        // Need to redirect the user to logout completely
+        window.location = "/logoutProxy"
     };
 
     $scope.my_data = treedata_avm;
@@ -413,7 +423,7 @@
              .when('/geoaxis', {
 
                  template: '/login.html',
-                 controller: function ($scope,$location,$rootScope,$http,discover,Auth,$sessionStorage,CONST,pzlogger,gateway,toaster) {
+                 controller: function ($scope,$location,$rootScope,$http,discover,Auth,$sessionStorage,CONST,pzlogger,gateway,toaster, uuid) {
                      $rootScope.accesstoken = $location.search();
                      var redirectUrl = "https://" + discover.sak + "/geoaxis";
                      $http.post(
@@ -447,24 +457,10 @@
                                     Auth.setUser(
                                         userProfileResponse.data.username,
                                         userProfileResponse.data.DN);
-                                    $http({
-                                        method: "POST",
-                                        url: "/proxy/" + discover.uuidHost + "/uuids"
-                                    }).then(
-                                        function(html) {
-                                            Auth.sessionId = html.data.data[0];
-                                            $sessionStorage[CONST.auth] = Auth;
-                                            $location.path("/index");
-                                            $rootScope.$emit('loggedInEvent');
-                                        },
-                                        function(res) {
-                                            $scope.logoutMessage = "An error occurred getting the session id.";
-                                            $location.path("/login");
-                                            toaster.pop("error", "Error", "An error occurred getting the session id.")
-                                        }
-                                    );
-
-
+                                    Auth.sessionId = uuid.generate();
+                                    $sessionStorage[CONST.auth] = Auth;
+                                    $location.path("/index");
+                                    $rootScope.$emit('loggedInEvent');
                                 },
                             function(res){
                                 // error
@@ -600,9 +596,6 @@
           loggerHost : "pz-logger" + hostname,
           loggerType : CORE_SERVICE,
           loggerPort : "",
-          uuidHost : "pz-uuidgen" + hostname,
-          uuidType : CORE_SERVICE,
-          uuidPort : "",
           workflowHost : "pz-workflow" + hostname,
           workflowType : CORE_SERVICE,
           workflowPort : "",
@@ -717,5 +710,6 @@
         };
         return pzlogger;
     }]);
+
 
 }).call(this);

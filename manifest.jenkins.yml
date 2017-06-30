@@ -11,6 +11,3 @@ applications:
     - pz-geoserver-efs
     - geoaxis
     - pz-elasticsearch
-  env:
-    NPM_CONFIG_CACHE: ~/workspace/venice/piazza/pz-sak/.npmcache
-

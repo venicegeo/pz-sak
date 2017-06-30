@@ -13,6 +13,16 @@
   "author": "Jen Duncan",
   "license": "RadiantBlue Technologies",
   "dependencies": {
+    "angular": "1.4.8",
+    "angular-bootstrap-nav-tree": "0.2.1",
+    "angular-spinners": "3.1.2",
+    "angular-ui-router": "0.2.18",
+    "angular-utils-pagination": "0.11.1",
+    "angularjs-toaster": "1.0.0",
+    "bootstrap": "3.3.4",
+    "jquery": "2.2.4",
+    "moment": "2.12.0",
+    "ngstorage": "0.3.11"
   },
   "devDependencies": {
     "jasmine": "2.4.1",
@@ -20,7 +30,6 @@
     "karma-coverage": "1.0.0",
     "karma-jasmine": "1.0.2",
     "karma-phantomjs-launcher": "1.0.0",
-    "phantomjs-prebuilt": "2.1.7",
-    "send": "0.14.1"
+    "phantomjs-prebuilt": "2.1.7"
   }
 }

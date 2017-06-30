@@ -1,22 +1,219 @@
-node ('sl61') {
-    git url: 'https://github.com/venicegeo/pz-sak', branch: 'master'
-    // **NPM Deps**
-    stage 'Node dependencies'
-    def path = tool 'Node 5.10.0'
-    withEnv(["PATH+=${path}/bin"]) {
-      sh 'npm install'
-    }
-    withCredentials([[$class: 'StringBinding', credentialsId: '978C467A-2B26-47AE-AD2F-4AFD5A4AF695', variable: 'THREADFIXKEY']]) {
-        // **Fortify**
-        stage 'Fortify Scan'
-        sh 'echo Fortify scan begin...'
-        sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} '**/*.js' -exclude 'test/*.js' -exclude package.json -exclude 'node_modules/**/*.js' -exclude 'public/js/**/*.js'"
-        sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER}  -scan -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr"
-        sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${env.BUILD_NUMBER}.fpr https://threadfix.devops.geointservices.io/rest/applications/10/upload?apiKey=$THREADFIXKEY"
-        // **OWASP**
-        stage 'OWASP Check'
-        sh '/opt/dependency-check/bin/dependency-check.sh --project "PZ Sak" --scan "." --format "XML" --enableExperimental'
-        sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml https://threadfix.devops.geointservices.io/rest/applications/10/upload?apiKey=$THREADFIXKEY"
-    }
-}
+#!/usr/bin/groovy
 
+node {
+  def nodejs = tool 'NodeJS_6'
+  def zapHome = tool 'ZAProxy_v2_5_0'
+  def mvn = tool 'M3'
+  def root = pwd()
+
+  stage('Setup') {
+    deleteDir()
+    if(env.GITLAB_CREDS) {
+      git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}", credentialsId: "${env.GITLAB_CREDS}"
+    } else {
+      git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}"
+    }
+  }
+
+  def appvers = sh(script: "git describe --long --tags --always | sed 's/\\./-/'g", returnStdout: true)
+  appvers = appvers.trim()
+  def appName = "pz-sak-${appvers}"
+
+  if(params.SIDECAR_CONFIG_REPO) {
+    stage("Security Env Extra Configs") {
+      sh "mkdir -p .sec-configs"
+      dir("./.sec-configs") {
+        git url: "${env.SIDECAR_CONFIG_REPO}", branch: "master", credentialsId: "${env.GITLAB_CREDS}"
+        sh "cp ./uc-deploy/* ../"
+      }
+    }
+  }
+
+ stage('Karma Tests') {
+    withEnv(["PATH+=${nodejs}/bin", "NPM_CONFIG_CACHE=${root}/.npmcache", "HOME=${WORKSPACE}"]) {
+      withCredentials([[$class: 'UsernamePasswordBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", variable: 'NPM_AUTH']]) {
+        def base64encoded = sh(script: "echo -n ${NPM_AUTH} | base64", returnStdout: true).trim()
+        if (fileExists('/jslave/.npmrc')) {
+            sh "cp /jslave/.npmrc ."
+            sh "cat .npmrc"
+        }
+        sh "rm npm-shrinkwrap.json"
+        sh "npm install"
+        sh "./node_modules/karma/bin/karma --version"
+        sh "./node_modules/karma/bin/karma start"
+      }
+    }
+  }
+
+  stage("Dependency Check") {
+    withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
+      sh "/jslave/dependency-check/dependency-check/bin/dependency-check.sh --version"
+      sh '/jslave/dependency-check/dependency-check/bin/dependency-check.sh --project "pz-sak" --scan "." --format "XML" --enableExperimental --disableBundleAudit'
+      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"
+    }
+  }
+
+  stage("Fortify Scans") {
+    withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
+      sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} '**/*.js' -exclude 'test/*.js' -exclude package.json -exclude 'node_modules/**/*.js' -exclude 'public/js/**/*.js'"
+      sh "/opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER}  -scan -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr"
+      sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${env.BUILD_NUMBER}.fpr ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"
+    }
+  }
+
+  stage("Sonar") {
+    withCredentials([string(credentialsId: "${env.SONAR_TOKEN}", variable: 'USERNAME')]) {
+      def sonar = tool 'SonarQube Runner 2.8'
+      def projectId = "venicegeo:piazza:pz-sak"
+      sh """
+        ${sonar}/bin/sonar-scanner \
+          -Dsonar.javascript.lcov.reportPath=report/coverage/lcov.info \
+          -Dsonar.host.url=${env.SONAR_URL} \
+          -Dsonar.projectKey=${projectId} \
+          -Dsonar.projectName=${projectId} \
+          -Dsonar.language=js \
+          -Dsonar.sources=public/app \
+          -Dsonar.tests=test \
+          -Dsonar.projectBaseDir=${root} \
+          -Dsonar.projectVersion=${appvers} \
+          -Dsonar.login=${USERNAME}
+        """
+    }
+  }
+
+  //stage("Security Scan Pass/Fail") {
+  //  // Query threadfix and block if any highs/crits are found
+  //  sh "mkdir -p sspf-pkg"
+  //  dir("./sspf-pkg") {
+  //    withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
+  //      sh "curl -L ${env.SSPF_PACKAGE} -o sspf.zip"
+  //      sh "unzip sspf.zip"
+  //      dir("./sspf-master/sspf") {
+  //        sh "/bin/curl --fail --silent ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}?apiKey=${THREADFIX_KEY} | ./sspf.py"
+  //      }
+  //    }
+  //  }
+  //}
+
+  stage("Archive") {
+    def archiveName = "pz-sak.tar.gz"
+    // Check if exists already
+    def getDependencyStatus = sh(script: """mvn --quiet --settings ~/.m2/settings.xml dependency:get \
+			-Dmaven.repo.local="${root}/.m2/repository" \
+			-DrepositoryId=nexus \
+			-DartifactId=pz-sak \
+			-Dversion=${appvers} \
+			-DgroupId="org.venice.piazza" \
+			-Dpackaging=tar.gz \
+			-DremoteRepositories="nexus::default::${env.ARTIFACT_STORAGE_DEPLOY_URL}" \
+			>> /dev/null 2>&1 \
+		""", returnStatus: true)
+	if (getDependencyStatus == 0) {
+		echo "Artifact version ${appvers} exists in Nexus, nothing to do"
+	} else {
+	  // Deploy file
+      sh "tar -czf ${archiveName} -C ${root} public"
+      sh """mvn -X --settings ~/.m2/settings.xml deploy:deploy-file -Dfile=${archiveName} \
+		-DrepositoryId=nexus \
+		-Durl="${env.ARTIFACT_STORAGE_DEPLOY_URL}" \
+		-DgroupId="org.venice.piazza" \
+		-DgeneratePom=false \
+		-Dpackaging=tar.gz \
+		-Dmaven.repo.local="${root}/.m2/repository" \
+		-DartifactId=pz-sak \
+		-Dversion=${appvers} \
+	  """
+	}
+
+  }
+
+
+  stage ("Int Deploy") {
+    if(!fileExists('.cf')) {
+      sh "mkdir -p .cf"
+    }
+    withEnv(['CF_HOME=.cf']) {
+      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.PCF_CREDS}", usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
+        sh "cf api ${env.PCF_API_ENDPOINT}"
+        sh "cf auth ${CFUSER} ${CFPASS}"
+        sh "cf target -o ${env.PCF_ORG} -s ${env.PHASE_ONE_PCF_SPACE}"
+        sh "cf push ${appName} -f manifest.jenkins.yml --hostname ${appName} -d ${env.PHASE_ONE_PCF_DOMAIN} --no-start"
+		sh "cf set-env ${appName} SPACE ${env.PHASE_ONE_PCF_SPACE}"
+		sh "cf set-env ${appName} DOMAIN ${env.PHASE_ONE_PCF_DOMAIN}"
+		sh "cf start ${appName}"
+	  }
+	}
+	withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
+	  sh "mkdir -p ${root}/zap-out"
+	  sh """${zapHome}/zap.sh -cmd \
+	    -quickout ${root}/zap-out/zap.xml \
+	    -quickurl https://${appName}.${env.PHASE_ONE_PCF_DOMAIN} \
+	  """
+	  sh "cat ${root}/zap-out/zap.xml"
+	  sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@${root}/zap-out/zap.xml ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"
+	}
+    withEnv(['CF_HOME=.cf']) {
+      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.PCF_CREDS}", usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
+        sh "cf api ${env.PCF_API_ENDPOINT}"
+        sh "cf auth ${CFUSER} ${CFPASS}"
+        sh "cf target -o ${env.PCF_ORG} -s ${env.PHASE_ONE_PCF_SPACE}"
+		def legacyAppNames = sh(script: "cf routes | grep \"pz-sak \" | awk '{print \$4}'", returnStdout: true)
+		sh "cf map-route ${appName} ${env.PHASE_ONE_PCF_DOMAIN} --hostname pz-sak"
+		// Remove Legacy applications
+		for (Object legacyApp : legacyAppNames.trim().tokenize(',')) {
+		  def legacyAppName = legacyApp.toString().trim()
+		  if (legacyAppName != appName) {
+		    sh "cf unmap-route ${legacyAppName} ${env.PHASE_ONE_PCF_DOMAIN} --hostname ${legacyAppName}"
+		    sh "cf delete -f ${legacyAppName}"
+		  }
+		}
+	  }
+	}
+  }
+
+  if(params.DEPLOY_PHASE_TWO) {
+	  stage('Stage Deploy') {
+		if(!fileExists('.cf')) {
+		  sh "mkdir -p .cf"
+		}
+		withEnv(['CF_HOME=.cf']) {
+		  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.PCF_CREDS}", usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
+			sh "cf api ${env.PCF_API_ENDPOINT}"
+			sh "cf auth ${CFUSER} ${CFPASS}"
+			sh "cf target -o ${env.PCF_ORG} -s ${env.PHASE_TWO_PCF_SPACE}"
+			sh "cf push ${appName} --hostname ${appName} -f manifest.jenkins.yml -d ${env.PHASE_TWO_PCF_DOMAIN} --no-start"
+			sh "cf set-env ${appName} SPACE ${env.PHASE_TWO_PCF_SPACE}"
+			sh "cf set-env ${appName} DOMAIN ${env.PHASE_TWO_PCF_DOMAIN}"
+			sh "cf start ${appName}"
+		  }
+		}
+		withCredentials([[$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: 'THREADFIX_KEY']]) {
+		  sh "mkdir -p ${root}/zap-out"
+		  sh """${zapHome}/zap.sh -cmd \
+			-quickout ${root}/zap-out/zap.xml \
+			-quickurl https://${appName}.${env.PHASE_TWO_PCF_DOMAIN} \
+		  """
+		  sh "cat ${root}/zap-out/zap.xml"
+		  sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@${root}/zap-out/zap.xml ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}"
+		}
+		withEnv(['CF_HOME=.cf']) {
+		  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.PCF_CREDS}", usernameVariable: 'CFUSER', passwordVariable: 'CFPASS']]) {
+			sh "cf api ${env.PCF_API_ENDPOINT}"
+			sh "cf auth ${CFUSER} ${CFPASS}"
+			sh "cf target -o ${env.PCF_ORG} -s ${env.PHASE_TWO_PCF_SPACE}"
+			def legacyAppNames = sh(script: "cf routes | grep \"pz-sak \" | awk '{print \$4}'", returnStdout: true)
+			sh "cf map-route ${appName} ${env.PHASE_TWO_PCF_DOMAIN} --hostname pz-sak"
+		    // Remove Legacy applications
+		    for (Object legacyApp : legacyAppNames.trim().tokenize(',')) {
+		      def legacyAppName = legacyApp.toString().trim()
+			  if (legacyAppName != appName) {
+			    sh "cf unmap-route ${legacyAppName} ${env.PHASE_TWO_PCF_DOMAIN} --hostname ${legacyAppName}"
+		            sh "cf delete -f ${legacyAppName}"
+			  }
+		    }
+		  }
+		}
+	  }
+  }
+
+}

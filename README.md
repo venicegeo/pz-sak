@@ -1,23 +1,21 @@
-# wfs_service_info
-Angular app used to query WFS endpoints
-
-![alt text](https://github.com/melbsurfer/wfs_service_info/blob/master/screenshots/wfs_screenshot.png "AngularWFS")
-
+# Swiss Army Knife
+Angular app for testing Piazza services
 
 ***
-*You will need to have node installed in order to run the application.*
+## Dependencies
+* nginx 1.8.1
 
-####Running####
-1. Navigate to the root of the project
-2. Run: ```npm install```
-3. You will need a web server to run the application.  Type the followg in the terminal: ```sudo npm install http-server -g```
-4. Now run: ```http-server ```  (more server options [here](https://github.com/indexzero/http-server#available-options))
-5. Enter a test WFS URL (endpoint): ```http://demo.boundlessgeo.com/geoserver/wfs```
-6. Click the "Get Info" button.  This will conduct a *GetCapabilities* on the WFS
-7. Select an item from the "Feature Type" list.  This will conduct a *DescribeFeatureType* and a *GetFeature* on the WFS
+Note: Unit tests require NodeJS 5 or later (for any `npm` command)
 
-#####Optional#####
+## Running
+1. Clone this repo
+2. Copy nginx.conf from sak_repo_root/conf to nginx_install_dir/conf
+3. Edit nginx.conf line 50 to point to your sak location
+4. Start nginx and go to https://localhost/
 
-1. You can pass a CQL filter to the WFS by using the CQL Filter input
-``` Ex: STATE_NAME='Indiana' ```
-2. You can also change the amount of features returned by using the "Max Features" input
+## Running unit tests
+1. Make sure the app isn't running
+2. From the project's root directory, run `npm install`
+3. Run `./node_modules/karma/bin/karma start`
+
+Troubleshooting: If phantomjs is having problems starting it may need to be installed globally via `npm install -g phantomjs-prebuilt`
