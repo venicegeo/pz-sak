@@ -108,7 +108,7 @@
         };
 
         $scope.getJobStatus = function() {
-            $scope.jobStatus = getJobStatus($scope.jobId, gateway, toaster)
+            getJobStatus($scope, gateway, toaster)
         }
     }
 
@@ -125,17 +125,17 @@
         return data;
     }
 
-    function getJobStatus(jobId, gateway, toaster) {
-        if (angular.isUndefined(jobId) || jobId == "") {
+    function getJobStatus($scope, gateway, toaster) {
+        if (angular.isUndefined($scope.jobId) || $scope.jobId == "") {
             toaster.pop('warning', "Missing Required Field", "Must include Job ID.");
             return;
         }
 
         gateway.async(
             "GET",
-            "/job/" + jobId
+            "/job/" + $scope.jobId
         ).then(function ( html ) {
-            return html.data.data;
+            $scope.jobStatus = html.data.data;
         }, function (response){
             console.log("ingester.controller job status fail: " + response.status);
             toaster.pop('error', "Error", "There was an issue with your request.");
