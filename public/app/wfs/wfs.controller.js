@@ -39,7 +39,7 @@
                 //$scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
 
                 // Only allow our geoserver instance for now (until we figure out proxy madness
-                $scope.endPoint = 'http://geoserver.piazzageo.io/geoserver/ows';
+                $scope.endPoint = 'http://demo.boundlessgeo.com/geoserver/wfs';
 
                 $scope.version = '1.1.0';
                 $scope.outputFormat = 'JSON';
@@ -58,50 +58,26 @@
 
                 var wfsClient;
 
+                $log.warn('outputFormat', $scope.outputFormat);
+                var endPoint = $scope.endPoint;
+                if ($scope.endPoint.startsWith("http://")) {
+                    endPoint = $scope.endPoint.substring(7);
+                }
+                $scope.proxiedEndPoint = "/uproxy/" + endPoint;
+                // $scope.proxiedEndPoint = "/geoserver/geoserver/ows";
+                wfsClient = new OGC.WFS.Client($scope.proxiedEndPoint);
+
                 //TODO: Move to a factory
                 //Refactored: 10.05.2015 - GetCapabilities
-                $scope.getCapabilities = function () {
-                    $log.warn('outputFormat', $scope.outputFormat);
-                    var endPoint = $scope.endPoint;
-                    if ($scope.endPoint.startsWith("http://")) {
-                        endPoint = $scope.endPoint.substring(7);
-                    }
-                    $scope.proxiedEndPoint = "/uproxy/" + endPoint;
-                    // $scope.proxiedEndPoint = "/geoserver/geoserver/ows";
-                    wfsClient = new OGC.WFS.Client($scope.proxiedEndPoint);
 
-                    $scope.showFeatureTypeSelect = false;
-                    $scope.showFeatureTypeTable = false;
-
-                    //Refactored: 10-06.2015 - Use the Client request from wfsClient library
-                    $scope.capabilities = wfsClient.getFeatureTypes();
-                    $log.debug('$scope.capabilities', $scope.capabilities);
-                    $log.debug('$scope.capabilities.length', $scope.capabilities.length);
-                    if ($scope.capabilities.length >= 1){
-
-                        $scope.showFeatureTypeSelect = true;
-
-                    }
-                    else{
-                        $scope.showFeatureTypeSelect = false;
-                        $scope.showFeatureTypeTable = false;
-                        toaster.pop('error', "Error", 'Error. Could not retrieve data from end point.  Please check the URL and try again.');
-                    }
-
+                $scope.getCapabilities = function() {
+                    getCapabilities($scope, $log, toaster, wfsClient);
                 };
 
                 //TODO: Move to a factory
                 // DescribeFeature
-                $scope.describeFeature = function () {
-                	if ($scope.selectedCapability != null) {
-	                    $scope.columns = wfsClient.getFeatureTypeSchema($scope.selectedCapability.name, $scope.selectedCapability.featureNS).featureTypes[0].properties;
-	                    $log.debug('$scope.columns (describeFeature)', $scope.columns);
-	                    $log.debug('$scope.columns.length', $scope.columns.length);
-	                    if($scope.columns.length >= 1){
-	                        $scope.getFeature();
-	                        $scope.showFeatureTypeTable = true;
-	                    }
-                	}
+                $scope.describeFeature = function() {
+                    describeFeature($scope, $log, wfsClient);
                 };
 
                 //TODO: Move to a factory
@@ -141,69 +117,102 @@
                 };
 
                 $scope.manualWfs = function() {
-                    var url = $scope.wfsFullUrl;
-                    if (url.startsWith("http://")) {
-                        url = url.substr(7);
-                    }
-                    $scope.showManualFeatureTypeTable = false;
-                    $scope.showManualGetFeatureTable = false;
-
-                    if (url.indexOf("DescribeFeatureType") > 0) {
-                        $scope.manualHeader = "Describe Feature List";
-                        var formatter = new OpenLayers.Format.WFSDescribeFeatureType();
-
-                        OpenLayers.Request.GET( {
-                            url: "/uproxy/" + url,
-                            async: false,
-                            success: function ( request )
-                            {
-                                var doc = request.responseXML;
-                                if ( !doc || !doc.documentElement )
-                                {
-                                    doc = request.responseText;
-                                }
-
-                                // use the tool to parse the data
-                                var response = (formatter.read( doc ));
-
-                                $scope.describeResults = response.featureTypes[0].properties;
-                                $scope.showManualFeatureTypeTable = true;
-                            },
-                            error: function ( error )
-                            {
-                                console.log( 'error', error );
-                            }
-                        } );
-                    } else {
-                        $scope.manualHeader = "Get Feature(s)";
-                        var format = new OpenLayers.Format.JSON();
-
-                        OpenLayers.Request.GET({
-                            url: "/uproxy/" + url,
-                            async: false,
-                            success: function (request){
-                                var response = request;
-
-                                var doc = request.responseXML;
-
-                                if (!doc || !doc.documentElement ){
-                                    doc = request.responseText;
-                                }
-
-                                // use the formatter to parse the data
-                                var response = (format.read(doc));
-
-                                $scope.featureResults = response.features;
-                                $scope.columnNames = Object.keys(response.features[0].properties);
-                                $scope.showManualGetFeatureTable = true;
-                            },
-                            failure: function (error){
-                                alert(error);
-                            }
-                        } );
-
-                    }
+                    manualWfs($scope);
                 };
         }
 
+        function getCapabilities($scope, $log, toaster, wfsClient) {
+            $scope.showFeatureTypeSelect = false;
+            $scope.showFeatureTypeTable = false;
+
+            //Refactored: 10-06.2015 - Use the Client request from wfsClient library
+            $scope.capabilities = wfsClient.getFeatureTypes();
+            $log.debug('$scope.capabilities', $scope.capabilities);
+            $log.debug('$scope.capabilities.length', $scope.capabilities.length);
+            if ($scope.capabilities.length >= 1){
+                $scope.showFeatureTypeSelect = true;
+            }
+            else{
+                $scope.showFeatureTypeSelect = false;
+                $scope.showFeatureTypeTable = false;
+                toaster.pop('error', "Error", 'Error. Could not retrieve data from end point.  Please check the URL and try again.');
+            }
+        }
+
+        function describeFeature($scope, $log, wfsClient) {
+            if ($scope.selectedCapability != null) {
+                $scope.columns = wfsClient.getFeatureTypeSchema($scope.selectedCapability.name, $scope.selectedCapability.featureNS).featureTypes[0].properties;
+                $log.debug('$scope.columns (describeFeature)', $scope.columns);
+                $log.debug('$scope.columns.length', $scope.columns.length);
+                if($scope.columns.length >= 1){
+                    $scope.getFeature();
+                    $scope.showFeatureTypeTable = true;
+                }
+            }
+        }
+
+        function manualWfs($scope) {
+            if ($scope.wfsFullUrl != undefined) {
+
+                var url = $scope.wfsFullUrl;
+                if (url.startsWith("http://")) {
+                    url = url.substr(7);
+                }
+                $scope.showManualFeatureTypeTable = false;
+                $scope.showManualGetFeatureTable = false;
+
+                if (url.indexOf("DescribeFeatureType") > 0) {
+                    $scope.manualHeader = "Describe Feature List";
+                    var formatter = new OpenLayers.Format.WFSDescribeFeatureType();
+
+                    OpenLayers.Request.GET({
+                        url: "/uproxy/" + url,
+                        async: false,
+                        success: function (request) {
+                            var doc = request.responseXML;
+                            if (!doc || !doc.documentElement) {
+                                doc = request.responseText;
+                            }
+
+                            // use the tool to parse the data
+                            var response = (formatter.read(doc));
+
+                            $scope.describeResults = response.featureTypes[0].properties;
+                            $scope.showManualFeatureTypeTable = true;
+                        },
+                        error: function (error) {
+                            console.log('error', error);
+                        }
+                    });
+                } else {
+                    $scope.manualHeader = "Get Feature(s)";
+                    var format = new OpenLayers.Format.JSON();
+
+                    OpenLayers.Request.GET({
+                        url: "/uproxy/" + url,
+                        async: false,
+                        success: function (request) {
+                            var response = request;
+
+                            var doc = request.responseXML;
+
+                            if (!doc || !doc.documentElement) {
+                                doc = request.responseText;
+                            }
+
+                            // use the formatter to parse the data
+                            var response = (format.read(doc));
+
+                            $scope.featureResults = response.features;
+                            $scope.columnNames = Object.keys(response.features[0].properties);
+                            $scope.showManualGetFeatureTable = true;
+                        },
+                        failure: function (error) {
+                            alert(error);
+                        }
+                    });
+
+                }
+            }
+        }
 })();
