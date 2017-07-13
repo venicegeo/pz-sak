@@ -70,11 +70,15 @@
                 //TODO: Move to a factory
                 //Refactored: 10.05.2015 - GetCapabilities
 
-                $scope.getCapabilities = getCapabilities($scope, $log, toaster, wfsClient);
+                $scope.getCapabilities = function() {
+                    getCapabilities($scope, $log, toaster, wfsClient);
+                };
 
                 //TODO: Move to a factory
                 // DescribeFeature
-                $scope.describeFeature = describeFeature($scope, $log, wfsClient);
+                $scope.describeFeature = function() {
+                    describeFeature($scope, $log, wfsClient);
+                };
 
                 //TODO: Move to a factory
                 // GetFeature
@@ -112,7 +116,9 @@
                     });
                 };
 
-                $scope.manualWfs = manualWfs($scope);
+                $scope.manualWfs = function() {
+                    manualWfs($scope);
+                };
         }
 
         function getCapabilities($scope, $log, toaster, wfsClient) {
