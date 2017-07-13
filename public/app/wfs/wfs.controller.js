@@ -83,37 +83,7 @@
                 //TODO: Move to a factory
                 // GetFeature
                 $scope.getFeature = function () {
-
-                    spinnerService.show('spinner');
-
-                    var deferred = $q.defer();
-
-
-                    var wfsRequest = {
-                        typeName: $scope.selectedCapability.name,
-                        namespace: $scope.selectedCapability.featureNS,
-                        version: $scope.version,
-                        maxFeatures: $scope.maxFeatures,
-                        outputFormat: $scope.outputFormat
-                    };
-
-                    if($scope.filter && $scope.filter.trim() !== ''){
-                        wfsRequest.cql = $scope.filter;
-                    }
-
-                    wfsClient.getFeature(wfsRequest, function(data) {
-                            deferred.resolve(data);
-                    });
-
-                    var promise = deferred.promise;
-                    promise.then(function(data){
-
-                        $scope.features = data;
-                        $log.warn('$scope.features', $scope.features);
-                        $scope.showGetFeatureTable = true;
-                        spinnerService.hide('spinner');
-
-                    });
+                    getFeature($scope, wfsClient, $q, $log, spinnerService);
                 };
 
                 $scope.manualWfs = function() {
@@ -149,6 +119,39 @@
                     $scope.showFeatureTypeTable = true;
                 }
             }
+        }
+
+        function getFeature($scope, wfsClient, $q, $log, spinnerService) {
+            spinnerService.show('spinner');
+
+            var deferred = $q.defer();
+
+
+            var wfsRequest = {
+                typeName: $scope.selectedCapability.name,
+                namespace: $scope.selectedCapability.featureNS,
+                version: $scope.version,
+                maxFeatures: $scope.maxFeatures,
+                outputFormat: $scope.outputFormat
+            };
+
+            if($scope.filter && $scope.filter.trim() !== ''){
+                wfsRequest.cql = $scope.filter;
+            }
+
+            wfsClient.getFeature(wfsRequest, function(data) {
+                deferred.resolve(data);
+            });
+
+            var promise = deferred.promise;
+            promise.then(function(data){
+
+                $scope.features = data;
+                $log.warn('$scope.features', $scope.features);
+                $scope.showGetFeatureTable = true;
+                spinnerService.hide('spinner');
+
+            });
         }
 
         function manualWfs($scope) {
