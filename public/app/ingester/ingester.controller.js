@@ -30,11 +30,8 @@
 
             var metadata = {};
             try{
-                if (angular.isDefined($scope.metadata) && $scope.metadata !== "") {
-                   metadata = JSON.parse($scope.metadata);
-                }
+                metadata = parseMetadata($scope.metadata, toaster);
             } catch (err) {
-                toaster.pop("warning", "Parsing Error", "Improper JSON included in metadata: " + err.message);
                 return;
             }
             var data = {};
@@ -111,20 +108,40 @@
         };
 
         $scope.getJobStatus = function() {
-            if (angular.isUndefined($scope.jobId) || $scope.jobId == "") {
-                toaster.pop('warning', "Missing Required Field", "Must include Job ID.");
-                return;
-            }
-
-            gateway.async(
-                "GET",
-                "/job/" + $scope.jobId
-            ).then(function successCallback( html ) {
-                $scope.jobStatus = html.data.data;
-            }, function errorCallback(response){
-                console.log("ingester.controller job status fail: " + response.status);
-                toaster.pop('error', "Error", "There was an issue with your request.");
-            });
+            $scope.jobStatus = getJobStatus($scope.jobId, gateway, toaster)
         }
     }
-})();
+
+    function parseMetadata(metadata, toaster) {
+        var data = {};
+        try{
+            if (angular.isDefined(metadata) && metadata !== "") {
+                data = JSON.parse(metadata);
+            }
+        } catch (err) {
+            toaster.pop("warning", "Parsing Error", "Improper JSON included in metadata: " + err.message);
+            throw err;
+        }
+        return data;
+    }
+
+    function getJobStatus(jobId, gateway, toaster) {
+        if (angular.isUndefined(jobId) || jobId == "") {
+            toaster.pop('warning', "Missing Required Field", "Must include Job ID.");
+            return;
+        }
+
+        gateway.async(
+            "GET",
+            "/job/" + jobId
+        ).then(function ( html ) {
+            return html.data.data;
+        }, function (response){
+            console.log("ingester.controller job status fail: " + response.status);
+            toaster.pop('error', "Error", "There was an issue with your request.");
+            return;
+        });
+    }
+
+}
+)();
