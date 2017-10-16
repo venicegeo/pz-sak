@@ -9,7 +9,7 @@ Note: Unit tests require NodeJS 5 or later (for any `npm` command)
 
 ## Running
 1. Clone this repo
-2. Copy nginx.conf from sak_repo_root/conf to nginx_install_dir/conf
+2. Copy nginx.conf from sak_repo_root/dev to nginx_install_dir/conf
 3. Edit nginx.conf line 50 to point to your sak location
 4. Start nginx and go to https://localhost/
 
