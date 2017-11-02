@@ -19,6 +19,8 @@ node {
   appvers = appvers.trim()
   def appName = "pz-sak-${appvers}"
 
+  sh "./write-nginx-conf.sh"
+
   if(params.SIDECAR_CONFIG_REPO) {
     stage("Security Env Extra Configs") {
       sh "mkdir -p .sec-configs"
