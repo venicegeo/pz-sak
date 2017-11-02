@@ -1,6 +1,6 @@
 applications:
 - name: pz-sak
-  command: /usr/bin/bash write-nginx-conf.sh
+  command: $HOME/write-nginx-conf.sh
   host: pz-sak
   buildpack: staticfile_buildpack
   domain: stage.geointservices.io
