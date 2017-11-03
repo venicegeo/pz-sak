@@ -1,6 +1,6 @@
 applications:
 - name: pz-sak
-  command: chmod +x $HOME/write-nginx-conf.sh && $HOME/write-nginx-conf.sh
+  command: echo "customizing resolver" && chmod +x $HOME/write-nginx-conf.sh && $HOME/write-nginx-conf.sh
   host: pz-sak
   buildpack: staticfile_buildpack
   domain: stage.geointservices.io
