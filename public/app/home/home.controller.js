@@ -24,6 +24,7 @@
         $scope.auth = Auth[CONST.isLoggedIn];
         $scope.jenkinsUrl = config.jenkinsUrl;
         $scope.devOpsUrl = config.devOpsUrl;
+        $scope.gitUrl = config.gitUrl;
 
         $rootScope.$on('loggedInEvent', function(event, args){
             $scope.getStatuses();
