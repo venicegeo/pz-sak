@@ -1,7 +1,0 @@
-applications:
-- name: pz-sak
-  host: pz-sak
-  buildpack: staticfile_buildpack
-  services:
-    - pz-geoserver-efs
-    - geoaxis
