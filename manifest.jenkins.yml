@@ -8,5 +8,4 @@ applications:
   instances: 1
   timeout: 180
   services:
-    - pz-geoserver-efs
     - geoaxis
