@@ -29,7 +29,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-        'public/js/lib/jquery.min.js',
+        'public/js/lib/jquery-3.2.1.min.js',
         'public/js/lib/angular.min.js',
         'public/js/lib/angular-mocks.js',
         'public/treeview.js',
