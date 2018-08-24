@@ -12,6 +12,8 @@ Before building and running the pz-sak project, please ensure that the following
 
 >__Note:__ Unit tests require NodeJS 5 or later (for any `npm` command)
 
+For additional details on prerequisites, please refer to the Piazza Developer's Guide [Core Overview](https://github.com/venicegeo/pz-docs/blob/master/documents/devguide/02-pz-core.md) or [Piazza SAK](https://github.com/venicegeo/pz-docs/blob/master/documents/devguide/08-pz-sak.md) sections. Also refer to the [prerequisites for using Piazza](https://github.com/venicegeo/pz-docs/blob/master/documents/devguide/03-jobs.md) section for additional details.
+
 ## Setup
 Navigate to the project root directory where the repository will live, and clone the git repository in that location:
 
